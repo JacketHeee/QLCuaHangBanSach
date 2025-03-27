@@ -23,6 +23,16 @@ public class SachDTO {
 		this.maNXB = maNXB;
 	}
 
+	//constructor cho insert
+	public SachDTO(String tenSach, BigDecimal giaBan, int soLuongTon, int namXB, int maVung, int maNXB) {
+		this.tenSach = tenSach;
+		this.giaBan = giaBan;
+		this.soLuongTon = soLuongTon;
+		this.namXB = namXB;
+		this.maVung = maVung;
+		this.maNXB = maNXB;
+	}
+
 	public int getMaSach() {
 		return maSach;
 	}

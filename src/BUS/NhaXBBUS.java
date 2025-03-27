@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import DAO.NhaXBDAO;
 import DTO.NhaXBDTO;
+import DTO.ViTriVungDTO;
 
 public class NhaXBBUS {
 	private static NhaXBBUS instance;
@@ -26,4 +27,21 @@ public class NhaXBBUS {
 		return(this.listNhaXB);
 	}
 	
+	public ArrayList<String> getAllTenNXB(){
+		ArrayList<String> result = new ArrayList<>();
+		for(NhaXBDTO nhaXBDTO : this.listNhaXB){
+			result.add(nhaXBDTO.getTenNXB());
+		}
+		return(result);
+	}
+
+	public int getMaNXBByTen(String ten){
+		for(NhaXBDTO nhaXBDTO : this.listNhaXB){
+			if(nhaXBDTO.getTenNXB() == ten){
+				return(nhaXBDTO.getMaNXB());
+			}
+		}
+		return(-1);
+	}
+
 }

@@ -25,5 +25,21 @@ public class ViTriVungBUS {
 	public ArrayList<ViTriVungDTO> getAll(){
 		return(this.listViTriVung);
 	}
+
+	public ArrayList<String> getAllTenVung(){
+		ArrayList<String> result = new ArrayList<>();
+		for(ViTriVungDTO viTriVungDTO : this.listViTriVung){
+			result.add(viTriVungDTO.getTenVung());
+		}
+		return(result);
+	}
+	public int getMaViTriVungByTen(String ten){
+		for(ViTriVungDTO viTriVungDTO : this.listViTriVung){
+			if(viTriVungDTO.getTenVung() == ten){
+				return(viTriVungDTO.getMaVung());
+			}
+		}
+		return(-1);
+	}
 	
 }

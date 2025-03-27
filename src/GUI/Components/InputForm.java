@@ -43,5 +43,10 @@ public class InputForm extends JPanel{
         this.listContent = listContent;
     }
 
+    public void addItem(InputFormItem item){
+        this.listItem.add(item);
+        this.add(item, "grow");
+    }
+
     
 }

@@ -10,7 +10,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import BUS.NhaXBBUS;
 import BUS.SachBUS;
+import BUS.ViTriVungBUS;
 import DTO.SachDTO;
 import GUI.MainFrame;
 import GUI.Components.FunctionBar;
@@ -25,8 +27,11 @@ public class SachPnl extends JPanel implements MouseListener{
 	private JScrollPane scrollPane;
 	private String[] header = {"Mã sách","Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
 	private String[] functionList = {"Thêm","Xóa","Sửa","Chi tiết"};
-	private String[] listAtribute = {"Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
+	private String[] listAtribute = {"Tên sách","Giá bán","Số lượng tồn","Năm XB"}; // Mã vùng, mã NXB
 	private SachBUS sachBUS;
+	private ViTriVungBUS viTriVungBUS;
+	private NhaXBBUS nhaXBBUS;
+
 	private MainFrame mainFrame;
 	
 	public SachPnl() {
@@ -35,6 +40,8 @@ public class SachPnl extends JPanel implements MouseListener{
 		model = new DefaultTableModel(header, 0);
 		scrollPane = new JScrollPane();
 		sachBUS = SachBUS.getInstance();
+		viTriVungBUS = ViTriVungBUS.getInstance();
+		nhaXBBUS = NhaXBBUS.getInstance();
 		this.initComponent();
 	}
 	
@@ -76,7 +83,7 @@ public class SachPnl extends JPanel implements MouseListener{
 	public void mousePressed(MouseEvent e) {
 		//nút thêm
 		if(e.getSource() == functionBar.getListItem().get(0)){
-			SachDialog sachDialog = new SachDialog(this, "Thêm Sách", "thêm", listAtribute);
+			SachDialog sachDialog = new SachDialog(this, "Thêm Sách", "thêm", viTriVungBUS, nhaXBBUS, listAtribute);
 		}
 		//nút xóa
 		else if(e.getSource() == functionBar.getListItem().get(1)){
@@ -92,6 +99,8 @@ public class SachPnl extends JPanel implements MouseListener{
 		}
 		
 	}
+
+
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -115,5 +124,31 @@ public class SachPnl extends JPanel implements MouseListener{
 	public void setMainFrame(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
 	}
+
+	public SachBUS getSachBUS() {
+		return sachBUS;
+	}
+
+	public void setSachBUS(SachBUS sachBUS) {
+		this.sachBUS = sachBUS;
+	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+
+	public DefaultTableModel getModel() {
+		return model;
+	}
+
+	public void setModel(DefaultTableModel model) {
+		this.model = model;
+	}
+
+	
 	
 }
