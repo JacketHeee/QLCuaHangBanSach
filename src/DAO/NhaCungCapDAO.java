@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.NhaCungCapDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
 

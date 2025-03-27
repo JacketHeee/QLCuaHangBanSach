@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.NhanVienDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class NhanVienDAO implements DAOInterface<NhanVienDTO>{
 

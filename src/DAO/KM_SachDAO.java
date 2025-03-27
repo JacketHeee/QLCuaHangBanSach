@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.KM_SachDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class KM_SachDAO implements DAOInterface<KM_SachDTO>{
 

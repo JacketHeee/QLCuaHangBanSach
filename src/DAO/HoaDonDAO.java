@@ -10,8 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.HoaDonDTO;
+import utils.JDBCUtil;
 import DTO.HoaDonDTO;
-import config.JDBCUtil;
 
 public class HoaDonDAO implements DAOInterface<HoaDonDTO>{
 

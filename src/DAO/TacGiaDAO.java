@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.TacGiaDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class TacGiaDAO implements DAOInterface<TacGiaDTO>{
 

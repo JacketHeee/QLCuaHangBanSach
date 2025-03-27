@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.NhomQuyenDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO>{
 

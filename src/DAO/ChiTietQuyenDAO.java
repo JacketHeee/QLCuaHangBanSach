@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.ChiTietQuyenDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO>{
 

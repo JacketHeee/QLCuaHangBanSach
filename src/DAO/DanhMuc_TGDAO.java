@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.DanhMuc_TGDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO>{
 

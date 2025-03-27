@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.NhaXBDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class NhaXBDAO implements DAOInterface<NhaXBDTO>{
 

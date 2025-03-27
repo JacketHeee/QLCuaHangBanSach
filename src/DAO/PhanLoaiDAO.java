@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.PhanLoaiDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class PhanLoaiDAO implements DAOInterface<PhanLoaiDTO>{
 

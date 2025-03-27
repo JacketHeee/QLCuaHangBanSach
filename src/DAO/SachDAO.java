@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.SachDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class SachDAO implements DAOInterface<SachDTO>{
 

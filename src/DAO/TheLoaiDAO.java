@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.TheLoaiDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class TheLoaiDAO implements DAOInterface<TheLoaiDTO>{
 

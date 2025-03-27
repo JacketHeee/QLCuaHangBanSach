@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.PhieuNhapDTO;
-import config.JDBCUtil;
+import utils.JDBCUtil;
 
 public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
 
