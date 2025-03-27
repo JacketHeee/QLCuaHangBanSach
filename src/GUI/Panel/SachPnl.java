@@ -15,7 +15,7 @@ import DTO.SachDTO;
 import GUI.MainFrame;
 import GUI.Components.FunctionBar;
 import GUI.Components.FunctionItem;
-import GUI.dialog.SachDialog;
+import GUI.Dialog.SachDialog;
 import net.miginfocom.swing.MigLayout;
 
 public class SachPnl extends JPanel implements MouseListener{
