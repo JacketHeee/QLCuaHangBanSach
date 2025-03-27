@@ -1,5 +1,6 @@
 package DAO;
 
+import DTO.SachDTO;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,8 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import DTO.SachDTO;
 import utils.JDBCUtil;
 
 public class SachDAO implements DAOInterface<SachDTO>{
@@ -54,7 +53,10 @@ public class SachDAO implements DAOInterface<SachDTO>{
 
 	@Override
 	public int delete(SachDTO t) {
-		// TODO Auto-generated method stub
+		Connection con = JDBCUtil.getConnection();
+		int rowDelete = 0;
+		String sql = "DELETE FROM SACH WHERE maSach = ?";
+		PreparedStatement pst;
 		return 0;
 	}
 
