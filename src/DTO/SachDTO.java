@@ -8,15 +8,19 @@ public class SachDTO {
 	private BigDecimal giaBan;
 	private int soLuongTon;
 	private int namXB;
+	private int maVung;
+	private int maNXB;
 	
 	public SachDTO() {}
 	
-	public SachDTO(int maSach, String tenSach, BigDecimal giaBan, int soLuongTon, int namXB) {
+	public SachDTO(int maSach, String tenSach, BigDecimal giaBan, int soLuongTon, int namXB, int maVung, int maNXB) {
 		this.maSach = maSach;
 		this.tenSach = tenSach;
 		this.giaBan = giaBan;
 		this.soLuongTon = soLuongTon;
 		this.namXB = namXB;
+		this.maVung = maVung;
+		this.maNXB = maNXB;
 	}
 
 	public int getMaSach() {
@@ -57,5 +61,21 @@ public class SachDTO {
 
 	public void setNamXB(int namXB) {
 		this.namXB = namXB;
+	}
+
+	public int getMaVung() {
+		return maVung;
+	}
+
+	public int getMaNXB() {
+		return maNXB;
+	}
+
+	public void setMaVung(int maVung) {
+		this.maVung = maVung;
+	}
+
+	public void setMaNXB(int maNXB) {
+		this.maNXB = maNXB;
 	}
 }

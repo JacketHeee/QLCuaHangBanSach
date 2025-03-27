@@ -22,6 +22,14 @@ public class SachBUS {
 		}
 		return(instance);
 	}
+
+	public int insert(SachDTO sach){
+		if(sachDAO.insert(sach) != 0){
+			listSach.add(sach);
+			return(1);
+		}
+		return(0);
+	}
 	
 	public ArrayList<SachDTO> getAll(){
 		return(this.listSach);

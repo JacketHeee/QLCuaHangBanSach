@@ -22,11 +22,34 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		}
 		return(instance);
 	}
-	
 	@Override
 	public int insert(SachDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+		Connection con = JDBCUtil.getConnection();
+		int rowInserted = 0;
+		String sql = "INSERT INTO SACH (tenSach, giaBan, soLuongTon, namXB, maVung, maNXB) VALUES (?,?,?,?,?,?)";
+		PreparedStatement pst;
+		try {
+			pst = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, t.getTenSach());
+			pst.setBigDecimal(2, t.getGiaBan());
+			pst.setInt(3, t.getSoLuongTon());
+			pst.setInt(4, t.getNamXB());
+			pst.setInt(5, t.getMaVung());
+			pst.setInt(6, t.getMaNXB());
+			rowInserted = pst.executeUpdate();
+
+			//set mã DTO tăng tự động
+			ResultSet rs = pst.getGeneratedKeys();
+			while(rs.next()){
+				t.setMaSach(rs.getInt(1));
+			}
+
+			JDBCUtil.closeConnection(con);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rowInserted;
 	}
 
 	@Override
@@ -56,7 +79,9 @@ public class SachDAO implements DAOInterface<SachDTO>{
 				BigDecimal giaBan = rs.getBigDecimal("giaBan");
 				int soLuongTon = rs.getInt("soLuongTon");
 				int namXB = rs.getInt("namXB");
-				SachDTO sach = new SachDTO(id, tenSach, giaBan, soLuongTon, namXB);
+				int maVung = rs.getInt("maVung");
+				int maNXB = rs.getInt("maNXB");
+				SachDTO sach = new SachDTO(id, tenSach, giaBan, soLuongTon, namXB, maVung, maNXB);
 				result.add(sach);
 			}
 			JDBCUtil.closeConnection(con);
