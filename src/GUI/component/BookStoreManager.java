@@ -1,4 +1,4 @@
-package GUI;
+package GUI.component;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import net.miginfocom.swing.MigLayout;
@@ -28,6 +28,10 @@ public class BookStoreManager extends JFrame {
         // Sử dụng CustomTitleBar
         titleBar = new CustomTitleBar(this, Color.WHITE);
         add(titleBar, "dock north");
+
+        titleBar.addTab("⚙");
+        titleBar.addTab("setting");
+        titleBar.addTab("setting");
 
         // Sidebar
         JPanel sidebar = new JPanel(new MigLayout("fillx, wrap", "[grow]", "[]10[]10[]10[]"));

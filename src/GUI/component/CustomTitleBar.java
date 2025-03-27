@@ -1,7 +1,10 @@
-package GUI;
+package GUI.component;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
+import DTO.KM_SachDTO;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
@@ -20,9 +23,9 @@ public class CustomTitleBar extends JPanel {
     private Rectangle endBounds;
 
     private int widthButton = 35; 
-    private int heightButton = 23;
+    private int heightButton = 30;
 
-    private int heightTitle = 25;
+    private int heightTitle = 30;
 
     private Color background;
 
@@ -35,20 +38,14 @@ public class CustomTitleBar extends JPanel {
         background = color;
 
         // Thiết lập layout và thuộc tính
-        setLayout(new MigLayout("fill, ins 0", "[100]push[][][]", "[]"));
+        setLayout(new MigLayout("fill, ins 0", "[200]push[][][]", "[]"));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setPreferredSize(new Dimension(screenSize.width, heightTitle));
         setBackground(background); // Màu nền xám đậm
 
+        tab = new JPanel(new MigLayout("al center center, gap 0, insets 0"));
         // Nút Settings (bên trái)
-        JButton settingsButton = new JButton("⚙"); // Icon settings đơn giản
-        settingsButton.setPreferredSize(size);
-        settingsButton.setFocusPainted(false);
-        settingsButton.setBackground(background);
-        settingsButton.setForeground(Color.decode("#323232"));  
-        settingsButton.setBorder(null);
-        settingsButton.addActionListener(e -> JOptionPane.showMessageDialog(parentFrame, "Cài đặt đang được phát triển!"));
-        add(settingsButton, "cell 0 0");
+        add(tab,"");
 
         // Tiêu đề (giữa)
         JLabel titleLabel = new JLabel("Quản lý cửa hàng sách");
@@ -153,4 +150,28 @@ public class CustomTitleBar extends JPanel {
     public void setMaximized(boolean maximized) {
         this.isMaximized = maximized;
     }
+
+    public JButton addTab(String text) {
+        JButton settingsButton = new JButton(text); // Icon settings đơn giản
+        settingsButton.setPreferredSize(new Dimension(settingsButton.getWidth(), 18));
+        settingsButton.setFocusPainted(false);
+        settingsButton.setBackground(background);
+        settingsButton.setForeground(Color.decode("#323232"));  
+        settingsButton.addActionListener(e -> JOptionPane.showMessageDialog(parentFrame, "Cài đặt đang được phát triển!"));
+        
+        settingsButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                settingsButton.setBackground(Color.lightGray);  // Khi hover vào
+            }
+            public void mouseExited(MouseEvent e) {
+                settingsButton.setBackground(background);  // Khi rời chuột
+            }
+        });
+        
+        settingsButton.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; margin:2,3,2,3 ");
+        tab.add(settingsButton);
+        return settingsButton;
+    } 
+
+    private JPanel tab;
 }
