@@ -58,7 +58,7 @@ public class Login extends JFrame implements ActionListener{
         txtPassword.putClientProperty(FlatClientProperties.STYLE, "showRevealButton:true; focusWidth: 0; innerFocusWidth: 0");
         txtPassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mật khẩu");
 
-        butLogin.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth: 0; margin: 5,20,5,20;" + 
+        butLogin.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth: 0; margin: 5,20,5,20; arc: 20;" + 
             String.format("background: %s; foreground: %s", baseTheme.mainColor,baseTheme.txtOnMainColor));
 
         butLogin.setActionCommand("butLogin");

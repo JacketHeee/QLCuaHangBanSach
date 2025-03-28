@@ -6,6 +6,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import DTO.KM_SachDTO;
 import net.miginfocom.swing.MigLayout;
+import resources.base.baseTheme;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -34,7 +35,12 @@ public class CustomTitleBar extends JPanel {
 
     public CustomTitleBar(JFrame parentFrame, Color color) {
         this.parentFrame = parentFrame;
-        this.isMaximized = true;
+        this.parentFrame.addWindowStateListener(event -> {
+            if (event.getNewState() == Frame.NORMAL) {
+                centerFrame();
+            }
+        });
+        this.isMaximized = false;
         background = color;
 
         // Thiết lập layout và thuộc tính
@@ -54,33 +60,53 @@ public class CustomTitleBar extends JPanel {
         add(titleLabel, "growx, pushx");
 
         // Nút thu nhỏ
-        JButton minimizeButton = new JButton("−");
+        JButton minimizeButton = new JButton("-");
         minimizeButton.setPreferredSize(size);
         minimizeButton.setFocusPainted(false);
         minimizeButton.setBackground(background);
         minimizeButton.setForeground(Color.decode("#323232"));
         minimizeButton.setBorder(null);
-        minimizeButton.addActionListener(e -> parentFrame.setState(Frame.ICONIFIED));
+        // minimizeButton.addActionListener(e -> parentFrame.setState(Frame.ICONIFIED));
+        minimizeButton.addActionListener(e -> {
+            parentFrame.setState(Frame.ICONIFIED);
+            parentFrame.addWindowStateListener(event -> {
+                if (event.getNewState() == Frame.NORMAL) {
+                    centerFrame(); // Gọi phương thức căn giữa
+                }
+            });
+        });
         add(minimizeButton, "cell 2 0");
 
         // Nút phóng to/thu nhỏ
-        maximizeButton = new JButton("□");
+        maximizeButton = new JButton("o");
         maximizeButton.setPreferredSize(size);
         maximizeButton.setFocusPainted(false);
         maximizeButton.setBackground(background);
         maximizeButton.setForeground(Color.decode("#323232"));
         maximizeButton.setBorder(null);
         maximizeButton.addActionListener(e -> animateToggleMaximize());
+
         add(maximizeButton, "cell 3 0");
 
         // Nút đóng
-        JButton closeButton = new JButton("✕");
+        JButton closeButton = new JButton("x");
         closeButton.setPreferredSize(size);
         closeButton.setFocusPainted(false);
-        closeButton.setBackground(Color.decode("#FF5555")); 
+        closeButton.setBackground(background); 
         closeButton.setForeground(Color.WHITE); 
         closeButton.setBorder(null);
         closeButton.addActionListener(e -> System.exit(0));
+
+        closeButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                closeButton.setBackground(Color.decode("#FF5555"));  // Khi hover vào
+                closeButton.setForeground(Color.white);
+            }
+            public void mouseExited(MouseEvent e) {
+                closeButton.setBackground(background);  // Khi rời chuột
+                closeButton.setForeground(Color.decode(baseTheme.textColor));
+            }
+        });
         add(closeButton, "cell 4 0");
 
         // Kéo cửa sổ bằng thanh tiêu đề
@@ -100,6 +126,16 @@ public class CustomTitleBar extends JPanel {
         });
     }
 
+    private void centerFrame() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = parentFrame.getWidth();
+        int height = parentFrame.getHeight();
+        int x = (screenSize.width - width) / 2;
+        int y = (screenSize.height - height) / 2;
+        parentFrame.setLocation(x, y);
+    }
+    
+
     // Logic animation cho phóng to/thu nhỏ
     private void animateToggleMaximize() {
         if (animationTimer != null && animationTimer.isRunning()) {
@@ -110,18 +146,19 @@ public class CustomTitleBar extends JPanel {
         if (isMaximized) {
             // Thu nhỏ: Từ fullscreen về kích thước ban đầu
             startBounds = new Rectangle(0, 0, screenSize.width, screenSize.height);
-            endBounds = new Rectangle(parentFrame.getLocation().x, parentFrame.getLocation().y, 800, 600);
+            endBounds = new Rectangle(parentFrame.getLocation().x, parentFrame.getLocation().y, 1024, 768);
             if (endBounds.x < 0 || endBounds.y < 0 || endBounds.x + endBounds.width > screenSize.width) {
-                endBounds = new Rectangle((screenSize.width - 800) / 2, (screenSize.height - 600) / 2, 800, 600); // Căn giữa nếu vượt màn hình
+                endBounds = new Rectangle((screenSize.width - 1024) / 2, (screenSize.height - 768) / 2, 1024, 768); // Căn giữa nếu vượt màn hình
             }
-            maximizeButton.setText("□"); // Icon phóng to
+            maximizeButton.setText("O"); // Icon phóng to
         } else {
             // Phóng to: Từ kích thước hiện tại lên fullscreen
             startBounds = new Rectangle(parentFrame.getLocation().x, parentFrame.getLocation().y, parentFrame.getWidth(), parentFrame.getHeight());
             endBounds = new Rectangle(0, 0, screenSize.width, screenSize.height);
-            maximizeButton.setText("❐"); // Icon thu nhỏ
+            maximizeButton.setText("o"); // Icon thu nhỏ
         }
 
+        
         currentStep = 0;
         animationTimer = new Timer(10, e -> {
             currentStep++;
