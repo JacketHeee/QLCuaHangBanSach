@@ -26,16 +26,15 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	public int insert(SachDTO t) {
 		Connection con = JDBCUtil.getConnection();
 		int rowInserted = 0;
-		String sql = "INSERT INTO SACH (tenSach, giaBan, soLuongTon, namXB, maVung, maNXB) VALUES (?,?,?,?,?,?)";
+		String sql = "INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB) VALUES (?,?,?,?,?)";
 		PreparedStatement pst;
 		try {
 			pst = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, t.getTenSach());
 			pst.setBigDecimal(2, t.getGiaBan());
-			pst.setInt(3, t.getSoLuongTon());
-			pst.setInt(4, t.getNamXB());
-			pst.setInt(5, t.getMaVung());
-			pst.setInt(6, t.getMaNXB());
+			pst.setInt(3, t.getNamXB());
+			pst.setInt(4, t.getMaVung());
+			pst.setInt(5, t.getMaNXB());
 			rowInserted = pst.executeUpdate();
 
 			//set mã DTO tăng tự động

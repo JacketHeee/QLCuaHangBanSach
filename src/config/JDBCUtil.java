@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class JDBCUtil {
-	private static final String url = "jdbc:mysql://localhost:3306/quanlycuahangbansachv3";
+	private static final String url = "jdbc:mysql://localhost:3306/quanlycuahangbansach";
 	private static final String user = "root";
 	private static final String password = "";
 	

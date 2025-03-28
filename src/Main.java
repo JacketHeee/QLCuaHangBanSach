@@ -17,6 +17,7 @@ public class Main {
 		// java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
 
         MainFrame mainFrame = new MainFrame();
+        
         mainFrame.setVisible(true);
 	}
 }

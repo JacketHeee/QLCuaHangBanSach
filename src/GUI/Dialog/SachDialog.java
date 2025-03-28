@@ -24,6 +24,7 @@ import DTO.SachDTO;
 import GUI.Components.InputForm;
 import GUI.Components.InputFormItem;
 import GUI.Panel.SachPnl;
+import Utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class SachDialog extends JDialog implements ActionListener{
@@ -86,37 +87,23 @@ public class SachDialog extends JDialog implements ActionListener{
         // }
         this.add(btnHuy);
 
+        this.setListener();
+
         this.setSize(300, 700);
         this.setLocationRelativeTo(sachPnl.getMainFrame());
         this.setVisible(true);
     }
 
     public void setListener(){
-
+        this.btnThem.addActionListener(this);
+        this.btnSua.addActionListener(this);
+        this.btnHuy.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btnThem){
-            //Lấy thông tin
-            String tenSach = inputForm.getListItem().get(0).getContent();
-            BigDecimal gia = BigDecimal.valueOf(Double.parseDouble(inputForm.getListItem().get(1).getContent()));
-            int soLuongTon = Integer.parseInt(inputForm.getListItem().get(2).getContent());
-            int namXB = Integer.parseInt(inputForm.getListItem().get(3).getContent());
-            //Lấy lựa chọn combobox
-            String tenVung = (String)inputForm.getListItem().get(4).getComboBox().getSelectedItem();
-            String tenNXB = (String)inputForm.getListItem().get(5).getComboBox().getSelectedItem();
-            int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
-            int maNXB = nhaXBBUS.getMaNXBByTen(tenNXB);
-
-            SachDTO sach = new SachDTO(tenSach, gia, soLuongTon, namXB, maVung, maNXB);
-            if(sachBUS.insert(sach) != 0){
-                JOptionPane.showConfirmDialog(null,"Thêm sách thành công");
-                model.addRow(new Object[]{sach.getTenSach(), sach.getGiaBan(), sach.getSoLuongTon(), sach.getNamXB(), sach.getMaVung(), sach.getMaNXB()});
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Thêm sách thất bại");
-            }
+            insert();
         }
         else if(e.getSource() == btnHuy){
             this.dispose();
@@ -126,4 +113,56 @@ public class SachDialog extends JDialog implements ActionListener{
         }
     }
 
+    public void insert(){
+        //Lấy thông tin
+        String tenSach = inputForm.getListItem().get(0).getContent();
+        String giaS = inputForm.getListItem().get(1).getContent();
+        String namXBS = inputForm.getListItem().get(2).getContent();
+        //Lấy lựa chọn combobox
+        String tenVung = (String)inputForm.getListItem().get(3).getComboBox().getSelectedItem();
+        String tenNXB = (String)inputForm.getListItem().get(4).getComboBox().getSelectedItem();
+    
+        if(!Validation(tenSach, giaS, namXBS)){
+            return;
+        }
+    
+        //Chuyển đổi sau validate
+        BigDecimal gia = BigDecimal.valueOf(Double.parseDouble(giaS));
+        int namXB = Integer.parseInt(namXBS);
+        int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
+        int maNXB = nhaXBBUS.getMaNXBByTen(tenNXB);
+        SachDTO sach = new SachDTO(tenSach, gia, namXB, maVung, maNXB);
+        if(sachBUS.insert(sach) != 0){
+            JOptionPane.showMessageDialog(null,"Thêm sách thành công");
+            model.addRow(new Object[]{sach.getMaSach(), sach.getTenSach(), sach.getGiaBan(), sach.getSoLuongTon(), sach.getNamXB(), sach.getMaVung(), sach.getMaNXB()});
+            this.dispose();
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Thêm sách thất bại");
+        }
+    }
+
+    public boolean Validation(String ten, String gia, String namXB){
+        if(Validate.isEmpty(ten)){
+            JOptionPane.showMessageDialog(null, "Tên sách không được để trống !");
+            return(false);
+        }
+        else if(Validate.isEmpty(gia)){
+            JOptionPane.showMessageDialog(null, "Giá tiền không được để trống !");
+            return(false);
+        }
+        else if(!Validate.isPositiveNumber(gia)){
+            JOptionPane.showMessageDialog(null, "Giá tiền phải là số dương !");
+            return(false);
+        }
+        else if(Validate.isEmpty(namXB)){   
+            JOptionPane.showMessageDialog(null, "Năm xuất bản không được để trống !");
+            return(false);
+        }
+        else if(!Validate.isYear(namXB)){   
+            JOptionPane.showMessageDialog(null, "Năm xuất bản phải nhập đúng định dạng !");
+            return(false);
+        }
+        return(true);
+    }
 }

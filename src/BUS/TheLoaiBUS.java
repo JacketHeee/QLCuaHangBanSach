@@ -3,6 +3,7 @@ package BUS;
 import java.util.ArrayList;
 
 import DAO.TheLoaiDAO;
+import DTO.SachDTO;
 import DTO.TheLoaiDTO;
 
 public class TheLoaiBUS {
@@ -20,6 +21,14 @@ public class TheLoaiBUS {
 			instance = new TheLoaiBUS();
 		}
 		return(instance);
+	}
+
+	public int insert(TheLoaiDTO theLoai){
+		if(theLoaiDAO.insert(theLoai) != 0){
+			listTheLoai.add(theLoai);
+			return(1);
+		}
+		return(0);
 	}
 	
 	public ArrayList<TheLoaiDTO> getAll(){

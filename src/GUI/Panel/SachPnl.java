@@ -27,7 +27,7 @@ public class SachPnl extends JPanel implements MouseListener{
 	private JScrollPane scrollPane;
 	private String[] header = {"Mã sách","Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
 	private String[] functionList = {"Thêm","Xóa","Sửa","Chi tiết"};
-	private String[] listAtribute = {"Tên sách","Giá bán","Số lượng tồn","Năm XB"}; // Mã vùng, mã NXB
+	private String[] listAtribute = {"Tên sách","Giá bán","Năm XB"}; // Mã vùng, mã NXB
 	private SachBUS sachBUS;
 	private ViTriVungBUS viTriVungBUS;
 	private NhaXBBUS nhaXBBUS;

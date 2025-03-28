@@ -2,6 +2,7 @@ package DAO;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,8 +25,28 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO>{
 	
 	@Override
 	public int insert(TheLoaiDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+		Connection con = JDBCUtil.getConnection();
+		int rowInserted = 0;
+		String sql = "INSERT INTO THELOAI (tenTheLoai) VALUES (?)";
+		PreparedStatement pst;
+		try {
+			pst = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, t.getTenTheLoai());
+
+			rowInserted = pst.executeUpdate();
+
+			//set mã DTO tăng tự động
+			ResultSet rs = pst.getGeneratedKeys();
+			while(rs.next()){
+				t.setMaTheLoai(rs.getInt(1));
+			}
+
+			JDBCUtil.closeConnection(con);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rowInserted;
 	}
 
 	@Override
