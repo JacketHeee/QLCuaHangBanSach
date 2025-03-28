@@ -31,7 +31,7 @@ public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO>{
 	}
 
 	@Override
-	public int delete(DanhMuc_TGDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

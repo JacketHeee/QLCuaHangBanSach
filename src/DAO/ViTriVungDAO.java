@@ -29,7 +29,7 @@ public class ViTriVungDAO implements DAOInterface<ViTriVungDTO>{
 	}
 
 	@Override
-	public int delete(ViTriVungDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

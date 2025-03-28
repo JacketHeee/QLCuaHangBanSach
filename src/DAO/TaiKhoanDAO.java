@@ -31,7 +31,7 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO>{
 	}
 
 	@Override
-	public int delete(TaiKhoanDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

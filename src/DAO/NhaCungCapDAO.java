@@ -29,7 +29,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
 	}
 
 	@Override
-	public int delete(NhaCungCapDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

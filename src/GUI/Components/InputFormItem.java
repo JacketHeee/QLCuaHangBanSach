@@ -63,5 +63,12 @@ public class InputFormItem extends JPanel{
         this.comboBox = comboBox;
     }
 
+    public String getSelection(){
+        return((String)this.comboBox.getSelectedItem());
+    }
+
+    public void setSelection(String str){
+        this.comboBox.setSelectedItem(str);
+    }
     
 }

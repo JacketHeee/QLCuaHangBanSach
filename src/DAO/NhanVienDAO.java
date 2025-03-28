@@ -31,7 +31,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO>{
 	}
 
 	@Override
-	public int delete(NhanVienDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

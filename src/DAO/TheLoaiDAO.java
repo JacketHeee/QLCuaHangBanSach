@@ -50,7 +50,7 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO>{
 	}
 
 	@Override
-	public int delete(TheLoaiDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -15,7 +15,7 @@ public class Validate {
         }
         return(false);
     }
-
+    //Kiểm tra số dương
     public static boolean isPositiveNumber(String i){
         try {
             double number = Double.parseDouble(i);

@@ -52,15 +52,42 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	}
 
 	@Override
-	public int delete(SachDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int delete(int id) {
+		Connection con = JDBCUtil.getConnection();
+		int rowDeleted = 0;
+		String sql = "UPDATE SACH SET TRANGTHAI = 0 WHERE maSach = ?";
+		try {
+			PreparedStatement pst = con.prepareStatement(sql);
+			pst.setInt(1, id);
+			rowDeleted = pst.executeUpdate();
+			JDBCUtil.closeConnection(con);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return(rowDeleted);
 	}
 
 	@Override
 	public int update(SachDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+		Connection con = JDBCUtil.getConnection();
+		String sql = "UPDATE SACH SET tenSach = ?, giaBan = ?, namXB = ?, maVung = ?, maNXB = ? WHERE maSach = ?";
+		int rowUpdated = 0;
+		try {
+			PreparedStatement pst = con.prepareStatement(sql);
+			pst.setString(1, t.getTenSach());
+			pst.setBigDecimal(2, t.getGiaBan());
+			pst.setInt(3, t.getNamXB());
+			pst.setInt(4, t.getMaVung());
+			pst.setInt(5, t.getMaNXB());
+			pst.setInt(6, t.getMaSach());
+			rowUpdated = pst.executeUpdate();
+			JDBCUtil.closeConnection(con);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rowUpdated;
 	}
 
 	@Override

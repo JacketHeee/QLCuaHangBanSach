@@ -31,7 +31,7 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO>{
 	}
 
 	@Override
-	public int delete(ChiTietQuyenDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

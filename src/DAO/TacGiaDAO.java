@@ -29,7 +29,7 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO>{
 	}
 
 	@Override
-	public int delete(TacGiaDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

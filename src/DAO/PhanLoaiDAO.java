@@ -31,7 +31,7 @@ public class PhanLoaiDAO implements DAOInterface<PhanLoaiDTO>{
 	}
 
 	@Override
-	public int delete(PhanLoaiDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -31,7 +31,7 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO>{
 	}
 
 	@Override
-	public int delete(KhuyenMaiDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

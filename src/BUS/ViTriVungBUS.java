@@ -41,5 +41,13 @@ public class ViTriVungBUS {
 		}
 		return(-1);
 	}
+	public String getTenByMaViTriVung(int ma){
+		for(ViTriVungDTO viTriVungDTO : this.listViTriVung){
+			if(viTriVungDTO.getMaVung() == ma){
+				return(viTriVungDTO.getTenVung());
+			}
+		}
+		return(null);
+	}
 	
 }

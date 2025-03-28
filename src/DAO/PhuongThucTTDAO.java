@@ -29,7 +29,7 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO>{
 	}
 
 	@Override
-	public int delete(PhuongThucTTDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

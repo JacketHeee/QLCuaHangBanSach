@@ -31,7 +31,7 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO>{
 	}
 
 	@Override
-	public int delete(CT_HoaDonDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

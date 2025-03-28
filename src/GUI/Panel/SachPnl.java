@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -83,15 +84,15 @@ public class SachPnl extends JPanel implements MouseListener{
 	public void mousePressed(MouseEvent e) {
 		//nút thêm
 		if(e.getSource() == functionBar.getListItem().get(0)){
-			SachDialog sachDialog = new SachDialog(this, "Thêm Sách", "thêm", viTriVungBUS, nhaXBBUS, listAtribute);
+			insert();
 		}
 		//nút xóa
 		else if(e.getSource() == functionBar.getListItem().get(1)){
-			// SachDialog sachDialog = new SachDialog(this, "Thêm Sách", "thêm");
+			delete();
 		}
 		//nút sửa
 		else if(e.getSource() == functionBar.getListItem().get(2)){
-			// SachDialog sachDialog = new SachDialog(this, "Thêm Sách", "thêm");
+			update();
 		}
 		//nút chi tiết
 		else if(e.getSource() == functionBar.getListItem().get(3)){
@@ -100,6 +101,36 @@ public class SachPnl extends JPanel implements MouseListener{
 		
 	}
 
+	public void insert(){
+		SachDialog sachDialog = new SachDialog(this, "Thêm Sách", "thêm", viTriVungBUS, nhaXBBUS, listAtribute);
+	}
+
+	public void delete(){
+		if(table.getSelectedRow() == -1){
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn sách cần xóa");
+			return;
+		}
+		int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa sách này ?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+		if(confirm == JOptionPane.YES_OPTION){
+			int row = table.getSelectedRow();
+			int maSach = (int)model.getValueAt(row, 0);
+			if(sachBUS.delete(maSach) != 0){
+				JOptionPane.showMessageDialog(null, "Xóa sách thành công !");
+				model.removeRow(row);
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Xóa sách thất bại !");
+			}
+		}
+	}
+
+	public void update(){
+		if(table.getSelectedRow() == -1){
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn sách cần sửa");
+			return;
+		}
+		SachDialog sachDialog = new SachDialog(this, "Chỉnh sửa sách", "sửa", viTriVungBUS, nhaXBBUS, listAtribute);
+	}
 
 
 	@Override

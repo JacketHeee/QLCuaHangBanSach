@@ -32,7 +32,7 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO>{
 	}
 
 	@Override
-	public int delete(HoaDonDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

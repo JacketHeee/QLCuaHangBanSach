@@ -31,7 +31,7 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO>{
 	}
 
 	@Override
-	public int delete(KM_SachDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -29,7 +29,7 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO>{
 	}
 
 	@Override
-	public int delete(NhaXBDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

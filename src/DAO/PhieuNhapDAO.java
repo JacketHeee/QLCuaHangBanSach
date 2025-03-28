@@ -31,7 +31,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
 	}
 
 	@Override
-	public int delete(PhieuNhapDTO t) {
+	public int delete(int id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

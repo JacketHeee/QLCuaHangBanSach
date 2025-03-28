@@ -80,6 +80,20 @@ public class SachDialog extends JDialog implements ActionListener{
             this.add(btnThem);
         }
         else if(this.type.equals("sửa")){
+            //Lấy thông tin chọn
+            int row = table.getSelectedRow();
+            String tenSach = (String)model.getValueAt(row, 1);
+            BigDecimal gia = new BigDecimal(model.getValueAt(row, 2) + "");
+            int namXB = (int)model.getValueAt(row, 4);
+            int maVung = (int)model.getValueAt(row, 5); 
+            int maNXB = (int)model.getValueAt(row, 6);
+            //set các thông tin cũ
+            this.inputForm.getListItem().get(0).setContent(tenSach);
+            this.inputForm.getListItem().get(1).setContent(gia + "");
+            this.inputForm.getListItem().get(2).setContent(namXB + "");
+            this.inputForm.getListItem().get(3).setSelection(viTriVungBUS.getTenByMaViTriVung(maVung));
+            this.inputForm.getListItem().get(4).setSelection(nhaXBBUS.getTenByMaNXB(maNXB));
+
             this.add(btnSua);
         }
         // else if(this.type.equals("xem")){
@@ -109,7 +123,7 @@ public class SachDialog extends JDialog implements ActionListener{
             this.dispose();
         }
         else if(e.getSource() == btnSua){
-            
+            update();
         }
     }
 
@@ -119,8 +133,8 @@ public class SachDialog extends JDialog implements ActionListener{
         String giaS = inputForm.getListItem().get(1).getContent();
         String namXBS = inputForm.getListItem().get(2).getContent();
         //Lấy lựa chọn combobox
-        String tenVung = (String)inputForm.getListItem().get(3).getComboBox().getSelectedItem();
-        String tenNXB = (String)inputForm.getListItem().get(4).getComboBox().getSelectedItem();
+        String tenVung = (String)inputForm.getListItem().get(3).getSelection();
+        String tenNXB = (String)inputForm.getListItem().get(4).getSelection();
     
         if(!Validation(tenSach, giaS, namXBS)){
             return;
@@ -133,12 +147,55 @@ public class SachDialog extends JDialog implements ActionListener{
         int maNXB = nhaXBBUS.getMaNXBByTen(tenNXB);
         SachDTO sach = new SachDTO(tenSach, gia, namXB, maVung, maNXB);
         if(sachBUS.insert(sach) != 0){
-            JOptionPane.showMessageDialog(null,"Thêm sách thành công");
+            JOptionPane.showMessageDialog(null,"Thêm sách thành công !");
             model.addRow(new Object[]{sach.getMaSach(), sach.getTenSach(), sach.getGiaBan(), sach.getSoLuongTon(), sach.getNamXB(), sach.getMaVung(), sach.getMaNXB()});
             this.dispose();
         }
         else{
-            JOptionPane.showMessageDialog(null, "Thêm sách thất bại");
+            JOptionPane.showMessageDialog(null, "Thêm sách thất bại !");
+        }
+    }
+
+    public void update(){
+        int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn sửa sách này ?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        if(confirm == JOptionPane.NO_OPTION){
+            return;
+        }
+        //Lấy thông tin
+        String tenSach = inputForm.getListItem().get(0).getContent();
+        String giaS = inputForm.getListItem().get(1).getContent();
+        String namXBS = inputForm.getListItem().get(2).getContent();
+        //Lấy lựa chọn combobox
+        String tenVung = (String)inputForm.getListItem().get(3).getSelection();
+        String tenNXB = (String)inputForm.getListItem().get(4).getSelection();
+    
+        if(!Validation(tenSach, giaS, namXBS)){
+            return;
+        }
+    
+        //Chuyển đổi sau validate
+        BigDecimal gia = BigDecimal.valueOf(Double.parseDouble(giaS));
+        int namXB = Integer.parseInt(namXBS);
+        int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
+        int maNXB = nhaXBBUS.getMaNXBByTen(tenNXB);
+        
+        //Lấy mã sách để sửa
+        int row = table.getSelectedRow();
+        int maSach = (int)model.getValueAt(row, 0);
+
+        SachDTO sach = new SachDTO(maSach, tenSach, gia, namXB, maVung, maNXB);
+
+        if(sachBUS.update(sach) != 0){
+            JOptionPane.showMessageDialog(null, "Sửa sách thành công !");
+            model.setValueAt(tenSach, row, 1);
+            model.setValueAt(gia, row, 2);
+            model.setValueAt(namXB, row, 3);
+            model.setValueAt(maVung, row, 4);
+            model.setValueAt(maNXB, row, 5);
+            dispose();
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Sửa sách thất bại !");
         }
     }
 
@@ -165,4 +222,5 @@ public class SachDialog extends JDialog implements ActionListener{
         }
         return(true);
     }
+
 }
