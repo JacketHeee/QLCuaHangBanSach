@@ -3,10 +3,10 @@ package DAO;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import DTO.KhuyenMaiDTO;
@@ -56,8 +56,8 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO>{
 				String tenKM = rs.getString("tenKM");
 				String dieuKienGiam = rs.getString("dieuKienGiam");
 				BigDecimal giaTriGiam = rs.getBigDecimal("giaTriGiam");
-				Date ngayBatDau = rs.getDate("ngayBatDau");
-				Date ngayKetThuc = rs.getDate("ngayKetThuc");
+				LocalDateTime ngayBatDau = rs.getTimestamp("ngayBatDau").toLocalDateTime();
+				LocalDateTime ngayKetThuc = rs.getTimestamp("ngayKetThuc").toLocalDateTime();
 				
 				KhuyenMaiDTO khuyenMai = new KhuyenMaiDTO(id, tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc);
 				result.add(khuyenMai);

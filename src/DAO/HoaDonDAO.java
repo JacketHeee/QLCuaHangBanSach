@@ -2,11 +2,11 @@ package DAO;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import DTO.HoaDonDTO;
@@ -54,7 +54,7 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO>{
 			ResultSet rs = statement.executeQuery(sql);
 			while(rs.next()) {
 				int id = rs.getInt("maHD");
-				Date tenSach = rs.getDate("ngayBan");
+				LocalDateTime tenSach = rs.getTimestamp("ngayBan").toLocalDateTime();
 				BigDecimal tongTien = rs.getBigDecimal("tongTien");
 				int maTK = rs.getInt("maTK");
 				int maPT = rs.getInt("maPT");

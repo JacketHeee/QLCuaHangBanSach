@@ -1,11 +1,12 @@
 package DTO;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 public class PhieuNhapDTO {
     private int maNhap; // Đã thay đổi kiểu từ String thành int
-    private Date ngayNhap;
+    private LocalDateTime ngayNhap;
     private BigDecimal tongTien;
     private int maNCC; // Đã thay đổi kiểu từ String thành int
     private int maTK;  // Đã thay đổi kiểu từ String thành int
@@ -15,7 +16,7 @@ public class PhieuNhapDTO {
     }
 
     // Constructor đầy đủ tham số
-    public PhieuNhapDTO(int maNhap, Date ngayNhap, BigDecimal tongTien, int maNCC, int maTK) {
+    public PhieuNhapDTO(int maNhap, LocalDateTime ngayNhap, BigDecimal tongTien, int maNCC, int maTK) {
         this.maNhap = maNhap;
         this.ngayNhap = ngayNhap;
         this.tongTien = tongTien;
@@ -32,11 +33,11 @@ public class PhieuNhapDTO {
         this.maNhap = maNhap;
     }
 
-    public Date getNgayNhap() {
+    public LocalDateTime getNgayNhap() {
         return ngayNhap;
     }
 
-    public void setNgayNhap(Date ngayNhap) {
+    public void setNgayNhap(LocalDateTime ngayNhap) {
         this.ngayNhap = ngayNhap;
     }
 

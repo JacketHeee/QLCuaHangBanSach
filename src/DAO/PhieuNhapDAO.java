@@ -3,10 +3,11 @@ package DAO;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import DTO.PhieuNhapDTO;
@@ -53,7 +54,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
 			ResultSet rs = statement.executeQuery(sql);
 			while(rs.next()) {
 				int id = rs.getInt("maNhap");
-				Date ngayNhap = rs.getDate("ngayNhap");
+				LocalDateTime ngayNhap = rs.getTimestamp("ngayNhap").toLocalDateTime();
 				BigDecimal tongTien = rs.getBigDecimal("tongTien");
 				int maNCC = rs.getInt("maNCC");
 				int maTK = rs.getInt("maTK");

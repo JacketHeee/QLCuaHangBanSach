@@ -1,15 +1,17 @@
 package config;
 
+
 import java.sql.Connection;
 
 import java.sql.DriverManager;
-
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class JDBCUtil {
-	private static final String url = "jdbc:mysql://localhost:3306/quanlycuahangbansach";
-	private static final String user = "root";
-	private static final String password = "";
+	private static String url = "jdbc:mysql://localhost:3306/quanlycuahangbansach";
+	private static String password = "";
+	private static String user = "root";
 	
 	public static Connection getConnection() {
 		Connection c = null;
@@ -33,6 +35,4 @@ public class JDBCUtil {
 			}
 		}
 	}
-	
-	
 }
