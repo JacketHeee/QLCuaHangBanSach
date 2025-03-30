@@ -1,87 +1,79 @@
 package DAO;
 
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
 import DTO.TheLoaiDTO;
 import config.JDBCUtil;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
-public class TheLoaiDAO implements DAOInterface<TheLoaiDTO>{
-
-	private static TheLoaiDAO instance;
-	private TheLoaiDAO() {}
-	
-	public static TheLoaiDAO getInstance() {
-		if(instance == null) {
-			instance = new TheLoaiDAO();
-		}
-		return(instance);
-	}
-	
-	@Override
-	public int insert(TheLoaiDTO t) {
-		Connection con = JDBCUtil.getConnection();
-		int rowInserted = 0;
-		String sql = "INSERT INTO THELOAI (tenTheLoai) VALUES (?)";
-		PreparedStatement pst;
-		try {
-			pst = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setString(1, t.getTenTheLoai());
-
-			rowInserted = pst.executeUpdate();
-
-			//set mã DTO tăng tự động
-			ResultSet rs = pst.getGeneratedKeys();
-			while(rs.next()){
-				t.setMaTheLoai(rs.getInt(1));
-			}
-
-			JDBCUtil.closeConnection(con);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return rowInserted;
-	}
-
-	@Override
-	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int update(TheLoaiDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public ArrayList<TheLoaiDTO> getAll() {
-		Connection con = JDBCUtil.getConnection();
-		ArrayList<TheLoaiDTO> result = new ArrayList<>();
-		String sql = "SELECT * FROM THELOAI WHERE TRANGTHAI = 1";
-		Statement statement;
-		try {
-			statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
-			while(rs.next()) {
-				int id = rs.getInt("maTheLoai");
-				String tenTheLoai = rs.getString("tenTheLoai");
-				TheLoaiDTO theLoai = new TheLoaiDTO(id, tenTheLoai);
-				result.add(theLoai);
-			}
-			JDBCUtil.closeConnection(con);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
-
+public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
+    private static TheLoaiDAO instance;
+    
+    private TheLoaiDAO() {}
+    
+    public static TheLoaiDAO getInstance() {
+        if (instance == null) {
+            instance = new TheLoaiDAO();
+        }
+        return instance;
+    }
+    
+    @Override
+    public int insert(TheLoaiDTO t) {
+        String sql = String.format(
+            "INSERT INTO THELOAI (tenTheloai) VALUES ('%s')", 
+            t.getTenTheLoai()
+        );
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int rowInserted = jdbcUtil.executeUpdate(sql);
+        int nextID = jdbcUtil.getAutoIncrement("THELOAI");
+        jdbcUtil.Close();
+        t.setMaTheLoai(nextID);
+        return rowInserted;
+    }
+    
+    @Override
+    public int delete(int id) {
+        String query = String.format("UPDATE THELOAI SET trangThai = 0 WHERE maTheloai = %d", id);
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int rowDeleted = jdbcUtil.executeUpdate(query);
+        jdbcUtil.Close();
+        return rowDeleted;
+    }
+    
+    @Override
+    public int update(TheLoaiDTO t) {
+        String query = String.format(
+            "UPDATE THELOAI SET tenTheloai = '%s' WHERE maTheloai = %d",
+            t.getTenTheLoai(), t.getMaTheLoai()
+        );
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int rowUpdated = jdbcUtil.executeUpdate(query);
+        jdbcUtil.Close();
+        return rowUpdated;
+    }
+    
+    public ArrayList<TheLoaiDTO> getAll() {
+        ArrayList<TheLoaiDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM THELOAI WHERE trangThai = 1";
+        
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while (rs.next()) {
+                int id = rs.getInt("maTheloai");
+                String tenTheLoai = rs.getString("tenTheloai");
+                TheLoaiDTO theLoai = new TheLoaiDTO(id, tenTheLoai);
+                result.add(theLoai);
+            }
+            jdbcUtil.Close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

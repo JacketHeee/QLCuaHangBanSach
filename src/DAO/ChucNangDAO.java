@@ -4,55 +4,54 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import DTO.PhuongThucTTDTO;
+import DTO.ChucNangDTO;
 import config.JDBCUtil;
 
-public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
-    private static PhuongThucTTDAO instance;
+public class ChucNangDAO implements DAOInterface<ChucNangDTO> {
+    private static ChucNangDAO instance;
+    private ChucNangDAO() {}
     
-    private PhuongThucTTDAO() {}
-    
-    public static PhuongThucTTDAO getInstance() {
+    public static ChucNangDAO getInstance() {
         if (instance == null) {
-            instance = new PhuongThucTTDAO();
+            instance = new ChucNangDAO();
         }
         return instance;
     }
     
     @Override
-    public int insert(PhuongThucTTDTO t) {
+    public int insert(ChucNangDTO cn) {
         int rowInserted = 0;
         String sql = String.format(
-            "INSERT INTO PHUONGTHUC_TT (tenPTTT) VALUES ('%s')",
-            t.getTenPTTT()
+            "INSERT INTO CHUCNANG (tenChucNang) VALUES ('%s')",
+            cn.getTenChucNang()
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         rowInserted = jdbcUtil.executeUpdate(sql);
-        int nextID = jdbcUtil.getAutoIncrement("PHUONGTHUC_TT");
+        int nextID = jdbcUtil.getAutoIncrement("ChucNang");
         jdbcUtil.Close();
-        t.setMaPT(nextID);
+        cn.setMaChucNang(nextID);
         return rowInserted;
     }
-    
+
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String query = String.format("UPDATE PHUONGTHUC_TT SET TRANGTHAI = 0 WHERE maPT = '%s'", id);
+        String query = String.format("UPDATE CHUCNANG SET TRANGTHAI = 0 WHERE maChucNang = '%d'", id);
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         rowDeleted = jdbcUtil.executeUpdate(query);
         jdbcUtil.Close();
         return rowDeleted;
     }
-    
+
     @Override
-    public int update(PhuongThucTTDTO t) {
+    public int update(ChucNangDTO cn) {
         int rowUpdated = 0;
         String query = String.format(
-            "UPDATE PHUONGTHUC_TT SET tenPTTT = '%s' WHERE maPT = '%s'",
-            t.getTenPTTT(),
-            t.getMaPT()
+            "UPDATE CHUCNANG SET tenChucNang = '%s' WHERE maChucNang = '%d'",
+            cn.getTenChucNang(),
+            cn.getMaChucNang()
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -60,20 +59,21 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
         jdbcUtil.Close();
         return rowUpdated;
     }
-    
-    public ArrayList<PhuongThucTTDTO> getAll() {
-        ArrayList<PhuongThucTTDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM PHUONGTHUC_TT WHERE TRANGTHAI = 1";
+
+    public ArrayList<ChucNangDTO> getAll() {
+        ArrayList<ChucNangDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM CHUCNANG WHERE TRANGTHAI = 1";
         
         try {
             JDBCUtil jdbcUtil = new JDBCUtil();
             jdbcUtil.Open();
             ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
-                int id = rs.getInt("maPT");
-                String tenPTTT = rs.getString("tenPTTT");
-                PhuongThucTTDTO phuongThucTT = new PhuongThucTTDTO(id, tenPTTT);
-                result.add(phuongThucTT);
+                int maChucNang = rs.getInt("maChucNang");
+                String tenChucNang = rs.getString("tenChucNang");
+                
+                ChucNangDTO cn = new ChucNangDTO(maChucNang, tenChucNang);
+                result.add(cn);
             }
             jdbcUtil.Close();
         } catch (SQLException e) {

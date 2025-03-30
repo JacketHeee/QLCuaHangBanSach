@@ -1,73 +1,92 @@
 package DAO;
 
-
 import java.math.BigDecimal;
-import java.sql.Connection;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
 import DTO.PhieuNhapDTO;
 import config.JDBCUtil;
 
-public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
+public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
+    private static PhieuNhapDAO instance;
+    private PhieuNhapDAO() {}
 
-	private static PhieuNhapDAO instance;
-	private PhieuNhapDAO() {}
-	
-	public static PhieuNhapDAO getInstance() {
-		if(instance == null) {
-			instance = new PhieuNhapDAO();
-		}
-		return(instance);
-	}
-	
-	@Override
-	public int insert(PhieuNhapDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public static PhieuNhapDAO getInstance() {
+        if (instance == null) {
+            instance = new PhieuNhapDAO();
+        }
+        return instance;
+    }
 
-	@Override
-	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int insert(PhieuNhapDTO t) {
+        int rowInserted = 0;
+        String sql = String.format(
+            "INSERT INTO PHIEUNHAP (ngayNhap, tongTien, maNCC, maTK) VALUES ('%s', '%s', '%s', '%s')",
+            t.getNgayNhap(),
+            t.getTongTien(),
+            t.getMaNCC(),
+            t.getMaTK()
+        );
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowInserted = jdbcUtil.executeUpdate(sql);
+        int nextID = jdbcUtil.getAutoIncrement("PHIEUNHAP");
+        jdbcUtil.Close();
+        t.setMaNhap(nextID);
+        return rowInserted;
+    }
 
-	@Override
-	public int update(PhieuNhapDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int delete(int id) {
+        int rowDeleted = 0;
+        String sql = String.format("UPDATE PHIEUNHAP SET trangThai = 0 WHERE maNhap = '%s'", id);
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowDeleted = jdbcUtil.executeUpdate(sql);
+        jdbcUtil.Close();
+        return rowDeleted;
+    }
 
-	@Override
-	public ArrayList<PhieuNhapDTO> getAll() {
-		Connection con = JDBCUtil.getConnection();
-		ArrayList<PhieuNhapDTO> result = new ArrayList<>();
-		String sql = "SELECT * FROM PHIEUNHAP WHERE TRANGTHAI = 1";
-		Statement statement;
-		try {
-			statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
-			while(rs.next()) {
-				int id = rs.getInt("maNhap");
-				LocalDateTime ngayNhap = rs.getTimestamp("ngayNhap").toLocalDateTime();
-				BigDecimal tongTien = rs.getBigDecimal("tongTien");
-				int maNCC = rs.getInt("maNCC");
-				int maTK = rs.getInt("maTK");
-				
-				PhieuNhapDTO phieuNhap = new PhieuNhapDTO(id, ngayNhap, tongTien, maNCC, maTK);
-				result.add(phieuNhap);
-			}
-			JDBCUtil.closeConnection(con);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
+    @Override
+    public int update(PhieuNhapDTO t) {
+        int rowUpdated = 0;
+        String sql = String.format(
+            "UPDATE PHIEUNHAP SET ngayNhap = '%s', tongTien = '%s', maNCC = '%s', maTK = '%s' WHERE maNhap = '%s'",
+            t.getNgayNhap(),
+            t.getTongTien(),
+            t.getMaNCC(),
+            t.getMaTK(),
+            t.getMaNhap()
+        );
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowUpdated = jdbcUtil.executeUpdate(sql);
+        jdbcUtil.Close();
+        return rowUpdated;
+    }
 
+    public ArrayList<PhieuNhapDTO> getAll() {
+        ArrayList<PhieuNhapDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM PHIEUNHAP WHERE trangThai = 1";
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while (rs.next()) {
+                int maNhap = rs.getInt("maNhap");
+                LocalDateTime ngayNhap = rs.getTimestamp("ngayNhap").toLocalDateTime();
+                BigDecimal tongTien = rs.getBigDecimal("tongTien");
+                int maNCC = rs.getInt("maNCC");
+                int maTK = rs.getInt("maTK");
+                PhieuNhapDTO phieuNhap = new PhieuNhapDTO(maNhap, ngayNhap, tongTien, maNCC, maTK);
+                result.add(phieuNhap);
+            }
+            jdbcUtil.Close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
