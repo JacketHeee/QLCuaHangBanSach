@@ -2,7 +2,6 @@ package DTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class HoaDonDTO {
     private int maHD; // Đã thay đổi kiểu từ String thành int

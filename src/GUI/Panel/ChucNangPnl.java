@@ -7,22 +7,22 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import BUS.TheLoaiBUS;
-import DTO.TheLoaiDTO;
+import BUS.ChucNangBUS;
+import DTO.ChucNangDTO;
 import net.miginfocom.swing.MigLayout;
 
-public class TheLoaiPnl extends JPanel{
+public class ChucNangPnl extends JPanel{
 	private JTable table;
 	private DefaultTableModel model;
 	private JScrollPane scrollPane;
-	private String[] header = {"Mã thể loại","Tên thể loại"};
-	private TheLoaiBUS theLoaiBUS;
+	private String[] header = {"Mã chức năng", "Tên chức năng"};
+	private ChucNangBUS chucNangBUS;
 	
-	public TheLoaiPnl() {
+	public ChucNangPnl() {
 		table = new JTable();
 		model = new DefaultTableModel(header, 0);
 		scrollPane = new JScrollPane();
-		this.theLoaiBUS = TheLoaiBUS.getInstance();
+		chucNangBUS = ChucNangBUS.getInstance();
 		this.initComponent();
 	}
 	
@@ -38,12 +38,12 @@ public class TheLoaiPnl extends JPanel{
 		scrollPane.setViewportView(table);
 		
 		this.add(scrollPane, "grow");
-		loadDataTable(theLoaiBUS.getAll());
+		loadDataTable(chucNangBUS.getAll());
 	}
 	
-	public void loadDataTable(ArrayList<TheLoaiDTO> listTheLoai) {
-		for(TheLoaiDTO i : listTheLoai) {
-			model.addRow(new Object[] {i.getMaTheLoai(), i.getTenTheLoai()});
+	public void loadDataTable(ArrayList<ChucNangDTO> listChucNang) {
+		for(ChucNangDTO i : listChucNang) {
+			model.addRow(new Object[] {i.getMaChucNang(), i.getTenChucNang()});
 		}
 	}
 }

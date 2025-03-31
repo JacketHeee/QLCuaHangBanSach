@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import DTO.HoaDonDTO;
 import GUI.Panel.CT_HoaDonPnl;
 import GUI.Panel.CT_PhieuNhapPnl;
 import GUI.Panel.ChiTietQuyenPnl;
+import GUI.Panel.ChucNangPnl;
 import GUI.Panel.DanhMuc_TGPnl;
 import GUI.Panel.HoaDonPnl;
 import GUI.Panel.KM_SachPnl;
@@ -121,6 +121,9 @@ public class TaskBar extends JPanel implements MouseListener{
 		}
 		else if(e.getSource() == list.get(18)) {
 			mainFrame.setPanel(new ChiTietQuyenPnl());
+		}
+		else if(e.getSource() == list.get(19)) {
+			mainFrame.setPanel(new ChucNangPnl());
 		}
 	}
 

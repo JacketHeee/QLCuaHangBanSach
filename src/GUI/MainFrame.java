@@ -14,7 +14,7 @@ import net.miginfocom.swing.MigLayout;
 public class MainFrame extends JFrame{
 	private JPanel mainPnl;
 	private TaskBar taskBar;
-	String[] listTask = {"Sách","Thể loại","Tác giả","Nhà xuất bản","Vùng thể loại","Nhà cung cấp","Quản lý phiếu nhập","Quản lý hóa đơn","Khuyến mãi","Nhân viên","Tài khoản","Phân quyền","Phương thức thanh toán","Phân loại","Danh mục_Tác giả","Chi tiết phiếu nhập","Chi tiết hóa đơn","Khuyến mãi_Sách","Chi tiết quyền"};
+	String[] listTask = {"Sách","Thể loại","Tác giả","Nhà xuất bản","Vùng thể loại","Nhà cung cấp","Quản lý phiếu nhập","Quản lý hóa đơn","Khuyến mãi","Nhân viên","Tài khoản","Phân quyền","Phương thức thanh toán","Phân loại","Danh mục_Tác giả","Chi tiết phiếu nhập","Chi tiết hóa đơn","Khuyến mãi_Sách","Chi tiết quyền","Chức năng"};
 	
 	public MainFrame() {
 		taskBar = new TaskBar(this, listTask);
