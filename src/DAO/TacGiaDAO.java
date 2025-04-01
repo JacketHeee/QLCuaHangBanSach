@@ -27,8 +27,8 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("TACGIA");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaTacGia(nextID);
         return rowInserted;

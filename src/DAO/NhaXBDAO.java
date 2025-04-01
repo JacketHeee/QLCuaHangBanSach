@@ -27,8 +27,8 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("NHAXB");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaNXB(nextID);
         return rowInserted;

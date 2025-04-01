@@ -28,8 +28,8 @@ public class ViTriVungDAO implements DAOInterface<ViTriVungDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("VITRIVUNG");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaVung(nextID);
         return rowInserted;

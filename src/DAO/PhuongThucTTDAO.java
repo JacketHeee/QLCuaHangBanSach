@@ -28,8 +28,8 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("PHUONGTHUC_TT");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaPT(nextID);
         return rowInserted;

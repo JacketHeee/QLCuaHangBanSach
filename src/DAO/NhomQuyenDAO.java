@@ -27,8 +27,8 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("NhomQuyen");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         nq.setMaRole(nextID);
         return rowInserted;

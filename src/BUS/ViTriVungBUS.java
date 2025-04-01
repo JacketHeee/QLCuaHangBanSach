@@ -22,8 +22,42 @@ public class ViTriVungBUS {
 		return(instance);
 	}
 	
+	public int insert(ViTriVungDTO ViTriVung){
+		if(viTriVungDAO.insert(ViTriVung) != 0){
+			listViTriVung.add(ViTriVung);
+			return(1);
+		}
+		return(0);
+	}
+
+	public int delete(int id){
+		if(viTriVungDAO.delete(id) != 0){
+			int index = getIndexByID(id);
+			listViTriVung.remove(index);
+			return(1);
+		}
+		return(0);
+	}
+	public int update(ViTriVungDTO ViTriVungDTO){
+		if(viTriVungDAO.update(ViTriVungDTO) != 0){
+			int index = getIndexByID(ViTriVungDTO.getMaVung());
+			listViTriVung.get(index).setTenVung(ViTriVungDTO.getTenVung());
+			return(1);
+		}
+		return(0);
+	}
+	
 	public ArrayList<ViTriVungDTO> getAll(){
 		return(this.listViTriVung);
+	}
+
+	public int getIndexByID(int id){
+		for(int i = 0; i < listViTriVung.size(); i++){
+			if(id == listViTriVung.get(i).getMaVung()){
+				return(i);
+			}
+		}
+		return(-1);
 	}
 
 	public ArrayList<String> getAllTenVung(){

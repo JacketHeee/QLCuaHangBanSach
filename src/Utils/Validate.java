@@ -50,21 +50,27 @@ public class Validate {
     }
 
     public static boolean isYear(String i){
-        Pattern pattern = Pattern.compile("^(\\d{4})$");
+        Pattern pattern = Pattern.compile("^(19|20)\\d{2}$");
         Matcher matcher = pattern.matcher(i);
         return matcher.matches();
     }
 
-    public static void main(String[] args) {
-        String[] string = {"(023)1231234","(023)-123-1234","023-123-1234","023.123.1234","023 123 1234","0231231234"};
-        String[] string2 = {"(02312312334","(023)-1231234","(023)123-1234"};
-
-        for(String i : string){
-            System.out.println(Validate.isPhoneNumber(i));
-        }
-        for(String i : string2){
-            System.out.println(Validate.isPhoneNumber(i));
-        }
+    public static boolean isDate(String i){ //Chưa validate 28 ngày tháng 2, tháng 30, 31, năm nhuận,...
+        Pattern pattern = Pattern.compile("^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)\\d{2}$");
+        Matcher matcher = pattern.matcher(i);
+        return matcher.matches();
     }
+
+    // public static void main(String[] args) {
+    //     String[] string = {"(023)1231234","(023)-123-1234","023-123-1234","023.123.1234","023 123 1234","0231231234"};
+    //     String[] string2 = {"(02312312334","(023)-1231234","(023)123-1234"};
+
+    //     for(String i : string){
+    //         System.out.println(Validate.isPhoneNumber(i));
+    //     }
+    //     for(String i : string2){
+    //         System.out.println(Validate.isPhoneNumber(i));
+    //     }
+    // }
 
 }

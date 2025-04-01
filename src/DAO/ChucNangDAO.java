@@ -27,8 +27,8 @@ public class ChucNangDAO implements DAOInterface<ChucNangDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("ChucNang");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         cn.setMaChucNang(nextID);
         return rowInserted;

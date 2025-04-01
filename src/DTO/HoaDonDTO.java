@@ -26,6 +26,15 @@ public class HoaDonDTO {
         this.maKM = maKM;
         this.maKH = maKH;
     }
+// cho insert
+    public HoaDonDTO(LocalDateTime ngayBan, BigDecimal tongTien, int maTK, int maPT, int maKM, int maKH) {
+        this.ngayBan = ngayBan;
+        this.tongTien = tongTien;
+        this.maTK = maTK;
+        this.maPT = maPT;
+        this.maKM = maKM;
+        this.maKH = maKH;
+    }
 
     // Constructor không có mã khuyến mãi
     public HoaDonDTO(int maHD, LocalDateTime ngayBan, BigDecimal tongTien, int maTK, int maPT, int maKH) {

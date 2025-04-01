@@ -33,8 +33,8 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("KhuyenMai");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         km.setMaKM(nextID);
         return rowInserted;

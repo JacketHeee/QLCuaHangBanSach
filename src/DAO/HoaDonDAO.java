@@ -33,8 +33,8 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("HOADON");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaHD(nextID);
         return rowInserted;

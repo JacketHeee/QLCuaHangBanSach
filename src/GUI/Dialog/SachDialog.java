@@ -8,14 +8,11 @@ import java.math.BigDecimal;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
-import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.NhaXBBUS;
 import BUS.SachBUS;
@@ -43,7 +40,7 @@ public class SachDialog extends JDialog implements ActionListener{
     NhaXBBUS nhaXBBUS;
     
     //listAttribute để tạo inputForm
-    public SachDialog(SachPnl sachPnl, String content, String type, ViTriVungBUS viTriVungBUS, NhaXBBUS nhaXBBUS,  String... listAttribute){
+    public SachDialog(SachPnl sachPnl, String content, String type, String... listAttribute){
         super(sachPnl.getMainFrame(), content, true);
         this.sachPnl = sachPnl;
         this.content = new JLabel(content);
@@ -55,8 +52,8 @@ public class SachDialog extends JDialog implements ActionListener{
         this.btnThem = new JButton("Thêm");
         this.btnSua = new JButton("Sửa");
         this.sachBUS = sachPnl.getSachBUS();
-        this.viTriVungBUS = viTriVungBUS;
-        this.nhaXBBUS = nhaXBBUS;
+        this.viTriVungBUS = sachPnl.getViTriVungBUS();
+        this.nhaXBBUS = sachPnl.getNhaXBBUS();
         this.initComponent();
     }
 
@@ -71,10 +68,10 @@ public class SachDialog extends JDialog implements ActionListener{
         this.add(inputForm, "grow");
         //Thêm item combobox
         String[] array1 = viTriVungBUS.getAllTenVung().toArray(new String[0]);
-        inputForm.addItem(new InputFormItem("Mã Vùng", "combobox", array1));
+        inputForm.addItem(new InputFormItem("Vùng", "combobox", array1));
         //Thêm item combobox
         String[] array2 = nhaXBBUS.getAllTenNXB().toArray(new String[0]);
-        inputForm.addItem(new InputFormItem("Mã nhà xuất bản", "combobox", array2));
+        inputForm.addItem(new InputFormItem("Nhà xuất bản", "combobox", array2));
 
         if(this.type.equals("thêm")){
             this.add(btnThem);

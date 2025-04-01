@@ -25,6 +25,14 @@ public class KhuyenMaiDTO {
         this.ngayKetThuc = ngayKetThuc;
     }
 
+    public KhuyenMaiDTO(String tenKM, String dieuKienGiam, BigDecimal giaTriGiam, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
+        this.tenKM = tenKM;
+        this.dieuKienGiam = dieuKienGiam;
+        this.giaTriGiam = giaTriGiam;
+        this.ngayBatDau = ngayBatDau;
+        this.ngayKetThuc = ngayKetThuc;
+    }
+
     // Getter và Setter
     public int getMaKM() {
         return maKM;

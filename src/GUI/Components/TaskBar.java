@@ -15,6 +15,7 @@ import GUI.Panel.ChucNangPnl;
 import GUI.Panel.DanhMuc_TGPnl;
 import GUI.Panel.HoaDonPnl;
 import GUI.Panel.KM_SachPnl;
+import GUI.Panel.KhachHangPnl;
 import GUI.Panel.KhuyenMaiPnl;
 import GUI.Panel.NhaCungCapPnl;
 import GUI.Panel.NhaXBPnl;
@@ -99,30 +100,33 @@ public class TaskBar extends JPanel implements MouseListener{
 			mainFrame.setPanel(new TaiKhoanPnl());
 		}
 		else if(e.getSource() == list.get(11)) {
-			mainFrame.setPanel(new NhomQuyenPnl());
+			mainFrame.setPanel(new KhachHangPnl());
 		}
 		else if(e.getSource() == list.get(12)) {
-			mainFrame.setPanel(new PhuongThucTTPnl());
+			mainFrame.setPanel(new NhomQuyenPnl());
 		}
 		else if(e.getSource() == list.get(13)) {
-			mainFrame.setPanel(new PhanLoaiPnl());
+			mainFrame.setPanel(new PhuongThucTTPnl());
 		}
 		else if(e.getSource() == list.get(14)) {
-			mainFrame.setPanel(new DanhMuc_TGPnl());
+			mainFrame.setPanel(new PhanLoaiPnl());
 		}
 		else if(e.getSource() == list.get(15)) {
-			mainFrame.setPanel(new CT_PhieuNhapPnl());
+			mainFrame.setPanel(new DanhMuc_TGPnl());
 		}
 		else if(e.getSource() == list.get(16)) {
-			mainFrame.setPanel(new CT_HoaDonPnl());
+			mainFrame.setPanel(new CT_PhieuNhapPnl());
 		}
 		else if(e.getSource() == list.get(17)) {
-			mainFrame.setPanel(new KM_SachPnl());
+			mainFrame.setPanel(new CT_HoaDonPnl());
 		}
 		else if(e.getSource() == list.get(18)) {
-			mainFrame.setPanel(new ChiTietQuyenPnl());
+			mainFrame.setPanel(new KM_SachPnl());
 		}
 		else if(e.getSource() == list.get(19)) {
+			mainFrame.setPanel(new ChiTietQuyenPnl());
+		}
+		else if(e.getSource() == list.get(20)) {
 			mainFrame.setPanel(new ChucNangPnl());
 		}
 	}

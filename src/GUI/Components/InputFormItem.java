@@ -1,14 +1,21 @@
 package GUI.Components;
 
 import java.awt.Color;
+import java.util.Calendar;
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.toedter.calendar.JDateChooser;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -17,6 +24,9 @@ public class InputFormItem extends JPanel{
     JTextField textField;
     JPasswordField passwordField;
     JComboBox comboBox;
+    JDateChooser dateChooser;
+    SpinnerDateModel timeModel;
+    JSpinner timeSpinner;
     String type; // text, pass, combobox, ...
     String[] itemComboBox;
 
@@ -44,6 +54,17 @@ public class InputFormItem extends JPanel{
             comboBox = new JComboBox<String>(itemComboBox);
             this.add(comboBox);
         }
+        else if(this.type.equals("calendar")){
+            dateChooser = new JDateChooser();
+            timeModel = new SpinnerDateModel();
+            timeSpinner = new JSpinner(timeModel);
+
+            dateChooser.setDateFormatString("dd/MM/yyyy");
+            JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
+            timeSpinner.setEditor(timeEditor);
+            this.add(dateChooser);
+            this.add(timeSpinner);
+        }
     }
 
     //set, get thẳng text trong textField
@@ -69,6 +90,45 @@ public class InputFormItem extends JPanel{
 
     public void setSelection(String str){
         this.comboBox.setSelectedItem(str);
+    }
+
+    // lấy string để validate
+    public String getDateS(){
+        //Lấy chuỗi từ JTextField
+        JTextField textField = (JTextField)dateChooser.getDateEditor().getUiComponent();
+        return(textField.getText());
+
+    }
+
+    public LocalDateTime getDateTime(){
+        Date selectedDate = dateChooser.getDate();
+        Date selectedTime = (Date)timeSpinner.getValue();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(selectedDate);
+
+        Calendar timeCalendar = Calendar.getInstance();
+        timeCalendar.setTime(selectedTime);
+
+        calendar.set(Calendar.HOUR_OF_DAY, timeCalendar.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, timeCalendar.get(Calendar.SECOND));
+
+        return calendar.getTime().toInstant().
+        atZone(ZoneId.systemDefault()).
+        toLocalDateTime();
+    }
+
+    public void setDateTime(LocalDateTime dateTime){
+        // chuyển đổi thừ localdatetime sang date
+        Date date = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+        //Cài đặt cho JDateChooser
+        dateChooser.setDate(date);
+        //Cài đặt cho JSpinner
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        timeSpinner.setValue(calendar.getTime());
     }
     
 }

@@ -32,8 +32,8 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		 );
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
-		rowInserted = jdbcUtil.executeUpdate(sql);
 		int nextID = jdbcUtil.getAutoIncrement("Sach");
+		rowInserted = jdbcUtil.executeUpdate(sql);
 		jdbcUtil.Close();
 		t.setMaSach(nextID);
 		return rowInserted;

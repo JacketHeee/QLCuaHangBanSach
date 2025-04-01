@@ -26,8 +26,8 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        int rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("THELOAI");
+        int rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaTheLoai(nextID);
         return rowInserted;

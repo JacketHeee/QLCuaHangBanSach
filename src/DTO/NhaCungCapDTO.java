@@ -20,6 +20,13 @@ public class NhaCungCapDTO {
         this.email = email;
     }
 
+    public NhaCungCapDTO(String tenNCC, String diaChi, String soDT, String email) {
+        this.tenNCC = tenNCC;
+        this.diaChi = diaChi;
+        this.soDT = soDT;
+        this.email = email;
+    }
+
     // Getter và Setter
     public int getMaNCC() {
         return maNCC;

@@ -31,7 +31,6 @@ public class SachPnl extends JPanel implements MouseListener{
 	private SachBUS sachBUS;
 	private ViTriVungBUS viTriVungBUS;
 	private NhaXBBUS nhaXBBUS;
-
 	private MainFrame mainFrame;
 	
 	public SachPnl() {
@@ -101,7 +100,7 @@ public class SachPnl extends JPanel implements MouseListener{
 	}
 
 	public void insert(){
-		SachDialog sachDialog = new SachDialog(this, "Thêm Sách", "thêm", viTriVungBUS, nhaXBBUS, listAtribute);
+		new SachDialog(this, "Thêm Sách", "thêm", listAtribute);
 	}
 
 	public void delete(){
@@ -128,7 +127,7 @@ public class SachPnl extends JPanel implements MouseListener{
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn sách cần sửa");
 			return;
 		}
-		SachDialog sachDialog = new SachDialog(this, "Chỉnh sửa sách", "sửa", viTriVungBUS, nhaXBBUS, listAtribute);
+		new SachDialog(this, "Chỉnh sửa sách", "sửa", listAtribute);
 	}
 
 
@@ -177,6 +176,22 @@ public class SachPnl extends JPanel implements MouseListener{
 
 	public void setModel(DefaultTableModel model) {
 		this.model = model;
+	}
+
+	public ViTriVungBUS getViTriVungBUS() {
+		return viTriVungBUS;
+	}
+
+	public void setViTriVungBUS(ViTriVungBUS viTriVungBUS) {
+		this.viTriVungBUS = viTriVungBUS;
+	}
+
+	public NhaXBBUS getNhaXBBUS() {
+		return nhaXBBUS;
+	}
+
+	public void setNhaXBBUS(NhaXBBUS nhaXBBUS) {
+		this.nhaXBBUS = nhaXBBUS;
 	}
 
 	

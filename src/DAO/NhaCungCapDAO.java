@@ -27,8 +27,8 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("NHACUNGCAP");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaNCC(nextID);
         return rowInserted;

@@ -24,6 +24,14 @@ public class PhieuNhapDTO {
         this.maTK = maTK;
     }
 
+    //cho insert
+    public PhieuNhapDTO(LocalDateTime ngayNhap, BigDecimal tongTien, int maNCC, int maTK) {
+        this.ngayNhap = ngayNhap;
+        this.tongTien = tongTien;
+        this.maNCC = maNCC;
+        this.maTK = maTK;
+    }
+
     // Getter và Setter
     public int getMaNhap() {
         return maNhap;

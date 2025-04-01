@@ -29,8 +29,8 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("TaiKhoan");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         tk.setMaTK(nextID);
         return rowInserted;

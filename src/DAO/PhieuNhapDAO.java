@@ -31,8 +31,8 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("PHIEUNHAP");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaNhap(nextID);
         return rowInserted;

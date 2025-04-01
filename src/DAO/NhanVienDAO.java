@@ -32,8 +32,8 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowInserted = jdbcUtil.executeUpdate(sql);
         int nextID = jdbcUtil.getAutoIncrement("NhanVien");
+        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         nv.setMaNV(nextID);
         return rowInserted;
