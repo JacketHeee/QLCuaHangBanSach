@@ -29,6 +29,7 @@ public class ButtonTaskBar extends JPanel{
         init();
     }
 
+    private JLabel label;
     private void init() {
         setOpaque(true);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -38,15 +39,23 @@ public class ButtonTaskBar extends JPanel{
         addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 setBackground(Color.decode(baseTheme.selectedButton));
+                label.setBackground(Color.decode(baseTheme.selectedButton));
             }
             public void mouseExited(MouseEvent e) {
-                setBackground(Color.decode(baseTheme.backgroundColor));
+                if (isSelected == false) {
+                    setBackground(Color.decode(baseTheme.backgroundColor));
+                    label.setBackground(Color.decode(baseTheme.backgroundColor));
+                }
+                else {
+                    label.setBackground(Color.decode(baseTheme.mainColor));
+                    setBackground(Color.decode(baseTheme.selectedButton));
+                }
             }
         });     
 
         setLayout(new MigLayout());
         
-        JLabel label = new JLabel();
+        label = new JLabel();
         label.setOpaque(true);
         label.setPreferredSize(new Dimension(3,20));
         // label.putClientProperty("arc", 3);
@@ -63,5 +72,47 @@ public class ButtonTaskBar extends JPanel{
 
         add(txt,"pushx,growx,gap left 10");
     }
-    
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getNameSVGIcon() {
+        return nameSVGIcon;
+    }
+
+    public void setNameSVGIcon(String nameSVGIcon) {
+        this.nameSVGIcon = nameSVGIcon;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+
+        if (isSelected == false) {
+            setBackground(Color.decode(baseTheme.backgroundColor));
+            label.setBackground(Color.decode(baseTheme.backgroundColor));
+        }
+        else {
+            setBackground(Color.decode(baseTheme.selectedButton));
+            label.setBackground(Color.decode(baseTheme.mainColor));
+        }       
+        this.repaint();
+        this.revalidate();
+    }
 }
