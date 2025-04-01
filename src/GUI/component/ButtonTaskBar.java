@@ -39,7 +39,11 @@ public class ButtonTaskBar extends JPanel{
         addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 setBackground(Color.decode(baseTheme.selectedButton));
-                label.setBackground(Color.decode(baseTheme.selectedButton));
+                if (isSelected == false) {
+                    label.setBackground(Color.decode(baseTheme.selectedButton));
+                }
+                else    
+                label.setBackground(Color.decode(baseTheme.mainColor));
             }
             public void mouseExited(MouseEvent e) {
                 if (isSelected == false) {
@@ -60,7 +64,7 @@ public class ButtonTaskBar extends JPanel{
         label.setPreferredSize(new Dimension(3,20));
         // label.putClientProperty("arc", 3);
         label.putClientProperty(FlatClientProperties.STYLE, "arc: 3");
-        label.setBackground(Color.decode(baseTheme.mainColor));
+        label.setBackground(Color.decode(baseTheme.backgroundColor));
 
         add(label);
 

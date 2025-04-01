@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,6 +31,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
     private MainFrame mainFrame;
     private String[][] arrCN;
     private JPanel menuChucNang;
+    private ButtonTaskBar butstart;
 
     
     public MenuTaskBar(MainFrame mainFrame, String[][] arrCN) {
@@ -51,6 +51,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 
         menuChucNang = panelChucNang();
 		CustomScrollPane jPane = new CustomScrollPane(menuChucNang);
+        changeColorOnCliked(butstart);
 		
 		add(jPane,"push, grow");
 		add(butLogout,"pushx, growx, gaptop 10");
@@ -59,8 +60,12 @@ public class MenuTaskBar extends JPanel implements MouseListener {
     private JPanel panelChucNang() {
 		JPanel panel = new JPanel(new MigLayout("gap 4, wrap 1"));
 		// panel.add(new JButton("con bi biet bay"));
+        butstart = new ButtonTaskBar(arrCN[0][0], arrCN[0][1], arrCN[0][2]);
+        butstart.addMouseListener(this);
+        panel.add(butstart,"pushx,growx");
         ButtonTaskBar but;
-		for (String[] x : arrCN) {
+		for (int i=1; i<arrCN.length; i++) {
+            String[] x = arrCN[i];
             but = new ButtonTaskBar(x[0], x[1], x[2]);
 			panel.add(but,"pushx,growx");
             but.addMouseListener(this);
