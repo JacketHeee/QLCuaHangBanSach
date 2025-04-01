@@ -11,10 +11,11 @@ import GUI.Login;
 public class Main {
 	public static void main(String[] args) {
 		FlatRobotoFont.install();
+		FlatIntelliJLaf.setup();
         FlatLaf.registerCustomDefaultsSource("resources/themes");
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN,13));
 		UIManager.put("Button.cursor", Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		FlatIntelliJLaf.setup();
+
 		java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
 	}
 }

@@ -107,6 +107,7 @@ public class CustomTitleBar extends JPanel {
                 closeButton.setForeground(Color.decode(baseTheme.textColor));
             }
         });
+        
         add(closeButton, "cell 4 0");
 
         // Kéo cửa sổ bằng thanh tiêu đề
