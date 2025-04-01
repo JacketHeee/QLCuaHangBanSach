@@ -3,6 +3,7 @@ package GUI;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -33,7 +34,7 @@ public class MainFrame extends JFrame {
 		titleBar.addTab("setting");
 		panel.add(titleBar,"dock north"); 
 
-		JPanel mainPanel = new JPanel(new MigLayout("debug"));
+		JPanel mainPanel = new JPanel(new MigLayout("debug, insets 0, gap 0"));
 		mainPanel.add(menuTaskBar(),"pushy, growy");
 		mainPanel.add(mainContentPanel(),"push, grow");
 
@@ -48,14 +49,25 @@ public class MainFrame extends JFrame {
 	private JPanel menuTaskBar() {
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(widthmenu, 100));
-
 		return panel;
+	}
+
+	private JButton butInfor;
+
+	private JButton createButtonInfor() {
+		JButton but = new JButton(); 
+		
+		return but;
 	}
 
 	private JPanel mainContentPanel() {
 		JPanel panel = new JPanel();
 
 		return panel;
+	}
+
+	public static void main(String[] args) {
+		new MainFrame().setVisible(true);
 	}
 
 }
