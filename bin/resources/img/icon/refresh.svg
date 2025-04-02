@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.2" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" viewBox="0 0 500 500" overflow="visible" xml:space="preserve">
+<g>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="62.6976" y1="249.7541" x2="438.0893" y2="249.7541">
+		<stop  offset="0" style="stop-color:#2871FB"/>
+		<stop  offset="1" style="stop-color:#11CCF8"/>
+	</linearGradient>
+	<path fill-rule="evenodd" fill="url(#SVGID_1_)" d="M271.1,58.4l-32,162.9l-32.5-49c-70,28.1-109.3,74.4-115.1,145.7
+		C33.9,217.6,68.9,127.5,141.7,74.7l-33.2-50L271.1,58.4L271.1,58.4L271.1,58.4L271.1,58.4L271.1,58.4z M229.7,441.1l32-162.9
+		l32.5,49c70-28.1,109.2-74.4,115.1-145.7c57.5,100.5,22.6,190.6-50.3,243.3l33.1,50L229.7,441.1L229.7,441.1L229.7,441.1
+		L229.7,441.1L229.7,441.1z"/>
+</g>
+</svg>

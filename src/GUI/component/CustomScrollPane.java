@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 public class CustomScrollPane extends JScrollPane{
      
@@ -17,7 +18,7 @@ public class CustomScrollPane extends JScrollPane{
 
     private void init() {
         setOpaque(false);
-		setBorder(null);
+		setBorder(new EmptyBorder(0,0,0,0));
 		
 		JScrollBar verticalBar = this.getVerticalScrollBar();
 		verticalBar.setPreferredSize(new Dimension(5, 0)); // Chiều rộng thanh cuộn dọc

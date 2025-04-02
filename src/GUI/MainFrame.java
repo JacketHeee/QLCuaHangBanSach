@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import GUI.component.CustomTitleBar;
@@ -42,7 +43,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 		panel.add(titleBar,"dock north"); 
 
 
-		JPanel mainPanel = new JPanel(new MigLayout("insets 0, gap 0, debug"));
+		JPanel mainPanel = new JPanel(new MigLayout("insets 0, gap 0"));
 
 		menuTaskBar = new MenuTaskBar(this,arrCN);
 		mainContent = mainContentPanel();
@@ -88,7 +89,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 
 	//maincontent
 	private JPanel mainContentPanel() {
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel(new MigLayout("insets 0"));
 		butmaintext = new JButton("con bo biet bay");
 		panel.add(butmaintext);
 		return panel;
@@ -110,12 +111,12 @@ public class MainFrame extends JFrame  implements ActionListener{
 		new MainFrame().setVisible(true);
 	}
 
-	public void setPanel(String txt) {
+	public void setPanel(JPanel panel) {
 
-		butmaintext.setText(txt);
-        // mainContent.removeAll();
-        // // mainContent.add(pn).setVisible(true);
-        // mainContent.repaint();
-        // mainContent.validate();
+		// butmaintext.setText(txt);
+        mainContent.removeAll();
+        mainContent.add(panel,"push, grow");
+        mainContent.repaint();
+        mainContent.validate();
     }
 }

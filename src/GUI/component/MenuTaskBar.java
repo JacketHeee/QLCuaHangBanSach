@@ -15,6 +15,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import GUI.Login;
 import GUI.MainFrame;
 import GUI.component.MenuTaskBar;
+import GUI.forms.SachForm;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
 
@@ -108,7 +109,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 		JPanel panel = new JPanel(new MigLayout("aligny center"));
 		JLabel labelImage = new JLabel(new FlatSVGIcon(MainFrame.class.getResource("../resources/img/icon/myAccount.svg")).derive(60, 60));
 		panel.setOpaque(false);
-		panel.add(new JLabel("<html><b>Nguyen Hung Manh</b></html>"),"wrap");
+		panel.add(new JLabel("<html><b>Nguyễn Hùng Mạnh</b></html>"),"wrap");
 		panel.add(new JLabel("admin"));
 
 		but.add(labelImage);
@@ -147,7 +148,15 @@ public class MenuTaskBar extends JPanel implements MouseListener {
         else {
             ButtonTaskBar but = (ButtonTaskBar) e.getSource();
             changeColorOnCliked(but);
-            mainFrame.setPanel(but.getText());
+            // mainFrame.setPanel(but.getText());
+			switch (but.getId()) {
+				case "book":
+					mainFrame.setPanel(new SachForm(but.getText()));
+					break;
+			
+				default:
+					break;
+			}
         }
 		
 	}
