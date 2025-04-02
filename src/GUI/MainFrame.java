@@ -103,8 +103,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
-	}
-
+	}	
 
 	public static void main(String[] args) {
 		FlatIntelliJLaf.setup();

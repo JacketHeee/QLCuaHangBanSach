@@ -7,6 +7,8 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.util.ArrayList;
+import java.util.List;
 
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
@@ -33,7 +35,7 @@ public class SachForm extends JPanel {
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
-        add(getMainContent(),"push,grow");
+        add(getMainContent(),"push,grow, gaptop 15");
 
     }
 
@@ -98,121 +100,28 @@ public class SachForm extends JPanel {
         return panel;
     }
     
-    private String[][] data = {
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"},
-        {"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000","hii"}
-    }; 
+    ArrayList<String[]> data = new ArrayList<>(List.of(
+            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
+            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
+            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
+            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
+            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
+            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"}
+    ));
+    // private ArrayList<String[]> data = new ArrayList<>(List.of(
+       
     /////////////////////////////////////////////////////////////////
+
+    String[][] actions = {
+        {"edit.svg","edit"},
+        {"detail.svg","detail"},
+        {"remove.svg","remove"}
+    };
+
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        panel.add(new CustomScrollPane(new CustomTable(data, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)","Hành động")),"push, grow");
+        CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
+        panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
 }
