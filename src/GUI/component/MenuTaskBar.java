@@ -15,7 +15,19 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import GUI.Login;
 import GUI.MainFrame;
 import GUI.component.MenuTaskBar;
+import GUI.forms.KhachHangForm;
+import GUI.forms.KhuyenMaiForm;
+import GUI.forms.NXBForm;
+import GUI.forms.NhaCungCapForm;
+import GUI.forms.NhanVienForm;
+import GUI.forms.PhuongThucThanhToanForm;
+import GUI.forms.QLHoaDonForm;
+import GUI.forms.QLPhieuNhapForm;
 import GUI.forms.SachForm;
+import GUI.forms.TacGiaForm;
+import GUI.forms.TheLoaiForm;
+import GUI.forms.VungKeForm;
+import GUI.forms.TaiKhoanForm;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
 
@@ -153,7 +165,43 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 				case "book":
 					mainFrame.setPanel(new SachForm(but.getText()));
 					break;
-			
+				case "category":
+					mainFrame.setPanel(new TheLoaiForm(but.getText()));
+					break;
+				case "author":
+					mainFrame.setPanel(new TacGiaForm(but.getText()));
+					break;
+				case "nxb":
+					mainFrame.setPanel(new NXBForm(but.getText()));
+					break;
+				case "ncc":
+					mainFrame.setPanel(new NhaCungCapForm(but.getText()));
+					break;
+				case "vungtl":
+					mainFrame.setPanel(new VungKeForm(but.getText()));
+					break;
+				case "qlInput":
+					mainFrame.setPanel(new QLPhieuNhapForm(but.getText()));
+					break;
+				case "qlBill":
+					mainFrame.setPanel(new QLHoaDonForm(but.getText()));
+					break;
+				case "promotion":
+					mainFrame.setPanel(new KhuyenMaiForm(but.getText()));
+					break;
+				case "nv":
+					mainFrame.setPanel(new NhanVienForm(but.getText()));
+					break;
+				case "taikhoan":
+					mainFrame.setPanel(new TaiKhoanForm(but.getText()));
+					break;
+				case "khachhang":
+					mainFrame.setPanel(new KhachHangForm(but.getText()));
+					break;
+				case "pttt":
+					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText()));
+					break;
+
 				default:
 					break;
 			}

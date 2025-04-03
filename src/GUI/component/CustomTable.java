@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import javax.swing.border.EmptyBorder;
 
 public class CustomTable extends JPanel implements ActionListener {
     private final String[] headers;
@@ -150,7 +151,8 @@ public class CustomTable extends JPanel implements ActionListener {
     // Tạo JLabel cho dữ liệu
     private JLabel createDataLabel(String text, int row) {
         JLabel label = new JLabel(text);
-        label.setPreferredSize(new Dimension(label.getWidth(),30));
+        // label.setPreferredSize(new Dimension(label.getWidth(),30));
+        label.setBorder(new EmptyBorder(10,5,10,5));        
         label.setOpaque(true);
         label.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
         label.setHorizontalAlignment(SwingConstants.CENTER);

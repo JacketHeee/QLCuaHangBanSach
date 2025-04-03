@@ -1,5 +1,4 @@
 package GUI.forms;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -22,10 +21,10 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
-public class SachForm extends JPanel {
+public class QLPhieuNhapForm extends JPanel {
 
     private String title;
-    public SachForm(String title) {
+    public QLPhieuNhapForm(String title) {
         this.title = title;
         init();
     }
@@ -101,27 +100,36 @@ public class SachForm extends JPanel {
     }
     
     ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"}
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
+            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"}
     ));
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
         {"edit.svg","edit"},
-        {"detail.svg","detail"},
         {"remove.svg","remove"}
     };
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
+        CustomTable table = new CustomTable(data,actions, "Mã phiếu","Ngày nhập","Nhà cung cấp","Nhân viên","Tổng tiền");
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
 }
-
-

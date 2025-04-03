@@ -1,5 +1,4 @@
 package GUI.forms;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -22,10 +21,10 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
-public class SachForm extends JPanel {
+public class TheLoaiForm extends JPanel {
 
     private String title;
-    public SachForm(String title) {
+    public TheLoaiForm(String title) {
         this.title = title;
         init();
     }
@@ -101,12 +100,10 @@ public class SachForm extends JPanel {
     }
     
     ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"}
+            new String[]{"1","Trinh thám"},
+            new String[]{"2","Kinh dị"},
+            new String[]{"3","Hôn nhân và gia đình"},
+            new String[]{"4","Chuyển sinh tại dị giới"}
     ));
     /////////////////////////////////////////////////////////////////
 
@@ -118,10 +115,8 @@ public class SachForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
+        CustomTable table = new CustomTable(data,actions, "Mã thể loại","Tên thể loại");
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
 }
-
-

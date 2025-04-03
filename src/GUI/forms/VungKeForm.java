@@ -1,5 +1,4 @@
 package GUI.forms;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -22,10 +21,10 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
-public class SachForm extends JPanel {
+public class VungKeForm extends JPanel {
 
     private String title;
-    public SachForm(String title) {
+    public VungKeForm(String title) {
         this.title = title;
         init();
     }
@@ -101,27 +100,22 @@ public class SachForm extends JPanel {
     }
     
     ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"}
+            new String[]{"1","Vùng sách phát triển bản thân"},
+            new String[]{"2","Vùng y học"},
+            new String[]{"3","Vùng địa bàng của Nguyễn Hùng Mạnh"},
+            new String[]{"4","Vùng đất Chuyển sinh tại dị giới"}
     ));
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
         {"edit.svg","edit"},
-        {"detail.svg","detail"},
         {"remove.svg","remove"}
     };
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
+        CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
 }
-
-

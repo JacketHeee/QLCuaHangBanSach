@@ -1,5 +1,4 @@
 package GUI.forms;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -22,10 +21,10 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
-public class SachForm extends JPanel {
+public class KhuyenMaiForm extends JPanel {
 
     private String title;
-    public SachForm(String title) {
+    public KhuyenMaiForm(String title) {
         this.title = title;
         init();
     }
@@ -101,12 +100,23 @@ public class SachForm extends JPanel {
     }
     
     ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"}
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","50%"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","100.000đ"},
+            new String[]{"1","Tri ân khách hàng","00:00:00 29/10/2005","00:00:00 29/10/2025","Đơn hàng tối thiểu 50.000","10%"}
     ));
     /////////////////////////////////////////////////////////////////
 
@@ -118,10 +128,8 @@ public class SachForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
+        CustomTable table = new CustomTable(data,actions, "Mã khuyến mãi","Tên khuyến mãi","Ngày bắt đầu","Ngày kết thúc","Điều kiện giảm","Giá trị giảm");
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
 }
-
-
