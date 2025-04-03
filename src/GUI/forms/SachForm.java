@@ -13,6 +13,7 @@ import java.util.List;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.PanelSearch;
 import net.miginfocom.swing.MigLayout;
 import utils.UIUtils;
 

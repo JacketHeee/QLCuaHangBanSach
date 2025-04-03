@@ -18,10 +18,10 @@ public class ButtonAction extends JButton{
     private String id;
     
     public ButtonAction(String text, String iconImg, String id) {
+        super(text,new FlatSVGIcon(ButtonAction.class.getResource("../../resources/img/icon/"+iconImg)).derive(20,20));
         this.text = text; 
         this.iconImg = iconImg;
         this.id = id;
-        super(text,new FlatSVGIcon(ButtonAction.class.getResource("../../resources/img/icon/"+iconImg)).derive(20,20));
         init();
         setBackgroundButton();
     }
