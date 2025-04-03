@@ -20,6 +20,7 @@ import GUI.forms.KhuyenMaiForm;
 import GUI.forms.NXBForm;
 import GUI.forms.NhaCungCapForm;
 import GUI.forms.NhanVienForm;
+import GUI.forms.PhanQuyenForm;
 import GUI.forms.PhuongThucThanhToanForm;
 import GUI.forms.QLHoaDonForm;
 import GUI.forms.QLPhieuNhapForm;
@@ -28,6 +29,8 @@ import GUI.forms.TacGiaForm;
 import GUI.forms.TheLoaiForm;
 import GUI.forms.VungKeForm;
 import GUI.forms.TaiKhoanForm;
+import GUI.forms.TaoHoaDonForm;
+import GUI.forms.TaoPhieuNhapForm;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
 
@@ -200,6 +203,15 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 					break;
 				case "pttt":
 					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText()));
+					break;
+				case "phanquyen":
+					mainFrame.setPanel(new PhanQuyenForm(but.getText()));
+					break;
+				case "createInput":
+					mainFrame.setPanel(new TaoPhieuNhapForm());
+					break;
+				case "createBill":
+					mainFrame.setPanel(new TaoHoaDonForm());
 					break;
 
 				default:

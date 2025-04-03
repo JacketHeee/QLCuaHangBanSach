@@ -142,8 +142,6 @@ public class SachForm extends JPanel implements ActionListener{
         }
         
     }
-
-    
 }
 
 

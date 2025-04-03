@@ -102,8 +102,7 @@ public class VungKeForm extends JPanel {
     ArrayList<String[]> data = new ArrayList<>(List.of(
             new String[]{"1","Vùng sách phát triển bản thân"},
             new String[]{"2","Vùng y học"},
-            new String[]{"3","Vùng địa bàng của Nguyễn Hùng Mạnh"},
-            new String[]{"4","Vùng đất Chuyển sinh tại dị giới"}
+            new String[]{"3","Vùng địa bàng của Nguyễn Hùng Mạnh"}
     ));
     /////////////////////////////////////////////////////////////////
 
@@ -115,6 +114,82 @@ public class VungKeForm extends JPanel {
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
+        table.addDataRow(new String[]{"4","Vùng đất Chuyển sinh tại dị giới"});
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
