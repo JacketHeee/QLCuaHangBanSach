@@ -1,5 +1,4 @@
 package GUI.forms;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -21,13 +20,11 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 
 import javax.swing.JButton;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class SachForm extends JPanel implements ActionListener{
+public class PhanQuyenForm extends JPanel {
 
     private String title;
-    public SachForm(String title) {
+    public PhanQuyenForm(String title) {
         this.title = title;
         init();
     }
@@ -95,23 +92,18 @@ public class SachForm extends JPanel implements ActionListener{
         JPanel panel = new JPanel(new MigLayout("gap 10"));
         panel.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
 
-        ButtonAction but;
         for (String[] x : arrActions) {
-            but = new ButtonAction(x[0],x[1],x[2]);
-            but.addActionListener(this);
-            panel.add(but);
+            panel.add(new ButtonAction(x[0],x[1],x[2]));
         }
 
         return panel;
     }
     
     ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"}
+            new String[]{"1","admin"},
+            new String[]{"2","Nhân viên bán hàng"},
+            new String[]{"3","Nhân viên nhập hàng"},
+            new String[]{"4","Nhân viên kiểm kê"}
     ));
     /////////////////////////////////////////////////////////////////
 
@@ -123,27 +115,8 @@ public class SachForm extends JPanel implements ActionListener{
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
+        CustomTable table = new CustomTable(data,actions, "Mã quyền","Tên nhóm quyền");
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        ButtonAction but = (ButtonAction) e.getSource();
-
-        switch (but.getId()) {
-            case "add":
-                
-                break;
-        
-            default:
-                break;
-        }
-        
-    }
-
-    
 }
-
-
