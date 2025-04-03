@@ -14,6 +14,12 @@ public class ChucNangDTO {
         this.tenChucNang = tenChucNang;
     }
 
+
+    //cho insert
+    public ChucNangDTO(String tenChucNang) {
+        this.tenChucNang = tenChucNang;
+    }
+
     // Getter và Setter
     public int getMaChucNang() {
         return maChucNang;

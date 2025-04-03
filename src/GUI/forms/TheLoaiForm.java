@@ -6,6 +6,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.TheLoaiBUS;
+import DTO.TheLoaiDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +28,12 @@ import javax.swing.JButton;
 public class TheLoaiForm extends JPanel {
 
     private String title;
+    private String[] header = {"Mã thể loại", "Tên thể loại"};
+    private TheLoaiBUS theLoaiBUS;
+
     public TheLoaiForm(String title) {
         this.title = title;
+        theLoaiBUS = TheLoaiBUS.getInstance();
         init();
     }
     
@@ -99,12 +107,15 @@ public class TheLoaiForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","Trinh thám"},
-            new String[]{"2","Kinh dị"},
-            new String[]{"3","Hôn nhân và gia đình"},
-            new String[]{"4","Chuyển sinh tại dị giới"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<TheLoaiDTO> listKH = theLoaiBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(TheLoaiDTO i : listKH){
+            data.add(new String[]{i.getMaTheLoai() + "", i.getTenTheLoai()});
+        }
+        return(data);
+    }
+    // {"Mã thể loại", "Tên thể loại"}
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -115,7 +126,7 @@ public class TheLoaiForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã thể loại","Tên thể loại");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

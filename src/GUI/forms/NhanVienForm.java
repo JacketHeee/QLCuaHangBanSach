@@ -6,6 +6,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.NhanVienBUS;
+import DTO.NhanVienDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +28,12 @@ import javax.swing.JButton;
 public class NhanVienForm extends JPanel {
 
     private String title;
+    private String[] header = {"Mã nhân viên","Họ tên","Ngày sinh","Giới tính","Số điện thoại","Mã tài khoản"};
+    NhanVienBUS nhanVienBUS;
+
     public NhanVienForm(String title) {
         this.title = title;
+        nhanVienBUS = NhanVienBUS.getInstance();
         init();
     }
     
@@ -62,7 +70,7 @@ public class NhanVienForm extends JPanel {
         inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
         inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
         search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
+        butSearch = new JButton(new FlatSVGIcon(NhanVienForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
         butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
@@ -71,7 +79,7 @@ public class NhanVienForm extends JPanel {
         search.add(butSearch);
         
         
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
+        butRefresh = new JButton(new FlatSVGIcon(NhanVienForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
         butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
         butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -99,21 +107,15 @@ public class NhanVienForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"},
-            new String[]{"1","Nguyễn Hùng Mạnh","01/01/2005","Nam","Số điện thoại","Nhân viên admin"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<NhanVienDTO> listKH = nhanVienBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(NhanVienDTO i : listKH){
+            data.add(new String[]{i.getMaNV() + "", i.getHoTen(), i.getNgaySinh() + "", i.getGioiTinh(), i.getSoDT(), i.getMaTK() + ""});
+        }
+        return(data);
+    }
+
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -123,7 +125,7 @@ public class NhanVienForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã NV","Họ tên","Ngày sinh","Giới tính","Số điện thoại","Chức vụ");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

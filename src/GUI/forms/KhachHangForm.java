@@ -6,6 +6,12 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.KhachHangBUS;
+import BUS.SachBUS;
+import DTO.KhachHangDTO;
+import DTO.SachDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +30,12 @@ import javax.swing.JButton;
 public class KhachHangForm extends JPanel {
 
     private String title;
+    private KhachHangBUS khachHangBUS;
+    private String[] header = {"Mã khách hàng","Tên khách hàng","Số điện thoại","Giới tính"};
+
     public KhachHangForm(String title) {
         this.title = title;
+        khachHangBUS = KhachHangBUS.getInstance();
         init();
     }
     
@@ -98,17 +108,15 @@ public class KhachHangForm extends JPanel {
 
         return panel;
     }
-    
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","Nguyễn Hùng Mạnh","Nam","09238024234"},
-            new String[]{"1","Nguyễn Hùng Mạnh","Nam","09238024234"},
-            new String[]{"1","Nguyễn Hùng Mạnh","Nam","09238024234"},
-            new String[]{"1","Nguyễn Hùng Mạnh","Nam","09238024234"},
-            new String[]{"1","Nguyễn Hùng Mạnh","Nam","09238024234"},
-            new String[]{"1","Nguyễn Hùng Mạnh","Nam","09238024234"},
-            new String[]{"1","Nguyễn Hùng Mạnh","Nam","09238024234"}
-    ));
-    /////////////////////////////////////////////////////////////////
+
+    public ArrayList<String[]> Data(){
+        ArrayList<KhachHangDTO> listKH = khachHangBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(KhachHangDTO i : listKH){
+            data.add(new String[]{i.getMaKH() + "",i.getTenKH(),i.getSoDT(),i.getGioiTinh()});
+        }
+        return(data);
+    }
 
     String[][] actions = {
         {"edit.svg","edit"},
@@ -117,7 +125,7 @@ public class KhachHangForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã KH","Tên khách hàng","Giới tính","Số điện thoại");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

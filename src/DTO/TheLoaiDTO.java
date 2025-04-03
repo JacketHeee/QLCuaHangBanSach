@@ -5,12 +5,14 @@ public class TheLoaiDTO {
 	private String tenTheLoai;
 	
 	public TheLoaiDTO() {
-		super();
 	}
 
 	public TheLoaiDTO(int maTheLoai, String tenTheLoai) {
-		super();
 		this.maTheLoai = maTheLoai;
+		this.tenTheLoai = tenTheLoai;
+	}
+
+	public TheLoaiDTO(String tenTheLoai) {
 		this.tenTheLoai = tenTheLoai;
 	}
 

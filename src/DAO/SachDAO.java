@@ -2,13 +2,10 @@ package DAO;
 
 import DTO.SachDTO;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import utils.JDBCUtil;
+import config.JDBCUtil;
 
 public class SachDAO implements DAOInterface<SachDTO>{
 
@@ -23,58 +20,64 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	}
 	@Override
 	public int insert(SachDTO t) {
-		Connection con = JDBCUtil.getConnection();
 		int rowInserted = 0;
-		String sql = "INSERT INTO SACH (tenSach, giaBan, soLuongTon, namXB, maVung, maNXB) VALUES (?,?,?,?,?,?)";
-		PreparedStatement pst;
-		try {
-			pst = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setString(1, t.getTenSach());
-			pst.setBigDecimal(2, t.getGiaBan());
-			pst.setInt(3, t.getSoLuongTon());
-			pst.setInt(4, t.getNamXB());
-			pst.setInt(5, t.getMaVung());
-			pst.setInt(6, t.getMaNXB());
-			rowInserted = pst.executeUpdate();
-
-			//set mã DTO tăng tự động
-			ResultSet rs = pst.getGeneratedKeys();
-			while(rs.next()){
-				t.setMaSach(rs.getInt(1));
-			}
-
-			JDBCUtil.closeConnection(con);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String sql = String.format(
+			"INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s','%s')",
+			t.getTenSach(),
+			t.getGiaBan(),
+			t.getNamXB(),
+			t.getMaVung(),
+			t.getMaNXB()
+		 );
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		int nextID = jdbcUtil.getAutoIncrement("Sach");
+		rowInserted = jdbcUtil.executeUpdate(sql);
+		jdbcUtil.Close();
+		t.setMaSach(nextID);
 		return rowInserted;
 	}
 
 	@Override
-	public int delete(SachDTO t) {
-		Connection con = JDBCUtil.getConnection();
-		int rowDelete = 0;
-		String sql = "DELETE FROM SACH WHERE maSach = ?";
-		PreparedStatement pst;
-		return 0;
+	public int delete(int id) {
+		int rowDeleted = 0;
+		String query = String.format("UPDATE SACH SET TRANGTHAI = 0 WHERE MASACH = '%s'", id + "");
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		rowDeleted =  jdbcUtil.executeUpdate(query);
+		jdbcUtil.Close();
+		return(rowDeleted);
 	}
 
 	@Override
 	public int update(SachDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+		// String sql = "UPDATE SACH SET tenSach = ?, giaBan = ?, namXB = ?, maVung = ?, maNXB = ? WHERE maSach = ?";
+		int rowUpdated = 0;
+		String query = String.format(
+			"UPDATE SACH SET tenSach = '%s', giaBan = '%s', namXB = '%s', maVung = '%s', maNXB = '%s' WHERE maSach = '%s'",
+			t.getTenSach(),
+			t.getGiaBan() + "",
+			t.getNamXB() + "",
+			t.getMaVung() + "",
+			t.getMaNXB() + "",
+			t.getMaSach() + ""
+		);
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		rowUpdated = jdbcUtil.executeUpdate(query);
+		jdbcUtil.Close();
+		return rowUpdated;
 	}
 
-	@Override
+	// @Override
 	public ArrayList<SachDTO> getAll() {
-		Connection con = JDBCUtil.getConnection();
 		ArrayList<SachDTO> result = new ArrayList<>();
 		String sql = "SELECT * FROM SACH WHERE TRANGTHAI = 1";
-		Statement statement;
+		
 		try {
-			statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
+			JDBCUtil jdbcUtil = new JDBCUtil();
+			jdbcUtil.Open();
+			ResultSet rs = jdbcUtil.executeQuery(sql);
 			while(rs.next()) {
 				int id = rs.getInt("maSach");
 				String tenSach = rs.getString("tenSach");
@@ -86,12 +89,11 @@ public class SachDAO implements DAOInterface<SachDTO>{
 				SachDTO sach = new SachDTO(id, tenSach, giaBan, soLuongTon, namXB, maVung, maNXB);
 				result.add(sach);
 			}
-			JDBCUtil.closeConnection(con);
+			jdbcUtil.Close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
 	}
-
 }

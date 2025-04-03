@@ -6,6 +6,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.HoaDonBUS;
+import DTO.HoaDonDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +28,12 @@ import javax.swing.JButton;
 public class QLHoaDonForm extends JPanel {
 
     private String title;
+    private String[] header = {"Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
+    HoaDonBUS hoaDonBUS;
+
     public QLHoaDonForm(String title) {
         this.title = title;
+        hoaDonBUS = HoaDonBUS.getInstance();
         init();
     }
     
@@ -81,6 +89,7 @@ public class QLHoaDonForm extends JPanel {
         return panel;
     }
 
+    
     ///////////////////////////////////////////////////////////////
     String[][] arrActions = {
         {"Export Excel","exportExcel.svg","exportExcel"}
@@ -97,28 +106,15 @@ public class QLHoaDonForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000","Tiền mặt","100.000.000.000"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<HoaDonDTO> listKH = hoaDonBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(HoaDonDTO i : listKH){
+            data.add(new String[]{i.getMaHD() + "", i.getNgayBan() + "", i.getTongTien() + "", i.getMaTK() + "", i.getMaPT() + "", i.getMaKM() + "", i.getMaKH() + ""});
+        }
+        return(data);
+    }
+    // {"Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"}
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -129,7 +125,7 @@ public class QLHoaDonForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã HD","Ngày nhập","Khách hàng","Nhân viên","Giá trị KM","Phương thức","Tổng tiền(đ)");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

@@ -18,6 +18,12 @@ public class KhachHangDTO {
         this.gioiTinh = gioiTinh;
     }
 
+    public KhachHangDTO(String tenKH, String soDT, String gioiTinh) {
+        this.tenKH = tenKH;
+        this.soDT = soDT;
+        this.gioiTinh = gioiTinh;
+    }
+
     // Getter và Setter
     public int getMaKH() {
         return maKH;

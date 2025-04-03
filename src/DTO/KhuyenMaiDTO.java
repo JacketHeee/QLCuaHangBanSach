@@ -1,23 +1,31 @@
 package DTO;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class KhuyenMaiDTO {
     private int maKM; // Đã thay đổi kiểu từ String thành int
     private String tenKM;
     private String dieuKienGiam;
     private BigDecimal giaTriGiam;
-    private Date ngayBatDau;
-    private Date ngayKetThuc;
+    private LocalDateTime ngayBatDau;
+    private LocalDateTime ngayKetThuc;
 
     // Constructor không tham số
     public KhuyenMaiDTO() {
     }
 
     // Constructor đầy đủ tham số
-    public KhuyenMaiDTO(int maKM, String tenKM, String dieuKienGiam, BigDecimal giaTriGiam, Date ngayBatDau, Date ngayKetThuc) {
+    public KhuyenMaiDTO(int maKM, String tenKM, String dieuKienGiam, BigDecimal giaTriGiam, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
         this.maKM = maKM;
+        this.tenKM = tenKM;
+        this.dieuKienGiam = dieuKienGiam;
+        this.giaTriGiam = giaTriGiam;
+        this.ngayBatDau = ngayBatDau;
+        this.ngayKetThuc = ngayKetThuc;
+    }
+
+    public KhuyenMaiDTO(String tenKM, String dieuKienGiam, BigDecimal giaTriGiam, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
         this.tenKM = tenKM;
         this.dieuKienGiam = dieuKienGiam;
         this.giaTriGiam = giaTriGiam;
@@ -58,19 +66,19 @@ public class KhuyenMaiDTO {
         this.giaTriGiam = giaTriGiam;
     }
 
-    public Date getNgayBatDau() {
+    public LocalDateTime getNgayBatDau() {
         return ngayBatDau;
     }
 
-    public void setNgayBatDau(Date ngayBatDau) {
+    public void setNgayBatDau(LocalDateTime ngayBatDau) {
         this.ngayBatDau = ngayBatDau;
     }
 
-    public Date getNgayKetThuc() {
+    public LocalDateTime getNgayKetThuc() {
         return ngayKetThuc;
     }
 
-    public void setNgayKetThuc(Date ngayKetThuc) {
+    public void setNgayKetThuc(LocalDateTime ngayKetThuc) {
         this.ngayKetThuc = ngayKetThuc;
     }
 }

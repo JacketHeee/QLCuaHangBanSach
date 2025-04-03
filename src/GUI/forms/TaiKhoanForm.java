@@ -6,6 +6,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.TaiKhoanBUS;
+import DTO.TaiKhoanDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,9 @@ import javax.swing.JButton;
 public class TaiKhoanForm extends JPanel {
 
     private String title;
+    private String[] header = {"Mã tài khoản","Username","Password","Mã Role"};
+    private TaiKhoanBUS taiKhoanBUS;
+
     public TaiKhoanForm(String title) {
         this.title = title;
         init();
@@ -62,7 +69,7 @@ public class TaiKhoanForm extends JPanel {
         inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
         inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
         search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
+        butSearch = new JButton(new FlatSVGIcon(TaiKhoanForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
         butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
@@ -71,7 +78,7 @@ public class TaiKhoanForm extends JPanel {
         search.add(butSearch);
         
         
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
+        butRefresh = new JButton(new FlatSVGIcon(TaiKhoanForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
         butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
         butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -99,25 +106,15 @@ public class TaiKhoanForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"},
-            new String[]{"1","1","Nguyễn Hùng Mạnh","admin","Đang hoạt động"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<TaiKhoanDTO> listKH = taiKhoanBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(TaiKhoanDTO i : listKH){
+            data.add(new String[]{i.getMaTK() + "", i.getUsername(), i.getPassword(), i.getMaRole() + ""});
+        }
+        return(data);
+    }
+
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -127,7 +124,7 @@ public class TaiKhoanForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã TK","Mã NV","Họ và tên","Quyền hạn","Trạng thái");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

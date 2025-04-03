@@ -7,6 +7,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.SachBUS;
+import DTO.SachDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +30,12 @@ import javax.swing.JButton;
 public class SachForm extends JPanel {
 
     private String title;
+    private SachBUS sachBUS;
+    private String[] header = {"Mã sách","Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
+
     public SachForm(String title) {
         this.title = title;
+        sachBUS = SachBUS.getInstance();
         init();
     }
     
@@ -101,14 +109,15 @@ public class SachForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"},
-            new String[]{"1","hii","1","Vết nhơ Huyền Trang","2024","100","100.000"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<SachDTO> listKH = sachBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(SachDTO i : listKH){
+            data.add(new String[]{i.getMaSach() + "", i.getTenSach(), i.getGiaBan() + "", i.getSoLuongTon() + "", i.getNamXB() + "",i.getMaVung() + "", i.getMaNXB() + ""});
+        }
+        return(data);
+    }
+    // {"Mã sách","Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -119,7 +128,8 @@ public class SachForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
+        // CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

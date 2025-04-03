@@ -14,6 +14,11 @@ public class TacGiaDTO {
         this.tenTacGia = tenTacGia;
     }
 
+    public TacGiaDTO(String tenTacGia) {
+        this.tenTacGia = tenTacGia;
+    }
+
+
     // Getter và Setter
     public int getMaTacGia() {
         return maTacGia;
