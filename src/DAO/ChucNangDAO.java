@@ -81,4 +81,24 @@ public class ChucNangDAO implements DAOInterface<ChucNangDTO> {
         }
         return result;
     }
+
+    public String getNameByMaCN(int maCN){
+        String result = null;
+        String sql = String.format("SELECT tenChucNang FROM CHUCNANG WHERE maChucNang = '%d'", maCN);
+
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                String ten = rs.getString("tenChucNang");
+                result = ten;
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return(result);
+    }
+
 }

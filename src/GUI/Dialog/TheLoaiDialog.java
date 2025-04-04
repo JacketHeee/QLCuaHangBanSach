@@ -16,7 +16,7 @@ import BUS.TheLoaiBUS;
 import DTO.TheLoaiDTO;
 import GUI.Components.InputForm;
 import GUI.Panel.TheLoaiPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class TheLoaiDialog extends JDialog implements ActionListener {

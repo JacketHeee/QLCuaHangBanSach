@@ -16,7 +16,7 @@ import BUS.TacGiaBUS;
 import DTO.TacGiaDTO;
 import GUI.Components.InputForm;
 import GUI.Panel.TacGiaPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class TacGiaDialog extends JDialog implements ActionListener {

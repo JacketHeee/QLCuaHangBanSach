@@ -25,7 +25,7 @@ import DTO.PhieuNhapDTO;
 import GUI.Components.InputForm;
 import GUI.Components.InputFormItem;
 import GUI.Panel.PhieuNhapPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class PhieuNhapDialog extends JDialog implements ActionListener{

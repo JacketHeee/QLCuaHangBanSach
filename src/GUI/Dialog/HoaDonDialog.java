@@ -25,7 +25,7 @@ import DTO.HoaDonDTO;
 import GUI.Components.InputForm;
 import GUI.Components.InputFormItem;
 import GUI.Panel.HoaDonPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class HoaDonDialog extends JDialog implements ActionListener{

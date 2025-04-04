@@ -17,7 +17,7 @@ import BUS.ChucNangBUS;
 import DTO.ChucNangDTO;
 import GUI.Components.InputForm;
 import GUI.Panel.ChucNangPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class ChucNangDialog extends JDialog implements ActionListener{

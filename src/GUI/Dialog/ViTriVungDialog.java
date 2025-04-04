@@ -16,7 +16,7 @@ import BUS.ViTriVungBUS;
 import DTO.ViTriVungDTO;
 import GUI.Components.InputForm;
 import GUI.Panel.ViTriVungPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class ViTriVungDialog extends JDialog implements ActionListener {

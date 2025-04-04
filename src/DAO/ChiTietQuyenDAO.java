@@ -55,4 +55,51 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
         }
         return result;
     }
+
+    public ArrayList<ChiTietQuyenDTO> selectChiTietQuyenByMaNQ(int maNQ){
+        ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
+        String sql = String.format(
+            "SELECT * FROM CHITIETQUYEN WHERE maRole = '%s'",
+            maNQ + "");    
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                int maRole = rs.getInt("maRole");
+                int maChucNang = rs.getInt("maChucNang");
+                String hanhDong = rs.getString("hanhDong");
+                
+                ChiTietQuyenDTO ctq = new ChiTietQuyenDTO(maRole, maChucNang, hanhDong);
+                result.add(ctq);
+            }
+            jdbcUtil.Close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return(result);
+    }
+
+    public ArrayList<Integer> getListMaCNByMaNQ(int maNQ){
+        ArrayList<Integer> result = new ArrayList<>();
+        String sql = String.format(
+            "SELECT DISTINCT maChucNang FROM CHITIETQUYEN WHERE maRole = '%s'",
+            maNQ + "");    
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                int maChucNang = rs.getInt("maChucNang");
+                result.add(maChucNang);
+            }
+            jdbcUtil.Close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return(result);
+    }
+
 }

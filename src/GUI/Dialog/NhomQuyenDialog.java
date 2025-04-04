@@ -16,7 +16,7 @@ import BUS.NhomQuyenBUS;
 import DTO.NhomQuyenDTO;
 import GUI.Components.InputForm;
 import GUI.Panel.NhomQuyenPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class NhomQuyenDialog extends JDialog implements ActionListener {

@@ -19,7 +19,7 @@ import DTO.KhuyenMaiDTO;
 import GUI.Components.InputForm;
 import GUI.Components.InputFormItem;
 import GUI.Panel.KhuyenMaiPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class KhuyenMaiDialog extends JDialog implements ActionListener {

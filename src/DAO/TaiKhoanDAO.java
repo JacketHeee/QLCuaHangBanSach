@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import DTO.TaiKhoanDTO;
 import config.JDBCUtil;
-
 public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
     private static TaiKhoanDAO instance;
     private TaiKhoanDAO() {}
@@ -87,4 +86,27 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
         }
         return result;
     }
+
+    public TaiKhoanDTO SelectTaiKhoanByUserName(String userName){
+        TaiKhoanDTO result = null;
+        String sql = String.format("SELECT * FROM taiKhoan WHERE username = '%s'", userName);
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                int maTK = rs.getInt("maTK");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                int maRole = rs.getInt("maRole");
+
+                TaiKhoanDTO tk = new TaiKhoanDTO(maTK, username, password, maRole);
+                result = tk;
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return(result);
+    }   
 }

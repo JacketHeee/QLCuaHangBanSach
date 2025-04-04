@@ -22,7 +22,7 @@ import DTO.NhanVienDTO;
 import GUI.Components.InputForm;
 import GUI.Components.InputFormItem;
 import GUI.Panel.NhanVienPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class NhanVienDialog extends JDialog implements ActionListener{

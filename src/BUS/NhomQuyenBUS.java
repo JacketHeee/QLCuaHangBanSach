@@ -83,5 +83,9 @@ public class NhomQuyenBUS {
 		}
 		return(null);
 	}
+
+	public NhomQuyenDTO SelectByID(int maNQ){
+		return(nhomQuyenDAO.SelectByID(maNQ));
+	}
 	
 }

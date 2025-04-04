@@ -18,7 +18,7 @@ import DTO.TaiKhoanDTO;
 import GUI.Components.InputForm;
 import GUI.Components.InputFormItem;
 import GUI.Panel.TaiKhoanPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class TaiKhoanDialog extends JDialog implements ActionListener{

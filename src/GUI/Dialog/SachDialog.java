@@ -21,7 +21,7 @@ import DTO.SachDTO;
 import GUI.Components.InputForm;
 import GUI.Components.InputFormItem;
 import GUI.Panel.SachPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class SachDialog extends JDialog implements ActionListener{

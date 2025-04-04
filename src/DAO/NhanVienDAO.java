@@ -94,4 +94,30 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         }
         return result;
     }
+
+    public NhanVienDTO SelectNhanVienByMaTK(int maTK){
+        NhanVienDTO result = null;
+        String sql = String.format("SELECT * FROM NHANVIEN WHERE maTK = '%d'", maTK);
+
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                int maNV = rs.getInt("maNV");
+                String hoTen = rs.getString("hoTen");
+                Date ngaySinh = rs.getDate("ngaySinh");
+                String gioiTinh = rs.getString("gioiTinh");
+                String soDT = rs.getString("soDT");
+
+                NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, ngaySinh, gioiTinh, soDT, maTK);
+                result = nv;
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return result;
+    }
+
 }

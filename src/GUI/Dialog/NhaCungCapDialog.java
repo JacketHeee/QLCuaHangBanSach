@@ -16,7 +16,7 @@ import BUS.NhaCungCapBUS;
 import DTO.NhaCungCapDTO;
 import GUI.Components.InputForm;
 import GUI.Panel.NhaCungCapPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class NhaCungCapDialog extends JDialog implements ActionListener {

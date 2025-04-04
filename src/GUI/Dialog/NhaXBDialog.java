@@ -16,7 +16,7 @@ import BUS.NhaXBBUS;
 import DTO.NhaXBDTO;
 import GUI.Components.InputForm;
 import GUI.Panel.NhaXBPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class NhaXBDialog extends JDialog implements ActionListener{

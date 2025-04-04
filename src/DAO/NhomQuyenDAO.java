@@ -81,4 +81,24 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO> {
         }
         return result;
     }
+
+    public NhomQuyenDTO SelectByID(int maRole){
+        NhomQuyenDTO result = null;
+        String sql = String.format("SELECT * FROM NHOMQUYEN WHERE maRole = '%d'", maRole);
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                String tenRole = rs.getString("tenrole");
+                
+                NhomQuyenDTO nq = new NhomQuyenDTO(maRole, tenRole);
+                result = nq;
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return(result);
+    }
 }

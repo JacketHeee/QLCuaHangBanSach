@@ -63,5 +63,9 @@ public class NhanVienBUS {
 		}
 		return(-1);
 	}
+
+	public NhanVienDTO SelectNhanVienByMaTK(int maTK){
+		return(nhanVienDAO.SelectNhanVienByMaTK(maTK));
+	}	
 	
 }

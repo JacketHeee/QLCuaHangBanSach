@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import DTO.ViTriVungDTO;
 import config.JDBCUtil;
-
 public class ViTriVungDAO implements DAOInterface<ViTriVungDTO> {
     private static ViTriVungDAO instance;
     

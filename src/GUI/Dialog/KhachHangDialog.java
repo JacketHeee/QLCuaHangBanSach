@@ -17,7 +17,7 @@ import BUS.KhachHangBUS;
 import DTO.KhachHangDTO;
 import GUI.Components.InputForm;
 import GUI.Components.InputFormItem;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class KhachHangDialog extends JDialog implements ActionListener {

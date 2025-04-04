@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import DTO.TacGiaDTO;
 import config.JDBCUtil;
-
 public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
     private static TacGiaDAO instance;
     private TacGiaDAO() {}

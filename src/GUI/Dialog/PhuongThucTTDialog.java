@@ -16,7 +16,7 @@ import BUS.PhuongThucTTBUS;
 import DTO.PhuongThucTTDTO;
 import GUI.Components.InputForm;
 import GUI.Panel.PhuongThucTTPnl;
-import Utils.Validate;
+import utils.Validate;
 import net.miginfocom.swing.MigLayout;
 
 public class PhuongThucTTDialog extends JDialog implements ActionListener {
