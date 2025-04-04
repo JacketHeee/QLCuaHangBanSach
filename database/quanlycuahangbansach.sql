@@ -143,7 +143,7 @@ CREATE TABLE CHITIETQUYEN(
   maRole INT,
   maChucNang INT,
   hanhDong VARCHAR(255) NOT NULL,
-  PRIMARY KEY (maRole, maChucNang)
+  PRIMARY KEY (maRole, maChucNang, hanhDong)
 );
 
 CREATE TABLE CHUCNANG ( 
@@ -208,10 +208,10 @@ INSERT INTO NHACUNGCAP (tenNCC, diaChi, soDT, email) VALUES
 -- Dữ liệu cho bảng TAIKHOAN
 INSERT INTO TAIKHOAN (username, password, maRole) VALUES
 ('admin', '123456', 1),
-('nhanvien1', 'abcdef', 2),
-('nhanvien2', 'xyz123', 2),
-('user1', 'pass123', 3),
-('user2', 'mypassword', 3);
+('nguyenan', '123456', 2),
+('ngocchau', '123456', 2),
+('huyentrang', '123456', 3),
+('quocphung', '123456', 3);
 
 -- Dữ liệu cho bảng NHOMQUYEN
 INSERT INTO NHOMQUYEN (tenrole) VALUES
@@ -219,6 +219,7 @@ INSERT INTO NHOMQUYEN (tenrole) VALUES
 
 -- Dữ liệu cho bảng NHANVIEN
 INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT, maTK) VALUES
+('Nguyễn Hùng Strong', '1990-01-01', 'Nam', '0911000001', 1),
 ('Nguyễn Văn A', '1990-01-01', 'Nam', '0911000001', 2),
 ('Trần Thị B', '1995-02-02', 'Nữ', '0911000002', 3);
 
@@ -263,14 +264,93 @@ INSERT INTO KM_SACH (maKM, maSach) VALUES
 (1, 1), (1, 2), (2, 3);
 
 -- Dữ liệu cho bảng CHUCNANG
-INSERT INTO CHUCNANG (tenChucNang) VALUES
-('Quản lý sách'), ('Quản lý nhân viên'), ('Quản lý khách hàng');
+INSERT INTO CHUCNANG (tenChucNang) VALUES 
+('book'), 
+('category'),
+('author'),
+('nxb'),
+('vungtl'),
+('ncc'),
+('createInput'),
+('qlInput'),
+('createBill'),
+('qlBill'),
+('promotion'),
+('pttt'),
+('nv'),
+('taikhoan'),
+('khachhang'),
+('phanquyen'),
+('report');
 
 -- Dữ liệu cho bảng CHITIETQUYEN
 INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
 (1, 1, 'Thêm'),
-(2, 1, 'Sửa'),
-(3, 3, 'Xem');
+(1, 1, 'Xóa'),
+(1, 1, 'Sửa'),
+(1, 1, 'Xem'),
+(1, 2, 'Thêm'),
+(1, 2, 'Xóa'),
+(1, 2, 'Sửa'),
+(1, 2, 'Xem'),
+(1, 3, 'Thêm'),
+(1, 3, 'Xóa'),
+(1, 3, 'Sửa'),
+(1, 3, 'Xem'),
+(1, 4, 'Thêm'),
+(1, 4, 'Xóa'),
+(1, 4, 'Sửa'),
+(1, 4, 'Xem'),
+(1, 5, 'Thêm'),
+(1, 5, 'Xóa'),
+(1, 5, 'Sửa'),
+(1, 5, 'Xem'),
+(1, 6, 'Thêm'),
+(1, 6, 'Xóa'),
+(1, 6, 'Sửa'),
+(1, 6, 'Xem'),
+(1, 7, 'Thêm'),
+(1, 7, 'Xóa'),
+(1, 7, 'Sửa'),
+(1, 7, 'Xem'),
+(1, 8, 'Thêm'),
+(1, 8, 'Xem'),
+(1, 9, 'Thêm'),
+(1, 9, 'Xem'),
+(1, 10, 'Thêm'),
+(1, 10, 'Xem'),
+(1, 11, 'Thêm'),
+(1, 11, 'Xem'),
+(1, 12, 'Thêm'),
+(1, 12, 'Xóa'),
+(1, 12, 'Sửa'),
+(1, 12, 'Xem'),
+(1, 13, 'Thêm'),
+(1, 13, 'Xóa'),
+(1, 13, 'Sửa'),
+(1, 13, 'Xem'),
+(1, 14, 'Thêm'),
+(1, 14, 'Xóa'),
+(1, 14, 'Sửa'),
+(1, 14, 'Xem'),
+(1, 15, 'Thêm'),
+(1, 15, 'Xóa'),
+(1, 15, 'Sửa'),
+(1, 15, 'Xem'),
+
+(2, 7, 'Thêm'),
+(2, 7, 'Xem'),
+(2, 8, 'Thêm'),
+(2, 8, 'Xem'),
+(2, 9, 'Thêm'),
+(2, 9, 'Xem'),
+(2, 10, 'Thêm'),
+(2, 10, 'Xem'),
+
+(3, 1, 'Thêm'),
+(3, 2, 'Xóa'),
+(3, 3, 'Sửa'),
+(3, 4, 'Xem');
 
 ALTER TABLE SACH
 ADD CONSTRAINT SACH_VITRIVUNG FOREIGN KEY (maVung) REFERENCES VITRIVUNG(maVung);
@@ -319,10 +399,3 @@ ADD CONSTRAINT NHANVIEN FOREIGN KEY (maTK) REFERENCES TAIKHOAN(maTK);
 ALTER TABLE KM_SACH
 ADD CONSTRAINT km1 FOREIGN KEY (maKM) REFERENCES KHUYENMAI(maKM),
 ADD CONSTRAINT km2 FOREIGN KEY (maSach) REFERENCES SACH(maSach);
-
-
-
-
-
-
-
