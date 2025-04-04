@@ -3,6 +3,7 @@ package BUS;
 import java.util.ArrayList;
 
 import DAO.ChiTietQuyenDAO;
+import DAO.ChucNangDAO;
 import DTO.ChiTietQuyenDTO;
 
 public class ChiTietQuyenBUS {
@@ -25,5 +26,20 @@ public class ChiTietQuyenBUS {
 	public ArrayList<ChiTietQuyenDTO> getAll(){
 		return(this.listChiTietQuyen);
 	}
-	
+
+	public ArrayList<ChiTietQuyenDTO> selectChiTietQuyenByMaNQ(int maNQ){
+		return(chiTietQuyenDAO.selectChiTietQuyenByMaNQ(maNQ));
+	}
+
+	public ArrayList<String> getListTenCNByMaNQ(int maNQ){
+		ArrayList<String> result = new ArrayList<>();
+
+		ArrayList<Integer> listCTQ = chiTietQuyenDAO.getListMaCNByMaNQ(maNQ);
+		ChucNangDAO chucNangDAO = ChucNangDAO.getInstance();
+		for(int i : listCTQ){
+			String tenCN = chucNangDAO.getNameByMaCN(i); 
+			result.add(tenCN);
+		}
+		return(result);
+	}
 }

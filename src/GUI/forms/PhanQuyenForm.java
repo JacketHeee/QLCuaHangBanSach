@@ -30,9 +30,9 @@ public class PhanQuyenForm extends JPanel implements ActionListener {
 
     private MainFrame mainFrame;
     private String title;
-    private String[][] arrCN;
+    private ArrayList<String[]> arrCN;
 
-    public PhanQuyenForm(MainFrame mainframe, String title, String[][] arrCN) {
+    public PhanQuyenForm(MainFrame mainframe, String title, ArrayList<String[]> arrCN) {
         this.mainFrame = mainframe;
         this.title = title;
         this.arrCN = arrCN;

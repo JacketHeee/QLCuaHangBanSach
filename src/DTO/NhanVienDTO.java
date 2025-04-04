@@ -1,6 +1,6 @@
 package DTO;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class NhanVienDTO {
     private int maNV; // Đã thay đổi kiểu từ String thành int
@@ -17,6 +17,14 @@ public class NhanVienDTO {
     // Constructor đầy đủ tham số
     public NhanVienDTO(int maNV, String hoTen, Date ngaySinh, String gioiTinh, String soDT, int maTK) {
         this.maNV = maNV;
+        this.hoTen = hoTen;
+        this.ngaySinh = ngaySinh;
+        this.gioiTinh = gioiTinh;
+        this.soDT = soDT;
+        this.maTK = maTK;
+    }
+
+    public NhanVienDTO(String hoTen, Date ngaySinh, String gioiTinh, String soDT, int maTK) {
         this.hoTen = hoTen;
         this.ngaySinh = ngaySinh;
         this.gioiTinh = gioiTinh;

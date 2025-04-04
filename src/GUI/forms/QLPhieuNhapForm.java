@@ -6,6 +6,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.PhieuNhapBUS;
+import DTO.PhieuNhapDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +28,12 @@ import javax.swing.JButton;
 public class QLPhieuNhapForm extends JPanel {
 
     private String title;
+    private String[] header = {"Mã nhập","Ngày nhập","Tổng tiền","Mã nhà cung cấp","Mã tài khoản"};
+    PhieuNhapBUS phieuNhapBUS;
+
     public QLPhieuNhapForm(String title) {
         this.title = title;
+        phieuNhapBUS = PhieuNhapBUS.getInstance();
         init();
     }
     
@@ -99,26 +107,15 @@ public class QLPhieuNhapForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"},
-            new String[]{"1","00:00:00 24/03/2024","Nhà cung cấp Nguyễn Hùng Mạnh","Danh Thị Ngọc Châu","100.000.000"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<PhieuNhapDTO> listKH = phieuNhapBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(PhieuNhapDTO i : listKH){
+            data.add(new String[]{i.getMaNhap() + "", i.getNgayNhap() + "", i.getTongTien() + "", i.getMaNCC() + "", i.getMaTK() + ""});
+        }
+        return(data);
+    }
+    // {"Mã nhập","Ngày nhập","Tổng tiền","Mã nhà cung cấp","Mã tài khoản"};
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -128,7 +125,7 @@ public class QLPhieuNhapForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã phiếu","Ngày nhập","Nhà cung cấp","Nhân viên","Tổng tiền");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

@@ -6,19 +6,32 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.TaiKhoanBUS;
+import DAO.TaiKhoanDAO;
+import DTO.TaiKhoanDTO;
 import GUI.component.CustomButton;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
+import utils.Validate;
 
 public class Login extends JFrame implements ActionListener{
 
+    private CustomButton butLogin; 
+    private JTextField txtUsername; 
+    private JPasswordField txtPassword; 
+    private JLabel forgotPass;
+    private TaiKhoanDTO taiKhoanDTO;
+    private TaiKhoanBUS taiKhoanBUS;
+
     public Login() {
+        taiKhoanBUS = TaiKhoanBUS.getInstance();
         init(); 
         addActionListener();
     }
@@ -73,17 +86,36 @@ public class Login extends JFrame implements ActionListener{
         String str = e.getActionCommand();
 
         if (str.equals("butLogin")) {
-            checkLogin();
+            if(checkLogin()){
+                AcceptLogin();
+            }
         }
     }
 
-    public void checkLogin() {
-        this.dispose();
-        java.awt.EventQueue.invokeLater(() -> new MainFrame().setVisible(true));
+    public boolean checkLogin() {
+        String userNameCheck = txtUsername.getText();
+        String passWordCheck = new String(txtPassword.getPassword());
+        if(Validate.isEmpty(userNameCheck) || Validate.isEmpty(passWordCheck)){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+            return(false);
+        }
+        if(!taiKhoanBUS.isExist(userNameCheck) || !taiKhoanBUS.isValidAcount(userNameCheck, passWordCheck)){    //kiểm tra bằng hash sau
+            JOptionPane.showMessageDialog(this, "Tên tài khoản hoặc mật khẩu không chính xác!");
+            return(false);
+        }
+        this.taiKhoanDTO = taiKhoanBUS.SelectTaiKhoanByUserName(userNameCheck);
+        return(true);
     }
 
-    private CustomButton butLogin; 
-    private JTextField txtUsername; 
-    private JPasswordField txtPassword; 
-    private JLabel forgotPass;
+    public void AcceptLogin(){
+        this.dispose();
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new MainFrame(taiKhoanDTO).setVisible(true);
+            } catch (Exception e) {
+                System.out.println("Lỗi khởi tạo");
+            }
+        });
+    }
+
 }

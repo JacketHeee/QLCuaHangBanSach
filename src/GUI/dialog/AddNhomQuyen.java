@@ -11,15 +11,16 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import java.util.ArrayList;
 
 public class AddNhomQuyen extends JDialog {
     JFrame parent;
     String title;
     boolean modal;
-    private String[][] arrCN;
+    private ArrayList<String[]> arrCN;
     private String[][] actionRole;
 
-    public AddNhomQuyen(JFrame parent, String title, boolean modal, String[][] arrCN,String[][] actionRole) {
+    public AddNhomQuyen(JFrame parent, String title, boolean modal, ArrayList<String[]> arrCN,String[][] actionRole) {
         this.arrCN = arrCN;
         this.actionRole = actionRole;
         super(parent,title,modal);
@@ -60,8 +61,8 @@ public class AddNhomQuyen extends JDialog {
         panel.add(new JLabel("<html><b>Sửa</b></html>"), "pushx,al center, cell 3 0");
         panel.add(new JLabel("<html><b>Xóa</b></html>"), "pushx,al center, cell 4 0,wrap");
 
-        for (int i=0; i<arrCN.length; i++) {
-            panel.add(new JLabel(arrCN[i][0]),"pushx,gaptop 10");
+        for (int i=0; i<arrCN.size(); i++) {
+            panel.add(new JLabel(arrCN.get(i)[0]),"pushx,gaptop 10");
             for (int j=0; j<3; j++) 
                 panel.add(new JCheckBox(),"pushx, al center");
             panel.add(new JCheckBox(),"pushx, al center, wrap");

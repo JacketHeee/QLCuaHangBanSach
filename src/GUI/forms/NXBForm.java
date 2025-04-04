@@ -6,6 +6,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.NhaXBBUS;
+import DTO.NhaXBDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +28,12 @@ import javax.swing.JButton;
 public class NXBForm extends JPanel {
 
     private String title;
+    private String[] header = {"Mã nhà xuất bản","Tên nhà xuất bản","Địa chỉ","Số điện thoại","Email"};
+    NhaXBBUS nhaXBBUS;
+
     public NXBForm(String title) {
         this.title = title;
+        nhaXBBUS = NhaXBBUS.getInstance();
         init();
     }
     
@@ -99,41 +107,14 @@ public class NXBForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<NhaXBDTO> listKH = nhaXBBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(NhaXBDTO i : listKH){
+            data.add(new String[]{i.getMaNXB() + "", i.getTenNXB(), i.getDiaChi(), i.getSoDT(), i.getEmail()});
+        }
+        return(data);
+    }
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -143,7 +124,7 @@ public class NXBForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã NXB","Tên NXB","Địa chỉ","Số điện thoại","Email");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

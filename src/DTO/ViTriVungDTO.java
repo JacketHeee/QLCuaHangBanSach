@@ -15,6 +15,10 @@ public class ViTriVungDTO {
         this.tenVung = tenVung;
     }
 
+    public ViTriVungDTO(String tenVung) {
+        this.tenVung = tenVung;
+    }
+
     // Getter và Setter
     public int getMaVung() {
         return maVung;

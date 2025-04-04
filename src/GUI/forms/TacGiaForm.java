@@ -6,6 +6,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.TacGiaBUS;
+import DTO.TacGiaDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +28,12 @@ import javax.swing.JButton;
 public class TacGiaForm extends JPanel {
 
     private String title;
+    private String[] header = {"Mã tác giả", "Tên tác giả"};
+    private TacGiaBUS tacGiaBUS;
+
     public TacGiaForm(String title) {
         this.title = title;
+        tacGiaBUS = TacGiaBUS.getInstance();
         init();
     }
     
@@ -99,13 +107,14 @@ public class TacGiaForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","Nguyễn Hùng Mạnh"},
-            new String[]{"2","Nguyễn Ngọc Thiên Ân"},
-            new String[]{"3","Trương Thị Huyền Trang"},
-            new String[]{"4","Tống Quốc Phùng"},
-            new String[]{"4","Danh Thị Ngọc Châu"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<TacGiaDTO> listKH = tacGiaBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(TacGiaDTO i : listKH){
+            data.add(new String[]{i.getMaTacGia() + "", i.getTenTacGia()});
+        }
+        return(data);
+    }
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -115,7 +124,7 @@ public class TacGiaForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã tác giả","Tên tác giả");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

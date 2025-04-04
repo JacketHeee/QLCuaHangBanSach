@@ -30,9 +30,39 @@ public class SachBUS {
 		}
 		return(0);
 	}
+
+	public int delete(int id){
+		if(sachDAO.delete(id) != 0){
+			int index = getIndexByID(id);
+			listSach.remove(index);
+			return(1);
+		}
+		return(0);
+	}
+	public int update(SachDTO sachDTO){
+		if(sachDAO.update(sachDTO) != 0){
+			int index = getIndexByID(sachDTO.getMaSach());
+			listSach.get(index).setTenSach(sachDTO.getTenSach());
+			listSach.get(index).setGiaBan(sachDTO.getGiaBan());
+			listSach.get(index).setNamXB(sachDTO.getNamXB());
+			listSach.get(index).setMaVung(sachDTO.getMaVung());
+			listSach.get(index).setMaNXB(sachDTO.getMaNXB());
+			return(1);
+		}
+		return(0);
+	}
 	
 	public ArrayList<SachDTO> getAll(){
 		return(this.listSach);
+	}
+
+	public int getIndexByID(int id){
+		for(int i = 0; i < listSach.size(); i++){
+			if(id == listSach.get(i).getMaSach()){
+				return(i);
+			}
+		}
+		return(-1);
 	}
 	
 }

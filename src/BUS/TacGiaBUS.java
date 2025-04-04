@@ -22,8 +22,42 @@ public class TacGiaBUS {
 		return(instance);
 	}
 	
+	public int insert(TacGiaDTO TacGia){
+		if(tacGiaDAO.insert(TacGia) != 0){
+			listTacGia.add(TacGia);
+			return(1);
+		}
+		return(0);
+	}
+
+	public int delete(int id){
+		if(tacGiaDAO.delete(id) != 0){
+			int index = getIndexByID(id);
+			listTacGia.remove(index);
+			return(1);
+		}
+		return(0);
+	}
+	public int update(TacGiaDTO TacGiaDTO){
+		if(tacGiaDAO.update(TacGiaDTO) != 0){
+			int index = getIndexByID(TacGiaDTO.getMaTacGia());
+			listTacGia.get(index).setTenTacGia(TacGiaDTO.getTenTacGia());
+			return(1);
+		}
+		return(0);
+	}
+	
 	public ArrayList<TacGiaDTO> getAll(){
 		return(this.listTacGia);
+	}
+
+	public int getIndexByID(int id){
+		for(int i = 0; i < listTacGia.size(); i++){
+			if(id == listTacGia.get(i).getMaTacGia()){
+				return(i);
+			}
+		}
+		return(-1);
 	}
 	
 }

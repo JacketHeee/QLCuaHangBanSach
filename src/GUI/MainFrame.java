@@ -10,6 +10,13 @@ import java.awt.Component;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
+import BUS.ChiTietQuyenBUS;
+import BUS.NhanVienBUS;
+import BUS.NhomQuyenBUS;
+import DTO.ChiTietQuyenDTO;
+import DTO.NhanVienDTO;
+import DTO.NhomQuyenDTO;
+import DTO.TaiKhoanDTO;
 import GUI.component.CustomTitleBar;
 import GUI.component.DimGlassPane;
 import GUI.component.MenuTaskBar;
@@ -18,6 +25,8 @@ import resources.base.baseTheme;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Date;
 public class MainFrame extends JFrame  implements ActionListener{
 	private int width = 1024; 
 	private int height = 768; 
@@ -28,7 +37,24 @@ public class MainFrame extends JFrame  implements ActionListener{
 	private MenuTaskBar menuTaskBar;
 	private JPanel mainContent;
 
-	public MainFrame() {
+	private TaiKhoanDTO taiKhoan;
+	private NhanVienDTO nhanVien;
+	private NhanVienBUS nhanVienBUS;
+	private NhomQuyenBUS nhomQuyenBUS;
+	private NhomQuyenDTO nhomQuyen;
+	private ChiTietQuyenBUS chiTietQuyenBUS;
+	private ArrayList<ChiTietQuyenDTO> listQuyen;
+
+	public MainFrame(TaiKhoanDTO taiKhoan) {
+
+		this.taiKhoan = taiKhoan; 
+		this.nhanVienBUS = NhanVienBUS.getInstance();
+		this.nhanVien = nhanVienBUS.SelectNhanVienByMaTK(taiKhoan.getMaTK());
+		this.nhomQuyenBUS = NhomQuyenBUS.getInstance();
+		this.nhomQuyen = nhomQuyenBUS.SelectByID(taiKhoan.getMaRole());
+		this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
+		this.listQuyen = chiTietQuyenBUS.selectChiTietQuyenByMaNQ(nhomQuyen.getMaRole());
+
 		setTitle(title);
 		setSize(width, height);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +76,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 
 		JPanel mainPanel = new JPanel(new MigLayout("insets 0, gap 0"));
 
-		menuTaskBar = new MenuTaskBar(this,arrCN);
+		menuTaskBar = new MenuTaskBar(this, getListCNOfThisUser());
 		mainContent = mainContentPanel();
 
 		mainPanel.add(menuTaskBar,"pushy, growy");
@@ -69,7 +95,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 	private JPanel listChucNang;
 
 	private String[][] arrCN = {
-		{"Home","home.svg","home"},
+		// {"Home","home.svg","home"},
 		{"Sách","book.svg","book"},
 		{"Thể loại","category_1.svg","category"},
 		{"Tác giả","author.svg","author"},
@@ -88,6 +114,28 @@ public class MainFrame extends JFrame  implements ActionListener{
 		{"Phân quyền","layer.svg","phanquyen"},
 		{"Báo cáo & thống kê","report.svg","report"}
 	};
+
+	public ArrayList<String[]> getListCNOfThisUser(){	//Khi tạo nhóm quyền mới, danh mục chức năng cần sắp từ trên xuống để hàm hoạt động
+		ArrayList<String[]> result = new ArrayList<>();
+		result.add(new String[]{"Home","home.svg","home"});
+		ArrayList<String> listTenCN = chiTietQuyenBUS.getListTenCNByMaNQ(nhomQuyen.getMaRole());
+		int j = 0;
+		for(int i = 0; i < listTenCN.size(); i++){
+			while(j < arrCN.length){
+				if(arrCN[j][2].equals(listTenCN.get(i))){
+					result.add(arrCN[j]);
+					j++;
+					break;
+				}	
+				j++;
+			}
+
+		}
+		return(result);
+	}
+
+
+
 
 
 	private JButton butmaintext;
@@ -112,7 +160,10 @@ public class MainFrame extends JFrame  implements ActionListener{
 
 	public static void main(String[] args) {
 		FlatIntelliJLaf.setup();
-		new MainFrame().setVisible(true);
+		TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(1,"admin","123456",1);
+		MainFrame mainFrame = new MainFrame(taiKhoanDTO);
+		mainFrame.setVisible(true);
+
 	}
 
 	public void setPanel(Component panel) {
@@ -123,4 +174,24 @@ public class MainFrame extends JFrame  implements ActionListener{
         mainContent.validate();
     }
 
+
+	public TaiKhoanDTO getTaiKhoan() {
+		return taiKhoan;
+	}
+
+	public void setTaiKhoan(TaiKhoanDTO taiKhoan) {
+		this.taiKhoan = taiKhoan;
+	}
+
+
+	public NhanVienDTO getNhanVien() {
+		return nhanVien;
+	}
+
+
+	public void setNhanVien(NhanVienDTO nhanVien) {
+		this.nhanVien = nhanVien;
+	}
+
+	
 }

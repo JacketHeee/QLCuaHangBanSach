@@ -1,11 +1,11 @@
 package DTO;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class HoaDonDTO {
     private int maHD; // Đã thay đổi kiểu từ String thành int
-    private Date ngayBan;
+    private LocalDateTime ngayBan;
     private BigDecimal tongTien;
     private int maTK;  // Đã thay đổi kiểu từ String thành int
     private int maPT;  // Đã thay đổi kiểu từ String thành int
@@ -17,8 +17,17 @@ public class HoaDonDTO {
     }
 
     // Constructor đầy đủ tham số
-    public HoaDonDTO(int maHD, Date ngayBan, BigDecimal tongTien, int maTK, int maPT, int maKM, int maKH) {
+    public HoaDonDTO(int maHD, LocalDateTime ngayBan, BigDecimal tongTien, int maTK, int maPT, int maKM, int maKH) {
         this.maHD = maHD;
+        this.ngayBan = ngayBan;
+        this.tongTien = tongTien;
+        this.maTK = maTK;
+        this.maPT = maPT;
+        this.maKM = maKM;
+        this.maKH = maKH;
+    }
+// cho insert
+    public HoaDonDTO(LocalDateTime ngayBan, BigDecimal tongTien, int maTK, int maPT, int maKM, int maKH) {
         this.ngayBan = ngayBan;
         this.tongTien = tongTien;
         this.maTK = maTK;
@@ -28,12 +37,12 @@ public class HoaDonDTO {
     }
 
     // Constructor không có mã khuyến mãi
-    public HoaDonDTO(int maHD, Date ngayBan, BigDecimal tongTien, int maTK, int maPT, int maKH) {
+    public HoaDonDTO(int maHD, LocalDateTime ngayBan, BigDecimal tongTien, int maTK, int maPT, int maKH) {
         this(maHD, ngayBan, tongTien, maTK, maPT, 0, maKH); // Mặc định maKM = 0 nếu không có
     }
 
     // Constructor không có mã khách hàng
-    public HoaDonDTO(int maHD, Date ngayBan, BigDecimal tongTien, int maTK, int maPT) {
+    public HoaDonDTO(int maHD, LocalDateTime ngayBan, BigDecimal tongTien, int maTK, int maPT) {
         this(maHD, ngayBan, tongTien, maTK, maPT, 0, 0); // Mặc định cả maKM và maKH = 0 nếu không có
     }
 
@@ -46,11 +55,11 @@ public class HoaDonDTO {
         this.maHD = maHD;
     }
 
-    public Date getNgayBan() {
+    public LocalDateTime getNgayBan() {
         return ngayBan;
     }
 
-    public void setNgayBan(Date ngayBan) {
+    public void setNgayBan(LocalDateTime ngayBan) {
         this.ngayBan = ngayBan;
     }
 

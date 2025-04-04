@@ -1,70 +1,105 @@
 package DAO;
 
-
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.ChiTietQuyenDTO;
-import utils.JDBCUtil;
+import config.JDBCUtil;
 
-public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO>{
+public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
+    private static ChiTietQuyenDAO instance;
+    private ChiTietQuyenDAO() {}
+    
+    public static ChiTietQuyenDAO getInstance() {
+        if (instance == null) {
+            instance = new ChiTietQuyenDAO();
+        }
+        return instance;
+    }
+    
+    @Override
+    public int insert(ChiTietQuyenDTO ctq) {
+        return 0;
+    }
 
-	private static ChiTietQuyenDAO instance;
-	private ChiTietQuyenDAO() {}
-	
-	public static ChiTietQuyenDAO getInstance() {
-		if(instance == null) {
-			instance = new ChiTietQuyenDAO();
-		}
-		return(instance);
-	}
-	
-	@Override
-	public int insert(ChiTietQuyenDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int delete(int id) {
+        return 0;
+    }
 
-	@Override
-	public int delete(ChiTietQuyenDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int update(ChiTietQuyenDTO ctq) {
+        return 0;
+    }
 
-	@Override
-	public int update(ChiTietQuyenDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public ArrayList<ChiTietQuyenDTO> getAll() {
+        ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM CHITIETQUYEN";
+        
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while (rs.next()) {
+                int maRole = rs.getInt("maRole");
+                int maChucNang = rs.getInt("maChucNang");
+                String hanhDong = rs.getString("hanhDong");
+                
+                ChiTietQuyenDTO ctq = new ChiTietQuyenDTO(maRole, maChucNang, hanhDong);
+                result.add(ctq);
+            }
+            jdbcUtil.Close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
-	@Override
-	public ArrayList<ChiTietQuyenDTO> getAll() {
-		Connection con = JDBCUtil.getConnection();
-		ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
-		String sql = "SELECT * FROM CHITIETQUYEN";
-		Statement statement;
-		try {
-			statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
-			while(rs.next()) {
-				int maRole = rs.getInt("maRole");
-				int maChucNang = rs.getInt("maChucNang");
-				String hanhDong = rs.getString("hanhDong");
-				
-				ChiTietQuyenDTO ChiTietQuyen = new ChiTietQuyenDTO(maRole, maChucNang, hanhDong);
-				result.add(ChiTietQuyen);
-			}
-			JDBCUtil.closeConnection(con);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
+    public ArrayList<ChiTietQuyenDTO> selectChiTietQuyenByMaNQ(int maNQ){
+        ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
+        String sql = String.format(
+            "SELECT * FROM CHITIETQUYEN WHERE maRole = '%s'",
+            maNQ + "");    
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                int maRole = rs.getInt("maRole");
+                int maChucNang = rs.getInt("maChucNang");
+                String hanhDong = rs.getString("hanhDong");
+                
+                ChiTietQuyenDTO ctq = new ChiTietQuyenDTO(maRole, maChucNang, hanhDong);
+                result.add(ctq);
+            }
+            jdbcUtil.Close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return(result);
+    }
+
+    public ArrayList<Integer> getListMaCNByMaNQ(int maNQ){
+        ArrayList<Integer> result = new ArrayList<>();
+        String sql = String.format(
+            "SELECT DISTINCT maChucNang FROM CHITIETQUYEN WHERE maRole = '%s'",
+            maNQ + "");    
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                int maChucNang = rs.getInt("maChucNang");
+                result.add(maChucNang);
+            }
+            jdbcUtil.Close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return(result);
+    }
 
 }

@@ -6,6 +6,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import BUS.NhaCungCapBUS;
+import DTO.NhaCungCapDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +28,12 @@ import javax.swing.JButton;
 public class NhaCungCapForm extends JPanel {
 
     private String title;
+    private String[] header = {"Mã nhà cung cấp","Tên nhà cung cấp","Địa chỉ","Số điện thoại","Email"};
+    NhaCungCapBUS nhaCungCapBUS;
+
     public NhaCungCapForm(String title) {
         this.title = title;
+        nhaCungCapBUS = NhaCungCapBUS.getInstance();
         init();
     }
     
@@ -62,7 +70,7 @@ public class NhaCungCapForm extends JPanel {
         inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
         inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
         search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
+        butSearch = new JButton(new FlatSVGIcon(NhaCungCapForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
         butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
@@ -71,7 +79,7 @@ public class NhaCungCapForm extends JPanel {
         search.add(butSearch);
         
         
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
+        butRefresh = new JButton(new FlatSVGIcon(NhaCungCapForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
         butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
         butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -99,41 +107,16 @@ public class NhaCungCapForm extends JPanel {
         return panel;
     }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"},
-            new String[]{"1","Nguyễn Hùng Mạnh","32, Cao Lo, Phuong 4, Quan 8, TP.HCM","0993875345","Jackethee@gmail.com"}
-    ));
+    public ArrayList<String[]> Data(){
+        ArrayList<NhaCungCapDTO> listKH = nhaCungCapBUS.getAll();
+        ArrayList<String[]> data = new ArrayList<>();
+        for(NhaCungCapDTO i : listKH){
+            data.add(new String[]{i.getMaNCC() + "", i.getTenNCC(), i.getDiaChi(), i.getSoDT(), i.getEmail()});
+        }
+        return(data);
+    }
+    // {"Mã nhà cung cấp","Tên nhà cung cấp","Địa chỉ","Số điện thoại","Email"};
+    
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -143,7 +126,7 @@ public class NhaCungCapForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(data,actions, "Mã NCC","Tên NCC","Địa chỉ","Số điện thoại","Email");
+        CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

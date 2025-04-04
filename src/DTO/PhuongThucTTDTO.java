@@ -14,6 +14,11 @@ public class PhuongThucTTDTO {
         this.tenPTTT = tenPTTT;
     }
 
+    // cho insert
+    public PhuongThucTTDTO(String tenPTTT) {
+        this.tenPTTT = tenPTTT;
+    }
+
     // Getter và Setter
     public int getMaPT() {
         return maPT;

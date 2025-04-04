@@ -20,6 +20,13 @@ public class NhaXBDTO {
         this.email = email;
     }
 
+    public NhaXBDTO(String tenNXB, String diaChi, String soDT, String email) {
+        this.tenNXB = tenNXB;
+        this.diaChi = diaChi;
+        this.soDT = soDT;
+        this.email = email;
+    }
+
     // Getter và Setter
     public int getMaNXB() {
         return maNXB;

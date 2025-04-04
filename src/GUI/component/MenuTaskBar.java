@@ -37,6 +37,7 @@ import resources.base.baseTheme;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 
 public class MenuTaskBar extends JPanel implements MouseListener {
@@ -45,12 +46,12 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 	private int widthmenu = 250;
 	private JPanel butLogout;
     private MainFrame mainFrame;
-    private String[][] arrCN;
+    private ArrayList<String[]> arrCN;
     private JPanel menuChucNang;
     private ButtonTaskBar butstart;
 
     
-    public MenuTaskBar(MainFrame mainFrame, String[][] arrCN) {
+    public MenuTaskBar(MainFrame mainFrame, ArrayList<String[]> arrCN) {
         this.mainFrame = mainFrame;
         this.arrCN = arrCN;
         init();
@@ -76,12 +77,12 @@ public class MenuTaskBar extends JPanel implements MouseListener {
     private JPanel panelChucNang() {
 		JPanel panel = new JPanel(new MigLayout("gap 4, wrap 1"));
 		// panel.add(new JButton("con bi biet bay"));
-        butstart = new ButtonTaskBar(arrCN[0][0], arrCN[0][1], arrCN[0][2]);
+        butstart = new ButtonTaskBar(arrCN.get(0)[0], arrCN.get(0)[1], arrCN.get(0)[2]);
         butstart.addMouseListener(this);
         panel.add(butstart,"pushx,growx");
         ButtonTaskBar but;
-		for (int i=1; i<arrCN.length; i++) {
-            String[] x = arrCN[i];
+		for (int i=1; i<arrCN.size(); i++) {
+            String[] x = arrCN.get(i);
             but = new ButtonTaskBar(x[0], x[1], x[2]);
 			panel.add(but,"pushx,growx");
             but.addMouseListener(this);
@@ -124,8 +125,8 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 		JPanel panel = new JPanel(new MigLayout("aligny center"));
 		JLabel labelImage = new JLabel(new FlatSVGIcon(MainFrame.class.getResource("../resources/img/icon/myAccount.svg")).derive(60, 60));
 		panel.setOpaque(false);
-		panel.add(new JLabel("<html><b>Nguyễn Hùng Mạnh</b></html>"),"wrap");
-		panel.add(new JLabel("admin"));
+		panel.add(new JLabel("<html><b>"+ mainFrame.getNhanVien().getHoTen() +"</b></html>"),"wrap");
+		panel.add(new JLabel(mainFrame.getTaiKhoan().getUsername()));
 
 		but.add(labelImage);
 		but.add(panel,"push, grow");

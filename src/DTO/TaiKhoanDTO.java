@@ -18,6 +18,12 @@ public class TaiKhoanDTO {
         this.maRole = maRole;
     }
 
+    public TaiKhoanDTO(String username, String password, int maRole) {
+        this.username = username;
+        this.password = password;
+        this.maRole = maRole;
+    }
+
     // Getter và Setter
     public int getMaTK() {
         return maTK;

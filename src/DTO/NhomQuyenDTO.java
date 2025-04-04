@@ -14,6 +14,12 @@ public class NhomQuyenDTO {
         this.tenRole = tenRole;
     }
 
+    //cho insert
+    public NhomQuyenDTO(String tenRole) {
+        this.tenRole = tenRole;
+    }
+
+
     // Getter và Setter
     public int getMaRole() {
         return maRole;
