@@ -205,7 +205,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText()));
 					break;
 				case "phanquyen":
-					mainFrame.setPanel(new PhanQuyenForm(but.getText()));
+					mainFrame.setPanel(new PhanQuyenForm(mainFrame,but.getText(),arrCN));
 					break;
 				case "createInput":
 					mainFrame.setPanel(new TaoPhieuNhapForm());

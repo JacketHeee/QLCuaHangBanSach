@@ -11,6 +11,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import GUI.component.CustomTitleBar;
+import GUI.component.DimGlassPane;
 import GUI.component.MenuTaskBar;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
@@ -21,6 +22,8 @@ public class MainFrame extends JFrame  implements ActionListener{
 	private int width = 1024; 
 	private int height = 768; 
 	private String title = "Quản lý cửa hàng máy tính"; 
+	
+	public DimGlassPane glassPane = new DimGlassPane();
 
 	private MenuTaskBar menuTaskBar;
 	private JPanel mainContent;
@@ -30,6 +33,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 		setSize(width, height);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		setGlassPane(glassPane);
 		
 		//tu dong mo full man hinh
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -118,4 +122,5 @@ public class MainFrame extends JFrame  implements ActionListener{
         mainContent.repaint();
         mainContent.validate();
     }
+
 }

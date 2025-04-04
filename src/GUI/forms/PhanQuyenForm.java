@@ -9,9 +9,11 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.util.ArrayList;
 import java.util.List;
 
+import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.dialog.AddNhomQuyen;
 import net.miginfocom.swing.MigLayout;
 import utils.UIUtils;
 
@@ -20,12 +22,20 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 
 import javax.swing.JButton;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class PhanQuyenForm extends JPanel {
+public class PhanQuyenForm extends JPanel implements ActionListener {
 
+    private MainFrame mainFrame;
     private String title;
-    public PhanQuyenForm(String title) {
+    private String[][] arrCN;
+
+    public PhanQuyenForm(MainFrame mainframe, String title, String[][] arrCN) {
+        this.mainFrame = mainframe;
         this.title = title;
+        this.arrCN = arrCN;
         init();
     }
     
@@ -91,9 +101,13 @@ public class PhanQuyenForm extends JPanel {
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
         panel.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-
+        ButtonAction but;
         for (String[] x : arrActions) {
-            panel.add(new ButtonAction(x[0],x[1],x[2]));
+            but = new ButtonAction(x[0],x[1],x[2]);
+            panel.add(but);
+            but.setActionCommand(but.getId());
+            but.addActionListener(this);
+
         }
 
         return panel;
@@ -118,5 +132,44 @@ public class PhanQuyenForm extends JPanel {
         CustomTable table = new CustomTable(data,actions, "Mã quyền","Tên nhóm quyền");
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
+    }
+
+    String[][] actionRole = {
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"},
+        {"view","add","edit","remove"}
+    };
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        
+        switch (e.getActionCommand()) {
+            case "add":
+                mainFrame.glassPane.setVisible(true);
+                ButtonAction but = (ButtonAction) e.getSource();
+                System.out.println(but.getId()+ but.getText());
+                for (String[] x : actionRole) 
+                    System.out.println(x.length);
+                new AddNhomQuyen(mainFrame,"Thêm nhóm quyền",true,arrCN,actionRole);
+                mainFrame.glassPane.setVisible(false);
+                break;
+        
+            default:
+                break;
+        }
     }
 }
