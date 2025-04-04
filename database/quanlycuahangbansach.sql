@@ -337,6 +337,8 @@ INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
 (1, 15, 'Xóa'),
 (1, 15, 'Sửa'),
 (1, 15, 'Xem'),
+(1, 16, 'Xem'),
+(1, 17, 'Xem'),
 
 (2, 7, 'Thêm'),
 (2, 7, 'Xem'),
