@@ -623,6 +623,8 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
         dataPanel.revalidate();
         dataPanel.repaint();
+        repaint();
+        revalidate();
     }
 
     public void setSelectedRow(int row) {

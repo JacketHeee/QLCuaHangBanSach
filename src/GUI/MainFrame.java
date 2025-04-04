@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.awt.Component;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
@@ -110,8 +111,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 		new MainFrame().setVisible(true);
 	}
 
-	public void setPanel(JPanel panel) {
-
+	public void setPanel(Component panel) {
 		// butmaintext.setText(txt);
         mainContent.removeAll();
         mainContent.add(panel,"push, grow");
