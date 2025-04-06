@@ -34,6 +34,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener{
         init();
     }
 
+    
     private void init() {
         setLayout(new MigLayout("insets 0,wrap 1, gap 10"));
 

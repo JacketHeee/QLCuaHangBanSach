@@ -28,6 +28,7 @@ import GUI.forms.SachForm;
 import GUI.forms.TacGiaForm;
 import GUI.forms.TheLoaiForm;
 import GUI.forms.VungKeForm;
+import GUI.forms.thongke.TongQuanForm;
 import GUI.forms.TaiKhoanForm;
 import GUI.forms.TaoHoaDonForm;
 import GUI.forms.TaoPhieuNhapForm;
@@ -213,6 +214,9 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 					break;
 				case "createBill":
 					mainFrame.setPanel(new CustomScrollPane(new TaoHoaDonForm()));
+					break;
+				case "report":
+					mainFrame.setPanel(new TongQuanForm());
 					break;
 
 				default:

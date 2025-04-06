@@ -33,6 +33,7 @@ public class TaiKhoanForm extends JPanel {
 
     public TaiKhoanForm(String title) {
         this.title = title;
+        taiKhoanBUS = TaiKhoanBUS.getInstance();
         init();
     }
     

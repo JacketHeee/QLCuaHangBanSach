@@ -6,9 +6,13 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Component;
+import java.awt.Font;
+import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.NhanVienBUS;
@@ -159,6 +163,10 @@ public class MainFrame extends JFrame  implements ActionListener{
 	}	
 
 	public static void main(String[] args) {
+		FlatRobotoFont.install();
+        FlatLaf.registerCustomDefaultsSource("resources/themes");
+        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN,13));
+		
 		FlatIntelliJLaf.setup();
 		TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(1,"admin","123456",1);
 		MainFrame mainFrame = new MainFrame(taiKhoanDTO);
@@ -167,7 +175,6 @@ public class MainFrame extends JFrame  implements ActionListener{
 	}
 
 	public void setPanel(Component panel) {
-		// butmaintext.setText(txt);
         mainContent.removeAll();
         mainContent.add(panel,"push, grow");
         mainContent.repaint();

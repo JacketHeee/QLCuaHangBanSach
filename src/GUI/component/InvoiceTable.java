@@ -68,6 +68,11 @@ public class InvoiceTable extends CustomTable {
         return panel;
     }
 
+    @Override
+    public void addScollPane() {
+        add(dataPanel,BorderLayout.CENTER);
+    }
+
     // Phương thức hỗ trợ để đếm số component trong hàng hiện tại
     private int getComponentCountInRow(int row) {
         List<Component> components = rowLabels.get(row);
@@ -139,8 +144,6 @@ public class InvoiceTable extends CustomTable {
     public void setSelectedRow(int row) {
         // TODO Auto-generated method stub
     }
+
     
-    // Để truy cập các trường protected từ lớp cha
-    // Các trường như evenRowColor, oddRowColor, headers, rowLabels, dataPanel, rowHeights cần được truy cập
-    // Nếu chúng không public/protected, bạn cần thêm getter hoặc thay đổi modifier trong CustomTable
 }

@@ -47,6 +47,7 @@ public class CustomTitleBar extends JPanel {
         setLayout(new MigLayout("fill, ins 0", "[200]push[][][]", "[]"));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setPreferredSize(new Dimension(screenSize.width, heightTitle));
+        setMinimumSize(new Dimension(screenSize.width, heightTitle));
         setBackground(background); // Màu nền xám đậm
 
         tab = new JPanel(new MigLayout("al center center, gap 0, insets 0"));
