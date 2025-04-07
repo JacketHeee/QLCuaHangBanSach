@@ -3,7 +3,7 @@ package DTO;
 import java.math.BigDecimal;
 
 public class CT_PhieuNhapDTO {
-    private int maSach;  // Đã thay đổi kiểu từ String thành int
+    private String maVach;  // Đã thay đổi kiểu từ String thành int
     private int maNhap;  // Đã thay đổi kiểu từ String thành int
     private int soLuongNhap;
     private BigDecimal giaNhap;
@@ -13,21 +13,14 @@ public class CT_PhieuNhapDTO {
     }
 
     // Constructor đầy đủ tham số
-    public CT_PhieuNhapDTO(int maSach, int maNhap, int soLuongNhap, BigDecimal giaNhap) {
-        this.maSach = maSach;
+    public CT_PhieuNhapDTO(String maVach, int maNhap, int soLuongNhap, BigDecimal giaNhap) {
+        this.maVach = maVach;
         this.maNhap = maNhap;
         this.soLuongNhap = soLuongNhap;
         this.giaNhap = giaNhap;
     }
 
     // Getter và Setter
-    public int getMaSach() {
-        return maSach;
-    }
-
-    public void setMaSach(int maSach) {
-        this.maSach = maSach;
-    }
 
     public int getMaNhap() {
         return maNhap;
@@ -51,6 +44,14 @@ public class CT_PhieuNhapDTO {
 
     public void setGiaNhap(BigDecimal giaNhap) {
         this.giaNhap = giaNhap;
+    }
+
+    public String getMaVach() {
+        return maVach;
+    }
+
+    public void setMaVach(String maVach) {
+        this.maVach = maVach;
     }
 }
 

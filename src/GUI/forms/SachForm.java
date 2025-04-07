@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
+import BUS.PhienBanSachBUS;
 import BUS.SachBUS;
 import DTO.SachDTO;
 
@@ -33,11 +34,13 @@ public class SachForm extends JPanel implements ActionListener{
 
     private String title;
     private SachBUS sachBUS;
-    private String[] header = {"Mã sách","Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
+    private PhienBanSachBUS phienBanSachBUS;
+    private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"}; // Tạm thời không cài đặt giá bán
 
     public SachForm(String title) {
         this.title = title;
         sachBUS = SachBUS.getInstance();
+        phienBanSachBUS = PhienBanSachBUS.getInstance();
         init();
     }
     
@@ -115,14 +118,15 @@ public class SachForm extends JPanel implements ActionListener{
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<SachDTO> listKH = sachBUS.getAll();
+        ArrayList<SachDTO> listKH = sachBUS.getAll(); 
         ArrayList<String[]> data = new ArrayList<>();
         for(SachDTO i : listKH){
-            data.add(new String[]{i.getMaSach() + "", i.getTenSach(), i.getGiaBan() + "", i.getSoLuongTon() + "", i.getNamXB() + "",i.getMaVung() + "", i.getMaNXB() + ""});
+            int soLuongTon = phienBanSachBUS.getSoLuongSachByMaSach(i.getMaSach());
+            data.add(new String[]{i.getMaSach() + "", i.getTenSach(), soLuongTon + "", i.getNamXB() + "",i.getMaVung() + "", i.getMaNXB() + ""});
         }
         return(data);
     }
-    // {"Mã sách","Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
+    // {"Mã sách","Tên sách","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
