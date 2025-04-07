@@ -2,16 +2,16 @@ package DTO;
 
 public class KM_SachDTO {
     private int maKM;  // Đã thay đổi kiểu từ String thành int
-    private int maSach; // Đã thay đổi kiểu từ String thành int
+    private String maVach; // Đã thay đổi kiểu từ String thành int
 
     // Constructor không tham số
     public KM_SachDTO() {
     }
 
     // Constructor đầy đủ tham số
-    public KM_SachDTO(int maKM, int maSach) {
+    public KM_SachDTO(int maKM, String maVach) {
         this.maKM = maKM;
-        this.maSach = maSach;
+        this.maVach = maVach;
     }
 
     // Getter và Setter
@@ -23,12 +23,12 @@ public class KM_SachDTO {
         this.maKM = maKM;
     }
 
-    public int getMaSach() {
-        return maSach;
+    public String getMaVach() {
+        return maVach;
     }
 
-    public void setMaSach(int maSach) {
-        this.maSach = maSach;
+    public void setMaVach(String maVach) {
+        this.maVach = maVach;
     }
 }
 

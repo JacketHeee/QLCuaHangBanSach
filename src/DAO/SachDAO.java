@@ -22,9 +22,8 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	public int insert(SachDTO t) {
 		int rowInserted = 0;
 		String sql = String.format(
-			"INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s','%s')",
+			"INSERT INTO SACH (tenSach, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s')",
 			t.getTenSach(),
-			t.getGiaBan(),
 			t.getNamXB(),
 			t.getMaVung(),
 			t.getMaNXB()
@@ -54,9 +53,8 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		// String sql = "UPDATE SACH SET tenSach = ?, giaBan = ?, namXB = ?, maVung = ?, maNXB = ? WHERE maSach = ?";
 		int rowUpdated = 0;
 		String query = String.format(
-			"UPDATE SACH SET tenSach = '%s', giaBan = '%s', namXB = '%s', maVung = '%s', maNXB = '%s' WHERE maSach = '%s'",
+			"UPDATE SACH SET tenSach = '%s', namXB = '%s', maVung = '%s', maNXB = '%s' WHERE maSach = '%s'",
 			t.getTenSach(),
-			t.getGiaBan() + "",
 			t.getNamXB() + "",
 			t.getMaVung() + "",
 			t.getMaNXB() + "",
@@ -81,12 +79,10 @@ public class SachDAO implements DAOInterface<SachDTO>{
 			while(rs.next()) {
 				int id = rs.getInt("maSach");
 				String tenSach = rs.getString("tenSach");
-				BigDecimal giaBan = rs.getBigDecimal("giaBan");
-				int soLuongTon = rs.getInt("soLuongTon");
 				int namXB = rs.getInt("namXB");
 				int maVung = rs.getInt("maVung");
 				int maNXB = rs.getInt("maNXB");
-				SachDTO sach = new SachDTO(id, tenSach, giaBan, soLuongTon, namXB, maVung, maNXB);
+				SachDTO sach = new SachDTO(id, tenSach, namXB, maVung, maNXB);
 				result.add(sach);
 			}
 			jdbcUtil.Close();
