@@ -533,7 +533,8 @@ public class CustomTable extends JPanel implements ActionListener {
         for (int i = 0; i < headers.length; i++) {
             headerPanel.add(createHeaderLabel(headers[i]), "grow,cell " + i + " 0");
         }
-        headerPanel.add(createHeaderLabel("Hành động"), "grow,cell " + headers.length + " 0");
+        
+        addColHanhDong();
 
         // Tạo dataPanel với constraints ngay từ đầu
         dataPanel = new JPanel();
@@ -549,17 +550,32 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
 
         // Tạo JScrollPane
+        
+        
+        // Thêm vào CustomTable
+        add(headerPanel, BorderLayout.NORTH);
+        addScollPane();
+
+        // Đặt kích thước mặc định cho CustomTable
+        setMinimumSize(new Dimension(400, 200));
+    }
+
+    protected void addColHanhDong() {
+        headerPanel.add(createHeaderLabel("Hành động"), "grow,cell " + headers.length + " 0");
+    }
+
+    @Override
+    public void setMinimumSize(Dimension minimumSize) {
+        // TODO Auto-generated method stub
+        super.setMinimumSize(minimumSize);
+    }
+
+    public void addScollPane() {
         scrollPane = new CustomScrollPane(dataPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(null);
-
-        // Thêm vào CustomTable
-        add(headerPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
-
-        // Đặt kích thước mặc định cho CustomTable
-        setMinimumSize(new Dimension(headers.length * 150, 200));
     }
 
     private JLabel createHeaderLabel(String text) {
@@ -623,6 +639,8 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
         dataPanel.revalidate();
         dataPanel.repaint();
+        repaint();
+        revalidate();
     }
 
     public void setSelectedRow(int row) {
@@ -771,9 +789,11 @@ public class CustomTable extends JPanel implements ActionListener {
             });
         }
 
-        JPanel panel = createActionPanel(row);
-        labels.add(panel);
-        dataPanel.add(panel, "grow,cell " + headers.length + " " + (row - 1));
+        if (actions != null) {
+            JPanel panel = createActionPanel(row);
+            labels.add(panel);
+            dataPanel.add(panel, "grow,cell " + headers.length + " " + (row - 1));
+        }
 
         rowLabels.put(row, labels);
 

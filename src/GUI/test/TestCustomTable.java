@@ -1,14 +1,14 @@
 package GUI.test;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
-import GUI.component.CustomScrollPane;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import GUI.component.LabelInfor;
+import net.miginfocom.swing.MigLayout;
+import resources.base.baseTheme;
 
 public class TestCustomTable extends JFrame {
 
@@ -16,69 +16,25 @@ public class TestCustomTable extends JFrame {
         setTitle("Test Custom Table");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        String[] headers = {"Tên", "Tuổi", "Địa chỉ", "Điểm"};
-        ArrayList<String[]> dataList = new ArrayList<>(List.of(
-            new String[]{"Nguyễn Văn A", "25", "Hà Nội", "8.5"},
-            new String[]{"Trần Thị B", "30", "TP.HCM", "9.0"},
-            new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"}
-        ));
-        ArrayList<String[]> data = new ArrayList<>(List.of(
-        ));
-
-        String[][] actions = {
-            {"edit.svg","edit"},
-            {"detail.svg","detail"},
-            {"remove.svg","remove"}
-        };
         
-        CustomTableExample tablePanel = new CustomTableExample(dataList,actions,headers);
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-        tablePanel.addDataRow(new String[]{"Lê Văn C", "22", "Đà Nẵng", "7.5"});
-
-        // // tablePanel.setHeaderBackground(new Color(173, 216, 230));
-        // tablePanel.setColumnWidth(0, 20);
-        // tablePanel.setColumnWidth(1, 200);
-        // tablePanel.setRowHeight(0, 40);
-        // tablePanel.setRowHeight(2, 50);
-
         setSize(1000,600);
-        add(new CustomScrollPane(tablePanel));
+
+        JPanel panel = new JPanel(new MigLayout());
+        
+        for (String[] x : data) 
+            panel.add(new LabelInfor(x[0], x[1], x[2], x[3]),"pushx,grow");
+        add(panel);
         // pack();
         setLocationRelativeTo(null);
     }
 
+    String[][] data = {
+        {"Cuốn sách hiện có","bookLabel.svg","100",baseTheme.bookLabel},
+        {"Nhà cung cấp","supplierLabel.svg","98",baseTheme.supplierLabel},
+        {"Khách hàng","customerLabel.svg","100",baseTheme.customerLabel},
+        {"Nhân viên","staffLabel.svg","100",baseTheme.staffLabel}
+        };
+        
     public static void main(String[] args) {
         FlatIntelliJLaf.setup();
         SwingUtilities.invokeLater(() -> {

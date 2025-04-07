@@ -124,6 +124,10 @@ public class VungKeForm extends JPanel {
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         CustomTable table = new CustomTable(Data(),actions, header);
+<<<<<<< HEAD
+=======
+        // CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
+>>>>>>> 05d505fc9093d33df099834b2ded50e6991b137d
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }

@@ -43,7 +43,9 @@ public class Login extends JFrame implements ActionListener{
 
         butLogin = new CustomButton("<html><b>ĐĂNG NHẬP</b></html>");
         txtPassword = new JPasswordField();
+        txtPassword.setText("123456");
         txtUsername = new JTextField();
+        txtUsername.setText("admin");
         forgotPass = new JLabel("<html><i><u><a href=''>Quên mật khẩu?</a></u><i></html>");
 
         cssComponent();

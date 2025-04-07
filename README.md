@@ -15,6 +15,17 @@ Dự án **"Quản Lý Cửa Hàng Sách"** nhằm xây dựng một hệ thốn
 - **Figma (Giao diện)**: [Xem chi tiết](https://www.figma.com/design/tpEv1Ks9hfGA4MKJMsvBXt/App-QL-C%E1%BB%ADa-h%C3%A0ng-S%C3%A1ch?node-id=1-3&t=QUtxeAGy5DxXsTU7-1)
 
 ## 3. Cài Đặt & Triển Khai
+1. Tải source code về:
+
+   ```bash
+   git clone https://github.com/JacketHeee/QLCuaHangBanSach.git
+   ```
+2. Mở xampp và vào trang http://localhost/phpmyadmin/ tạo 1 database mới có tên là quanlycuahangbansach và import cơ sở dữ liệu trong folder database -> file quanlycuahangbansach.sql trong source code.
+
+3. Sử dụng VSCODE để chạy source code.
+### Tài khoản Admin
+- Username: admin
+- Password: 123456
 
 ## 4. Các thao thác với git
 | Bước | Lệnh Git / Thao tác | Mô tả chi tiết |

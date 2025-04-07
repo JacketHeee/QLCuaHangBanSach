@@ -34,6 +34,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener{
         init();
     }
 
+    
     private void init() {
         setLayout(new MigLayout("insets 0,wrap 1, gap 10"));
 
@@ -83,7 +84,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener{
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         panel.add(table,"push,grow,wrap");
-        panel.add(panelActionOnTable(),"pushx,growx");
+        panel.add(panelActionOnTable(),"pushx,growx,wrap");
+        panel.add(getTongTien(),"pushx,growx");
         return panel;
     }
 

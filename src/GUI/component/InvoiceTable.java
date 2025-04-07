@@ -25,7 +25,7 @@ public class InvoiceTable extends CustomTable {
     public JPanel createDataInput(String text, int row, int columnIndex) { // Thêm tham số columnIndex
         // Chuẩn hóa text khi null
         String displayText = (text == null) ? "" : text;
-        JPanel panel = new JPanel(new MigLayout("insets 0"));
+        JPanel panel = new JPanel(new MigLayout("insets 0,al center center"));
         
 
         // Cột đầu tiên (index 0) là JTextField
@@ -52,7 +52,11 @@ public class InvoiceTable extends CustomTable {
         // Các cột khác vẫn là JLabel
         else {
             JLabel label = new JLabel(displayText);
-            label.setBorder(new javax.swing.border.EmptyBorder(10, 5, 10, 5));
+            // label.setBorder(new javax.swing.border.EmptyBorder(10, 5, 10, 5));
+            int height = 40;
+            label.setPreferredSize(new Dimension(label.getWidth(),height));
+            label.setMinimumSize(new Dimension(label.getWidth(),height));
+            label.setMaximumSize(new Dimension(label.getWidth(),height));
             label.setOpaque(true);
             label.setBackground(Color.WHITE);
             label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -62,6 +66,11 @@ public class InvoiceTable extends CustomTable {
         panel.setOpaque(true);
         panel.setBackground(Color.white);
         return panel;
+    }
+
+    @Override
+    public void addScollPane() {
+        add(dataPanel,BorderLayout.CENTER);
     }
 
     // Phương thức hỗ trợ để đếm số component trong hàng hiện tại
@@ -135,8 +144,6 @@ public class InvoiceTable extends CustomTable {
     public void setSelectedRow(int row) {
         // TODO Auto-generated method stub
     }
+
     
-    // Để truy cập các trường protected từ lớp cha
-    // Các trường như evenRowColor, oddRowColor, headers, rowLabels, dataPanel, rowHeights cần được truy cập
-    // Nếu chúng không public/protected, bạn cần thêm getter hoặc thay đổi modifier trong CustomTable
 }

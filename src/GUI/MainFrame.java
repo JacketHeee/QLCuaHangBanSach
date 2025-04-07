@@ -5,9 +5,14 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.awt.Component;
+import java.awt.Font;
+import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.NhanVienBUS;
@@ -17,6 +22,7 @@ import DTO.NhanVienDTO;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 import GUI.component.CustomTitleBar;
+import GUI.component.DimGlassPane;
 import GUI.component.MenuTaskBar;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
@@ -29,6 +35,8 @@ public class MainFrame extends JFrame  implements ActionListener{
 	private int width = 1024; 
 	private int height = 768; 
 	private String title = "Quản lý cửa hàng máy tính"; 
+	
+	public DimGlassPane glassPane = new DimGlassPane();
 
 	private MenuTaskBar menuTaskBar;
 	private JPanel mainContent;
@@ -55,6 +63,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 		setSize(width, height);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		setGlassPane(glassPane);
 		
 		//tu dong mo full man hinh
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -154,6 +163,10 @@ public class MainFrame extends JFrame  implements ActionListener{
 	}	
 
 	public static void main(String[] args) {
+		FlatRobotoFont.install();
+        FlatLaf.registerCustomDefaultsSource("resources/themes");
+        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN,13));
+		
 		FlatIntelliJLaf.setup();
 		TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(1,"admin","123456",1);
 		MainFrame mainFrame = new MainFrame(taiKhoanDTO);
@@ -161,9 +174,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 
 	}
 
-	public void setPanel(JPanel panel) {
-
-		// butmaintext.setText(txt);
+	public void setPanel(Component panel) {
         mainContent.removeAll();
         mainContent.add(panel,"push, grow");
         mainContent.repaint();
