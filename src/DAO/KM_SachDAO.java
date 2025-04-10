@@ -35,7 +35,7 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
 
     public ArrayList<KM_SachDTO> getAll() {
         ArrayList<KM_SachDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM KM_SACH";
+        String sql = "SELECT * FROM KM_PHIENBANSACH";
         
         try {
             JDBCUtil jdbcUtil = new JDBCUtil();
@@ -43,7 +43,7 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
             ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maKM = rs.getInt("maKM");
-                int maSach = rs.getInt("maSach");
+                String maSach = rs.getString("maSach");
                 
                 KM_SachDTO kmSach = new KM_SachDTO(maKM, maSach);
                 result.add(kmSach);
@@ -54,4 +54,12 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
         }
         return result;
     }
+
+    // public static void main(String[] args) {
+    //     KM_SachDAO km_SachDAO = KM_SachDAO.getInstance();
+    //     ArrayList<KM_SachDTO> list = km_SachDAO.getAll();
+    //     for(KM_SachDTO i : list){
+    //         System.out.println(i.getMaKM() + "\t" + i.getmaSach());
+    //     }
+    // }
 }

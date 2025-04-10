@@ -21,9 +21,9 @@ public class AddNhomQuyen extends JDialog {
     private String[][] actionRole;
 
     public AddNhomQuyen(JFrame parent, String title, boolean modal, ArrayList<String[]> arrCN,String[][] actionRole) {
+        super(parent,title,modal);
         this.arrCN = arrCN;
         this.actionRole = actionRole;
-        super(parent,title,modal);
         init(); 
     }
 

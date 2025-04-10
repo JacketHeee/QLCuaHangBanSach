@@ -43,7 +43,7 @@ public class CT_PhieuNhapDAO implements DAOInterface<CT_PhieuNhapDTO> {
             jdbcUtil.Open();
             ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
-                int maSach = rs.getInt("maSach");
+                String maSach = rs.getString("maSach");
                 int maNhap = rs.getInt("maNhap");
                 int soLuongNhap = rs.getInt("soLuongNhap");
                 BigDecimal giaNhap = rs.getBigDecimal("giaNhap");
@@ -57,4 +57,12 @@ public class CT_PhieuNhapDAO implements DAOInterface<CT_PhieuNhapDTO> {
         }
         return result;
     }
+
+    //     public static void main(String[] args) {
+    //     CT_PhieuNhapDAO cT_PhieuNhapDAO = CT_PhieuNhapDAO.getInstance();
+    //     ArrayList<CT_PhieuNhapDTO> list = cT_PhieuNhapDAO.getAll();
+    //     for(CT_PhieuNhapDTO i : list){
+    //         System.out.println(i.getMaNhap() + "\t" + i.getmaSach() + "\t" + i.getSoLuongNhap() + "\t" + i.getGiaNhap());
+    //     }
+    // }
 }

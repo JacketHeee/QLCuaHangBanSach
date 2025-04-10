@@ -2,6 +2,7 @@ package GUI.forms;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -14,6 +15,7 @@ import DTO.SachDTO;
 import java.util.ArrayList;
 import java.util.List;
 
+import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
@@ -30,13 +32,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SachForm extends JPanel implements ActionListener{
+    		// "INSERT INTO SACH (tenSach, soLuong, giaNhap, giaBan, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s','%s','%s','%s')",
 
     private String title;
     private SachBUS sachBUS;
-    private String[] header = {"Mã sách","Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
 
-    public SachForm(String title) {
+    private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá nhập","Giá bán","Năm XB", "Mã vùng", "Mã NXB"}; // Tạm thời không cài đặt giá bán
+    private MainFrame mainFrame;
+
+    public SachForm(String title, MainFrame mainFrame) {
         this.title = title;
+        this.mainFrame = mainFrame;
         sachBUS = SachBUS.getInstance();
         init();
     }
@@ -107,22 +113,31 @@ public class SachForm extends JPanel implements ActionListener{
         ButtonAction but;
         for (String[] x : arrActions) {
             but = new ButtonAction(x[0],x[1],x[2]);
-            but.addActionListener(this);
             panel.add(but);
+            but.setActionCommand(but.getId());
+            but.addActionListener(this);
         }
 
         return panel;
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<SachDTO> listKH = sachBUS.getAll();
+        ArrayList<SachDTO> listKH = sachBUS.getAll(); 
         ArrayList<String[]> data = new ArrayList<>();
         for(SachDTO i : listKH){
-            data.add(new String[]{i.getMaSach() + "", i.getTenSach(), i.getGiaBan() + "", i.getSoLuongTon() + "", i.getNamXB() + "",i.getMaVung() + "", i.getMaNXB() + ""});
+            data.add(new String[]{
+                i.getMaSach() + "", 
+                i.getTenSach(), 
+                i.getSoLuong() + "", 
+                i.getGiaNhap() + "",
+                i.getGiaBan() + "",
+                i.getNamXB() + "",
+                i.getMaVung() + "", 
+                i.getMaNXB() + ""
+            });
         }
         return(data);
     }
-    // {"Mã sách","Tên sách","Giá bán","Số lượng tồn","Năm XB", "Mã vùng", "Mã NXB"};
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -133,7 +148,6 @@ public class SachForm extends JPanel implements ActionListener{
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        // CustomTable table = new CustomTable(data,actions, "#","Hình ảnh","Mã sách","Tên sách","Năm XB","Hiện có","Giá bán(đ)");
         CustomTable table = new CustomTable(Data(),actions, header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -141,13 +155,16 @@ public class SachForm extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ButtonAction but = (ButtonAction) e.getSource();
-
-        switch (but.getId()) {
+        switch (e.getActionCommand()) {
             case "add":
+                JOptionPane.showMessageDialog(mainFrame, "hi");
+                break;
+            case "importExcel":
                 
                 break;
-        
+            case "exportExcel":
+                
+                break;
             default:
                 break;
         }

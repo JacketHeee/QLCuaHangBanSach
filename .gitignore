@@ -1,0 +1,23 @@
+# Bỏ qua file biên dịch Java
+*.class
+
+# Thư mục build
+/bin/
+/build/
+
+# File log, tạm
+*.log
+*.tmp
+
+# VS Code settings
+.vscode/
+
+# Java IDE khác (nếu dùng chung)
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+nbproject/
+
+*.class

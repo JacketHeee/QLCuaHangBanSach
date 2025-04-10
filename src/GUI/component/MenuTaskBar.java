@@ -168,7 +168,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
             // mainFrame.setPanel(but.getText());
 			switch (but.getId()) {
 				case "book":
-					mainFrame.setPanel(new SachForm(but.getText()));
+					mainFrame.setPanel(new SachForm(but.getText(), mainFrame));
 					break;
 				case "category":
 					mainFrame.setPanel(new TheLoaiForm(but.getText()));

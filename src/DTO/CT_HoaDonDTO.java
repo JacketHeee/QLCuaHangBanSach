@@ -3,9 +3,10 @@ package DTO;
 import java.math.BigDecimal;
 
 public class CT_HoaDonDTO {
-    private int maSach;  // Đã thay đổi kiểu từ String thành int
+    private String maSach;  // Đã thay đổi kiểu từ String thành int
     private int maHD;    // Đã thay đổi kiểu từ String thành int
     private int soLuong;
+    private BigDecimal giaNhap;
     private BigDecimal giaBan;
 
     // Constructor không tham số
@@ -13,24 +14,20 @@ public class CT_HoaDonDTO {
     }
 
     // Constructor đầy đủ tham số
-    public CT_HoaDonDTO(int maSach, int maHD, int soLuong, BigDecimal giaBan) {
-        this.maSach = maSach;
-        this.maHD = maHD;
-        this.soLuong = soLuong;
-        this.giaBan = giaBan;
-    }
+    
 
     // Getter và Setter
-    public int getMaSach() {
-        return maSach;
-    }
-
-    public void setMaSach(int maSach) {
-        this.maSach = maSach;
-    }
 
     public int getMaHD() {
         return maHD;
+    }
+
+    public CT_HoaDonDTO(String maSach, int maHD, int soLuong, BigDecimal giaNhap, BigDecimal giaBan) {
+        this.maSach = maSach;
+        this.maHD = maHD;
+        this.soLuong = soLuong;
+        this.giaNhap = giaNhap;
+        this.giaBan = giaBan;
     }
 
     public void setMaHD(int maHD) {
@@ -52,5 +49,31 @@ public class CT_HoaDonDTO {
     public void setGiaBan(BigDecimal giaBan) {
         this.giaBan = giaBan;
     }
+
+    public String getmaSach() {
+        return maSach;
+    }
+
+    public void setmaSach(String maSach) {
+        this.maSach = maSach;
+    }
+
+    public String getMaSach() {
+        return maSach;
+    }
+
+    public void setMaSach(String maSach) {
+        this.maSach = maSach;
+    }
+
+    public BigDecimal getGiaNhap() {
+        return giaNhap;
+    }
+
+    public void setGiaNhap(BigDecimal giaNhap) {
+        this.giaNhap = giaNhap;
+    }
+
+    
 }
 
