@@ -155,6 +155,8 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener {
                     Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
                 }
                 break;
+            case "detail":
+                break;
             default:
                 System.out.println("Unknown action: " + actionId);
                 break;

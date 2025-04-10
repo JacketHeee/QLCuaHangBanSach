@@ -3,8 +3,11 @@ package GUI.forms;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
+import utils.UIUtils;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -13,10 +16,11 @@ import javax.swing.border.Border;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomButton;
 import GUI.component.InvoiceTable;
-
+import GUI.component.TableActionListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,13 +28,15 @@ import java.awt.event.ActionListener;
 import java.awt.Font;
 import java.awt.Color;
 
-public class TaoHoaDonForm extends JPanel implements ActionListener{
+public class TaoHoaDonForm extends JPanel implements ActionListener,TableActionListener{
     private String[] listNcc; 
     private CustomButton buttonSave;
     private CustomButton buttonCancel;
     private InvoiceTable table;
+    private MainFrame mainFrame;
 
-    public TaoHoaDonForm() {
+    public TaoHoaDonForm(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
         init();
     }
 
@@ -84,6 +90,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener{
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         panel.add(table,"push,grow,wrap");
+        table.setActionListener(this);
         panel.add(panelActionOnTable(),"pushx,growx,wrap");
         panel.add(getTongTien(),"pushx,growx");
         return panel;
@@ -186,6 +193,25 @@ public class TaoHoaDonForm extends JPanel implements ActionListener{
 
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
+                break;
+        }
     }
 
     

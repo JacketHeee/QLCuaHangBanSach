@@ -1,125 +1,173 @@
 package GUI.forms.thongke;
 
-import java.awt.*;
 import javax.swing.*;
 
-import GUI.component.CustomScrollPane;
-import GUI.component.CustomSubTab;
+import GUI.component.CustomTable;
+import GUI.component.LabelInfor;
+import GUI.component.LabelTongQuan;
+import GUI.component.TableNoTouch;
+import GUI.component.chart.HorizontalBarChartV2;
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import resources.base.baseTheme;
 
-public class DoanhThuForm extends JPanel implements ActionListener{
+import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.Arrays; 
 
-    private JPanel mainPanel; 
-    private JPanel hPanel;
-
-    private JButton butThongKeTheoNam;
-    private JButton butThongKeTheoThang;
-    private JButton butThongKeTheoNgay;
-    private JButton butThongKeTuNgayDenNgay;
+public class DoanhThuForm extends JPanel {
+    JComboBox<String> comboBox;
 
     public DoanhThuForm() {
         init();
     }
 
     private void init() {
-        setLayout(new MigLayout("insets 0,gap 0"));
-
-        hPanel = tabTime();
-        add(hPanel,"pushx,growx,wrap"); 
-
-        mainPanel = new JPanel(new MigLayout("insets 0"));
-        mainPanel.add(new JButton("jhihi"));
-        add(mainPanel,"push,grow");
-
-        setPanel(new ThongKeTheoNam());
+        setLayout(new MigLayout("insets 0, gap 0,wrap 1"));
+        add(getHeader(),"pushx,growx, hmin 60");
+        add(getMainContent(),"push,grow");
     }
 
-    private JPanel tabTime() {
-        JPanel panel = new JPanel(new MigLayout("insets 0,gap 0"));
-
-        butThongKeTheoNam = new CustomSubTab("Thống kê theo năm");
-        butThongKeTheoThang = new CustomSubTab("Thống kê từng tháng trong năm");
-        butThongKeTheoNgay = new CustomSubTab("Thống kê từng ngày trong tháng");
-        butThongKeTuNgayDenNgay = new CustomSubTab("Thống kê từ ngày đến ngày");
-
-        butThongKeTheoNam.setActionCommand("tkNam");
-        butThongKeTheoThang.setActionCommand("tkThang");
-        butThongKeTheoNgay.setActionCommand("tkNgay");
-        butThongKeTuNgayDenNgay.setActionCommand("tkNgayDenNgay");
-
-        butThongKeTheoNam.setSelected(true);
-
-        butThongKeTheoNam.addActionListener(this);
-        butThongKeTheoThang.addActionListener(this);
-        butThongKeTheoNgay.addActionListener(this);
-        butThongKeTuNgayDenNgay.addActionListener(this);
-        
-
-        panel.add(butThongKeTheoNam,"growy");
-        panel.add(butThongKeTheoThang,"growy");
-        panel.add(butThongKeTheoNgay,"growy");
-        panel.add(butThongKeTuNgayDenNgay,"growy");
-
+    private JPanel getHeader() {
+        JPanel panel = new JPanel(new MigLayout("insets 10 30 10 30, gap 5,al center center"));
+        panel.setBackground(Color.decode(baseTheme.selectedButton));
+        String[] choose = {"Khách hàng","Sách"};
+        panel.add(new JLabel("Thống kê theo")); 
+        comboBox = new JComboBox<>(choose);
+        panel.add(comboBox);
+        panel.add(new JLabel(),"pushx"); 
+        panel.add(new JLabel("Từ ngày"));
+        panel.add(new JTextField(20));
+        panel.add(new JLabel("Đến"));
+        panel.add(new JTextField(20));
         return panel;
     }
 
-    public void setPanel(Component panel) {
-        mainPanel.removeAll();
-        mainPanel.add(panel,"push, grow");
-        mainPanel.repaint();
-        mainPanel.validate();
+    private JPanel getMainContent() {
+        JPanel panel = new JPanel(new MigLayout("insets 0, gap 0"));
+        panel.add(getPanelTable(),"push,grow");
+        panel.add(getPanelTongQuan(),"pushy,growy");
+        return panel;
     }
 
+    private String[] headerSach = {"Mã sách","Tên sách","Số hóa đơn","Tổng tiền"}; 
+    private String[] headerKhachHang = {"Mã KH","Tên khách hàng","Số hóa đơn","Tổng tiền"};
 
-    private void setTabDefault() {
-        CustomSubTab but;
+    private JPanel getPanelTable() {
+        JPanel panel = new JPanel(new MigLayout("insets 5, gap 5,wrap 1"));
+        panel.add(new JLabel("<html><font size='+1'><b>Tình hình kinh doanh</b></font></html>"));
 
-        for (Component x : hPanel.getComponents()) {
-            but = (CustomSubTab) x;
-            but.setDefault(baseTheme.backgroundColor,baseTheme.textColor);
+        comboBox.setSelectedItem("Sách");
+        String select = (String)comboBox.getSelectedItem();
+        // String[] headerTable;
+        TableNoTouch table;
+        if (select.equals("Khách hàng")) {
+            table = new TableNoTouch(null, headerKhachHang);
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
         }
-    }
+        else {
+            table = new TableNoTouch(null, headerSach);
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
+            table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
 
-
-     @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        setTabDefault();
-
-        CustomSubTab but;
-        switch (e.getActionCommand()) {
-            case "tkNam":
-                but = (CustomSubTab) e.getSource();
-                but.setSelected(true);
-                setPanel(new ThongKeTheoNam());
-                break;
-            case "tkThang":
-                but = (CustomSubTab) e.getSource();
-                but.setSelected(true);
-                setPanel(new ThongKeTungThang());
-                break;
-            case "tkNgay":
-                but = (CustomSubTab) e.getSource();
-                but.setSelected(true);
-                setPanel(new ThongKeTungNgay());
-                break;
-            case "tkNgayDenNgay":
-                but = (CustomSubTab) e.getSource();
-                but.setSelected(true);
-                setPanel(new ThongKeTungNgayDenNgay());
-                break;
-        
-            default:
-                break;
         }
         
+
+        panel.add(table,"push,grow");
+        
+        return panel;
     }
 
+    private JPanel getPanelTongQuan() {
+        JPanel panel = new JPanel(new MigLayout("insets 0, gap 0,wrap 1"));
+        panel.setPreferredSize(new Dimension(300,500));
+        panel.add(getTongQuan(),"pushx,growx");
+        panel.add(getListHoaDon(),"push,grow");
+        return panel;
+    }
+
+    private JPanel getTongQuan() {
+        JPanel panel = new JPanel(new MigLayout("insets 0, gap 0,wrap 1"));
+        
+        JPanel panelLabel = new JPanel(new MigLayout("insets 10, gap 10"));
+        panelLabel.add(new LabelTongQuan("Doanh thu","staff.svg","100.000.000",baseTheme.supplierLabel),"pushx,growx,sg 1");
+        panelLabel.add(new LabelTongQuan("Doanh thu","staff.svg","100.000.000",baseTheme.customerLabel),"pushx, growx,sg 1");
+
+        panel.add(panelLabel,"pushx,growx");
+
+        HorizontalBarChartV2 top = new HorizontalBarChartV2();
+        top.setBackground(Color.white);
+        top.setHeader(new JLabel("<html><b>Top 5 sách bán chạy nhất</b><html>", JLabel.CENTER));
+        panel.add(top,"hmin 300,pushx,growx");
+        return panel;
+    }
+
+
+    private JPanel getListHoaDon() {
+        JPanel panel = new JPanel(new MigLayout("insets 5, gap 10,wrap 1"));
+        panel.add(new JLabel("<html><b>Hóa đơn tương ứng</b></html>"),"pushx, al center"); 
+        CustomTable table = new CustomTable(null, new String[][] {{"detail.svg","detail"}},"Mã hóa đơn","Tổng tiền");
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        panel.add(table,"push,grow");
+        return panel;
+    }
 
     
 }

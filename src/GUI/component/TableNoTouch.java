@@ -1,15 +1,8 @@
 package GUI.component;
 
-import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.swing.border.EmptyBorder;
 
 public class TableNoTouch extends CustomTable {
 

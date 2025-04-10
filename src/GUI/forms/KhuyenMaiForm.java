@@ -135,7 +135,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener{
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         table = new CustomTable(Data(),actions, header);
         table.setActionListener(this);
-        
+
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
