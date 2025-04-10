@@ -30,6 +30,9 @@ public class CustomTable extends JPanel implements ActionListener {
     protected JPanel headerPanel;
     protected JPanel dataPanel;
     protected CustomScrollPane scrollPane;
+
+    //set
+    private TableActionListener actionListener;
     
 
     public JPanel getDataPanel() {
@@ -83,6 +86,10 @@ public class CustomTable extends JPanel implements ActionListener {
         setMinimumSize(new Dimension(400, 200));
     }
 
+    public void setActionListener(TableActionListener listener) {
+        this.actionListener = listener;
+    }
+
     protected void addColHanhDong() {
         headerPanel.add(createHeaderLabel("Hành động"), "grow,cell " + headers.length + " 0");
     }
@@ -123,16 +130,27 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
     public JPanel createActionPanel(int row) {
+        // JPanel label = new JPanel(new MigLayout("al center center, gap 10"));
+        // label.setPreferredSize(new Dimension(150, 30));
+        // label.setOpaque(true);
+        // label.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
+
+        // CustumActionButtonTable but;
+        // for (String[] x : actions) {
+        //     but = new CustumActionButtonTable(x[0], x[1], row);
+        //     label.add(but);
+        //     but.addActionListener(this);
+        // }
+
         JPanel label = new JPanel(new MigLayout("al center center, gap 10"));
         label.setPreferredSize(new Dimension(150, 30));
         label.setOpaque(true);
         label.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
 
-        CustumActionButtonTable but;
         for (String[] x : actions) {
-            but = new CustumActionButtonTable(x[0], x[1], row);
+            CustumActionButtonTable but = new CustumActionButtonTable(x[0], x[1], row);
             label.add(but);
-            but.addActionListener(this);
+            but.addActionListener(this); // Gắn ActionListener
         }
         return label;
     }
@@ -340,20 +358,38 @@ public class CustomTable extends JPanel implements ActionListener {
         return rowConstraints.toString();
     }
 
+    // @Override
+    // public void actionPerformed(ActionEvent e) {
+    //     CustumActionButtonTable but = (CustumActionButtonTable) e.getSource();
+    //     switch (but.getId()) {
+    //         case "edit":
+    //             editRow(but.getRow());
+    //             break;
+    //         case "remove":
+    //             removeRow(but.getRow());
+    //             break;
+    //         default:
+    //         break;
+    //     }
+    // }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         CustumActionButtonTable but = (CustumActionButtonTable) e.getSource();
-        switch (but.getId()) {
-            case "edit":
-                editRow(but.getRow());
-                break;
-            case "remove":
-                removeRow(but.getRow());
-                break;
-            default:
-            break;
+        int buttonRow = but.getRow();
+
+        // Kiểm tra hàng hợp lệ
+        if (!rowLabels.containsKey(buttonRow)) {
+            return;
+        }
+
+        // Thông báo sự kiện lên listener nếu có
+        if (actionListener != null) {
+            actionListener.onActionPerformed(but.getId(), buttonRow);
         }
     }
+
+    
     public void addDataRow(String[] data) {
         int row = rowLabels.size() + 1;
         // System.out.println(row);
@@ -373,8 +409,22 @@ public class CustomTable extends JPanel implements ActionListener {
             labels.add(label);
             dataPanel.add(label, "grow,cell " + i + " " + (row - 1));
             label.addMouseListener(new java.awt.event.MouseAdapter() {
+                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                //     setSelectedRow(row);
+                // }
+
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    setSelectedRow(row);
+                    // Tìm chỉ số hàng hiện tại của JLabel trong rowLabels
+                    int currentRow = -1;
+                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                        if (entry.getValue().contains(label)) {
+                            currentRow = entry.getKey();
+                            break;
+                        }
+                    }
+                    if (currentRow != -1) {
+                        setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
+                    }
                 }
             });
         }

@@ -20,18 +20,21 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.PanelSearch;
+import GUI.component.TableActionListener;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import utils.UIUtils;
 
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 
+import javax.management.Notification;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SachForm extends JPanel implements ActionListener{
+public class SachForm extends JPanel implements ActionListener,TableActionListener{
     		// "INSERT INTO SACH (tenSach, soLuong, giaNhap, giaBan, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s','%s','%s','%s')",
 
     private String title;
@@ -146,9 +149,11 @@ public class SachForm extends JPanel implements ActionListener{
         {"remove.svg","remove"}
     };
 
+    CustomTable table;
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(Data(),actions, header);
+        table = new CustomTable(Data(),actions, header);
+        table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
@@ -169,6 +174,28 @@ public class SachForm extends JPanel implements ActionListener{
                 break;
         }
         
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "edit":
+                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                break;
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
+                break;
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -14,10 +15,13 @@ import DTO.PhuongThucTTDTO;
 import java.util.ArrayList;
 import java.util.List;
 
+import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.TableActionListener;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -26,13 +30,16 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
-public class PhuongThucThanhToanForm extends JPanel {
+public class PhuongThucThanhToanForm extends JPanel implements TableActionListener {
 
     private String title;
     private String[] header = {"Mã phương thức", "Tên phương thức thanh toán"};
     private PhuongThucTTBUS phuongThucTTBUS;
+    private CustomTable table ;
+    private MainFrame mainFrame;
 
-    public PhuongThucThanhToanForm(String title) {
+    public PhuongThucThanhToanForm(String title,MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
         this.title = title;
         phuongThucTTBUS = PhuongThucTTBUS.getInstance();
         init();
@@ -126,8 +133,31 @@ public class PhuongThucThanhToanForm extends JPanel {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(Data(),actions, header);
+        table = new CustomTable(Data(),actions, header);
+        table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "edit":
+                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                break;
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
+                break;
+        }
     }
 }

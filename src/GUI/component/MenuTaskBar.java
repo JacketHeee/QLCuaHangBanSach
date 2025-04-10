@@ -171,40 +171,40 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 					mainFrame.setPanel(new SachForm(but.getText(), mainFrame));
 					break;
 				case "category":
-					mainFrame.setPanel(new TheLoaiForm(but.getText()));
+					mainFrame.setPanel(new TheLoaiForm(but.getText(), mainFrame));
 					break;
 				case "author":
-					mainFrame.setPanel(new TacGiaForm(but.getText()));
+					mainFrame.setPanel(new TacGiaForm(but.getText(), mainFrame));
 					break;
 				case "nxb":
-					mainFrame.setPanel(new NXBForm(but.getText()));
+					mainFrame.setPanel(new NXBForm(but.getText(), mainFrame));
 					break;
 				case "ncc":
-					mainFrame.setPanel(new NhaCungCapForm(but.getText()));
+					mainFrame.setPanel(new NhaCungCapForm(but.getText(), mainFrame));
 					break;
 				case "vungtl":
-					mainFrame.setPanel(new VungKeForm(but.getText()));
+					mainFrame.setPanel(new VungKeForm(but.getText(), mainFrame));
 					break;
 				case "qlInput":
-					mainFrame.setPanel(new QLPhieuNhapForm(but.getText()));
+					mainFrame.setPanel(new QLPhieuNhapForm(but.getText(), mainFrame));
 					break;
 				case "qlBill":
-					mainFrame.setPanel(new QLHoaDonForm(but.getText()));
+					mainFrame.setPanel(new QLHoaDonForm(but.getText(), mainFrame));
 					break;
 				case "promotion":
-					mainFrame.setPanel(new KhuyenMaiForm(but.getText()));
+					mainFrame.setPanel(new KhuyenMaiForm(but.getText(), mainFrame));
 					break;
 				case "nv":
-					mainFrame.setPanel(new NhanVienForm(but.getText()));
+					mainFrame.setPanel(new NhanVienForm(but.getText(), mainFrame));
 					break;
 				case "taikhoan":
-					mainFrame.setPanel(new TaiKhoanForm(but.getText()));
+					mainFrame.setPanel(new TaiKhoanForm(but.getText(), mainFrame));
 					break;
 				case "khachhang":
-					mainFrame.setPanel(new KhachHangForm(but.getText()));
+					mainFrame.setPanel(new KhachHangForm(but.getText(),mainFrame));
 					break;
 				case "pttt":
-					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText()));
+					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText(), mainFrame));
 					break;
 				case "phanquyen":
 					mainFrame.setPanel(new PhanQuyenForm(mainFrame,but.getText(),arrCN));
