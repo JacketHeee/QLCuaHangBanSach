@@ -50,11 +50,13 @@ public class MenuTaskBar extends JPanel implements MouseListener {
     private ArrayList<String[]> arrCN;
     private JPanel menuChucNang;
     private ButtonTaskBar butstart;
+	private ArrayList<String[]> arrCNForNhomQuyen;
 
     
     public MenuTaskBar(MainFrame mainFrame, ArrayList<String[]> arrCN) {
         this.mainFrame = mainFrame;
         this.arrCN = arrCN;
+		this.arrCNForNhomQuyen = new ArrayList<>(arrCN.subList(1, arrCN.size()));
         init();
 	}
 
@@ -168,52 +170,52 @@ public class MenuTaskBar extends JPanel implements MouseListener {
             // mainFrame.setPanel(but.getText());
 			switch (but.getId()) {
 				case "book":
-					mainFrame.setPanel(new SachForm(but.getText()));
+					mainFrame.setPanel(new SachForm(but.getText(), mainFrame));
 					break;
 				case "category":
-					mainFrame.setPanel(new TheLoaiForm(but.getText()));
+					mainFrame.setPanel(new TheLoaiForm(but.getText(), mainFrame));
 					break;
 				case "author":
-					mainFrame.setPanel(new TacGiaForm(but.getText()));
+					mainFrame.setPanel(new TacGiaForm(but.getText(), mainFrame));
 					break;
 				case "nxb":
-					mainFrame.setPanel(new NXBForm(but.getText()));
+					mainFrame.setPanel(new NXBForm(but.getText(), mainFrame));
 					break;
 				case "ncc":
-					mainFrame.setPanel(new NhaCungCapForm(but.getText()));
+					mainFrame.setPanel(new NhaCungCapForm(but.getText(), mainFrame));
 					break;
 				case "vungtl":
-					mainFrame.setPanel(new VungKeForm(but.getText()));
+					mainFrame.setPanel(new VungKeForm(but.getText(), mainFrame));
 					break;
 				case "qlInput":
-					mainFrame.setPanel(new QLPhieuNhapForm(but.getText()));
+					mainFrame.setPanel(new QLPhieuNhapForm(but.getText(), mainFrame));
 					break;
 				case "qlBill":
-					mainFrame.setPanel(new QLHoaDonForm(but.getText()));
+					mainFrame.setPanel(new QLHoaDonForm(but.getText(), mainFrame));
 					break;
 				case "promotion":
-					mainFrame.setPanel(new KhuyenMaiForm(but.getText()));
+					mainFrame.setPanel(new KhuyenMaiForm(but.getText(), mainFrame));
 					break;
 				case "nv":
-					mainFrame.setPanel(new NhanVienForm(but.getText()));
+					mainFrame.setPanel(new NhanVienForm(but.getText(), mainFrame));
 					break;
 				case "taikhoan":
-					mainFrame.setPanel(new TaiKhoanForm(but.getText()));
+					mainFrame.setPanel(new TaiKhoanForm(but.getText(), mainFrame));
 					break;
 				case "khachhang":
-					mainFrame.setPanel(new KhachHangForm(but.getText()));
+					mainFrame.setPanel(new KhachHangForm(but.getText(), mainFrame));
 					break;
 				case "pttt":
-					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText()));
+					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText(), mainFrame));
 					break;
 				case "phanquyen":
-					mainFrame.setPanel(new PhanQuyenForm(mainFrame,but.getText(),arrCN));
+					mainFrame.setPanel(new PhanQuyenForm(mainFrame,but.getText(),arrCNForNhomQuyen));
 					break;
 				case "createInput":
-					mainFrame.setPanel(new TaoPhieuNhapForm());
+					mainFrame.setPanel(new TaoPhieuNhapForm(mainFrame));
 					break;
 				case "createBill":
-					mainFrame.setPanel(new CustomScrollPane(new TaoHoaDonForm()));
+					mainFrame.setPanel(new CustomScrollPane(new TaoHoaDonForm(mainFrame)));
 					break;
 				case "report":
 					mainFrame.setPanel(new TongQuanForm());

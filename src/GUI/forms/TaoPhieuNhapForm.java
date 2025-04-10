@@ -12,6 +12,11 @@ import javax.swing.border.Border;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.ChiTietQuyenBUS;
+import BUS.ChucNangBUS;
+import DTO.ChiTietQuyenDTO;
+import DTO.TaiKhoanDTO;
+import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomButton;
 import GUI.component.InvoiceTable;
@@ -19,17 +24,28 @@ import GUI.component.InvoiceTable;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.ArrayList;
 import java.awt.Font;
 import java.awt.Color;
 
 public class TaoPhieuNhapForm extends JPanel implements ActionListener{
+    private String id = "createInput";
     private String[] listNcc; 
     private CustomButton buttonSave;
     private CustomButton buttonCancel;
     private InvoiceTable table;
+    private MainFrame mainFrame;
+    private TaiKhoanDTO taiKhoan;
+    private ArrayList<String> listAction;
+    private ChiTietQuyenBUS chiTietQuyenBUS;
+    private ChucNangBUS chucNangBUS;
 
-    public TaoPhieuNhapForm() {
+    public TaoPhieuNhapForm(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+        this.taiKhoan = mainFrame.getTaiKhoan();
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
+        this.chucNangBUS = ChucNangBUS.getInstance();
+
         init();
     }
 
@@ -42,6 +58,17 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener{
         add(getTongTien(),"pushx, growx");
         add(getPanelAction(),"pushx, growx");
         
+    }
+
+    public ArrayList<String> getListAction(){
+        ArrayList<String> result = new ArrayList<>(); 
+        int maNQ = taiKhoan.getMaRole();
+        int maCN = chucNangBUS.getMaChucNangByTen(id);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        for(ChiTietQuyenDTO i : listCTQ){
+            result.add(i.getHanhDong());
+        }
+        return(result);
     }
 
     private JPanel getThongtin() {
@@ -74,7 +101,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener{
     private JPanel getChiTietPhieuNhap() {
         JPanel panel = getPanel("Chi tiết phiếu nhập");
         panel.setLayout(new MigLayout());
-        table = new InvoiceTable(null, actions, "Mã sách","Tên sách","Số lượng","Giá nhập","Thành tiền");
+        table = new InvoiceTable(null, getActionBottom(), "Mã sách","Tên sách","Số lượng","Giá nhập","Thành tiền");
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
@@ -83,6 +110,19 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener{
         panel.add(panelActionOnTable(),"pushx,growx");
         return panel;
     }
+
+    public String[][] getActionBottom(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Xóa")){
+                arrActions.add(actions[0]);
+            }
+        }
+        String[][] array = arrActions.toArray(new String[0][]);
+        return(array);
+    }
+
+
 
     private ButtonAction butAddData;
     private ButtonAction butImportData;

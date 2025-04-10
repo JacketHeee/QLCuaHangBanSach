@@ -1,18 +1,24 @@
 package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
+import BUS.ChiTietQuyenBUS;
+import BUS.ChucNangBUS;
 import BUS.HoaDonBUS;
+import DTO.ChiTietQuyenDTO;
 import DTO.HoaDonDTO;
+import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
@@ -22,17 +28,31 @@ import utils.UIUtils;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class QLHoaDonForm extends JPanel {
+public class QLHoaDonForm extends JPanel implements ActionListener {
 
     private String title;
+    private String id = "qlBill";
     private String[] header = {"Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
     HoaDonBUS hoaDonBUS;
+    private MainFrame mainFrame;
+    private TaiKhoanDTO taiKhoan;
+    private ArrayList<String> listAction;
+    private ChiTietQuyenBUS chiTietQuyenBUS;
+    private ChucNangBUS chucNangBUS; 
 
-    public QLHoaDonForm(String title) {
+    public QLHoaDonForm(String title, MainFrame mainFrame) {
         this.title = title;
+        this.mainFrame = mainFrame;
+        this.taiKhoan = mainFrame.getTaiKhoan();
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
+        this.chucNangBUS = ChucNangBUS.getInstance();
+
+
         hoaDonBUS = HoaDonBUS.getInstance();
         init();
     }
@@ -47,6 +67,17 @@ public class QLHoaDonForm extends JPanel {
     }
 
     ////////////////////////////////////////////////////////////////////
+    public ArrayList<String> getListAction(){
+        ArrayList<String> result = new ArrayList<>(); 
+        int maNQ = taiKhoan.getMaRole();
+        int maCN = chucNangBUS.getMaChucNangByTen(id);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        for(ChiTietQuyenDTO i : listCTQ){
+            result.add(i.getHanhDong());
+        }
+        return(result);
+    }
+    
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
@@ -91,19 +122,40 @@ public class QLHoaDonForm extends JPanel {
 
     
     ///////////////////////////////////////////////////////////////
-    String[][] arrActions = {
+    String[][] topActions = {
+        {"Thêm","add.svg","add"},
         {"Export Excel","exportExcel.svg","exportExcel"}
+    };
+    String[][] bottomActions = {
+        {"edit.svg","edit"},
+        {"detail.svg","detail"},
+        {"remove.svg","remove"}
     };
 
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
         panel.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
 
-        for (String[] x : arrActions) {
-            panel.add(new ButtonAction(x[0],x[1],x[2]));
+        ButtonAction but;
+        for (String[] x : getActionTop()) {
+            but = new ButtonAction(x[0],x[1],x[2]);
+            panel.add(but);
+            but.setActionCommand(but.getId());
+            but.addActionListener(this);
         }
 
         return panel;
+    }
+
+    public ArrayList<String[]> getActionTop(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Thêm")){
+                arrActions.add(topActions[0]);
+            }
+        }
+        arrActions.add(topActions[1]);  
+        return(arrActions);
     }
     
     public ArrayList<String[]> Data(){
@@ -114,19 +166,46 @@ public class QLHoaDonForm extends JPanel {
         }
         return(data);
     }
+    public String[][] getActionBottom(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Sửa")){
+                arrActions.add(bottomActions[0]);
+            }
+            arrActions.add(bottomActions[1]);
+            if(i.equals("Xóa")){
+                arrActions.add(bottomActions[2]);
+            }
+        }
+        String[][] array = arrActions.toArray(new String[0][]);
+        return(array);
+    }
     // {"Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"}
     /////////////////////////////////////////////////////////////////
 
-    String[][] actions = {
-        {"edit.svg","edit"},
-        {"detail.svg","detail"},
-        {"remove.svg","remove"}
-    };
+
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(Data(),actions, header);
+        CustomTable table = new CustomTable(Data(),getActionBottom(), header);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "add":
+                JOptionPane.showMessageDialog(mainFrame, "hi");
+                break;
+            case "importExcel":
+                
+                break;
+            case "exportExcel":
+                
+                break;
+            default:
+                break;
+        }
     }
 }

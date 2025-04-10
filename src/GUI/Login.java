@@ -111,13 +111,6 @@ public class Login extends JFrame implements ActionListener{
 
     public void AcceptLogin(){
         this.dispose();
-        java.awt.EventQueue.invokeLater(() -> {
-            try {
-                new MainFrame(taiKhoanDTO).setVisible(true);
-            } catch (Exception e) {
-                System.out.println("Lỗi khởi tạo");
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new MainFrame(taiKhoanDTO).setVisible(true));
     }
-
 }

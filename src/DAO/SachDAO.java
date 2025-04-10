@@ -1,6 +1,7 @@
 package DAO;
 
 import DTO.SachDTO;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,9 @@ import java.util.ArrayList;
 import config.JDBCUtil;
 
 public class SachDAO implements DAOInterface<SachDTO>{
+
+	// int maSach, String tenSach, int soLuong, BigDecimal giaBan, BigDecimal giaNhap, int namXB,
+			// int maVung, int maNXB
 
 	private static SachDAO instance;
 	private SachDAO() {}
@@ -22,9 +26,12 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	public int insert(SachDTO t) {
 		int rowInserted = 0;
 		String sql = String.format(
-			"INSERT INTO SACH (tenSach, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s')",
+			"INSERT INTO SACH (tenSach, soLuong, giaNhap, giaBan, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s','%s','%s','%s')",
 			t.getTenSach(),
-			t.getNamXB(),
+			t.getSoLuong() + "",
+			t.getGiaNhap() + "",
+			t.getGiaBan() + "",
+			t.getNamXB() + "", 
 			t.getMaVung(),
 			t.getMaNXB()
 		 );
@@ -50,11 +57,13 @@ public class SachDAO implements DAOInterface<SachDTO>{
 
 	@Override
 	public int update(SachDTO t) {
-		// String sql = "UPDATE SACH SET tenSach = ?, giaBan = ?, namXB = ?, maVung = ?, maNXB = ? WHERE maSach = ?";
 		int rowUpdated = 0;
 		String query = String.format(
-			"UPDATE SACH SET tenSach = '%s', namXB = '%s', maVung = '%s', maNXB = '%s' WHERE maSach = '%s'",
+			"UPDATE SACH SET tenSach = '%s', soLuong = '%s', giaNhap = '%s', giaBan = '%s', namXB = '%s', maVung = '%s', maNXB = '%s' WHERE maSach = '%s'",
 			t.getTenSach(),
+			t.getSoLuong() + "",
+			t.getGiaNhap() + "",
+			t.getGiaBan() + "",
 			t.getNamXB() + "",
 			t.getMaVung() + "",
 			t.getMaNXB() + "",
@@ -79,10 +88,13 @@ public class SachDAO implements DAOInterface<SachDTO>{
 			while(rs.next()) {
 				int id = rs.getInt("maSach");
 				String tenSach = rs.getString("tenSach");
+				int soLuong = rs.getInt("soLuong");
+				BigDecimal giaNhap = rs.getBigDecimal("giaNhap");
+				BigDecimal giaBan = rs.getBigDecimal("giaBan");
 				int namXB = rs.getInt("namXB");
 				int maVung = rs.getInt("maVung");
 				int maNXB = rs.getInt("maNXB");
-				SachDTO sach = new SachDTO(id, tenSach, namXB, maVung, maNXB);
+				SachDTO sach = new SachDTO(id, tenSach, soLuong, giaNhap, giaBan, namXB, maVung, maNXB);
 				result.add(sach);
 			}
 			jdbcUtil.Close();

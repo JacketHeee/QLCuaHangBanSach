@@ -9,7 +9,6 @@ import java.awt.Component;
 import java.awt.Font;
 import javax.swing.UIManager;
 
-import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
@@ -30,7 +29,6 @@ import resources.base.baseTheme;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Date;
 public class MainFrame extends JFrame  implements ActionListener{
 	private int width = 1024; 
 	private int height = 768; 
@@ -47,7 +45,6 @@ public class MainFrame extends JFrame  implements ActionListener{
 	private NhomQuyenBUS nhomQuyenBUS;
 	private NhomQuyenDTO nhomQuyen;
 	private ChiTietQuyenBUS chiTietQuyenBUS;
-	private ArrayList<ChiTietQuyenDTO> listQuyen;
 
 	public MainFrame(TaiKhoanDTO taiKhoan) {
 
@@ -57,7 +54,6 @@ public class MainFrame extends JFrame  implements ActionListener{
 		this.nhomQuyenBUS = NhomQuyenBUS.getInstance();
 		this.nhomQuyen = nhomQuyenBUS.SelectByID(taiKhoan.getMaRole());
 		this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
-		this.listQuyen = chiTietQuyenBUS.selectChiTietQuyenByMaNQ(nhomQuyen.getMaRole());
 
 		setTitle(title);
 		setSize(width, height);
@@ -119,7 +115,9 @@ public class MainFrame extends JFrame  implements ActionListener{
 		{"Báo cáo & thống kê","report.svg","report"}
 	};
 
-	public ArrayList<String[]> getListCNOfThisUser(){	//Khi tạo nhóm quyền mới, danh mục chức năng cần sắp từ trên xuống để hàm hoạt động
+	//Set các chức năng để tạo 
+	//Khi tạo nhóm quyền mới, danh mục chức năng cần sắp từ trên xuống để hàm hoạt động
+	public ArrayList<String[]> getListCNOfThisUser(){	
 		ArrayList<String[]> result = new ArrayList<>();
 		result.add(new String[]{"Home","home.svg","home"});
 		ArrayList<String> listTenCN = chiTietQuyenBUS.getListTenCNByMaNQ(nhomQuyen.getMaRole());
@@ -137,10 +135,6 @@ public class MainFrame extends JFrame  implements ActionListener{
 		}
 		return(result);
 	}
-
-
-
-
 
 	private JButton butmaintext;
 

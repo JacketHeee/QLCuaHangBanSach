@@ -43,12 +43,13 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
             jdbcUtil.Open();
             ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
-                String maVach = rs.getString("maVach");
+                String maSach = rs.getString("maSach");
                 int maHD = rs.getInt("maHD");
                 int soLuong = rs.getInt("soLuong");
+                BigDecimal giaNhap = rs.getBigDecimal("giaNhap");
                 BigDecimal giaBan = rs.getBigDecimal("giaBan");
                 
-                CT_HoaDonDTO cthd = new CT_HoaDonDTO(maVach, maHD, soLuong, giaBan);
+                CT_HoaDonDTO cthd = new CT_HoaDonDTO(maSach, maHD, soLuong, giaNhap, giaBan);
                 result.add(cthd);
             }
             jdbcUtil.Close();
@@ -62,7 +63,7 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
     //     CT_HoaDonDAO cT_HoaDonDAO = CT_HoaDonDAO.getInstance();
     //     ArrayList<CT_HoaDonDTO> list = cT_HoaDonDAO.getAll();
     //     for(CT_HoaDonDTO i : list){
-    //         System.out.println(i.getMaHD() + "\t" + i.getMaVach() + "\t" + i.getSoLuong() + "\t" + i.getGiaBan());
+    //         System.out.println(i.getMaHD() + "\t" + i.getmaSach() + "\t" + i.getSoLuong() + "\t" + i.getGiaBan());
     //     }
     // }
 }

@@ -59,4 +59,9 @@ public class ChucNangBUS {
         }
         return -1;
     }
+
+    public int getMaChucNangByTen(String i){
+        return(chucNangDAO.getMaChucNangByTen(i));
+    }
+
 }

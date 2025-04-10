@@ -43,9 +43,9 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
             ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maKM = rs.getInt("maKM");
-                String maVach = rs.getString("maVach");
+                String maSach = rs.getString("maSach");
                 
-                KM_SachDTO kmSach = new KM_SachDTO(maKM, maVach);
+                KM_SachDTO kmSach = new KM_SachDTO(maKM, maSach);
                 result.add(kmSach);
             }
             jdbcUtil.Close();
@@ -59,7 +59,7 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
     //     KM_SachDAO km_SachDAO = KM_SachDAO.getInstance();
     //     ArrayList<KM_SachDTO> list = km_SachDAO.getAll();
     //     for(KM_SachDTO i : list){
-    //         System.out.println(i.getMaKM() + "\t" + i.getMaVach());
+    //         System.out.println(i.getMaKM() + "\t" + i.getmaSach());
     //     }
     // }
 }
