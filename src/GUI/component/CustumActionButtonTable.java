@@ -42,5 +42,4 @@ public class CustumActionButtonTable extends JButton {
         this.row = row;
     }
 
-    
 }

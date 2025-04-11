@@ -130,17 +130,6 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
     public JPanel createActionPanel(int row) {
-        // JPanel label = new JPanel(new MigLayout("al center center, gap 10"));
-        // label.setPreferredSize(new Dimension(150, 30));
-        // label.setOpaque(true);
-        // label.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
-
-        // CustumActionButtonTable but;
-        // for (String[] x : actions) {
-        //     but = new CustumActionButtonTable(x[0], x[1], row);
-        //     label.add(but);
-        //     but.addActionListener(this);
-        // }
 
         JPanel label = new JPanel(new MigLayout("al center center, gap 10"));
         label.setPreferredSize(new Dimension(150, 30));
@@ -387,6 +376,46 @@ public class CustomTable extends JPanel implements ActionListener {
         if (actionListener != null) {
             actionListener.onActionPerformed(but.getId(), buttonRow);
         }
+    }
+
+    public void updateTable(ArrayList<String[]> newData) {
+        // Lưu trữ trạng thái hàng được chọn
+        int previouslySelectedRow = selectedRow;
+        
+        // Xóa tất cả dữ liệu hiện tại
+        dataPanel.removeAll();
+        rowLabels.clear();
+        
+        // Cập nhật dữ liệu mới
+        this.data = (newData == null) ? new ArrayList<>() : newData;
+        
+        // Cập nhật rowHeights
+        rowHeights = new int[this.data.size() + 1]; // +1 cho header
+        for (int i = 0; i < rowHeights.length; i++) {
+            rowHeights[i] = 30;
+        }
+        
+        // Thêm lại các hàng dữ liệu
+        for (String[] rowData : this.data) {
+            addDataRow(rowData);
+        }
+        
+        // Cập nhật constraints và kích thước
+        updateRowConstraints();
+        dataPanel.setPreferredSize(new Dimension((headers.length + (actions != null ? 1 : 0)) * 150, rowLabels.size() * 30));
+        
+        // Khôi phục trạng thái chọn hàng nếu có thể
+        if (previouslySelectedRow != -1 && previouslySelectedRow <= rowLabels.size()) {
+            setSelectedRow(previouslySelectedRow);
+        } else {
+            selectedRow = -1; // Reset nếu hàng được chọn trước đó không còn tồn tại
+        }
+        
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+        revalidate();
+        repaint();
     }
 
     

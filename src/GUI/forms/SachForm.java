@@ -8,8 +8,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 import BUS.SachBUS;
+import BUS.ViTriVungBUS;
 import DTO.SachDTO;
 
 import java.util.ArrayList;
@@ -21,8 +23,12 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.PanelSearch;
 import GUI.component.TableActionListener;
+import GUI.component.search.SearchBarPanel;
+import GUI.component.search.SearchPanel;
+import interfaces.Searchable;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.SachSearch;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -40,8 +46,10 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private String title;
     private SachBUS sachBUS;
 
-    private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá nhập","Giá bán","Năm XB", "Mã vùng", "Mã NXB"}; // Tạm thời không cài đặt giá bán
+    private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá bán","Vị trí vùng"}; // Tạm thời không cài đặt giá bán
     private MainFrame mainFrame;
+    private ArrayList<SachDTO> listKH;
+    private ArrayList<String[]> dataToShow;
 
     public SachForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -52,6 +60,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -63,44 +72,12 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(foods, new SachSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
     String[][] arrActions = {
@@ -125,22 +102,28 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<SachDTO> listKH = sachBUS.getAll(); 
+        listKH = sachBUS.getAll(); 
+
+        return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<SachDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(SachDTO i : listKH){
+        ViTriVungBUS vitri = ViTriVungBUS.getInstance();
+
+        for(SachDTO i : inputData){
             data.add(new String[]{
                 i.getMaSach() + "", 
                 i.getTenSach(), 
                 i.getSoLuong() + "", 
-                i.getGiaNhap() + "",
                 i.getGiaBan() + "",
-                i.getNamXB() + "",
-                i.getMaVung() + "", 
-                i.getMaNXB() + ""
+                vitri.getTenByMaViTriVung(i.getMaVung()), 
             });
         }
         return(data);
     }
+
     /////////////////////////////////////////////////////////////////
 
     String[][] actions = {
@@ -152,7 +135,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     CustomTable table;
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),actions, header);
+        table = new CustomTable(dataToShow,actions, header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -197,6 +180,15 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 break;
         }
     }
+
+
+
+    private void updateTable(ArrayList<SachDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
+    
 }
 
 
