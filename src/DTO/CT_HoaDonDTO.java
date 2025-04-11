@@ -6,7 +6,6 @@ public class CT_HoaDonDTO {
     private String maSach;  // Đã thay đổi kiểu từ String thành int
     private int maHD;    // Đã thay đổi kiểu từ String thành int
     private int soLuong;
-    private BigDecimal giaNhap;
     private BigDecimal giaBan;
 
     // Constructor không tham số
@@ -22,11 +21,10 @@ public class CT_HoaDonDTO {
         return maHD;
     }
 
-    public CT_HoaDonDTO(String maSach, int maHD, int soLuong, BigDecimal giaNhap, BigDecimal giaBan) {
+    public CT_HoaDonDTO(String maSach, int maHD, int soLuong, BigDecimal giaBan) {
         this.maSach = maSach;
         this.maHD = maHD;
         this.soLuong = soLuong;
-        this.giaNhap = giaNhap;
         this.giaBan = giaBan;
     }
 
@@ -66,14 +64,5 @@ public class CT_HoaDonDTO {
         this.maSach = maSach;
     }
 
-    public BigDecimal getGiaNhap() {
-        return giaNhap;
-    }
-
-    public void setGiaNhap(BigDecimal giaNhap) {
-        this.giaNhap = giaNhap;
-    }
-
-    
 }
 

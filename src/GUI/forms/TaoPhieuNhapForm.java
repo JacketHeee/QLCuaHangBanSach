@@ -106,7 +106,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private JPanel getChiTietPhieuNhap() {
         JPanel panel = getPanel("Chi tiết phiếu nhập");
         panel.setLayout(new MigLayout());
-        table = new InvoiceTable(null, getActionBottom(), "Mã sách","Tên sách","Số lượng","Giá nhập","Thành tiền");
+        table = new InvoiceTable(null, actions, "Mã sách","Tên sách","Số lượng","Giá nhập","Thành tiền");
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
@@ -116,18 +116,6 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         panel.add(panelActionOnTable(),"pushx,growx");
         return panel;
     }
-
-    public String[][] getActionBottom(){
-        ArrayList<String[]> arrActions = new ArrayList<>();
-        for(String i : listAction){
-            if(i.equals("Xóa")){
-                arrActions.add(actions[0]);
-            }
-        }
-        String[][] array = arrActions.toArray(new String[0][]);
-        return(array);
-    }
-
 
 
     private ButtonAction butAddData;

@@ -130,9 +130,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         {"Export Excel","exportExcel.svg","exportExcel"}
     };
     String[][] bottomActions = {
-        {"edit.svg","edit"},
-        {"detail.svg","detail"},
-        {"remove.svg","remove"}
+        {"detail.svg","detail"}
     };
     private CustomTable table;
 
@@ -170,20 +168,6 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         }
         return(data);
     }
-    public String[][] getActionBottom(){
-        ArrayList<String[]> arrActions = new ArrayList<>();
-        for(String i : listAction){
-            if(i.equals("Sửa")){
-                arrActions.add(bottomActions[0]);
-            }
-            if(i.equals("Xóa")){
-                arrActions.add(bottomActions[2]);
-            }
-        }
-        arrActions.add(bottomActions[1]);
-        String[][] array = arrActions.toArray(new String[0][]);
-        return(array);
-    }
     // {"Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"}
     /////////////////////////////////////////////////////////////////
 
@@ -191,7 +175,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(Data(),bottomActions, header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;

@@ -39,13 +39,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SachForm extends JPanel implements ActionListener,TableActionListener{
-    		// "INSERT INTO SACH (tenSach, soLuong, giaNhap, giaBan, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s','%s','%s','%s')",
 
     private String title;
     private String id = "book";
     private SachBUS sachBUS;
 
-    private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá nhập","Giá bán","Năm XB", "Mã vùng", "Mã NXB"}; // Tạm thời không cài đặt giá bán
+    private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá bán","Năm XB"}; 
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
@@ -80,9 +79,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         int maNQ = taiKhoan.getMaRole();
         int maCN = chucNangBUS.getMaChucNangByTen(id);
         ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
-        for(ChiTietQuyenDTO i : listCTQ){
-            System.out.println(i.getMaRole() + "\t" + i.getMaChucNang() +"\t"+ i.getHanhDong());
-        }
+
         for(ChiTietQuyenDTO i : listCTQ){
             result.add(i.getHanhDong());
         }
@@ -178,11 +175,8 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 i.getMaSach() + "", 
                 i.getTenSach(), 
                 i.getSoLuong() + "", 
-                i.getGiaNhap() + "",
                 i.getGiaBan() + "",
-                i.getNamXB() + "",
-                i.getMaVung() + "", 
-                i.getMaNXB() + ""
+                i.getNamXB() + ""
             });
         }
         return(data);

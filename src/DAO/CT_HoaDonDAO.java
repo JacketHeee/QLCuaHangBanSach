@@ -46,10 +46,9 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
                 String maSach = rs.getString("maSach");
                 int maHD = rs.getInt("maHD");
                 int soLuong = rs.getInt("soLuong");
-                BigDecimal giaNhap = rs.getBigDecimal("giaNhap");
                 BigDecimal giaBan = rs.getBigDecimal("giaBan");
                 
-                CT_HoaDonDTO cthd = new CT_HoaDonDTO(maSach, maHD, soLuong, giaNhap, giaBan);
+                CT_HoaDonDTO cthd = new CT_HoaDonDTO(maSach, maHD, soLuong, giaBan);
                 result.add(cthd);
             }
             jdbcUtil.Close();
