@@ -34,7 +34,7 @@ import java.awt.Font;
 import java.awt.Color;
 
 public class TaoHoaDonForm extends JPanel implements ActionListener, TableActionListener{
-    private String id = "createBill";
+    private int id = 9;
     private String[] listNcc; 
     private CustomButton buttonSave;
     private CustomButton buttonCancel;
@@ -43,13 +43,11 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-    private ChucNangBUS chucNangBUS;
 
     public TaoHoaDonForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
-        this.chucNangBUS = ChucNangBUS.getInstance();
         this.listAction = getListAction();
 
         init();
@@ -72,8 +70,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     public ArrayList<String> getListAction(){
         ArrayList<String> result = new ArrayList<>(); 
         int maNQ = taiKhoan.getMaRole();
-        int maCN = chucNangBUS.getMaChucNangByTen(id);
-        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
         for(ChiTietQuyenDTO i : listCTQ){
             result.add(i.getHanhDong());
         }

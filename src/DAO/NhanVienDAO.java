@@ -2,7 +2,6 @@ package DAO;
 
 import java.sql.Date;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DTO.NhanVienDTO;
@@ -22,17 +21,17 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
     @Override
     public int insert(NhanVienDTO nv) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT) VALUES ('%s', '%s', '%s', '%s')",
-            nv.getHoTen(),
-            nv.getNgaySinh().toString(),
-            nv.getGioiTinh(),
-            nv.getSoDT()
-        );
+        String sql = "INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT) VALUES (?,?,?,?)";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("NhanVien");
-        rowInserted = jdbcUtil.executeUpdate(sql);
+        rowInserted = jdbcUtil.executeUpdate(
+            sql,
+            nv.getHoTen(),
+            nv.getNgaySinh(),
+            nv.getGioiTinh(),
+            nv.getSoDT()
+        );
         jdbcUtil.Close();
         nv.setMaNV(nextID);
         return rowInserted;
@@ -41,10 +40,10 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String query = String.format("UPDATE NHANVIEN SET TRANGTHAI = 0 WHERE maNV = '%d'", id);
+        String query = "UPDATE NHANVIEN SET TRANGTHAI = 0 WHERE maNV = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(query);
+        rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -52,30 +51,28 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
     @Override
     public int update(NhanVienDTO nv) {
         int rowUpdated = 0;
-        String query = String.format(
-            "UPDATE NHANVIEN SET hoTen = '%s', ngaySinh = '%s', gioiTinh = '%s', soDT = '%s', maTK = '%d' WHERE maNV = '%d'",
+        String query = "UPDATE NHANVIEN SET hoTen = ?, ngaySinh = ?, gioiTinh = ?, soDT = ? WHERE maNV = ?";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowUpdated = jdbcUtil.executeUpdate(
+            query,
             nv.getHoTen(),
             nv.getNgaySinh().toString(),
             nv.getGioiTinh(),
             nv.getSoDT(),
-            nv.getMaTK(),
             nv.getMaNV()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(query);
         jdbcUtil.Close();
         return rowUpdated;
     }
 
     public ArrayList<NhanVienDTO> getAll() {
         ArrayList<NhanVienDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM NHANVIEN WHERE TRANGTHAI = 1";
-        
+        String sql = "SELECT * FROM NHANVIEN WHERE TRANGTHAI = 1"; 
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maNV = rs.getInt("maNV");
                 String hoTen = rs.getString("hoTen");
@@ -87,21 +84,21 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
                 NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, ngaySinh, gioiTinh, soDT, maTK);
                 result.add(nv);
             }
-            jdbcUtil.Close();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 
     public NhanVienDTO SelectNhanVienByMaTK(int maTK){
         NhanVienDTO result = null;
-        String sql = String.format("SELECT * FROM NHANVIEN WHERE maTK = '%d'", maTK);
+        String sql = "SELECT * FROM NHANVIEN WHERE maTK = ?";
 
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maTK);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while(rs.next()){
                 int maNV = rs.getInt("maNV");
                 String hoTen = rs.getString("hoTen");
@@ -123,10 +120,10 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         ArrayList<String> result = new ArrayList<>();
         String sql = "SELECT hoTen FROM NHANVIEN WHERE maTK IS NULL";
 
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while(rs.next()){
                 String hoTen = rs.getString("hoTen");
                 result.add(hoTen);
@@ -140,11 +137,11 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     public int getMaNVByTenNV(String tenNV){
         int result = -1;
-        String sql = String.format("SELECT maNV FROM nhanVien WHERE hoTen = '%s'", tenNV);
+        String sql = "SELECT maNV FROM nhanVien WHERE hoTen = ?";
         try {
             JDBCUtil jdbcUtil = new JDBCUtil();
             jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
+            ResultSet rs = jdbcUtil.executeQuery(sql, tenNV);
             while(rs.next()){
                 result = rs.getInt("maNV");
             }
@@ -157,15 +154,26 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     public int setMaTK(int maNV, int maTK){
         int result = -1;
-        String sql = String.format("UPDATE NHANVIEN SET maTK = '%s' WHERE maNV = '%s'", maTK + "", maNV + "");
+        String sql = "UPDATE NHANVIEN SET maTK = ? WHERE maNV = ?";
         try {
             JDBCUtil jdbcUtil = new JDBCUtil();
             jdbcUtil.Open();
-            result = jdbcUtil.executeUpdate(sql);
+            result = jdbcUtil.executeUpdate(sql, maTK, maNV);
             jdbcUtil.Close();
         } catch (Exception e) {
         }
         return(result);
     }
+
+    // public static void main(String[] args) {
+    //     NhanVienDAO nhanVienDAO = new NhanVienDAO();
+    //     ArrayList<NhanVienDTO> list = nhanVienDAO.getAll();
+    //     for(NhanVienDTO i : list){
+    //         System.out.println(i.getMaNV() + "\t" + i.getHoTen() + "\t" + i.getGioiTinh() + "\t" + i.getSoDT() + "\t" + i.getNgaySinh() + "\t" + i.getMaTK());
+    //     }
+    //     java.sql.Date ngSinh = new java.sql.Date(1);
+    //     NhanVienDTO nhanVienDTO = new NhanVienDTO(6,"Nguyễn Ân testtest",ngSinh,"nam","0923223223");
+
+    // }
 
 }

@@ -21,14 +21,12 @@ public class ViTriVungDAO implements DAOInterface<ViTriVungDTO> {
     @Override
     public int insert(ViTriVungDTO t) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO VITRIVUNG (tenVung) VALUES ('%s')",
-            t.getTenVung()
-        );
+        String sql = "INSERT INTO VITRIVUNG (tenVung) VALUES (?)";
+
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("VITRIVUNG");
-        rowInserted = jdbcUtil.executeUpdate(sql);
+        rowInserted = jdbcUtil.executeUpdate(sql, t.getTenVung());
         jdbcUtil.Close();
         t.setMaVung(nextID);
         return rowInserted;
@@ -37,10 +35,10 @@ public class ViTriVungDAO implements DAOInterface<ViTriVungDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String sql = String.format("UPDATE VITRIVUNG SET trangThai = 0 WHERE maVung = '%s'", id);
+        String sql = "UPDATE VITRIVUNG SET trangThai = 0 WHERE maVung = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(sql);
+        rowDeleted = jdbcUtil.executeUpdate(sql, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -48,13 +46,15 @@ public class ViTriVungDAO implements DAOInterface<ViTriVungDTO> {
     @Override
     public int update(ViTriVungDTO t) {
         int rowUpdated = 0;
-        String sql = String.format(
-            "UPDATE VITRIVUNG SET tenVung = '%s' WHERE maVung = '%s'",
-            t.getTenVung(), t.getMaVung()
-        );
+        String sql = "UPDATE VITRIVUNG SET tenVung = ? WHERE maVung = ?";
+
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(sql);
+        rowUpdated = jdbcUtil.executeUpdate(
+            sql,
+            t.getTenVung(), 
+            t.getMaVung()
+        );
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -62,21 +62,20 @@ public class ViTriVungDAO implements DAOInterface<ViTriVungDTO> {
     public ArrayList<ViTriVungDTO> getAll() {
         ArrayList<ViTriVungDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM VITRIVUNG WHERE trangThai = 1";
-        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int id = rs.getInt("maVung");
                 String tenVung = rs.getString("tenVung");
                 ViTriVungDTO vung = new ViTriVungDTO(id, tenVung);
                 result.add(vung);
             }
-            jdbcUtil.Close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

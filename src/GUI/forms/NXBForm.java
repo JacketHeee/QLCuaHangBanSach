@@ -38,14 +38,13 @@ import javax.swing.JButton;
 public class NXBForm extends JPanel implements TableActionListener, ActionListener{
 
     private String title;
-    private String id = "nxb";
+    private int id = 4;
     private String[] header = {"Mã nhà xuất bản","Tên nhà xuất bản","Địa chỉ","Số điện thoại","Email"};
     NhaXBBUS nhaXBBUS;
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-    private ChucNangBUS chucNangBUS;
 
 
     public NXBForm(String title, MainFrame mainFrame) {
@@ -53,7 +52,6 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
-        this.chucNangBUS = ChucNangBUS.getInstance();
 
         nhaXBBUS = NhaXBBUS.getInstance();
         this.listAction = getListAction();
@@ -73,8 +71,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     public ArrayList<String> getListAction(){
         ArrayList<String> result = new ArrayList<>(); 
         int maNQ = taiKhoan.getMaRole();
-        int maCN = chucNangBUS.getMaChucNangByTen(id);
-        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
         for(ChiTietQuyenDTO i : listCTQ){
             result.add(i.getHanhDong());
         }

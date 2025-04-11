@@ -41,7 +41,7 @@ import java.awt.event.ActionListener;
 public class SachForm extends JPanel implements ActionListener,TableActionListener{
 
     private String title;
-    private String id = "book";
+    private int id = 1;
     private SachBUS sachBUS;
 
     private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá bán","Năm XB"}; 
@@ -49,7 +49,6 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-    private ChucNangBUS chucNangBUS;
 
 
     public SachForm(String title, MainFrame mainFrame) {
@@ -57,7 +56,6 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
-        this.chucNangBUS = ChucNangBUS.getInstance();
 
         sachBUS = SachBUS.getInstance();
         this.listAction = getListAction();
@@ -77,8 +75,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     public ArrayList<String> getListAction(){
         ArrayList<String> result = new ArrayList<>(); 
         int maNQ = taiKhoan.getMaRole();
-        int maCN = chucNangBUS.getMaChucNangByTen(id);
-        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
 
         for(ChiTietQuyenDTO i : listCTQ){
             result.add(i.getHanhDong());

@@ -39,7 +39,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
     private MainFrame mainFrame;
     private String title;
-    private String id = "phanquyen";
+    private int id = 16;
     private ArrayList<String[]> arrCN;
     private ArrayList<ButtonAction> buttonActionsList;
     private TaiKhoanDTO taiKhoan;
@@ -61,9 +61,8 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
         this.title = title;
         this.arrCN = arrCN;
-        chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
-        nhomQuyenBUS = NhomQuyenBUS.getInstance();
-        chucNangBUS = ChucNangBUS.getInstance();
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
+        this.nhomQuyenBUS = NhomQuyenBUS.getInstance();
         listAction = getListAction();
         init();
     }
@@ -81,8 +80,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     public ArrayList<String> getListAction(){
         ArrayList<String> result = new ArrayList<>(); 
         int maNQ = taiKhoan.getMaRole();
-        int maCN = chucNangBUS.getMaChucNangByTen(id);
-        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
         for(ChiTietQuyenDTO i : listCTQ){
             result.add(i.getHanhDong());
         }

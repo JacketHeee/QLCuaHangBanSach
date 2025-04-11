@@ -20,14 +20,11 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
     
     @Override
     public int insert(TheLoaiDTO t) {
-        String sql = String.format(
-            "INSERT INTO THELOAI (tenTheloai) VALUES ('%s')", 
-            t.getTenTheLoai()
-        );
+        String sql = "INSERT INTO THELOAI (tenTheloai) VALUES (?)";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("THELOAI");
-        int rowInserted = jdbcUtil.executeUpdate(sql);
+        int rowInserted = jdbcUtil.executeUpdate(sql, t.getTenTheLoai());
         jdbcUtil.Close();
         t.setMaTheLoai(nextID);
         return rowInserted;
@@ -35,23 +32,21 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
     
     @Override
     public int delete(int id) {
-        String query = String.format("UPDATE THELOAI SET trangThai = 0 WHERE maTheloai = %d", id);
+        String query = "UPDATE THELOAI SET trangThai = 0 WHERE maTheloai = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        int rowDeleted = jdbcUtil.executeUpdate(query);
+        int rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
     
     @Override
     public int update(TheLoaiDTO t) {
-        String query = String.format(
-            "UPDATE THELOAI SET tenTheloai = '%s' WHERE maTheloai = %d",
-            t.getTenTheLoai(), t.getMaTheLoai()
-        );
+        String query = "UPDATE THELOAI SET tenTheloai = ? WHERE maTheloai = ?";    
+    
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        int rowUpdated = jdbcUtil.executeUpdate(query);
+        int rowUpdated = jdbcUtil.executeUpdate(query, t.getTenTheLoai(), t.getMaTheLoai());
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -60,20 +55,22 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
         ArrayList<TheLoaiDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM THELOAI WHERE trangThai = 1";
         
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int id = rs.getInt("maTheloai");
                 String tenTheLoai = rs.getString("tenTheloai");
                 TheLoaiDTO theLoai = new TheLoaiDTO(id, tenTheLoai);
                 result.add(theLoai);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

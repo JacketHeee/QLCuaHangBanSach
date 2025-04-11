@@ -39,14 +39,13 @@ import javax.swing.JButton;
 public class TaiKhoanForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
-    private String id = "taikhoan";
+    private int id = 14;
     private String[] header = {"Mã tài khoản","Username","Password","Mã Role"};
     private TaiKhoanBUS taiKhoanBUS;
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-    private ChucNangBUS chucNangBUS;
     private NhanVienBUS nhanVienBUS;
     private CustomTable table;
 
@@ -63,7 +62,6 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
-        this.chucNangBUS = ChucNangBUS.getInstance();
         this.taiKhoanBUS = TaiKhoanBUS.getInstance();
         this.nhanVienBUS = NhanVienBUS.getInstance();
         this.listAction = getListAction();
@@ -83,8 +81,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     public ArrayList<String> getListAction(){
         ArrayList<String> result = new ArrayList<>(); 
         int maNQ = taiKhoan.getMaRole();
-        int maCN = chucNangBUS.getMaChucNangByTen(id);
-        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
         for(ChiTietQuyenDTO i : listCTQ){
             result.add(i.getHanhDong());
         }

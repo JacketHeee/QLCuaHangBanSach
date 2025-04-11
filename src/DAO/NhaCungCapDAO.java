@@ -21,14 +21,18 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
     @Override
     public int insert(NhaCungCapDTO t) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO NHACUNGCAP (tenNCC, diaChi, soDT, email) VALUES ('%s', '%s', '%s', '%s')",
-            t.getTenNCC(), t.getDiaChi(), t.getSoDT(), t.getEmail()
-        );
+        String sql = "INSERT INTO NHACUNGCAP (tenNCC, diaChi, soDT, email) VALUES (?,?,?,?)";
+            
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("NHACUNGCAP");
-        rowInserted = jdbcUtil.executeUpdate(sql);
+        rowInserted = jdbcUtil.executeUpdate(
+            sql, 
+            t.getTenNCC(), 
+            t.getDiaChi(), 
+            t.getSoDT(), 
+            t.getEmail()
+        );
         jdbcUtil.Close();
         t.setMaNCC(nextID);
         return rowInserted;
@@ -37,10 +41,10 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String sql = String.format("UPDATE NHACUNGCAP SET trangThai = 0 WHERE maNCC = %d", id);
+        String sql = "UPDATE NHACUNGCAP SET trangThai = 0 WHERE maNCC = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(sql);
+        rowDeleted = jdbcUtil.executeUpdate(sql, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -48,13 +52,18 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
     @Override
     public int update(NhaCungCapDTO t) {
         int rowUpdated = 0;
-        String sql = String.format(
-            "UPDATE NHACUNGCAP SET tenNCC = '%s', diaChi = '%s', soDT = '%s', email = '%s' WHERE maNCC = %d",
-            t.getTenNCC(), t.getDiaChi(), t.getSoDT(), t.getEmail(), t.getMaNCC()
-        );
+        String sql = "UPDATE NHACUNGCAP SET tenNCC = ?, diaChi = ?, soDT = ?, email = ? WHERE maNCC = ?";
+
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(sql);
+        rowUpdated = jdbcUtil.executeUpdate(
+            sql,
+            t.getTenNCC(),
+            t.getDiaChi(), 
+            t.getSoDT(), 
+            t.getEmail(), 
+            t.getMaNCC()
+        );
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -62,10 +71,11 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
     public ArrayList<NhaCungCapDTO> getAll() {
         ArrayList<NhaCungCapDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM NHACUNGCAP WHERE trangThai = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maNCC = rs.getInt("maNCC");
                 String tenNCC = rs.getString("tenNCC");
@@ -75,10 +85,11 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
                 NhaCungCapDTO ncc = new NhaCungCapDTO(maNCC, tenNCC, diaChi, soDT, email);
                 result.add(ncc);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

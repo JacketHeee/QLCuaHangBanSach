@@ -39,14 +39,13 @@ import javax.swing.JButton;
 public class NhanVienForm extends JPanel implements TableActionListener, ActionListener{
 
     private String title;
-    private String id = "nv";
+    private int id = 13;
     private String[] header = {"Mã nhân viên","Họ tên","Ngày sinh","Giới tính","Số điện thoại","Mã tài khoản"};
     NhanVienBUS nhanVienBUS;
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-    private ChucNangBUS chucNangBUS;
     private String[][] attributes = {
         {"textbox","Tên nhân viên"},
         {"inputDate","Ngày sinh"},
@@ -60,7 +59,6 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
-        this.chucNangBUS = ChucNangBUS.getInstance();
 
         nhanVienBUS = NhanVienBUS.getInstance();
         this.listAction = getListAction();
@@ -80,8 +78,7 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     public ArrayList<String> getListAction(){
         ArrayList<String> result = new ArrayList<>(); 
         int maNQ = taiKhoan.getMaRole();
-        int maCN = chucNangBUS.getMaChucNangByTen(id);
-        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
         for(ChiTietQuyenDTO i : listCTQ){
             result.add(i.getHanhDong());
         }

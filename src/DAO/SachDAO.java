@@ -10,9 +10,6 @@ import config.JDBCUtil;
 
 public class SachDAO implements DAOInterface<SachDTO>{
 
-	// int maSach, String tenSach, int soLuong, BigDecimal giaBan, BigDecimal giaNhap, int namXB,
-			// int maVung, int maNXB
-
 	private static SachDAO instance;
 	private SachDAO() {}
 	
@@ -25,19 +22,20 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	@Override
 	public int insert(SachDTO t) {
 		int rowInserted = 0;
-		String sql = String.format(
-			"INSERT INTO SACH (tenSach, soLuong, giaBan, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s','%s','%s')",
-			t.getTenSach(),
-			t.getSoLuong() + "",
-			t.getGiaBan() + "",
-			t.getNamXB() + "", 
-			t.getMaVung(),
-			t.getMaNXB()
-		 );
+		String sql = "INSERT INTO SACH (tenSach, soLuong, giaBan, namXB, maVung, maNXB) VALUES (?,?,?,?,?,?)";
+
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
 		int nextID = jdbcUtil.getAutoIncrement("Sach");
-		rowInserted = jdbcUtil.executeUpdate(sql);
+		rowInserted = jdbcUtil.executeUpdate(
+			sql,
+			t.getTenSach(),
+			t.getSoLuong(),
+			t.getGiaBan(),
+			t.getNamXB(), 
+			t.getMaVung(),
+			t.getMaNXB()
+		);
 		jdbcUtil.Close();
 		t.setMaSach(nextID);
 		return rowInserted;
@@ -46,10 +44,10 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	@Override
 	public int delete(int id) {
 		int rowDeleted = 0;
-		String query = String.format("UPDATE SACH SET TRANGTHAI = 0 WHERE MASACH = '%s'", id + "");
+		String query = String.format("UPDATE SACH SET TRANGTHAI = 0 WHERE MASACH = ?");
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
-		rowDeleted =  jdbcUtil.executeUpdate(query);
+		rowDeleted =  jdbcUtil.executeUpdate(query, id);
 		jdbcUtil.Close();
 		return(rowDeleted);
 	}
@@ -57,19 +55,20 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	@Override
 	public int update(SachDTO t) {
 		int rowUpdated = 0;
-		String query = String.format(
-			"UPDATE SACH SET tenSach = '%s', soLuong = '%s', giaBan = '%s', namXB = '%s', maVung = '%s', maNXB = '%s' WHERE maSach = '%s'",
-			t.getTenSach(),
-			t.getSoLuong() + "",
-			t.getGiaBan() + "",
-			t.getNamXB() + "",
-			t.getMaVung() + "",
-			t.getMaNXB() + "",
-			t.getMaSach() + ""
-		);
+		String query = "UPDATE SACH SET tenSach = ?, soLuong = ?, giaBan = ?, namXB = ?, maVung = ?, maNXB = ? WHERE maSach = ?";
+
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
-		rowUpdated = jdbcUtil.executeUpdate(query);
+		rowUpdated = jdbcUtil.executeUpdate(
+			query,
+			t.getTenSach(),
+			t.getSoLuong(),
+			t.getGiaBan(),
+			t.getNamXB(),
+			t.getMaVung(),
+			t.getMaNXB(),
+			t.getMaSach()
+		);
 		jdbcUtil.Close();
 		return rowUpdated;
 	}
@@ -79,10 +78,11 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		ArrayList<SachDTO> result = new ArrayList<>();
 		String sql = "SELECT * FROM SACH WHERE TRANGTHAI = 1";
 		
+		
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		ResultSet rs = jdbcUtil.executeQuery(sql);
 		try {
-			JDBCUtil jdbcUtil = new JDBCUtil();
-			jdbcUtil.Open();
-			ResultSet rs = jdbcUtil.executeQuery(sql);
 			while(rs.next()) {
 				int id = rs.getInt("maSach");
 				String tenSach = rs.getString("tenSach");
@@ -94,11 +94,12 @@ public class SachDAO implements DAOInterface<SachDTO>{
 				SachDTO sach = new SachDTO(id, tenSach, soLuong, giaBan, namXB, maVung, maNXB);
 				result.add(sach);
 			}
-			jdbcUtil.Close();
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		jdbcUtil.Close();
 		return result;
 	}
 }

@@ -20,14 +20,15 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
     @Override
     public int insert(TacGiaDTO t) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO TACGIA (tenTacGia) VALUES ('%s')",
-            t.getTenTacGia()
-        );
+        String sql = "INSERT INTO TACGIA (tenTacGia) VALUES (?)";
+
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("TACGIA");
-        rowInserted = jdbcUtil.executeUpdate(sql);
+        rowInserted = jdbcUtil.executeUpdate(
+            sql,
+            t.getTenTacGia()
+        );
         jdbcUtil.Close();
         t.setMaTacGia(nextID);
         return rowInserted;
@@ -36,10 +37,10 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String query = String.format("UPDATE TACGIA SET TRANGTHAI = 0 WHERE maTacGia = '%s'", id);
+        String query = "UPDATE TACGIA SET TRANGTHAI = 0 WHERE maTacGia = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(query);
+        rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -47,14 +48,14 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
     @Override
     public int update(TacGiaDTO t) {
         int rowUpdated = 0;
-        String query = String.format(
-            "UPDATE TACGIA SET tenTacGia = '%s' WHERE maTacGia = '%s'",
+        String query ="UPDATE TACGIA SET tenTacGia = ? WHERE maTacGia = ?";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowUpdated = jdbcUtil.executeUpdate(
+            query,
             t.getTenTacGia(),
             t.getMaTacGia()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(query);
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -63,20 +64,21 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
         ArrayList<TacGiaDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM TACGIA WHERE TRANGTHAI = 1";
         
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int id = rs.getInt("maTacGia");
                 String tenTacGia = rs.getString("tenTacGia");
                 TacGiaDTO tacGia = new TacGiaDTO(id, tenTacGia);
                 result.add(tacGia);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

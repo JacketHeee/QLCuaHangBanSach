@@ -37,10 +37,11 @@ public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO> {
         ArrayList<DanhMuc_TGDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM DANHMUC_TG";
         
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maTacGia = rs.getInt("maTacGia");
                 int maSach = rs.getInt("maSach");
@@ -48,10 +49,11 @@ public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO> {
                 DanhMuc_TGDTO dmtg = new DanhMuc_TGDTO(maTacGia, maSach);
                 result.add(dmtg);
             }
-            jdbcUtil.Close();
+           
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

@@ -38,10 +38,10 @@ public class CT_PhieuNhapDAO implements DAOInterface<CT_PhieuNhapDTO> {
         ArrayList<CT_PhieuNhapDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM CT_PHIEUNHAP";
         
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 String maSach = rs.getString("maSach");
                 int maNhap = rs.getInt("maNhap");
@@ -51,18 +51,12 @@ public class CT_PhieuNhapDAO implements DAOInterface<CT_PhieuNhapDTO> {
                 CT_PhieuNhapDTO ctpn = new CT_PhieuNhapDTO(maSach, maNhap, soLuongNhap, giaNhap);
                 result.add(ctpn);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 
-    //     public static void main(String[] args) {
-    //     CT_PhieuNhapDAO cT_PhieuNhapDAO = CT_PhieuNhapDAO.getInstance();
-    //     ArrayList<CT_PhieuNhapDTO> list = cT_PhieuNhapDAO.getAll();
-    //     for(CT_PhieuNhapDTO i : list){
-    //         System.out.println(i.getMaNhap() + "\t" + i.getmaSach() + "\t" + i.getSoLuongNhap() + "\t" + i.getGiaNhap());
-    //     }
-    // }
 }

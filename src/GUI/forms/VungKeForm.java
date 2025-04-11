@@ -38,14 +38,13 @@ import javax.swing.JButton;
 public class VungKeForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
-    private String id = "vungtl";
+    private int id = 5;
     private String[] header = {"Mã vùng", "Tên vùng"};
     private ViTriVungBUS viTriVungBUS;
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-    private ChucNangBUS chucNangBUS;
 
     public VungKeForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -53,7 +52,6 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         this.taiKhoan = mainFrame.getTaiKhoan();
         viTriVungBUS = ViTriVungBUS.getInstance();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
-        this.chucNangBUS = ChucNangBUS.getInstance();
         this.listAction = getListAction();
 
         init();
@@ -73,8 +71,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     public ArrayList<String> getListAction(){
         ArrayList<String> result = new ArrayList<>(); 
         int maNQ = taiKhoan.getMaRole();
-        int maCN = chucNangBUS.getMaChucNangByTen(id);
-        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, maCN);
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
         for(ChiTietQuyenDTO i : listCTQ){
             result.add(i.getHanhDong());
         }

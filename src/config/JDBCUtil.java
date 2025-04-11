@@ -1,17 +1,21 @@
 package config;
 
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 // new com.mysql.cj.jdbc.Driver()
 public class JDBCUtil {
 	private Connection connection;
+	private PreparedStatement pst;
 
 	public void Open(){
 		try {
@@ -38,11 +42,12 @@ public class JDBCUtil {
 		}
 	}
 
-	public ResultSet executeQuery (String sql){
+	public ResultSet executeQuery (String sql, Object... params){
 		ResultSet rs = null;
 		try {
-			Statement statement = this.connection.createStatement();
-			rs = statement.executeQuery(sql);
+			pst = this.connection.prepareStatement(sql);
+			setParams(params);
+			rs = pst.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,11 +55,12 @@ public class JDBCUtil {
 		return(rs);
 	}
 
-	public int executeUpdate(String sql){
+	public int executeUpdate(String sql, Object... params){
 		int n = -1;
 		try {
-			Statement statement = this.connection.createStatement();
-			n = statement.executeUpdate(sql);
+			pst = this.connection.prepareStatement(sql);
+			setParams(params);
+			n = pst.executeUpdate();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -65,10 +71,11 @@ public class JDBCUtil {
 
 	public int getAutoIncrement(String tableName){
 		int nextID = -1;
-		String query = String.format("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '%s'", tableName);
+		String query = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?";
 		try {
-			Statement statment = this.connection.createStatement();
-			ResultSet result = statment.executeQuery(query);
+			pst = this.connection.prepareStatement(query);
+			pst.setString(1, tableName);
+			ResultSet result = pst.executeQuery();
 			while(result.next()){
 				nextID = result.getInt(1);
 			}
@@ -77,6 +84,50 @@ public class JDBCUtil {
 			e.printStackTrace();
 		}
 		return(nextID);
+	}
+
+	public void setParams(Object... params){
+		for(int i = 0; i < params.length; i++){
+			int index = i + 1;
+			if(params[i] instanceof String){
+				try {
+					pst.setString(index, (String)params[i]);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			else if(params[i] instanceof Integer){
+				try {
+					pst.setInt(index, (Integer)params[i]);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			else if(params[i] instanceof BigDecimal){
+				try {
+					pst.setBigDecimal(index, (BigDecimal)params[i]);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			else if(params[i] instanceof LocalDateTime){//java hỗ trợ
+				try {
+					pst.setObject(index, params[i]);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			else if(params[i] instanceof java.sql.Date){
+				try {
+					pst.setDate(index, (java.sql.Date)params[i]);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			else{
+				System.out.println("Kiểu dữ liệu chưa có");
+			}
+		}
 	}
 
 }
