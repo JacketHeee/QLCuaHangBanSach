@@ -3,40 +3,25 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 import BUS.SachBUS;
 import BUS.ViTriVungBUS;
 import DTO.SachDTO;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
-import GUI.component.PanelSearch;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
-import GUI.component.search.SearchPanel;
-import interfaces.Searchable;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.SachSearch;
 import utils.UIUtils;
-
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-
-import javax.management.Notification;
-import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

@@ -12,6 +12,7 @@ import BUS.KhachHangBUS;
 import BUS.SachBUS;
 import DTO.KhachHangDTO;
 import DTO.SachDTO;
+import DTO.ViTriVungDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.KhachHangSearch;
 import search.SachSearch;
 import utils.UIUtils;
 
@@ -40,6 +42,8 @@ public class KhachHangForm extends JPanel implements TableActionListener{
     private String[] header = {"Mã khách hàng","Tên khách hàng","Số điện thoại","Giới tính"};
     private CustomTable table;
     private MainFrame mainFrame;
+    private ArrayList<KhachHangDTO> listKH;
+    private ArrayList<String[]> dataToShow;
 
     public KhachHangForm(String title,MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -50,6 +54,7 @@ public class KhachHangForm extends JPanel implements TableActionListener{
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -61,16 +66,12 @@ public class KhachHangForm extends JPanel implements TableActionListener{
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(foods, new SachSearch(listKH), this::updateTable, null);
+        SearchBarPanel<KhachHangDTO> searchBarPanel = new SearchBarPanel<>(foods, new KhachHangSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
 
 
     ///////////////////////////////////////////////////////////////
@@ -92,9 +93,15 @@ public class KhachHangForm extends JPanel implements TableActionListener{
     }
 
     public ArrayList<String[]> Data(){
-        ArrayList<KhachHangDTO> listKH = khachHangBUS.getAll();
+        listKH = khachHangBUS.getAll();
+        
+       return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<KhachHangDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(KhachHangDTO i : listKH){
+        for(KhachHangDTO i : inputData){
             data.add(new String[]{i.getMaKH() + "",i.getTenKH(),i.getSoDT(),i.getGioiTinh()});
         }
         return(data);
@@ -132,6 +139,18 @@ public class KhachHangForm extends JPanel implements TableActionListener{
             default:
                 System.out.println("Unknown action: " + actionId);
                 break;
+        }
+    }
+
+
+    private void updateTable(ArrayList<KhachHangDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+        for (KhachHangDTO x: ketqua) {
+            for (String y : new String[]{x.getMaKH() + "",x.getTenKH(),x.getSoDT(),x.getGioiTinh()})
+                System.out.print(y);
+            System.out.println();
         }
     }
 

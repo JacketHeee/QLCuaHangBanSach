@@ -7,6 +7,10 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import DTO.NhomQuyenDTO;
+import DTO.SachDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +19,12 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.component.search.SearchBarPanel;
 import GUI.dialog.AddNhomQuyen;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.PhanQuyenSearch;
+import search.SachSearch;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -35,6 +42,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private String title;
     private ArrayList<String[]> arrCN;
     private CustomTable table; 
+    private ArrayList<String[]> dataToShow;
 
     public PhanQuyenForm(MainFrame mainframe, String title, ArrayList<String[]> arrCN) {
         this.mainFrame = mainframe;
@@ -45,6 +53,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -56,44 +65,13 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(foods, new PhanQuyenSearch(data), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
 
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
     String[][] arrActions = {
@@ -198,5 +176,12 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+    }
+
+
+    private void updateTable(ArrayList<NhomQuyenDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
     }
 }
