@@ -139,11 +139,8 @@ public class InvoiceTable extends CustomTable {
         revalidate();
     }
 
-
     @Override
     public void setSelectedRow(int row) {
-        // TODO Auto-generated method stub
+        super.setSelectedRow(row);
     }
-
-    
 }

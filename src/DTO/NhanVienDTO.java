@@ -32,6 +32,13 @@ public class NhanVienDTO {
         this.maTK = maTK;
     }
 
+    public NhanVienDTO(String hoTen, Date ngaySinh, String gioiTinh, String soDT) {
+        this.hoTen = hoTen;
+        this.ngaySinh = ngaySinh;
+        this.gioiTinh = gioiTinh;
+        this.soDT = soDT;
+    }
+
     // Getter và Setter
     public int getMaNV() {
         return maNV;

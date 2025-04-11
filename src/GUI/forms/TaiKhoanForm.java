@@ -10,6 +10,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
+import BUS.NhanVienBUS;
 import BUS.TaiKhoanBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.TaiKhoanDTO;
@@ -21,7 +22,11 @@ import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.TableActionListener;
+import GUI.dialog.KhachHangDialog;
+import GUI.dialog.TaiKhoanDialog;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -31,7 +36,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class TaiKhoanForm extends JPanel implements ActionListener {
+public class TaiKhoanForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
     private String id = "taikhoan";
@@ -42,6 +47,16 @@ public class TaiKhoanForm extends JPanel implements ActionListener {
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private ChucNangBUS chucNangBUS;
+    private NhanVienBUS nhanVienBUS;
+    private CustomTable table;
+
+
+    private String[][] attributes = {
+        {"textbox","Tên đăng nhập"},
+        {"textbox","Mật khẩu"},
+        {"combobox","Nhân Viên"},
+        {"combobox", "Nhóm quyền"}
+    };
 
     public TaiKhoanForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -49,8 +64,9 @@ public class TaiKhoanForm extends JPanel implements ActionListener {
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         this.chucNangBUS = ChucNangBUS.getInstance();
-
-        taiKhoanBUS = TaiKhoanBUS.getInstance();
+        this.taiKhoanBUS = TaiKhoanBUS.getInstance();
+        this.nhanVienBUS = NhanVienBUS.getInstance();
+        this.listAction = getListAction();
         init();
     }
     
@@ -118,6 +134,8 @@ public class TaiKhoanForm extends JPanel implements ActionListener {
     }
 
     ///////////////////////////////////////////////////////////////
+
+
     String[][] topActions = {
         {"Thêm","add.svg","add"},
         {"Import Excel","importExcel.svg","importExcel"},
@@ -184,7 +202,8 @@ public class TaiKhoanForm extends JPanel implements ActionListener {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(Data(),getActionBottom(), header);
+        table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
@@ -193,7 +212,8 @@ public class TaiKhoanForm extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                // JOptionPane.showMessageDialog(mainFrame, "hi");
+                TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(this, "Tài khoản", "Thêm tài khoản", "add", attributes);
+                taiKhoanDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -202,7 +222,63 @@ public class TaiKhoanForm extends JPanel implements ActionListener {
                 
                 break;
             default:
+        }
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "edit":
+                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                break;
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public ChiTietQuyenBUS getChiTietQuyenBUS() {
+        return chiTietQuyenBUS;
+    }
+
+    public void setChiTietQuyenBUS(ChiTietQuyenBUS chiTietQuyenBUS) {
+        this.chiTietQuyenBUS = chiTietQuyenBUS;
+    }
+
+    public TaiKhoanBUS getTaiKhoanBUS() {
+        return taiKhoanBUS;
+    }
+
+    public void setTaiKhoanBUS(TaiKhoanBUS taiKhoanBUS) {
+        this.taiKhoanBUS = taiKhoanBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+    
 }

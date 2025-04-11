@@ -1,6 +1,7 @@
 package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -15,19 +16,26 @@ import DTO.KhachHangDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.TableActionListener;
 import GUI.dialog.KhachHangDialog;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
+import utils.UIUtils;
+
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class KhachHangForm extends JPanel implements ActionListener{
+public class KhachHangForm extends JPanel implements TableActionListener, ActionListener{
 
     private String title;
     private String id = "khachhang";
@@ -43,7 +51,7 @@ public class KhachHangForm extends JPanel implements ActionListener{
     private String[][] attributes = {
         {"textbox","Tên khách hàng"},
         {"textbox","Số điện thoại"},
-        {"combobox", "Giới tính", "Nam", "Nữ"}
+        {"combobox", "Giới tính"}
     };
 
     public KhachHangForm(String title, MainFrame mainFrame) {
@@ -162,6 +170,7 @@ public class KhachHangForm extends JPanel implements ActionListener{
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         table = new CustomTable(Data(),getActionBottom(), header);
+        table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
@@ -193,7 +202,6 @@ public class KhachHangForm extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                // JOptionPane.showMessageDialog(mainFrame, "hi");
                 KhachHangDialog khachHangDialog = new KhachHangDialog(this, "Khách hàng", "Thêm Khách Hàng", "add", attributes);
                 khachHangDialog.setVisible(true);
                 break;
@@ -204,6 +212,27 @@ public class KhachHangForm extends JPanel implements ActionListener{
                 
                 break;
             default:
+        }
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "edit":
+                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                break;
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
                 break;
         }
     }

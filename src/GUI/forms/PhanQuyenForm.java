@@ -1,6 +1,7 @@
 package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -22,14 +23,19 @@ import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.TableActionListener;
 import GUI.dialog.AddNhomQuyen;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
+import utils.UIUtils;
+
+import java.awt.Color;
 import java.awt.Cursor;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PhanQuyenForm extends JPanel implements ActionListener {
+public class PhanQuyenForm extends JPanel implements ActionListener,TableActionListener {
 
     private MainFrame mainFrame;
     private String title;
@@ -182,6 +188,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener {
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         table = new CustomTable(Data(),getActionBottom(), "Mã quyền","Tên nhóm quyền");
+        table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
@@ -201,9 +208,11 @@ public class PhanQuyenForm extends JPanel implements ActionListener {
                 arrActions.add(bottomActions[0]);
             }
             else if(i.equals("Xóa")){
-                arrActions.add(bottomActions[1]);
+                arrActions.add(bottomActions[2]);
             }
+
         }
+        arrActions.add(bottomActions[1]);
         String[][] array = arrActions.toArray(new String[0][]);
         return(array);
     }
@@ -260,4 +269,25 @@ public class PhanQuyenForm extends JPanel implements ActionListener {
     }
 
     
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "edit":
+                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                break;
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
+                break;
+        }
+    }
 }

@@ -203,7 +203,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 					mainFrame.setPanel(new TaiKhoanForm(but.getText(), mainFrame));
 					break;
 				case "khachhang":
-					mainFrame.setPanel(new KhachHangForm(but.getText(), mainFrame));
+					mainFrame.setPanel(new KhachHangForm(but.getText(),mainFrame));
 					break;
 				case "pttt":
 					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText(), mainFrame));

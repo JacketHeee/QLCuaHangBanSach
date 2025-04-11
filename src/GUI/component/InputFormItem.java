@@ -1,11 +1,14 @@
 package GUI.component;
 
 import java.awt.Color;
+import java.sql.Date;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.toedter.calendar.JDateChooser;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -13,6 +16,7 @@ public class InputFormItem extends JPanel{
     private JLabel label;
     private JTextField textField;
     private JComboBox<String> combobox;
+    private JDateChooser inputDate;
     // private // date tutu
 
     public InputFormItem(String type, String title){
@@ -28,7 +32,11 @@ public class InputFormItem extends JPanel{
                 this.combobox = new JComboBox<>();
                 setCombobox();
                 break;
-
+            case "inputDate":
+                this.inputDate = new JDateChooser();
+                inputDate.setDateFormatString("dd/MM/yyyy");
+                setInputDate();
+                break;
             default:
                 break;
         }
@@ -42,6 +50,11 @@ public class InputFormItem extends JPanel{
     public void setCombobox(){
         this.add(label, "grow");
         this.add(combobox, "grow");
+    }
+
+    public void setInputDate(){
+        this.add(label, "grow");
+        this.add(inputDate, "grow");
     }
 
     public void setListCombobox(String... list){
@@ -60,6 +73,21 @@ public class InputFormItem extends JPanel{
 
     public String getSelection(){
         return((String)combobox.getSelectedItem());
+    }
+
+    public java.sql.Date getDate(){
+        java.util.Date utilDate = inputDate.getDate();
+        java.sql.Date sqlDate = new Date(utilDate.getTime());
+        return(sqlDate);
+    }
+
+    public String getDateString(){
+        String result = ((JTextField) inputDate.getDateEditor().getUiComponent()).getText();
+        return(result);  
+    }
+
+    public void setDate(java.sql.Date sqlDate){
+        inputDate.setDate(sqlDate);
     }
 
 }

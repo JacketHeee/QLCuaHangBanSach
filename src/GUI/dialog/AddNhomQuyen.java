@@ -29,9 +29,11 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
-public class AddNhomQuyen extends JDialog implements ActionListener{
+public class AddNhomQuyen extends JDialog implements ActionListener, ItemListener{
     JFrame parent;
     String title;
     private PhanQuyenForm phanQuyenForm;
@@ -96,11 +98,12 @@ public class AddNhomQuyen extends JDialog implements ActionListener{
         initListCheckBox();
         for(int i = 0; i < listAllowSelect.size(); i++){
             panel.add(new JLabel(listAllowSelect.get(i)[0]),"pushx,gaptop 10");
+            String chucNang = listAllowSelect.get(i)[1];
             String hanhDong = listAllowSelect.get(i)[2];
             int k = 0;
             int skipCell = 0;
             if(hanhDong.contains("Xem")){
-                listCheckBox.get(i).add(new CheckBoxCustom("Xem"));
+                listCheckBox.get(i).add(new CheckBoxCustom(chucNang, "Xem"));
                 panel.add(listCheckBox.get(i).get(k),"pushx, al center");
                 k++;
             }
@@ -109,16 +112,7 @@ public class AddNhomQuyen extends JDialog implements ActionListener{
                 skipCell++;
             }
             if(hanhDong.contains("Thêm")){
-                listCheckBox.get(i).add(new CheckBoxCustom("Thêm"));
-                panel.add(listCheckBox.get(i).get(k),"pushx, al center");
-                k++;
-            }
-            else{
-                panel.add(new JPanel());
-                skipCell++;
-            }
-            if(hanhDong.contains("Xóa")){
-                listCheckBox.get(i).add(new CheckBoxCustom("Sửa"));
+                listCheckBox.get(i).add(new CheckBoxCustom(chucNang, "Thêm"));
                 panel.add(listCheckBox.get(i).get(k),"pushx, al center");
                 k++;
             }
@@ -127,7 +121,16 @@ public class AddNhomQuyen extends JDialog implements ActionListener{
                 skipCell++;
             }
             if(hanhDong.contains("Sửa")){
-                listCheckBox.get(i).add(new CheckBoxCustom("Xóa"));
+                listCheckBox.get(i).add(new CheckBoxCustom(chucNang, "Sửa"));
+                panel.add(listCheckBox.get(i).get(k),"pushx, al center");
+                k++;
+            }
+            else{
+                panel.add(new JPanel());
+                skipCell++;
+            }
+            if(hanhDong.contains("Xóa")){
+                listCheckBox.get(i).add(new CheckBoxCustom(chucNang, "Xóa"));
                 panel.add(listCheckBox.get(i).get(k),"pushx, al center");
                 k++;
             }
@@ -141,6 +144,10 @@ public class AddNhomQuyen extends JDialog implements ActionListener{
                 panel.add(new JPanel(), "skip " + (2 - lastIndex));
             }
         }
+        //Cài đặt không cho chọn khi chưa chọn nút xem
+        setDefaultCheckBox();
+        //Cài đặt listener nút xem
+        setListenerCheckBox();
 
         CustomButton btnThem = new CustomButton("Thêm");    
         btnThem.setActionCommand("add");
@@ -174,7 +181,7 @@ public class AddNhomQuyen extends JDialog implements ActionListener{
         listAllowSelect.add(new String[]{"Tạo phiếu nhập", "createInput", "Xem Xóa"});
         listAllowSelect.add(new String[]{"Quản lý phiếu nhập", "qlInput", "Xem Thêm Sửa Xóa"}); //?
         listAllowSelect.add(new String[]{"Tạo hóa đơn", "createBill", "Xem Xóa"});
-        listAllowSelect.add(new String[]{"Quản lý hóa đơn", "book", "Xem Thêm Sửa Xóa"}); //?
+        listAllowSelect.add(new String[]{"Quản lý hóa đơn", "qlBill", "Xem Thêm Sửa Xóa"}); //?
         listAllowSelect.add(new String[]{"Khuyến mãi", "promotion", "Xem Thêm Sửa Xóa"});
         listAllowSelect.add(new String[]{"Phương thức thanh toán", "pttt", "Xem Thêm Sửa Xóa"});
         listAllowSelect.add(new String[]{"Nhân viên", "nv", "Xem Thêm Sửa Xóa"});
@@ -213,7 +220,7 @@ public class AddNhomQuyen extends JDialog implements ActionListener{
             int maCN = chucNangBUS.getMaChucNangByTen(tenCN);
             for(int j = 0; j < listCheckBox.get(i).size(); j++){
                 if(listCheckBox.get(i).get(j).isSelected()){
-                    ChiTietQuyenDTO chiTietQuyenDTO = new ChiTietQuyenDTO(maRole, maCN, listCheckBox.get(i).get(j).gethanhDong());
+                    ChiTietQuyenDTO chiTietQuyenDTO = new ChiTietQuyenDTO(maRole, maCN, listCheckBox.get(i).get(j).getHanhDong());
                     chiTietQuyenBUS.insert(chiTietQuyenDTO);
                 }
             }
@@ -231,6 +238,56 @@ public class AddNhomQuyen extends JDialog implements ActionListener{
             return(false);
         }
         return(true);
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        CheckBoxCustom checkBox = (CheckBoxCustom)e.getSource();
+
+        if(checkBox.isSelected()){
+            setEnabled(checkBox.getChucNang());
+        }
+        else {
+            setUnEnable(checkBox.getChucNang());
+        }
+    }
+
+    public void setDefaultCheckBox(){
+        for(int i = 0; i < listCheckBox.size(); i++){
+            for(int j = 1; j < listCheckBox.get(i).size(); j++){
+                listCheckBox.get(i).get(j).setEnabled(false);
+            }
+        }
+    }
+
+    public void setListenerCheckBox(){
+        for(int i = 0; i < listCheckBox.size(); i++){
+            listCheckBox.get(i).get(0).addItemListener(this);
+        }
+    }
+
+    public void setEnabled(String chucNang){
+        for(int i = 0; i < listCheckBox.size(); i++){
+            String tenCN = listCheckBox.get(i).get(0).getChucNang();
+            if(chucNang.equals(tenCN)){
+                for(int j = 1; j < listCheckBox.get(i).size(); j++){
+                    listCheckBox.get(i).get(j).setEnabled(true);
+                }
+                break;
+            }
+        }
+    }
+
+    public void setUnEnable(String chucNang){
+        for(int i = 0; i < listCheckBox.size(); i++){
+            String tenCN = listCheckBox.get(i).get(0).getChucNang();
+            if(chucNang.equals(tenCN)){
+                for(int j = 1; j < listCheckBox.get(i).size(); j++){
+                    listCheckBox.get(i).get(j).setEnabled(false);
+                }
+                break;
+            }
+        }
     }
 
 

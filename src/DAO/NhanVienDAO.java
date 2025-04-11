@@ -23,12 +23,11 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
     public int insert(NhanVienDTO nv) {
         int rowInserted = 0;
         String sql = String.format(
-            "INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT, maTK) VALUES ('%s', '%s', '%s', '%s', '%d')",
+            "INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT) VALUES ('%s', '%s', '%s', '%s')",
             nv.getHoTen(),
             nv.getNgaySinh().toString(),
             nv.getGioiTinh(),
-            nv.getSoDT(),
-            nv.getMaTK()
+            nv.getSoDT()
         );
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -118,6 +117,55 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
             // TODO: handle exception
         }
         return result;
+    }
+
+    public ArrayList<String> getAllTenNVNotHaveAccount(){
+        ArrayList<String> result = new ArrayList<>();
+        String sql = "SELECT hoTen FROM NHANVIEN WHERE maTK IS NULL";
+
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                String hoTen = rs.getString("hoTen");
+                result.add(hoTen);
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
+    public int getMaNVByTenNV(String tenNV){
+        int result = -1;
+        String sql = String.format("SELECT maNV FROM nhanVien WHERE hoTen = '%s'", tenNV);
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql);
+            while(rs.next()){
+                result = rs.getInt("maNV");
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return(result);
+    }
+
+    public int setMaTK(int maNV, int maTK){
+        int result = -1;
+        String sql = String.format("UPDATE NHANVIEN SET maTK = '%s' WHERE maNV = '%s'", maTK + "", maNV + "");
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            result = jdbcUtil.executeUpdate(sql);
+            jdbcUtil.Close();
+        } catch (Exception e) {
+        }
+        return(result);
     }
 
 }

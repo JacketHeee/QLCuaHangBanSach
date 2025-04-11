@@ -3,6 +3,8 @@ package GUI.forms;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
+import utils.UIUtils;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -20,7 +22,7 @@ import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomButton;
 import GUI.component.InvoiceTable;
-
+import GUI.component.TableActionListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.awt.Font;
 import java.awt.Color;
 
-public class TaoPhieuNhapForm extends JPanel implements ActionListener{
+public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableActionListener{
     private String id = "createInput";
     private String[] listNcc; 
     private CustomButton buttonSave;
@@ -39,12 +41,14 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener{
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private ChucNangBUS chucNangBUS;
+    private JPanel chiTietPhieuNhap;
 
     public TaoPhieuNhapForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         this.chucNangBUS = ChucNangBUS.getInstance();
+        this.listAction = getListAction();
 
         init();
     }
@@ -54,7 +58,8 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener{
 
         add(new JLabel("<html><b><font size='+2'>TẠO PHIẾU NHẬP MỚI</font></b><html>"),"gaptop 20, al center,pushx");
         add(getThongtin(),"pushx, growx");
-        add(getChiTietPhieuNhap(),"pushx, growx");
+        chiTietPhieuNhap = getChiTietPhieuNhap();
+        add(chiTietPhieuNhap,"pushx, growx");
         add(getTongTien(),"pushx, growx");
         add(getPanelAction(),"pushx, growx");
         
@@ -107,6 +112,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener{
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         panel.add(table,"push,grow,wrap");
+        table.setActionListener(this);
         panel.add(panelActionOnTable(),"pushx,growx");
         return panel;
     }
@@ -176,6 +182,10 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener{
         switch (ms) {
             case "addRowData":
                 table.addDataRow(null);
+                chiTietPhieuNhap.repaint();
+                chiTietPhieuNhap.revalidate();
+                repaint();
+                revalidate();
                 break;
         
             default:
@@ -184,6 +194,27 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener{
 
         // TODO Auto-generated method stub
         
+    }
+
+
+    
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
+                break;
+        }
     }
 
     

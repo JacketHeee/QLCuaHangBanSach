@@ -22,7 +22,9 @@ import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.TableActionListener;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -33,7 +35,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class VungKeForm extends JPanel implements ActionListener {
+public class VungKeForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
     private String id = "vungtl";
@@ -52,6 +54,7 @@ public class VungKeForm extends JPanel implements ActionListener {
         viTriVungBUS = ViTriVungBUS.getInstance();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         this.chucNangBUS = ChucNangBUS.getInstance();
+        this.listAction = getListAction();
 
         init();
     }
@@ -131,6 +134,7 @@ public class VungKeForm extends JPanel implements ActionListener {
         {"edit.svg","edit"},
         {"remove.svg","remove"}
     };
+    private CustomTable table;
 
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
@@ -188,7 +192,8 @@ public class VungKeForm extends JPanel implements ActionListener {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(Data(),getActionBottom(), header);
+        table.setActionListener(this);
         // CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -207,6 +212,27 @@ public class VungKeForm extends JPanel implements ActionListener {
                 
                 break;
             default:
+        }
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "edit":
+                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                break;
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
                 break;
         }
     }

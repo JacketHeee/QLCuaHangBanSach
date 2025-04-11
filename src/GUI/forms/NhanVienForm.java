@@ -22,7 +22,10 @@ import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.TableActionListener;
+import GUI.dialog.NhanVienDialog;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -33,7 +36,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class NhanVienForm extends JPanel implements ActionListener {
+public class NhanVienForm extends JPanel implements TableActionListener, ActionListener{
 
     private String title;
     private String id = "nv";
@@ -44,7 +47,12 @@ public class NhanVienForm extends JPanel implements ActionListener {
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private ChucNangBUS chucNangBUS;
-
+    private String[][] attributes = {
+        {"textbox","Tên nhân viên"},
+        {"inputDate","Ngày sinh"},
+        {"combobox", "Giới tính"},
+        {"textbox", "Số điện thoại"}
+    };
 
 
     public NhanVienForm(String title, MainFrame mainFrame) {
@@ -55,6 +63,7 @@ public class NhanVienForm extends JPanel implements ActionListener {
         this.chucNangBUS = ChucNangBUS.getInstance();
 
         nhanVienBUS = NhanVienBUS.getInstance();
+        this.listAction = getListAction();
         init();
     }
     
@@ -132,6 +141,7 @@ public class NhanVienForm extends JPanel implements ActionListener {
         {"edit.svg","edit"},
         {"remove.svg","remove"}
     };
+    private CustomTable table;
 
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
@@ -188,7 +198,8 @@ public class NhanVienForm extends JPanel implements ActionListener {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(Data(),getActionBottom(), header);
+        table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
@@ -197,7 +208,8 @@ public class NhanVienForm extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+            NhanVienDialog nhanVienDialog = new NhanVienDialog(this, "Nhân viên", "Thêm Nhân Viên", "add", attributes);
+            nhanVienDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -206,7 +218,52 @@ public class NhanVienForm extends JPanel implements ActionListener {
                 
                 break;
             default:
+        }
+    }
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "edit":
+                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                break;
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
                 break;
         }
     }
+
+    public NhanVienBUS getNhanVienBUS() {
+        return nhanVienBUS;
+    }
+
+    public void setNhanVienBUS(NhanVienBUS nhanVienBUS) {
+        this.nhanVienBUS = nhanVienBUS;
+    }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
 }

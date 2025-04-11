@@ -22,7 +22,9 @@ import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.TableActionListener;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -33,7 +35,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class QLPhieuNhapForm extends JPanel implements ActionListener {
+public class QLPhieuNhapForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
     private String id = "qlInput";
@@ -53,6 +55,7 @@ public class QLPhieuNhapForm extends JPanel implements ActionListener {
         this.chucNangBUS = ChucNangBUS.getInstance();
 
         phieuNhapBUS = PhieuNhapBUS.getInstance();
+        this.listAction = getListAction();
         init();
     }
     
@@ -127,8 +130,10 @@ public class QLPhieuNhapForm extends JPanel implements ActionListener {
     };
     String[][] bottomActions = {
         {"edit.svg","edit"},
+        {"detail.svg","detail"},
         {"remove.svg","remove"}
     };
+    private CustomTable table;
 
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
@@ -172,10 +177,11 @@ public class QLPhieuNhapForm extends JPanel implements ActionListener {
             if(i.equals("Sửa")){
                 arrActions.add(bottomActions[0]);
             }
-            else if(i.equals("Xóa")){
-                arrActions.add(bottomActions[1]);
+            if(i.equals("Xóa")){
+                arrActions.add(bottomActions[2]);
             }
         }
+        arrActions.add(bottomActions[1]);
         String[][] array = arrActions.toArray(new String[0][]);
         return(array);
     }
@@ -186,7 +192,8 @@ public class QLPhieuNhapForm extends JPanel implements ActionListener {
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        CustomTable table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(Data(),getActionBottom(), header);
+        table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
@@ -204,6 +211,29 @@ public class QLPhieuNhapForm extends JPanel implements ActionListener {
                 
                 break;
             default:
+        }
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        switch (actionId) {
+            case "edit":
+                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                break;
+            case "remove":
+                // Logic xóa cho form này
+                int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
+
+                if (choose == 0) {
+                    table.removeRow(row);
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                }
+                break;
+            case "detail":
+                break;
+            default:
+                System.out.println("Unknown action: " + actionId);
                 break;
         }
     }

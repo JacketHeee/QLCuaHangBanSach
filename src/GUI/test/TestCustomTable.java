@@ -1,6 +1,7 @@
 package GUI.test;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -18,6 +19,37 @@ public class TestCustomTable extends JFrame {
 
         
         setSize(1000,600);
+
+        // JOptionPane.showMessageDialog(null, "Xin chào bạn!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        // JOptionPane.showMessageDialog(null, "Xin chào bạn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+        // JOptionPane.showMessageDialog(null, "Xin chào bạn!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        // JOptionPane.showMessageDialog(null, "Xin chào bạn!", "Thông báo", JOptionPane.QUESTION_MESSAGE);
+        // JOptionPane.showMessageDialog(null, "Xin chào bạn!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
+
+        //  JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        //  JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát không?", "Xác nhận", JOptionPane.YES_OPTION);
+        //  JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát không?", "Xác nhận", JOptionPane.NO_OPTION);
+        //  JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát không?", "Xác nhận", JOptionPane.CANCEL_OPTION);
+        //  JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát không?", "Xác nhận", JOptionPane.CLOSED_OPTION);
+
+        Object[] options = {"Yes", "Cancel"};
+        int result = JOptionPane.showOptionDialog(
+            null,
+            "Bạn thực sự muốn xóa?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            options,
+            options[0]
+        );
+
+        if (result == 0) {
+            System.out.println("Người dùng chọn YES");
+        } else {
+            System.out.println("Người dùng chọn CANCEL hoặc đóng hộp thoại");
+        }
+
 
         JPanel panel = new JPanel(new MigLayout());
         
