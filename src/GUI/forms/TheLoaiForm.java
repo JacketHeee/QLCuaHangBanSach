@@ -8,8 +8,12 @@ import javax.swing.JTextField;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
+import BUS.ChiTietQuyenBUS;
+import BUS.ChucNangBUS;
 import BUS.TheLoaiBUS;
 import DTO.SachDTO;
+import DTO.ChiTietQuyenDTO;
+import DTO.TaiKhoanDTO;
 import DTO.TheLoaiDTO;
 import DTO.ViTriVungDTO;
 
@@ -31,24 +35,33 @@ import utils.UIUtils;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class TheLoaiForm extends JPanel implements TableActionListener{
+public class TheLoaiForm extends JPanel implements TableActionListener, ActionListener{
 
     private String title;
+    private int id = 2;
     private String[] header = {"Mã thể loại", "Tên thể loại"};
     private TheLoaiBUS theLoaiBUS;
-    private CustomTable table;
     private MainFrame mainFrame;
     private ArrayList<TheLoaiDTO> listKH;
     private ArrayList<String[]> dataToShow;
 
+    private TaiKhoanDTO taiKhoan;
+    private ArrayList<String> listAction;
+    private ChiTietQuyenBUS chiTietQuyenBUS;
 
-    public TheLoaiForm(String title,MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
+    public TheLoaiForm(String title, MainFrame mainFrame) {
         this.title = title;
+        this.mainFrame = mainFrame;
+        this.taiKhoan = mainFrame.getTaiKhoan();
         theLoaiBUS = TheLoaiBUS.getInstance();
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
+        this.listAction = getListAction();
+
         init();
     }
     
@@ -63,6 +76,17 @@ public class TheLoaiForm extends JPanel implements TableActionListener{
     }
 
     ////////////////////////////////////////////////////////////////////
+    
+    public ArrayList<String> getListAction(){
+        ArrayList<String> result = new ArrayList<>(); 
+        int maNQ = taiKhoan.getMaRole();
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
+        for(ChiTietQuyenDTO i : listCTQ){
+            result.add(i.getHanhDong());
+        }
+        return(result);
+    }
+
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
@@ -74,25 +98,50 @@ public class TheLoaiForm extends JPanel implements TableActionListener{
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
-    String[][] arrActions = {
+    String[][] topActions = {
         {"Thêm","add.svg","add"},
         {"Import Excel","importExcel.svg","importExcel"},
         {"Export Excel","exportExcel.svg","exportExcel"}
     };
 
+    String[][] bottomActions = {
+        {"edit.svg","edit"},
+        {"detail.svg","detail"},
+        {"remove.svg","remove"}
+    };
+    private CustomTable table;
+
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
         panel.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
 
-        for (String[] x : arrActions) {
-            panel.add(new ButtonAction(x[0],x[1],x[2]));
+        ButtonAction but;
+        for (String[] x : getActionTop()) {
+            but = new ButtonAction(x[0],x[1],x[2]);
+            panel.add(but);
+            but.setActionCommand(but.getId());
+            but.addActionListener(this);
         }
 
         return panel;
     }
+
+    public ArrayList<String[]> getActionTop(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Thêm")){
+                arrActions.add(topActions[0]);
+            }
+        }
+        arrActions.add(topActions[1]);  
+        arrActions.add(topActions[2]);
+        return(arrActions);
+    }
     
     public ArrayList<String[]> Data(){
+        // System.out.println("con bo biet bay");
         listKH = theLoaiBUS.getAll();
+        // System.out.println("con cho biet bo");
         
         return DataToShow(listKH);
     }
@@ -105,23 +154,49 @@ public class TheLoaiForm extends JPanel implements TableActionListener{
         }
         return(data);
     }
+
+    public String[][] getActionBottom(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Sửa")){
+                arrActions.add(bottomActions[0]);
+            }
+            if(i.equals("Xóa")){
+                arrActions.add(bottomActions[2]);
+            }
+        }
+        arrActions.add(bottomActions[1]);
+        String[][] array = arrActions.toArray(new String[0][]);
+        return(array);
+    }
     // {"Mã thể loại", "Tên thể loại"}
     /////////////////////////////////////////////////////////////////
 
-    String[][] actions = {
-        {"edit.svg","edit"},
-        {"detail.svg","detail"},
-        {"remove.svg","remove"}
-    };
+
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),actions, header);
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "add":
+                JOptionPane.showMessageDialog(mainFrame, "hi");
+                break;
+            case "importExcel":
+                
+                break;
+            case "exportExcel":
+                
+                break;
+            default:
+        }
+    }
 
 
 

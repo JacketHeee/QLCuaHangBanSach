@@ -21,14 +21,18 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
     @Override
     public int insert(NhaXBDTO t) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO NHAXB (tenNXB, diaChi, soDT, email) VALUES ('%s', '%s', '%s', '%s')",
-            t.getTenNXB(), t.getDiaChi(), t.getSoDT(), t.getEmail()
-        );
+        String sql = "INSERT INTO NHAXB (tenNXB, diaChi, soDT, email) VALUES (?,?,?,?)";
+
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("NHAXB");
-        rowInserted = jdbcUtil.executeUpdate(sql);
+        rowInserted = jdbcUtil.executeUpdate(
+            sql,
+            t.getTenNXB(),
+            t.getDiaChi(), 
+            t.getSoDT(), 
+            t.getEmail()
+        );
         jdbcUtil.Close();
         t.setMaNXB(nextID);
         return rowInserted;
@@ -37,10 +41,10 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String query = String.format("UPDATE NHAXB SET trangThai = 0 WHERE maNXB = '%d'", id);
+        String query = "UPDATE NHAXB SET trangThai = 0 WHERE maNXB = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(query);
+        rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -48,13 +52,18 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
     @Override
     public int update(NhaXBDTO t) {
         int rowUpdated = 0;
-        String query = String.format(
-            "UPDATE NHAXB SET tenNXB = '%s', diaChi = '%s', soDT = '%s', email = '%s' WHERE maNXB = '%d'",
-            t.getTenNXB(), t.getDiaChi(), t.getSoDT(), t.getEmail(), t.getMaNXB()
-        );
+        String query = "UPDATE NHAXB SET tenNXB = '%s', diaChi = '%s', soDT = '%s', email = '%s' WHERE maNXB = ?";
+
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(query);
+        rowUpdated = jdbcUtil.executeUpdate(
+            query,
+            t.getTenNXB(), 
+            t.getDiaChi(), 
+            t.getSoDT(), 
+            t.getEmail(), 
+            t.getMaNXB()
+        );
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -63,10 +72,11 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
         ArrayList<NhaXBDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM NHAXB WHERE trangThai = 1";
         
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int id = rs.getInt("maNXB");
                 String tenNXB = rs.getString("tenNXB");
@@ -76,10 +86,10 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
                 NhaXBDTO nxb = new NhaXBDTO(id, tenNXB, diaChi, soDT, email);
                 result.add(nxb);
             }
-            jdbcUtil.Close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

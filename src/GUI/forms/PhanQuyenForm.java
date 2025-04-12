@@ -3,13 +3,21 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import DTO.NhomQuyenDTO;
+import DTO.PhuongThucTTDTO;
 import DTO.SachDTO;
+import BUS.ChiTietQuyenBUS;
+import BUS.ChucNangBUS;
+import BUS.NhomQuyenBUS;
+import DTO.ChiTietQuyenDTO;
+import DTO.NhomQuyenDTO;
+import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +37,7 @@ import utils.UIUtils;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
-
 import javax.swing.JButton;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -40,14 +45,32 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
     private MainFrame mainFrame;
     private String title;
+    private int id = 16;
     private ArrayList<String[]> arrCN;
     private CustomTable table; 
     private ArrayList<String[]> dataToShow;
+    private ArrayList<ButtonAction> buttonActionsList;
+    private TaiKhoanDTO taiKhoan;
+
+    private ChiTietQuyenBUS chiTietQuyenBUS;
+    private NhomQuyenBUS nhomQuyenBUS;
+    private ChucNangBUS chucNangBUS;
+    
+    private ArrayList<String> listAction;
+    private ArrayList<NhomQuyenDTO> listKH; 
+
 
     public PhanQuyenForm(MainFrame mainframe, String title, ArrayList<String[]> arrCN) {
         this.mainFrame = mainframe;
+        this.taiKhoan = mainFrame.getTaiKhoan();
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
+        this.chucNangBUS = ChucNangBUS.getInstance();
+
         this.title = title;
         this.arrCN = arrCN;
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
+        this.nhomQuyenBUS = NhomQuyenBUS.getInstance();
+        listAction = getListAction();
         init();
     }
     
@@ -62,10 +85,20 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     }
 
     ////////////////////////////////////////////////////////////////////
+    public ArrayList<String> getListAction(){
+        ArrayList<String> result = new ArrayList<>(); 
+        int maNQ = taiKhoan.getMaRole();
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
+        for(ChiTietQuyenDTO i : listCTQ){
+            result.add(i.getHanhDong());
+        }
+        return(result);
+    }
+    
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(foods, new PhanQuyenSearch(data), this::updateTable, null);
+        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(foods, new PhanQuyenSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -74,17 +107,23 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
 
     ///////////////////////////////////////////////////////////////
-    String[][] arrActions = {
+    String[][] topActions = {
         {"Thêm","add.svg","add"},
         {"Import Excel","importExcel.svg","importExcel"},
         {"Export Excel","exportExcel.svg","exportExcel"}
+    };
+
+    String[][] bottomActions = {
+        {"edit.svg","edit"},
+        {"detail.svg","detail"},
+        {"remove.svg","remove"}
     };
 
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
         panel.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
         ButtonAction but;
-        for (String[] x : arrActions) {
+        for (String[] x : getActionTop()) {
             but = new ButtonAction(x[0],x[1],x[2]);
             panel.add(but);
             but.setActionCommand(but.getId());
@@ -94,50 +133,75 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
         return panel;
     }
+
+    public ArrayList<String[]> getActionTop(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Thêm")){
+                arrActions.add(topActions[0]);
+            }
+        }
+        arrActions.add(topActions[1]);  
+        arrActions.add(topActions[2]);
+        return(arrActions);
+    }
     
-    ArrayList<String[]> data = new ArrayList<>(List.of(
-            new String[]{"1","admin"},
-            new String[]{"2","Nhân viên bán hàng"},
-            new String[]{"3","Nhân viên nhập hàng"},
-            new String[]{"4","Nhân viên kiểm kê"}
-    ));
+    // ArrayList<String[]> data = new ArrayList<>(List.of(
+    //         new String[]{"1","admin"},
+    //         new String[]{"2","Nhân viên bán hàng"},
+    //         new String[]{"3","Nhân viên nhập hàng"},
+    //         new String[]{"4","Nhân viên kiểm kê"}
+    // ));
+
+
+
     /////////////////////////////////////////////////////////////////
 
-    String[][] actions = {
-        {"edit.svg","edit"},
-        {"detail.svg","detail"},
-        {"remove.svg","remove"}
-    };
+
+    
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(data,actions, "Mã quyền","Tên nhóm quyền");
+        table = new CustomTable(dataToShow,getActionBottom(), "Mã quyền","Tên nhóm quyền");
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
     }
 
-    String[][] actionRole = {
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"},
-        {"view","add","edit","remove"}
-    };
-    
+    public ArrayList<String[]> Data(){
+        listKH = nhomQuyenBUS.getAll();
+        
+       return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<NhomQuyenDTO> inputData){
+
+        ArrayList<String[]> data = new ArrayList<>();
+        for(NhomQuyenDTO i : inputData){
+            data.add(new String[]{i.getMaRole() + "", i.getTenRole()});
+        }
+        return(data);
+    }
+
+
+    public String[][] getActionBottom(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Sửa")){
+                arrActions.add(bottomActions[0]);
+            }
+            else if(i.equals("Xóa")){
+                arrActions.add(bottomActions[2]);
+            }
+
+        }
+        arrActions.add(bottomActions[1]);
+        String[][] array = arrActions.toArray(new String[0][]);
+        return(array);
+    }
+
+
+      
     @Override
     public void actionPerformed(ActionEvent e) {
         
@@ -146,9 +210,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
                 System.out.println(but.getId()+ but.getText());
-                for (String[] x : actionRole) 
-                    System.out.println(x.length);
-                new AddNhomQuyen(mainFrame,"Thêm nhóm quyền",true,arrCN,actionRole);
+                new AddNhomQuyen(mainFrame,this, "Thêm nhóm quyền",arrCN);
                 mainFrame.glassPane.setVisible(false);
                 break;
         
@@ -157,6 +219,39 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
         }
     }
 
+    public ChiTietQuyenBUS getChiTietQuyenBUS() {
+        return chiTietQuyenBUS;
+    }
+
+    public void setChiTietQuyenBUS(ChiTietQuyenBUS chiTietQuyenBUS) {
+        this.chiTietQuyenBUS = chiTietQuyenBUS;
+    }
+
+    public NhomQuyenBUS getNhomQuyenBUS() {
+        return nhomQuyenBUS;
+    }
+
+    public void setNhomQuyenBUS(NhomQuyenBUS nhomQuyenBUS) {
+        this.nhomQuyenBUS = nhomQuyenBUS;
+    }
+
+    public ChucNangBUS getChucNangBUS() {
+        return chucNangBUS;
+    }
+
+    public void setChucNangBUS(ChucNangBUS chucNangBUS) {
+        this.chucNangBUS = chucNangBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
     @Override
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {

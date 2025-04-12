@@ -23,6 +23,14 @@ public class NhanVienDTO {
         this.soDT = soDT;
         this.maTK = maTK;
     }
+    public NhanVienDTO(int maNV, String hoTen, Date ngaySinh, String gioiTinh, String soDT) {
+        this.maNV = maNV;
+        this.hoTen = hoTen;
+        this.ngaySinh = ngaySinh;
+        this.gioiTinh = gioiTinh;
+        this.soDT = soDT;
+    }
+
 
     public NhanVienDTO(String hoTen, Date ngaySinh, String gioiTinh, String soDT, int maTK) {
         this.hoTen = hoTen;
@@ -30,6 +38,13 @@ public class NhanVienDTO {
         this.gioiTinh = gioiTinh;
         this.soDT = soDT;
         this.maTK = maTK;
+    }
+
+    public NhanVienDTO(String hoTen, Date ngaySinh, String gioiTinh, String soDT) {
+        this.hoTen = hoTen;
+        this.ngaySinh = ngaySinh;
+        this.gioiTinh = gioiTinh;
+        this.soDT = soDT;
     }
 
     // Getter và Setter

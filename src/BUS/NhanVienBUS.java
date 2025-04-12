@@ -67,5 +67,22 @@ public class NhanVienBUS {
 	public NhanVienDTO SelectNhanVienByMaTK(int maTK){
 		return(nhanVienDAO.SelectNhanVienByMaTK(maTK));
 	}	
+
+	public ArrayList<String> getAllTenNVNotHaveAccount(){
+		return(nhanVienDAO.getAllTenNVNotHaveAccount());
+	}
+
+	public int getMaNVByTen(String tenNV){
+		return(nhanVienDAO.getMaNVByTenNV(tenNV));
+	}
+
+	public int setMaTK(int maNV, int maTK){
+		if(nhanVienDAO.setMaTK(maNV, maTK) != 0){
+			int index = getIndexByID(maNV);
+			listNhanVien.get(index).setMaTK(maTK);
+			return(1);
+		}
+		return(0);
+	}
 	
 }

@@ -20,16 +20,17 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
     @Override
     public int insert(TaiKhoanDTO tk) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO TAIKHOAN (username, password, maRole) VALUES ('%s', '%s', '%d')",
+        String sql = "INSERT INTO TAIKHOAN (username, password, maRole) VALUES (?,?,?)";
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int nextID = jdbcUtil.getAutoIncrement("TaiKhoan");
+        rowInserted = jdbcUtil.executeUpdate(
+            sql,
             tk.getUsername(),
             tk.getPassword(),
             tk.getMaRole()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        int nextID = jdbcUtil.getAutoIncrement("TaiKhoan");
-        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         tk.setMaTK(nextID);
         return rowInserted;
@@ -38,10 +39,10 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String query = String.format("UPDATE TAIKHOAN SET TRANGTHAI = 0 WHERE maTK = '%d'", id);
+        String query = "UPDATE TAIKHOAN SET TRANGTHAI = 0 WHERE maTK = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(query);
+        rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -49,16 +50,17 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
     @Override
     public int update(TaiKhoanDTO tk) {
         int rowUpdated = 0;
-        String query = String.format(
-            "UPDATE TAIKHOAN SET username = '%s', password = '%s', maRole = '%d' WHERE maTK = '%d'",
+        String query = "UPDATE TAIKHOAN SET username = ?, password = ?, maRole = ? WHERE maTK = ?";
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowUpdated = jdbcUtil.executeUpdate(
+            query,
             tk.getUsername(),
             tk.getPassword(),
             tk.getMaRole(),
             tk.getMaTK()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(query);
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -67,10 +69,11 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
         ArrayList<TaiKhoanDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM TAIKHOAN WHERE TRANGTHAI = 1";
         
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maTK = rs.getInt("maTK");
                 String username = rs.getString("username");
@@ -80,20 +83,22 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
                 TaiKhoanDTO tk = new TaiKhoanDTO(maTK, username, password, maRole);
                 result.add(tk);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 
     public TaiKhoanDTO SelectTaiKhoanByUserName(String userName){
         TaiKhoanDTO result = null;
-        String sql = String.format("SELECT * FROM taiKhoan WHERE username = '%s'", userName);
+        String sql = "SELECT * FROM taiKhoan WHERE username = ?";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, userName);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while(rs.next()){
                 int maTK = rs.getInt("maTK");
                 String username = rs.getString("username");
@@ -103,10 +108,11 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
                 TaiKhoanDTO tk = new TaiKhoanDTO(maTK, username, password, maRole);
                 result = tk;
             }
-            jdbcUtil.Close();
+            
         } catch (Exception e) {
             // TODO: handle exception
         }
+        jdbcUtil.Close();
         return(result);
     }   
 }

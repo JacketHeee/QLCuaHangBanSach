@@ -23,18 +23,19 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
     @Override
     public int insert(KhuyenMaiDTO km) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO KHUYENMAI (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc) VALUES ('%s', '%s', '%s', '%s', '%s')",
+        String sql = "INSERT INTO KHUYENMAI (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc) VALUES (?,?,?,?,?)";
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int nextID = jdbcUtil.getAutoIncrement("KhuyenMai");
+        rowInserted = jdbcUtil.executeUpdate(
+            sql,
             km.getTenKM(),
             km.getDieuKienGiam(),
             km.getGiaTriGiam(),
             km.getNgayBatDau(),
             km.getNgayKetThuc()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        int nextID = jdbcUtil.getAutoIncrement("KhuyenMai");
-        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         km.setMaKM(nextID);
         return rowInserted;
@@ -43,10 +44,10 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String query = String.format("UPDATE KHUYENMAI SET TRANGTHAI = 0 WHERE maKM = '%d'", id);
+        String query = "UPDATE KHUYENMAI SET TRANGTHAI = 0 WHERE maKM = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(query);
+        rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -54,8 +55,11 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
     @Override
     public int update(KhuyenMaiDTO km) {
         int rowUpdated = 0;
-        String query = String.format(
-            "UPDATE KHUYENMAI SET tenKM = '%s', dieuKienGiam = '%s', giaTriGiam = '%s', ngayBatDau = '%s', ngayKetThuc = '%s' WHERE maKM = '%d'",
+        String query = "UPDATE KHUYENMAI SET tenKM = ?, dieuKienGiam = ?, giaTriGiam = ?, ngayBatDau = ?, ngayKetThuc = ? WHERE maKM = ?";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowUpdated = jdbcUtil.executeUpdate(
+            query,
             km.getTenKM(),
             km.getDieuKienGiam(),
             km.getGiaTriGiam(),
@@ -63,9 +67,6 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
             km.getNgayKetThuc(),
             km.getMaKM()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(query);
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -74,10 +75,11 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
         ArrayList<KhuyenMaiDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM KHUYENMAI WHERE TRANGTHAI = 1";
         
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maKM = rs.getInt("maKM");
                 String tenKM = rs.getString("tenKM");
@@ -89,10 +91,11 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
                 KhuyenMaiDTO km = new KhuyenMaiDTO(maKM, tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc);
                 result.add(km);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

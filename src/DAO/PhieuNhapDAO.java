@@ -22,17 +22,17 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
     @Override
     public int insert(PhieuNhapDTO t) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO PHIEUNHAP (ngayNhap, tongTien, maNCC, maTK) VALUES ('%s', '%s', '%s', '%s')",
+        String sql = "INSERT INTO PHIEUNHAP (ngayNhap, tongTien, maNCC, maTK) VALUES (?,?,?,?)";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int nextID = jdbcUtil.getAutoIncrement("PHIEUNHAP");
+        rowInserted = jdbcUtil.executeUpdate(
+            sql,
             t.getNgayNhap(),
             t.getTongTien(),
             t.getMaNCC(),
             t.getMaTK()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        int nextID = jdbcUtil.getAutoIncrement("PHIEUNHAP");
-        rowInserted = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         t.setMaNhap(nextID);
         return rowInserted;
@@ -41,10 +41,10 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String sql = String.format("UPDATE PHIEUNHAP SET trangThai = 0 WHERE maNhap = '%s'", id);
+        String sql = "UPDATE PHIEUNHAP SET trangThai = 0 WHERE maNhap = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(sql);
+        rowDeleted = jdbcUtil.executeUpdate(sql, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -52,17 +52,18 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
     @Override
     public int update(PhieuNhapDTO t) {
         int rowUpdated = 0;
-        String sql = String.format(
-            "UPDATE PHIEUNHAP SET ngayNhap = '%s', tongTien = '%s', maNCC = '%s', maTK = '%s' WHERE maNhap = '%s'",
+        String sql = "UPDATE PHIEUNHAP SET ngayNhap = '%s', tongTien = '%s', maNCC = '%s', maTK = '%s' WHERE maNhap = ?";
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowUpdated = jdbcUtil.executeUpdate(
+            sql,
             t.getNgayNhap(),
             t.getTongTien(),
             t.getMaNCC(),
             t.getMaTK(),
             t.getMaNhap()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(sql);
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -70,10 +71,11 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
     public ArrayList<PhieuNhapDTO> getAll() {
         ArrayList<PhieuNhapDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM PHIEUNHAP WHERE trangThai = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maNhap = rs.getInt("maNhap");
                 LocalDateTime ngayNhap = rs.getTimestamp("ngayNhap").toLocalDateTime();
@@ -83,10 +85,11 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
                 PhieuNhapDTO phieuNhap = new PhieuNhapDTO(maNhap, ngayNhap, tongTien, maNCC, maTK);
                 result.add(phieuNhap);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

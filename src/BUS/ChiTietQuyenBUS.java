@@ -22,6 +22,14 @@ public class ChiTietQuyenBUS {
 		}
 		return(instance);
 	}
+
+	public int insert(ChiTietQuyenDTO chiTietQuyen){
+		if(chiTietQuyenDAO.insert(chiTietQuyen) != 0){
+			listChiTietQuyen.add(chiTietQuyen);
+			return 1;
+		}
+		return 0;
+	}
 	
 	public ArrayList<ChiTietQuyenDTO> getAll(){
 		return(this.listChiTietQuyen);
@@ -42,4 +50,9 @@ public class ChiTietQuyenBUS {
 		}
 		return(result);
 	}
+
+	public ArrayList<ChiTietQuyenDTO> getListChiTietQuyenByMaRoleMaCN(int maRole, int maCN){
+		return(chiTietQuyenDAO.getListChiTietQuyenByMaRoleMaCN(maRole, maCN));
+	}
+
 }

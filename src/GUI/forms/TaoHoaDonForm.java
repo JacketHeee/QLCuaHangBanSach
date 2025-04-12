@@ -16,27 +16,40 @@ import javax.swing.border.Border;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.ChiTietQuyenBUS;
+import BUS.ChucNangBUS;
+import DTO.ChiTietQuyenDTO;
+import DTO.TaiKhoanDTO;
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomButton;
+import GUI.component.CustomTable;
 import GUI.component.InvoiceTable;
 import GUI.component.TableActionListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.ArrayList;
 import java.awt.Font;
 import java.awt.Color;
 
-public class TaoHoaDonForm extends JPanel implements ActionListener,TableActionListener{
+public class TaoHoaDonForm extends JPanel implements ActionListener, TableActionListener{
+    private int id = 9;
     private String[] listNcc; 
     private CustomButton buttonSave;
     private CustomButton buttonCancel;
     private InvoiceTable table;
     private MainFrame mainFrame;
+    private TaiKhoanDTO taiKhoan;
+    private ArrayList<String> listAction;
+    private ChiTietQuyenBUS chiTietQuyenBUS;
 
     public TaoHoaDonForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
+        this.taiKhoan = mainFrame.getTaiKhoan();
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
+        this.listAction = getListAction();
+
         init();
     }
 
@@ -52,6 +65,16 @@ public class TaoHoaDonForm extends JPanel implements ActionListener,TableActionL
         add(panelThongTinThanhToan(),"pushx, growx");
         add(getPanelAction(),"pushx, growx");
         
+    }
+
+    public ArrayList<String> getListAction(){
+        ArrayList<String> result = new ArrayList<>(); 
+        int maNQ = taiKhoan.getMaRole();
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
+        for(ChiTietQuyenDTO i : listCTQ){
+            result.add(i.getHanhDong());
+        }
+        return(result);
     }
 
     private JPanel getThongtin() {
@@ -95,6 +118,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener,TableActionL
         panel.add(getTongTien(),"pushx,growx");
         return panel;
     }
+
 
     private ButtonAction butAddData;
     private ButtonAction butImportData;

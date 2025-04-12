@@ -22,14 +22,12 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
     @Override
     public int insert(PhuongThucTTDTO t) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO PHUONGTHUC_TT (tenPTTT) VALUES ('%s')",
-            t.getTenPTTT()
-        );
+        String sql = "INSERT INTO PHUONGTHUC_TT (tenPTTT) VALUES (?)";
+
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("PHUONGTHUC_TT");
-        rowInserted = jdbcUtil.executeUpdate(sql);
+        rowInserted = jdbcUtil.executeUpdate(sql, t.getTenPTTT());
         jdbcUtil.Close();
         t.setMaPT(nextID);
         return rowInserted;
@@ -38,10 +36,10 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String query = String.format("UPDATE PHUONGTHUC_TT SET TRANGTHAI = 0 WHERE maPT = '%s'", id);
+        String query = "UPDATE PHUONGTHUC_TT SET TRANGTHAI = 0 WHERE maPT = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(query);
+        rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -49,14 +47,15 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
     @Override
     public int update(PhuongThucTTDTO t) {
         int rowUpdated = 0;
-        String query = String.format(
-            "UPDATE PHUONGTHUC_TT SET tenPTTT = '%s' WHERE maPT = '%s'",
+        String query = "UPDATE PHUONGTHUC_TT SET tenPTTT = ? WHERE maPT = ?";
+ 
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowUpdated = jdbcUtil.executeUpdate(
+            query,
             t.getTenPTTT(),
             t.getMaPT()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(query);
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -65,20 +64,21 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
         ArrayList<PhuongThucTTDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM PHUONGTHUC_TT WHERE TRANGTHAI = 1";
         
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int id = rs.getInt("maPT");
                 String tenPTTT = rs.getString("tenPTTT");
                 PhuongThucTTDTO phuongThucTT = new PhuongThucTTDTO(id, tenPTTT);
                 result.add(phuongThucTT);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

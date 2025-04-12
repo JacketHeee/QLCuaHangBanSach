@@ -1,8 +1,11 @@
+CREATE DATABASE quanlycuahangbansach;
+USE quanlycuahangbansach;
+
 CREATE TABLE SACH(
 	maSach INT AUTO_INCREMENT PRIMARY KEY,
 	tenSach VARCHAR(255) NOT NULL,
+	soLuong INT NOT NULL,
 	giaBan DECIMAL(10, 2) NOT NULL,
-	soLuongTon INT DEFAULT 0,
 	namXB INT NOT NULL,
 	maVung INT NOT NULL,
 	maNXB INT NOT NULL,
@@ -109,7 +112,7 @@ CREATE TABLE KHUYENMAI (
   trangThai TINYINT DEFAULT 1
 );
 
-CREATE TABLE KM_SACH (
+CREATE TABLE KM_PHIENBANSACH (
   maKM INT,
   maSach INT,
   PRIMARY KEY (maKM, maSach)
@@ -121,7 +124,7 @@ CREATE TABLE NHANVIEN (
   ngaySinh DATE NOT NULL,
   gioiTinh VARCHAR(10) NOT NULL,
   soDT VARCHAR(15) NOT NULL,
-  maTK INT NOT NULL,
+  maTK INT DEFAULT NULL,
   trangThai TINYINT DEFAULT 1
 );
 
@@ -182,12 +185,12 @@ INSERT INTO NHAXB (tenNXB, diaChi, soDT, email) VALUES
 ('NXB Thế Giới', 'Đà Nẵng, VN', '0945678901', 'nxbtg@gmail.com');
 
 -- Dữ liệu cho bảng SACH
-INSERT INTO SACH (tenSach, giaBan, soLuongTon, namXB, maVung, maNXB) VALUES
-('Đắc Nhân Tâm', 120000, 50, 2019, 1, 5),
-('Harry Potter', 250000, 30, 2000, 2, 2),
-('1984', 180000, 40, 1949, 3, 3),
-('Rừng Na Uy', 190000, 20, 1987, 4, 4),
-('Tôi thấy hoa vàng trên cỏ xanh', 150000, 25, 2015, 5, 1);
+INSERT INTO SACH (tenSach, soLuong, giaBan, namXB, maVung, maNXB) VALUES
+('Đắc Nhân Tâm', 2, 2000, 2019, 1, 5),
+('Harry Potter',2, 2000, 2000, 2, 2),
+('1984', 1949,2, 2000, 3, 3),
+('Rừng Na Uy',2, 2000, 1987, 4, 4),
+('Tôi thấy hoa vàng trên cỏ xanh',2, 2000, 2015, 5, 1);
 
 -- Dữ liệu cho bảng PHANLOAI
 INSERT INTO PHANLOAI (maSach, maTheLoai) VALUES
@@ -220,8 +223,10 @@ INSERT INTO NHOMQUYEN (tenrole) VALUES
 -- Dữ liệu cho bảng NHANVIEN
 INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT, maTK) VALUES
 ('Nguyễn Hùng Strong', '1990-01-01', 'Nam', '0911000001', 1),
-('Nguyễn Văn A', '1990-01-01', 'Nam', '0911000001', 2),
-('Trần Thị B', '1995-02-02', 'Nữ', '0911000002', 3);
+('Nguyễn Ngọc Thiên Ân', '1990-01-01', 'Nam', '0911000001', 2),
+('Danh Thị Ngọc Châu', '1995-02-02', 'Nữ', '0911000002', 3),
+('Huyền Trang', '1990-01-01', 'Nam', '0911000001', 4),
+('Tống Phùng', '1995-02-02', 'Nữ', '0911000002', 5);
 
 -- Dữ liệu cho bảng KHACHHANG
 INSERT INTO KHACHHANG (tenKH, soDT, gioiTinh) VALUES
@@ -236,9 +241,9 @@ INSERT INTO PHIEUNHAP (ngayNhap, tongTien, maNCC, maTK) VALUES
 
 -- Dữ liệu cho bảng CT_PHIEUNHAP
 INSERT INTO CT_PHIEUNHAP (maSach, maNhap, soLuongNhap, giaNhap) VALUES
-(1, 1, 10, 100000),
-(2, 1, 15, 200000),
-(3, 2, 5, 150000);
+('1', 1, 10, 100000),
+('2', 1, 15, 200000),
+('3', 2, 5, 150000);
 
 -- Dữ liệu cho bảng HOADON
 INSERT INTO HOADON (ngayBan, tongTien, maTK, maPT, maKM, maKH) VALUES
@@ -247,8 +252,8 @@ INSERT INTO HOADON (ngayBan, tongTien, maTK, maPT, maKM, maKH) VALUES
 
 -- Dữ liệu cho bảng CT_HOADON
 INSERT INTO CT_HOADON (maSach, maHD, soLuong, giaBan) VALUES
-(1, 1, 1, 120000),
-(2, 2, 1, 250000);
+('1', 1, 1, 120000),
+('2', 2, 1, 250000);
 
 -- Dữ liệu cho bảng PHUONGTHUC_TT
 INSERT INTO PHUONGTHUC_TT (tenPTTT) VALUES
@@ -259,9 +264,9 @@ INSERT INTO KHUYENMAI (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc)
 ('Giảm 10%', 'Hóa đơn > 500k', 50000, '2024-03-01', '2024-03-31'),
 ('Giảm 5%', 'Hóa đơn > 300k', 25000, '2024-03-01', '2024-03-31');
 
--- Dữ liệu cho bảng KM_SACH
-INSERT INTO KM_SACH (maKM, maSach) VALUES
-(1, 1), (1, 2), (2, 3);
+-- Dữ liệu cho bảng KM_PHIENBANSACH
+INSERT INTO KM_PHIENBANSACH (maKM, maSach) VALUES
+(1, '1'), (1, '2'), (2, '3');
 
 -- Dữ liệu cho bảng CHUCNANG
 INSERT INTO CHUCNANG (tenChucNang) VALUES 
@@ -337,8 +342,15 @@ INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
 (1, 15, 'Xóa'),
 (1, 15, 'Sửa'),
 (1, 15, 'Xem'),
+(1, 16, 'Thêm'),
+(1, 16, 'Xóa'),
+(1, 16, 'Sửa'),
 (1, 16, 'Xem'),
+(1, 17, 'Thêm'),
+(1, 17, 'Xóa'),
+(1, 17, 'Sửa'),
 (1, 17, 'Xem'),
+
 
 (2, 7, 'Thêm'),
 (2, 7, 'Xem'),
@@ -349,10 +361,8 @@ INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
 (2, 10, 'Thêm'),
 (2, 10, 'Xem'),
 
-(3, 1, 'Thêm'),
-(3, 2, 'Xóa'),
-(3, 3, 'Sửa'),
-(3, 4, 'Xem');
+(3, 15, 'Sửa'),
+(3, 15, 'Xem');
 
 ALTER TABLE SACH
 ADD CONSTRAINT SACH_VITRIVUNG FOREIGN KEY (maVung) REFERENCES VITRIVUNG(maVung);
@@ -368,13 +378,13 @@ ADD CONSTRAINT DANHMUC_TG_TACGIA FOREIGN KEY (maTacGia) REFERENCES TACGIA(maTacG
 ALTER TABLE SACH
 ADD CONSTRAINT SACH_NHAXB FOREIGN KEY (maNXB) REFERENCES NHAXB(maNXB);
 
-ALTER TABLE CT_HOADON
-ADD CONSTRAINT SACH_CT_HOADON FOREIGN KEY (maSach) REFERENCES SACH(maSach),
-ADD CONSTRAINT HOADON_CT_HOADON FOREIGN KEY (maHD) REFERENCES HOADON(maHD);
-
 ALTER TABLE CT_PHIEUNHAP
 ADD CONSTRAINT SACH_CT_PHIEUNHAP FOREIGN KEY (maSach) REFERENCES SACH(maSach),
 ADD CONSTRAINT PHIEUNHAP_CT_PHIEUNHAP FOREIGN KEY (maNhap) REFERENCES PHIEUNHAP(maNhap);
+
+ALTER TABLE CT_HOADON
+ADD CONSTRAINT PHIENBANSACH_CT_HOADON FOREIGN KEY (maSach) REFERENCES SACH(maSach),
+ADD CONSTRAINT HOADON_CT_HOADON FOREIGN KEY (maHD) REFERENCES HOADON(maHD);
 
 ALTER TABLE PHIEUNHAP
 ADD CONSTRAINT PHIEUNHAP_NHACUNGCAP FOREIGN KEY (maNCC) REFERENCES NHACUNGCAP(maNCC),
@@ -398,6 +408,16 @@ ADD CONSTRAINT KH_HD FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH);
 ALTER TABLE NHANVIEN
 ADD CONSTRAINT NHANVIEN FOREIGN KEY (maTK) REFERENCES TAIKHOAN(maTK);
 
-ALTER TABLE KM_SACH
+ALTER TABLE KM_PHIENBANSACH
 ADD CONSTRAINT km1 FOREIGN KEY (maKM) REFERENCES KHUYENMAI(maKM),
 ADD CONSTRAINT km2 FOREIGN KEY (maSach) REFERENCES SACH(maSach);
+
+
+
+
+
+
+
+
+
+

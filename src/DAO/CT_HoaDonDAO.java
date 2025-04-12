@@ -38,32 +38,27 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
         ArrayList<CT_HoaDonDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM CT_HOADON";
         
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 String maSach = rs.getString("maSach");
                 int maHD = rs.getInt("maHD");
                 int soLuong = rs.getInt("soLuong");
-                BigDecimal giaNhap = rs.getBigDecimal("giaNhap");
                 BigDecimal giaBan = rs.getBigDecimal("giaBan");
                 
-                CT_HoaDonDTO cthd = new CT_HoaDonDTO(maSach, maHD, soLuong, giaNhap, giaBan);
+                CT_HoaDonDTO cthd = new CT_HoaDonDTO(maSach, maHD, soLuong, giaBan);
                 result.add(cthd);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 
-    // public static void main(String[] args) {
-    //     CT_HoaDonDAO cT_HoaDonDAO = CT_HoaDonDAO.getInstance();
-    //     ArrayList<CT_HoaDonDTO> list = cT_HoaDonDAO.getAll();
-    //     for(CT_HoaDonDTO i : list){
-    //         System.out.println(i.getMaHD() + "\t" + i.getmaSach() + "\t" + i.getSoLuong() + "\t" + i.getGiaBan());
-    //     }
-    // }
+
 }

@@ -61,6 +61,13 @@ public class Validate {
         return matcher.matches();
     }
 
+    public static boolean lengthGreaterThan(String s, int i){
+        if(s.length() > i){
+            return(true);
+        }
+        return(false);
+    }
+
     // public static void main(String[] args) {
     //     String[] string = {"(023)1231234","(023)-123-1234","023-123-1234","023.123.1234","023 123 1234","0231231234"};
     //     String[] string2 = {"(02312312334","(023)-1231234","(023)123-1234"};

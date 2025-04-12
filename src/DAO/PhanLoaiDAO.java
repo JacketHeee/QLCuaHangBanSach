@@ -37,10 +37,11 @@ public class PhanLoaiDAO implements DAOInterface<PhanLoaiDTO> {
         ArrayList<PhanLoaiDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM PHANLOAI";
         
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maSach = rs.getInt("maSach");
                 int maTheLoai = rs.getInt("maTheLoai");
@@ -48,10 +49,11 @@ public class PhanLoaiDAO implements DAOInterface<PhanLoaiDTO> {
                 PhanLoaiDTO phanLoai = new PhanLoaiDTO(maSach, maTheLoai);
                 result.add(phanLoai);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 }

@@ -6,9 +6,13 @@ import javax.swing.JOptionPane;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.ChiTietQuyenBUS;
+import BUS.ChucNangBUS;
 import BUS.SachBUS;
 import BUS.ViTriVungBUS;
+import DTO.ChiTietQuyenDTO;
 import DTO.SachDTO;
+import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
 
@@ -26,20 +30,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SachForm extends JPanel implements ActionListener,TableActionListener{
-    		// "INSERT INTO SACH (tenSach, soLuong, giaNhap, giaBan, namXB, maVung, maNXB) VALUES ('%s','%s','%s','%s','%s','%s','%s')",
 
     private String title;
+    private int id = 1;
     private SachBUS sachBUS;
 
     private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá bán","Vị trí vùng"}; // Tạm thời không cài đặt giá bán
     private MainFrame mainFrame;
     private ArrayList<SachDTO> listKH;
     private ArrayList<String[]> dataToShow;
+    private TaiKhoanDTO taiKhoan;
+    private ArrayList<String> listAction;
+    private ChiTietQuyenBUS chiTietQuyenBUS;
+
 
     public SachForm(String title, MainFrame mainFrame) {
         this.title = title;
         this.mainFrame = mainFrame;
+        this.taiKhoan = mainFrame.getTaiKhoan();
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
+
         sachBUS = SachBUS.getInstance();
+        this.listAction = getListAction();
         init();
     }
     
@@ -54,6 +66,17 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     }
 
     ////////////////////////////////////////////////////////////////////
+    public ArrayList<String> getListAction(){
+        ArrayList<String> result = new ArrayList<>(); 
+        int maNQ = taiKhoan.getMaRole();
+        ArrayList<ChiTietQuyenDTO> listCTQ = this.chiTietQuyenBUS.getListChiTietQuyenByMaRoleMaCN(maNQ, id);
+
+        for(ChiTietQuyenDTO i : listCTQ){
+            result.add(i.getHanhDong());
+        }
+        return(result);
+    }
+    
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
@@ -65,10 +88,15 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
-    String[][] arrActions = {
+    String[][] topActions = {
         {"Thêm","add.svg","add"},
         {"Import Excel","importExcel.svg","importExcel"},
         {"Export Excel","exportExcel.svg","exportExcel"}
+    };
+    String[][] bottomActions = {
+        {"edit.svg","edit"},
+        {"detail.svg","detail"},
+        {"remove.svg","remove"}
     };
 
     private JPanel getActions() {
@@ -76,7 +104,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         panel.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
 
         ButtonAction but;
-        for (String[] x : arrActions) {
+        for (String[] x : getActionTop()) {
             but = new ButtonAction(x[0],x[1],x[2]);
             panel.add(but);
             but.setActionCommand(but.getId());
@@ -84,6 +112,18 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         }
 
         return panel;
+    }
+
+    public ArrayList<String[]> getActionTop(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Thêm")){
+                arrActions.add(topActions[0]);
+            }
+        }
+        arrActions.add(topActions[1]);  
+        arrActions.add(topActions[2]);
+        return(arrActions);
     }
     
     public ArrayList<String[]> Data(){
@@ -109,18 +149,28 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         return(data);
     }
 
+    public String[][] getActionBottom(){
+        ArrayList<String[]> arrActions = new ArrayList<>();
+        for(String i : listAction){
+            if(i.equals("Sửa")){
+                arrActions.add(bottomActions[0]);
+            }
+            if(i.equals("Xóa")){
+                arrActions.add(bottomActions[2]);
+            }
+        }
+        arrActions.add(bottomActions[1]);
+        String[][] array = arrActions.toArray(new String[0][]);
+        return(array);
+    }
     /////////////////////////////////////////////////////////////////
 
-    String[][] actions = {
-        {"edit.svg","edit"},
-        {"detail.svg","detail"},
-        {"remove.svg","remove"}
-    };
+
 
     CustomTable table;
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(dataToShow,actions, header);
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;

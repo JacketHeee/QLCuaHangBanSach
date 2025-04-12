@@ -20,7 +20,19 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
     
     @Override
     public int insert(ChiTietQuyenDTO ctq) {
-        return 0;
+        int rowInserted = 0;
+        String sql = "INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES (?,?,?)";
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowInserted = jdbcUtil.executeUpdate(
+            sql,
+            ctq.getMaRole(),
+            ctq.getMaChucNang(),
+            ctq.getHanhDong()
+        );
+        jdbcUtil.Close();
+        return rowInserted;
     }
 
     @Override
@@ -37,10 +49,10 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
         ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM CHITIETQUYEN";
         
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maRole = rs.getInt("maRole");
                 int maChucNang = rs.getInt("maChucNang");
@@ -58,13 +70,12 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
 
     public ArrayList<ChiTietQuyenDTO> selectChiTietQuyenByMaNQ(int maNQ){
         ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
-        String sql = String.format(
-            "SELECT * FROM CHITIETQUYEN WHERE maRole = '%s'",
-            maNQ + "");    
+        String sql = "SELECT * FROM CHITIETQUYEN WHERE maRole = ?";  
+    
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maNQ);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while(rs.next()){
                 int maRole = rs.getInt("maRole");
                 int maChucNang = rs.getInt("maChucNang");
@@ -72,24 +83,21 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
                 
                 ChiTietQuyenDTO ctq = new ChiTietQuyenDTO(maRole, maChucNang, hanhDong);
                 result.add(ctq);
-            }
-            jdbcUtil.Close();
+            }      
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return(result);
     }
 
     public ArrayList<Integer> getListMaCNByMaNQ(int maNQ){
         ArrayList<Integer> result = new ArrayList<>();
-        String sql = String.format(
-            "SELECT DISTINCT maChucNang FROM CHITIETQUYEN WHERE maRole = '%s'",
-            maNQ + "");    
+        String sql = "SELECT DISTINCT maChucNang FROM CHITIETQUYEN WHERE maRole = ?"; 
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maNQ);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while(rs.next()){
                 int maChucNang = rs.getInt("maChucNang");
                 result.add(maChucNang);
@@ -99,6 +107,29 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        return(result);
+    }
+
+    public ArrayList<ChiTietQuyenDTO> getListChiTietQuyenByMaRoleMaCN(int maRole, int maCN){
+        ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM CHITIETQUYEN WHERE maRole = ? AND maChucNang = ?";  
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maRole, maCN);
+        try {
+            while(rs.next()){
+                int maChucNang = rs.getInt("maChucNang");
+                String hanhDong = rs.getString("hanhDong");
+                ChiTietQuyenDTO chiTietQuyenDTO = new ChiTietQuyenDTO(maRole, maChucNang, hanhDong);
+                result.add(chiTietQuyenDTO);
+            }
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
         return(result);
     }
 

@@ -21,14 +21,12 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO> {
     @Override
     public int insert(NhomQuyenDTO nq) {
         int rowInserted = 0;
-        String sql = String.format(
-            "INSERT INTO NHOMQUYEN (tenrole) VALUES ('%s')",
-            nq.getTenRole()
-        );
+        String sql ="INSERT INTO NHOMQUYEN (tenrole) VALUES (?)";
+            
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("NhomQuyen");
-        rowInserted = jdbcUtil.executeUpdate(sql);
+        rowInserted = jdbcUtil.executeUpdate(sql, nq.getTenRole());
         jdbcUtil.Close();
         nq.setMaRole(nextID);
         return rowInserted;
@@ -37,10 +35,10 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO> {
     @Override
     public int delete(int id) {
         int rowDeleted = 0;
-        String query = String.format("UPDATE NHOMQUYEN SET TRANGTHAI = 0 WHERE maRole = '%d'", id);
+        String query = "UPDATE NHOMQUYEN SET TRANGTHAI = 0 WHERE maRole = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        rowDeleted = jdbcUtil.executeUpdate(query);
+        rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
         return rowDeleted;
     }
@@ -48,14 +46,15 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO> {
     @Override
     public int update(NhomQuyenDTO nq) {
         int rowUpdated = 0;
-        String query = String.format(
-            "UPDATE NHOMQUYEN SET tenrole = '%s' WHERE maRole = '%d'",
+        String query = "UPDATE NHOMQUYEN SET tenrole = ? WHERE maRole = ?";
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowUpdated = jdbcUtil.executeUpdate(
+            query,
             nq.getTenRole(),
             nq.getMaRole()
         );
-        JDBCUtil jdbcUtil = new JDBCUtil();
-        jdbcUtil.Open();
-        rowUpdated = jdbcUtil.executeUpdate(query);
         jdbcUtil.Close();
         return rowUpdated;
     }
@@ -64,10 +63,11 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO> {
         ArrayList<NhomQuyenDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM NHOMQUYEN WHERE TRANGTHAI = 1";
         
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while (rs.next()) {
                 int maRole = rs.getInt("maRole");
                 String tenRole = rs.getString("tenrole");
@@ -75,30 +75,32 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO> {
                 NhomQuyenDTO nq = new NhomQuyenDTO(maRole, tenRole);
                 result.add(nq);
             }
-            jdbcUtil.Close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        jdbcUtil.Close();
         return result;
     }
 
     public NhomQuyenDTO SelectByID(int maRole){
         NhomQuyenDTO result = null;
-        String sql = String.format("SELECT * FROM NHOMQUYEN WHERE maRole = '%d'", maRole);
+        String sql = "SELECT * FROM NHOMQUYEN WHERE maRole = ?";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maRole);
         try {
-            JDBCUtil jdbcUtil = new JDBCUtil();
-            jdbcUtil.Open();
-            ResultSet rs = jdbcUtil.executeQuery(sql);
             while(rs.next()){
                 String tenRole = rs.getString("tenrole");
                 
                 NhomQuyenDTO nq = new NhomQuyenDTO(maRole, tenRole);
                 result = nq;
             }
-            jdbcUtil.Close();
         } catch (Exception e) {
             // TODO: handle exception
         }
+        jdbcUtil.Close();
         return(result);
     }
 }

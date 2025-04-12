@@ -7,32 +7,29 @@ public class SachDTO {
 	private String tenSach;
 	private int soLuong;
 	private BigDecimal giaBan;
-	private BigDecimal giaNhap;
 	private int namXB;
 	private int maVung;
 	private int maNXB;
 	
 	public SachDTO() {}
 
-	public SachDTO(int maSach, String tenSach, int soLuong, BigDecimal giaBan, BigDecimal giaNhap, int namXB,
+	public SachDTO(int maSach, String tenSach, int soLuong, BigDecimal giaBan, int namXB,
 			int maVung, int maNXB) {
 		this.maSach = maSach;
 		this.tenSach = tenSach;
 		this.soLuong = soLuong;
 		this.giaBan = giaBan;
-		this.giaNhap = giaNhap;
 		this.namXB = namXB;
 		this.maVung = maVung;
 		this.maNXB = maNXB;
 	}
 
 	//constructor cho insert
-	public SachDTO( String tenSach, int soLuong, BigDecimal giaBan, BigDecimal giaNhap, int namXB,
+	public SachDTO( String tenSach, int soLuong, BigDecimal giaBan, int namXB,
 			int maVung, int maNXB) {
 		this.tenSach = tenSach;
 		this.soLuong = soLuong;
 		this.giaBan = giaBan;
-		this.giaNhap = giaNhap;
 		this.namXB = namXB;
 		this.maVung = maVung;
 		this.maNXB = maNXB;
@@ -94,14 +91,5 @@ public class SachDTO {
 	public void setGiaBan(BigDecimal giaBan) {
 		this.giaBan = giaBan;
 	}
-
-	public BigDecimal getGiaNhap() {
-		return giaNhap;
-	}
-
-	public void setGiaNhap(BigDecimal giaNhap) {
-		this.giaNhap = giaNhap;
-	}
-
 	
 }
