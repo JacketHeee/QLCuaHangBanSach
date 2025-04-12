@@ -137,6 +137,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
         {"view","add","edit","remove"},
         {"view","add","edit","remove"}
     };
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         
