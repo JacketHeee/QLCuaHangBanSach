@@ -23,6 +23,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.NhaXBDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import utils.UIUtils;
@@ -45,7 +46,12 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-
+    private String[][] attributes = {
+        {"textbox","Tên nhà xuất bản"},
+        {"textbox", "Địa chỉ"},  
+        {"textbox", "Số điện thoại"},
+        {"textbox", "Email"},
+    };
 
     public NXBForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -198,7 +204,8 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                NhaXBDialog nhaXBDialog = new NhaXBDialog(this, "Nhà xuất bản", "Thêm Nhà Xuất Bản", "add", attributes);
+                nhaXBDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -219,11 +226,16 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
-
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(nhaXBBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -231,4 +243,31 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public NhaXBBUS getNhaXBBUS() {
+        return nhaXBBUS;
+    }
+
+    public void setNhaXBBUS(NhaXBBUS nhaXBBUS) {
+        this.nhaXBBUS = nhaXBBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+    
 }

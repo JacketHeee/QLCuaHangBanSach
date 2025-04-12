@@ -12,31 +12,31 @@ import javax.swing.JPanel;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
-import BUS.KhachHangBUS;
-import DTO.KhachHangDTO;
+import BUS.PhuongThucTTBUS;
+import DTO.PhuongThucTTDTO;
 import GUI.MainFrame;
 import GUI.component.CustomButton;
 import GUI.component.InputForm;
-import GUI.forms.KhachHangForm;
+import GUI.forms.PhuongThucThanhToanForm;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import resources.base.baseTheme;
 import utils.Validate;
 
-public class KhachHangDialog extends JDialog implements ActionListener{
-    private KhachHangForm khachHangPanel;
+public class PhuongThucTTDialog extends JDialog implements ActionListener{
+    private PhuongThucThanhToanForm phuongThucTTPanel;
     private MainFrame mainFrame;
-    private KhachHangBUS khachHangBUS; 
+    private PhuongThucTTBUS phuongThucTTBUS; 
     private JLabel label;
     private String type;
     private String[][] attributes;
     private InputForm inputForm;
     
-    public KhachHangDialog(KhachHangForm khachHangPanel, String title, String function, String type, String[][] attributes){
-        super(khachHangPanel.getMainFrame(), title, true);
-        this.khachHangPanel = khachHangPanel;
-        this.mainFrame = this.khachHangPanel.getMainFrame();
-        this.khachHangBUS = this.khachHangPanel.getKhachHangBUS();
+    public PhuongThucTTDialog(PhuongThucThanhToanForm phuongThucTTPanel, String title, String function, String type, String[][] attributes){
+        super(phuongThucTTPanel.getMainFrame(), title, true);
+        this.phuongThucTTPanel = phuongThucTTPanel;
+        this.mainFrame = this.phuongThucTTPanel.getMainFrame();
+        this.phuongThucTTBUS = this.phuongThucTTPanel.getPhuongThucTTBUS();
         this.type = type;
         this.attributes = attributes;
         inputForm = new InputForm(attributes);
@@ -59,8 +59,6 @@ public class KhachHangDialog extends JDialog implements ActionListener{
         this.setSize(new Dimension(300, originalSize + rowsize * attributes.length));
         this.add(panel, "grow");
 
-        //Cài đặt lựa chọn cmbobox
-        inputForm.getListItem().get(2).setListCombobox("Nam", "Nữ");
         this.add(inputForm, "grow");
         setLocationRelativeTo(mainFrame);
 
@@ -83,7 +81,7 @@ public class KhachHangDialog extends JDialog implements ActionListener{
             this.add(new JPanel(), "push y");
             this.add(panel, "right, gap right 10");
         }
-        else if(type.equals("update")){// khách hàng thì không có sửa
+        else if(type.equals("update")){// phương thức thanh toán thì không có sửa
 
         }
     }
@@ -102,39 +100,24 @@ public class KhachHangDialog extends JDialog implements ActionListener{
 
     public void insert(){
         String ten = inputForm.getListItem().get(0).getText();
-        String soDT = inputForm.getListItem().get(1).getText();
-        String gioiTinh = inputForm.getListItem().get(2).getSelection();
-        KhachHangDTO khach = new KhachHangDTO(ten, soDT, gioiTinh);
-        if(khachHangBUS.insert(khach) != 0){
+        PhuongThucTTDTO pttt = new PhuongThucTTDTO(ten);
+        if(phuongThucTTBUS.insert(pttt) != 0){
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
-            String[] row = {khach.getMaKH()+"", ten,soDT,gioiTinh};
-            khachHangPanel.getTable().addDataRow(row);
+            String[] row = {pttt.getMaPT()+"", pttt.getTenPTTT()};
+            phuongThucTTPanel.getTable().addDataRow(row);
             this.dispose();
         }
         else{
-            JOptionPane.showMessageDialog(mainFrame, "Thêm khách hàng thất bại!");
+            JOptionPane.showMessageDialog(mainFrame, "Thêm phương thức thanh toán thất bại!");
             this.dispose();
         }
     }
 
     public boolean validation(){
         String ten = inputForm.getListItem().get(0).getText();
-        String soDT = inputForm.getListItem().get(1).getText();
         if(Validate.isEmpty(ten)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên khách hàng không được để trống!");
-            return(false);
-        }
-        if(!Validate.lengthGreaterThan(ten, 5)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên khách hàng phải có độ dài trên 5 ký tự!");
-            return(false);
-        }
-        if(Validate.isEmpty(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại khách hàng không được để trống!");
-            return(false);
-        }
-        if(!Validate.isPhoneNumber(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại khách hàng phải nhập đúng định dạng!");
+            JOptionPane.showMessageDialog(mainFrame, "Tên phương thức thanh toán không được để trống!");
             return(false);
         }
         return(true);

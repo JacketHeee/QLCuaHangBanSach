@@ -9,27 +9,23 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.KhuyenMaiBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.KhuyenMaiDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import utils.UIUtils;
 
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -46,6 +42,14 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private MainFrame mainFrame;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+
+    private String[][] attributes = {
+        {"textbox","Tên khuyến mãi"},
+        {"textbox","Điều kiện giảm"},
+        {"textbox", "Giá trị giảm"},
+        {"inputDateTime", "Ngày bắt đầu"},//làm dateTime
+        {"inputDateTime", "Ngày kết thúc"},//làm dateTime
+    };
 
 
     public KhuyenMaiForm(String title, MainFrame mainFrame) {
@@ -129,7 +133,6 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
     String[][] bottomActions = {
         {"edit.svg","edit"},
-        {"detail.svg","detail"},
         {"remove.svg","remove"}
     };
     private CustomTable table;
@@ -185,8 +188,6 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
     /////////////////////////////////////////////////////////////////
 
-
-
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         table = new CustomTable(Data(),getActionBottom(), header);
@@ -200,7 +201,8 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                KhuyenMaiDialog khuyenMaiDialog = new KhuyenMaiDialog(this, "Khuyến mãi", "Thêm Khuyến Mãi", "add", attributes);
+                khuyenMaiDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -222,10 +224,16 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(khuyenMaiBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -233,4 +241,31 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public KhuyenMaiBUS getKhuyenMaiBUS() {
+        return khuyenMaiBUS;
+    }
+
+    public void setKhuyenMaiBUS(KhuyenMaiBUS khuyenMaiBUS) {
+        this.khuyenMaiBUS = khuyenMaiBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+ 
 }

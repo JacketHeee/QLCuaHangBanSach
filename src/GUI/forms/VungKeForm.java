@@ -23,6 +23,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.ViTriVungDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import utils.UIUtils;
@@ -45,6 +46,9 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"textbox","Tên vùng"}
+    };
 
     public VungKeForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -200,7 +204,8 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                ViTriVungDialog viTriVungDialog = new ViTriVungDialog(this, "Vị trí vùng", "Thêm Vùng", "add", attributes);
+                viTriVungDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -222,10 +227,16 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(viTriVungBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -233,4 +244,31 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public ViTriVungBUS getViTriVungBUS() {
+        return viTriVungBUS;
+    }
+
+    public void setViTriVungBUS(ViTriVungBUS viTriVungBUS) {
+        this.viTriVungBUS = viTriVungBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+    
 }

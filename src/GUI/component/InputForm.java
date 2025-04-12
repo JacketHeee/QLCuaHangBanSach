@@ -3,13 +3,9 @@ package GUI.component;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.formdev.flatlaf.FlatClientProperties;
-
 import net.miginfocom.swing.MigLayout;
-import resources.base.baseTheme;
 
 public class InputForm extends JPanel{
     private ArrayList<InputFormItem> listItem;

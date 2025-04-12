@@ -9,28 +9,23 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.PhuongThucTTBUS;
-import DAO.PhuongThucTTDAO;
 import DTO.ChiTietQuyenDTO;
 import DTO.PhuongThucTTDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.PhuongThucTTDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import utils.UIUtils;
 
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -46,6 +41,9 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"textbox","Tên phương thức thanh toán"}
+    };
 
 
     public PhuongThucThanhToanForm(String title, MainFrame mainFrame) {
@@ -200,7 +198,8 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                PhuongThucTTDialog phuongThucTTDialog = new PhuongThucTTDialog(this, "Phương thức thanh toán", "Thêm Phương Thức TT", "add", attributes);
+                phuongThucTTDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -220,10 +219,16 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(phuongThucTTBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -231,4 +236,32 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public PhuongThucTTBUS getPhuongThucTTBUS() {
+        return phuongThucTTBUS;
+    }
+
+    public void setPhuongThucTTBUS(PhuongThucTTBUS phuongThucTTBUS) {
+        this.phuongThucTTBUS = phuongThucTTBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+
+    
 }

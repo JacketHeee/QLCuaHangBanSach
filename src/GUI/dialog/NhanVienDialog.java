@@ -19,6 +19,7 @@ import GUI.component.CustomButton;
 import GUI.component.InputForm;
 import GUI.forms.NhanVienForm;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import resources.base.baseTheme;
 import utils.Validate;
 
@@ -106,7 +107,8 @@ public class NhanVienDialog extends JDialog implements ActionListener{
         String soDT = inputForm.getListItem().get(3).getText();
         NhanVienDTO nhanVien = new NhanVienDTO(ten, ngaySinh, gioiTinh, soDT);
         if(nhanVienBUS.insert(nhanVien) != 0){
-            JOptionPane.showMessageDialog(mainFrame, "Thêm nhân viên thành công!");
+            Notifications.getInstance().setJFrame(mainFrame);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
             String[] row = {nhanVien.getMaNV()+"", ten, ngaySinh + "", gioiTinh, soDT};
             nhanVienPanel.getTable().addDataRow(row);
             this.dispose();

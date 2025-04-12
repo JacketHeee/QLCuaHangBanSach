@@ -209,8 +209,14 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(this, "Tài khoản", "Thêm tài khoản", "add", attributes);
-                taiKhoanDialog.setVisible(true);
+                ArrayList<String> listNV = nhanVienBUS.getAllTenNVNotHaveAccount();
+                if(listNV.size() == 0){
+                    JOptionPane.showMessageDialog(mainFrame, "Mọi nhân viên đã được thêm tài khoản, vui lòng thêm nhân viên!");
+                }
+                else{
+                    TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(this, "Tài khoản", "Thêm tài khoản", "add", attributes);
+                    taiKhoanDialog.setVisible(true);
+                }
                 break;
             case "importExcel":
                 
@@ -232,10 +238,16 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(taiKhoanBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -275,7 +287,4 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     public void setTable(CustomTable table) {
         this.table = table;
     }
-
-    
-    
 }

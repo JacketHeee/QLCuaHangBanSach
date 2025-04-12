@@ -45,6 +45,14 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"inputDate","Ngày bán"},   //tự get
+        {"textbox", "Tổng tiền"},  //cài đặt sau
+        {"textbox", "Mã tài khoản"},    //tự get
+        {"combobox", "Phương thức thanh toán"},
+        {"combobox", "Mã khuyến mãi"},  //tự đặt là không có khuyến mãi
+        {"droplist", "Khách hàng"}  //droplist
+    };
 
     public QLHoaDonForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -211,4 +219,13 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+    
 }

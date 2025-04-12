@@ -23,6 +23,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.TheLoaiDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import utils.UIUtils;
@@ -45,6 +46,9 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"textbox","Tên thể loại"}
+    };
 
     public TheLoaiForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -201,7 +205,8 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                TheLoaiDialog theLoaiDialog = new TheLoaiDialog(this, "Thể loại", "Thêm Thể Loại", "add", attributes);
+                theLoaiDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -225,10 +230,16 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(theLoaiBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -236,4 +247,31 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public TheLoaiBUS getTheLoaiBUS() {
+        return theLoaiBUS;
+    }
+
+    public void setTheLoaiBUS(TheLoaiBUS theLoaiBUS) {
+        this.theLoaiBUS = theLoaiBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+    
 }

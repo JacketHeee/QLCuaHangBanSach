@@ -225,7 +225,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
                 System.out.println(but.getId()+ but.getText());
-                new AddNhomQuyen(mainFrame,this, "Thêm nhóm quyền",arrCN);
+                new AddNhomQuyen(mainFrame,this, "Thêm nhóm quyền");
                 mainFrame.glassPane.setVisible(false);
                 break;
         
@@ -277,10 +277,16 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(nhomQuyenBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -288,4 +294,14 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    
 }

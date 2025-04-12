@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -12,35 +13,42 @@ import javax.swing.JPanel;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
-import BUS.KhachHangBUS;
-import DTO.KhachHangDTO;
+import BUS.NhaXBBUS;
+import BUS.SachBUS;
+import BUS.ViTriVungBUS;
+import DTO.SachDTO;
 import GUI.MainFrame;
 import GUI.component.CustomButton;
 import GUI.component.InputForm;
-import GUI.forms.KhachHangForm;
+import GUI.forms.SachForm;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import resources.base.baseTheme;
 import utils.Validate;
 
-public class KhachHangDialog extends JDialog implements ActionListener{
-    private KhachHangForm khachHangPanel;
+public class SachDialog extends JDialog implements ActionListener{
+    private SachForm sachPanel;
     private MainFrame mainFrame;
-    private KhachHangBUS khachHangBUS; 
+    private SachBUS sachBUS; 
     private JLabel label;
     private String type;
     private String[][] attributes;
     private InputForm inputForm;
+    //Lấy khóa ngoại
+    private ViTriVungBUS viTriVungBUS;
+    private NhaXBBUS nhaXBBUS;
     
-    public KhachHangDialog(KhachHangForm khachHangPanel, String title, String function, String type, String[][] attributes){
-        super(khachHangPanel.getMainFrame(), title, true);
-        this.khachHangPanel = khachHangPanel;
-        this.mainFrame = this.khachHangPanel.getMainFrame();
-        this.khachHangBUS = this.khachHangPanel.getKhachHangBUS();
+    public SachDialog(SachForm sachPanel, String title, String function, String type, String[][] attributes){
+        super(sachPanel.getMainFrame(), title, true);
+        this.sachPanel = sachPanel;
+        this.mainFrame = this.sachPanel.getMainFrame();
+        this.sachBUS = this.sachPanel.getSachBUS();
         this.type = type;
         this.attributes = attributes;
         inputForm = new InputForm(attributes);
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
+        viTriVungBUS = ViTriVungBUS.getInstance();
+        nhaXBBUS = NhaXBBUS.getInstance();
         this.init();
     }
 
@@ -60,7 +68,11 @@ public class KhachHangDialog extends JDialog implements ActionListener{
         this.add(panel, "grow");
 
         //Cài đặt lựa chọn cmbobox
-        inputForm.getListItem().get(2).setListCombobox("Nam", "Nữ");
+        String[] listVung = viTriVungBUS.getAllTenVung().toArray(new String[0]);
+        String[] listNXB = nhaXBBUS.getAllTenNXB().toArray(new String[0]);
+        inputForm.getListItem().get(3).setListCombobox(listVung);
+        inputForm.getListItem().get(4).setListCombobox(listNXB);
+
         this.add(inputForm, "grow");
         setLocationRelativeTo(mainFrame);
 
@@ -83,7 +95,7 @@ public class KhachHangDialog extends JDialog implements ActionListener{
             this.add(new JPanel(), "push y");
             this.add(panel, "right, gap right 10");
         }
-        else if(type.equals("update")){// khách hàng thì không có sửa
+        else if(type.equals("update")){// sách thì không có sửa
 
         }
     }
@@ -102,39 +114,46 @@ public class KhachHangDialog extends JDialog implements ActionListener{
 
     public void insert(){
         String ten = inputForm.getListItem().get(0).getText();
-        String soDT = inputForm.getListItem().get(1).getText();
-        String gioiTinh = inputForm.getListItem().get(2).getSelection();
-        KhachHangDTO khach = new KhachHangDTO(ten, soDT, gioiTinh);
-        if(khachHangBUS.insert(khach) != 0){
+        BigDecimal giaBan = BigDecimal.valueOf(Double.parseDouble(inputForm.getListItem().get(1).getText()));
+        int namXB = Integer.parseInt(inputForm.getListItem().get(2).getText());
+        String tenVung = inputForm.getListItem().get(3).getSelection();
+        String tenNhaXB = inputForm.getListItem().get(4).getSelection();
+
+        int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
+        int maNXB = nhaXBBUS.getMaNXBByTen(tenNhaXB);
+
+        SachDTO sach = new SachDTO(ten, giaBan, namXB, maVung, maNXB);
+        if(sachBUS.insert(sach) != 0){
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
-            String[] row = {khach.getMaKH()+"", ten,soDT,gioiTinh};
-            khachHangPanel.getTable().addDataRow(row);
+            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", sach.getGiaBan() + "", sach.getNamXB() + ""};
+            sachPanel.getTable().addDataRow(row);
             this.dispose();
         }
         else{
-            JOptionPane.showMessageDialog(mainFrame, "Thêm khách hàng thất bại!");
+            JOptionPane.showMessageDialog(mainFrame, "Thêm sách thất bại!");
             this.dispose();
         }
     }
 
     public boolean validation(){
         String ten = inputForm.getListItem().get(0).getText();
-        String soDT = inputForm.getListItem().get(1).getText();
+        String giaBan = inputForm.getListItem().get(1).getText();
+        String namXB = inputForm.getListItem().get(2).getText();
         if(Validate.isEmpty(ten)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên khách hàng không được để trống!");
+            JOptionPane.showMessageDialog(mainFrame, "Tên sách không được để trống!");
             return(false);
         }
-        if(!Validate.lengthGreaterThan(ten, 5)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên khách hàng phải có độ dài trên 5 ký tự!");
+        if(Validate.isEmpty(giaBan)){
+            JOptionPane.showMessageDialog(mainFrame, "Giá bán không được để trống!");
             return(false);
         }
-        if(Validate.isEmpty(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại khách hàng không được để trống!");
+        if(Validate.isEmpty(namXB)){
+            JOptionPane.showMessageDialog(mainFrame, "Năm xuất bản không được để trống!");
             return(false);
         }
-        if(!Validate.isPhoneNumber(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại khách hàng phải nhập đúng định dạng!");
+        if(!Validate.isYear(namXB)){
+            JOptionPane.showMessageDialog(mainFrame, "Năm xuất bản phải nhập đúng định dạng!");
             return(false);
         }
         return(true);

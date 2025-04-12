@@ -451,4 +451,9 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.revalidate();
         dataPanel.repaint();
     }
+
+    public String getCellData(int row, int column){
+        String result = ((JLabel)rowLabels.get(row).get(column)).getText();
+        return(result);
+    }
 }

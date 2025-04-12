@@ -23,6 +23,7 @@ import GUI.component.CustomButton;
 import GUI.component.InputForm;
 import GUI.forms.TaiKhoanForm;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import resources.base.baseTheme;
 import utils.Validate;
 
@@ -104,12 +105,7 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("add")){
-            if(listItemNV.length == 0){
-                JOptionPane.showMessageDialog(mainFrame ,"Mọi nhân viên đã được cấp tài khoản, vui lòng thêm nhân viên!");//?
-            }
-            else if(validation()){
-                insert();
-            }
+            insert();
         }
         else if(e.getActionCommand().equals("exit")){
             this.dispose();
@@ -128,7 +124,8 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
         TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(username, password, maRole);
 
         if(taiKhoanBUS.insert(taiKhoanDTO) != 0){
-            JOptionPane.showMessageDialog(mainFrame, "Thêm tài khoản thành công!");
+            Notifications.getInstance().setJFrame(mainFrame);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
             if(nhanVienBUS.setMaTK(maNV, taiKhoanDTO.getMaTK()) != 0){
                 String[] row = {taiKhoanDTO.getMaTK()+"", taiKhoanDTO.getUsername(), taiKhoanDTO.getPassword()};
                 taiKhoanPanel.getTable().addDataRow(row);

@@ -10,30 +10,23 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.SachBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
-import GUI.component.PanelSearch;
 import GUI.component.TableActionListener;
+import GUI.dialog.SachDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import utils.UIUtils;
 
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
-
-import javax.management.Notification;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +42,14 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"textbox","Tên sách"},
+        {"textbox", "Giá bán"},
+        {"textbox", "Năm xuất bản"},
+        {"combobox", "Vùng"}, //FK
+        {"combobox", "Nhà xuất bản"} //FK
+        //Khóa ngoại nhiều-nhiều
+    };
 
 
     public SachForm(String title, MainFrame mainFrame) {
@@ -210,7 +211,8 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                SachDialog sachDialog = new SachDialog(this, "Sách", "Thêm Sách", "add", attributes);
+                sachDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -234,10 +236,16 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(sachBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -245,6 +253,33 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public SachBUS getSachBUS() {
+        return sachBUS;
+    }
+
+    public void setSachBUS(SachBUS sachBUS) {
+        this.sachBUS = sachBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+    
 }
 
 

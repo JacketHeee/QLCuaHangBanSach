@@ -25,10 +25,9 @@ public class SachDTO {
 	}
 
 	//constructor cho insert
-	public SachDTO( String tenSach, int soLuong, BigDecimal giaBan, int namXB,
+	public SachDTO( String tenSach, BigDecimal giaBan, int namXB,
 			int maVung, int maNXB) {
 		this.tenSach = tenSach;
-		this.soLuong = soLuong;
 		this.giaBan = giaBan;
 		this.namXB = namXB;
 		this.maVung = maVung;

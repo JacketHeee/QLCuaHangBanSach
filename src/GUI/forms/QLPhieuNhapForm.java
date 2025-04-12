@@ -45,6 +45,12 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"inputDate","Ngày nhập"},   //tự get
+        {"textbox", "Tổng tiền"},  
+        {"combobox", "Mã nhà cung cáp"},    
+        {"textbox", "Mã tài khoản"},    //tự get
+    };
 
     public QLPhieuNhapForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -215,4 +221,13 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+    
 }

@@ -23,6 +23,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.NhaCungCapDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import utils.UIUtils;
@@ -45,7 +46,12 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-
+    private String[][] attributes = {
+        {"textbox","Tên nhà cung cấp"},
+        {"textbox", "Địa chỉ"},  
+        {"textbox", "Số điện thoại"},
+        {"textbox", "Email"},
+    };
 
 
     public NhaCungCapForm(String title, MainFrame mainFrame) {
@@ -200,7 +206,8 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                NhaCungCapDialog nhaCungCapDialog = new NhaCungCapDialog(this, "Nhà cung cấp", "Thêm Nhà Cung Cấp", "add", attributes);
+                nhaCungCapDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -223,10 +230,16 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(nhaCungCapBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -234,5 +247,31 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
                 break;
         }
     }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public NhaCungCapBUS getNhaCungCapBUS() {
+        return nhaCungCapBUS;
+    }
+
+    public void setNhaCungCapBUS(NhaCungCapBUS nhaCungCapBUS) {
+        this.nhaCungCapBUS = nhaCungCapBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
 
 }

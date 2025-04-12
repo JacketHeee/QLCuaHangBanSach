@@ -9,21 +9,16 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhomQuyenBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.ChucNangDTO;
 import DTO.NhomQuyenDTO;
 
-import javax.swing.JCheckBox;
-
-import GUI.MainFrame;
 import GUI.component.CheckBoxCustom;
 import GUI.component.CustomButton;
-import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.forms.PhanQuyenForm;
 import net.miginfocom.swing.MigLayout;
+import raven.toast.Notifications;
 import utils.Validate;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -37,20 +32,17 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
     JFrame parent;
     String title;
     private PhanQuyenForm phanQuyenForm;
-    private ArrayList<String[]> arrCN;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private NhomQuyenBUS nhomQuyenBUS;
     private ChucNangBUS chucNangBUS;
     private ArrayList<ArrayList<CheckBoxCustom>> listCheckBox;
     private CustomTable customTable;
     private ArrayList<String[]> listAllowSelect;
-    private int numberOfCN = 16; 
 
     // NhomQuyenBUS nhomQuyenBUS
-    public AddNhomQuyen(JFrame parent, PhanQuyenForm phanQuyenForm, String title, ArrayList<String[]> arrCN) {
+    public AddNhomQuyen(JFrame parent, PhanQuyenForm phanQuyenForm, String title) {
         super(parent,title,true);
         this.phanQuyenForm = phanQuyenForm;
-        this.arrCN = arrCN;
         this.customTable = phanQuyenForm.getTable();
         this.chiTietQuyenBUS = this.phanQuyenForm.getChiTietQuyenBUS();
         this.nhomQuyenBUS = this.phanQuyenForm.getNhomQuyenBUS();
@@ -173,8 +165,8 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
     }
 
     public void loadListAllowSelect(){
-        listAllowSelect.add(new String[] {"Sách", "book", "Xem Thêm Sửa Xóa"});
-        listAllowSelect.add(new String[] {"Thể loại", "category", "Xem Thêm Sửa Xóa"});
+        listAllowSelect.add(new String[]{"Sách", "book", "Xem Thêm Sửa Xóa"});
+        listAllowSelect.add(new String[]{"Thể loại", "category", "Xem Thêm Sửa Xóa"});
         listAllowSelect.add(new String[]{"Nhà xuất bản", "author", "Xem Thêm Sửa Xóa"});
         listAllowSelect.add(new String[]{"Vùng kệ", "vungtl", "Xem Thêm Sửa Xóa"}); // Có làm giao diện vùng kệ k ?
         listAllowSelect.add(new String[]{"Nhà cung cấp", "ncc", "Xem Thêm Sửa Xóa"});
@@ -225,7 +217,8 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
                 }
             }
         }
-        JOptionPane.showMessageDialog(parent, "Thêm nhóm quyền thành công");
+        Notifications.getInstance().setJFrame(parent);
+        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
         String[] s = {maRole + "",tenNQ};
         customTable.addDataRow(s);
         this.dispose();
