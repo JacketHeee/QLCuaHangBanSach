@@ -23,6 +23,7 @@ import DTO.TaiKhoanDTO;
 import GUI.component.CustomTitleBar;
 import GUI.component.DimGlassPane;
 import GUI.component.MenuTaskBar;
+import GUI.forms.HomeForm;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
 
@@ -86,6 +87,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 		panel.add(mainPanel,"push, grow");
 
 		add(panel);
+		setPanel(new HomeForm());
 
 		addActionListener(this);
 	}
@@ -95,7 +97,7 @@ public class MainFrame extends JFrame  implements ActionListener{
 	private JPanel listChucNang;
 
 	private String[][] arrCN = {
-		// {"Home","home.svg","home"},
+		{"Home","home.svg","home"},
 		{"Sách","book.svg","book"},
 		{"Thể loại","category_1.svg","category"},
 		{"Tác giả","author.svg","author"},

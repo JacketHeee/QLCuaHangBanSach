@@ -97,7 +97,7 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
 
         initListCheckBox();
         for(int i = 0; i < listAllowSelect.size(); i++){
-            panel.add(new JLabel(listAllowSelect.get(i)[0]),"pushx,gaptop 10");
+            panel.add(new JLabel(listAllowSelect.get(i)[0]),"pushx,gaptop 15");
             String chucNang = listAllowSelect.get(i)[1];
             String hanhDong = listAllowSelect.get(i)[2];
             int k = 0;

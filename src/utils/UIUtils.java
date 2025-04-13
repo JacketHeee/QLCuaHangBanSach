@@ -4,6 +4,8 @@ import GUI.component.CustomScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JPanel;
+import javax.swing.BorderFactory;
 
 public class UIUtils {
     public static CustomScrollPane getTableScollPane(String[][] data, String... cols) {
@@ -29,5 +31,11 @@ public class UIUtils {
             options,
             options[0]
         );
+    }
+
+    public static JPanel getPanel(String title) {
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createTitledBorder(title));
+        return panel;   
     }
 }

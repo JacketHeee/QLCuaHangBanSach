@@ -15,6 +15,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import GUI.Login;
 import GUI.MainFrame;
 import GUI.component.MenuTaskBar;
+import GUI.forms.HomeForm;
 import GUI.forms.KhachHangForm;
 import GUI.forms.KhuyenMaiForm;
 import GUI.forms.NXBForm;
@@ -169,6 +170,9 @@ public class MenuTaskBar extends JPanel implements MouseListener {
             changeColorOnCliked(but);
             // mainFrame.setPanel(but.getText());
 			switch (but.getId()) {
+				case "home": 
+					mainFrame.setPanel(new HomeForm());
+					break;
 				case "book":
 					mainFrame.setPanel(new SachForm(but.getText(), mainFrame));
 					break;

@@ -67,13 +67,13 @@ public class Login extends JFrame implements ActionListener{
 
     private void cssComponent() {
         
-        txtUsername.putClientProperty(FlatClientProperties.STYLE, "showClearButton: true; focusWidth: 0; innerFocusWidth: 0");
+        txtUsername.putClientProperty(FlatClientProperties.STYLE, "showClearButton: true; focusWidth: 0; innerFocusWidth: 0; arc: 10");
         txtUsername.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mã nhân viên hoặc số điện thoại");
 
-        txtPassword.putClientProperty(FlatClientProperties.STYLE, "showRevealButton:true; focusWidth: 0; innerFocusWidth: 0");
+        txtPassword.putClientProperty(FlatClientProperties.STYLE, "showRevealButton:true; focusWidth: 0; innerFocusWidth: 0; arc: 10");
         txtPassword.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mật khẩu");
 
-        butLogin.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth: 0; margin: 5,20,5,20; arc: 20;" + 
+        butLogin.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth: 0; margin: 5,20,5,20; arc: 10;" + 
             String.format("background: %s; foreground: %s", baseTheme.mainColor,baseTheme.txtOnMainColor));
 
         butLogin.setActionCommand("butLogin");
