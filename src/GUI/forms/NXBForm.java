@@ -56,7 +56,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private String[][] attributes = {
         {"textbox","Tên nhà xuất bản"},
-        {"textbox", "Địa chỉ"},  
+        {"inputDC", "Địa chỉ"},  
         {"textbox", "Số điện thoại"},
         {"textbox", "Email"},
     };

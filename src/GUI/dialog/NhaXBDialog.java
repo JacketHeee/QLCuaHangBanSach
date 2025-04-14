@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,6 +34,7 @@ public class NhaXBDialog extends JDialog implements ActionListener{
     private String[][] attributes;
     private InputForm inputForm;
     private int rowSelected;
+    private CustomButton btnDC;
 
     
     public NhaXBDialog(NXBForm nhaXBPanel, String title, String function, String type, String[][] attributes, int... row){
@@ -66,9 +68,26 @@ public class NhaXBDialog extends JDialog implements ActionListener{
         this.add(panel, "grow");
 
         this.add(inputForm, "grow");
+
+        //set listener dc
+        btnDC = inputForm.getListItem().get(1).getButtonDC();
+        setListenerBtnDC();
+
         setLocationRelativeTo(mainFrame);
 
         setButton();
+    }
+
+    public void setListenerBtnDC(){
+        btnDC.addActionListener(e -> {
+            AddressAdderDialog dialog = new AddressAdderDialog(mainFrame);
+            dialog.setOnCloseCallback(addresses -> {
+                System.out.println("Địa chỉ đã lưu: " + addresses);
+                String diaChi = String.join("",addresses);
+                inputForm.getListItem().get(1).setTextDC(diaChi);
+            });
+            dialog.setVisible(true);
+        });
     }
 
     public void setButton(){
@@ -114,7 +133,7 @@ public class NhaXBDialog extends JDialog implements ActionListener{
         String email = nhaXBPanel.getTable().getCellData(rowSelected, 4);
 
         inputForm.getListItem().get(0).setText(ten);
-        inputForm.getListItem().get(1).setText(diaChi);
+        inputForm.getListItem().get(1).setTextDC(diaChi);
         inputForm.getListItem().get(2).setText(soDT);
         inputForm.getListItem().get(3).setText(email);
     }
@@ -138,7 +157,7 @@ public class NhaXBDialog extends JDialog implements ActionListener{
 
     public void insert(){
         String ten = inputForm.getListItem().get(0).getText();
-        String diaChi = inputForm.getListItem().get(1).getText();
+        String diaChi = inputForm.getListItem().get(1).getTextDC();
         String soDT = inputForm.getListItem().get(2).getText();
         String email = inputForm.getListItem().get(3).getText();
 
@@ -159,7 +178,7 @@ public class NhaXBDialog extends JDialog implements ActionListener{
     public void update(){
         int ma = Integer.parseInt(nhaXBPanel.getTable().getCellData(rowSelected, 0));
         String ten = inputForm.getListItem().get(0).getText();
-        String diaChi = inputForm.getListItem().get(1).getText();
+        String diaChi = inputForm.getListItem().get(1).getTextDC();
         String soDT = inputForm.getListItem().get(2).getText();
         String email = inputForm.getListItem().get(3).getText();
 
@@ -179,7 +198,7 @@ public class NhaXBDialog extends JDialog implements ActionListener{
 
     public boolean validation(){
         String ten = inputForm.getListItem().get(0).getText();
-        String diaChi = inputForm.getListItem().get(1).getText();
+        String diaChi = inputForm.getListItem().get(1).getTextDC();
         String soDT = inputForm.getListItem().get(2).getText();
         String email = inputForm.getListItem().get(3).getText();
 

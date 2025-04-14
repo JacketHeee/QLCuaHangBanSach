@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -18,9 +19,11 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.toedter.calendar.JDateChooser;
 
 import net.miginfocom.swing.MigLayout;
+import resources.base.baseTheme;
 
 public class InputFormItem extends JPanel{
     private JLabel label;
@@ -30,6 +33,8 @@ public class InputFormItem extends JPanel{
     // private JFormattedTextField numberField;
     private JDateChooser inputDateTime;
     private JSpinner timeSpinner;
+    private JTextField textDC;
+    private CustomButton btnDC;
 
     public InputFormItem(String type, String title){
         this.label = new JLabel(title);
@@ -64,6 +69,11 @@ public class InputFormItem extends JPanel{
                 timeSpinner.setValue(new java.util.Date());
                 setInputDateTime();
                 break;
+            case "inputDC":
+                this.textDC = new JTextField();
+                this.btnDC = new CustomButton("Tạo");
+                setinputDC();
+                break;
             default:
                 break;
         }
@@ -97,6 +107,15 @@ public class InputFormItem extends JPanel{
         this.add(timeSpinner, "grow");
     }
 
+    public void setinputDC(){
+        this.add(label, "grow");
+        JPanel panel = new JPanel(new MigLayout("wrap 2, insets 0", "[grow][]"));
+        panel.putClientProperty(FlatClientProperties.STYLE, "background:#FFFFFF");
+        panel.add(textDC, "grow, gapright 5");
+        panel.add(btnDC, "grow");
+        this.add(panel, "grow");
+    }
+
     public void setListCombobox(String... list){
         for(String i : list){
             this.combobox.addItem(i);
@@ -109,6 +128,18 @@ public class InputFormItem extends JPanel{
 
     public void setText(String i){
         this.textField.setText(i);
+    }
+
+    public String getTextDC(){
+        return(this.textDC.getText());
+    }
+
+    public void setTextDC(String i){
+        this.textDC.setText(i);
+    }
+
+    public CustomButton getButtonDC(){
+        return(this.btnDC);
     }
 
     public String getSelection(){

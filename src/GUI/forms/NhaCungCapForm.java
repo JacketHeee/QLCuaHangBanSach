@@ -55,7 +55,7 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private String[][] attributes = {
         {"textbox","Tên nhà cung cấp"},
-        {"textbox", "Địa chỉ"},  
+        {"inputDC", "Địa chỉ"},  
         {"textbox", "Số điện thoại"},
         {"textbox", "Email"},
     };

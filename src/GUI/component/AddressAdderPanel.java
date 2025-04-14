@@ -221,10 +221,10 @@ public class AddressAdderPanel extends JPanel {
             } else {
                 savedAddresses.add(address);
                 if (onAddressAdded != null) {
+                    JOptionPane.showMessageDialog(this, "Đã thêm địa chỉ: " + address, "Thành công", JOptionPane.INFORMATION_MESSAGE);
                     onAddressAdded.accept(address);
                 }
-                JOptionPane.showMessageDialog(this, "Đã thêm địa chỉ: " + address, "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                clearSelections();
+                
             }
         });
 
