@@ -3,11 +3,13 @@ package GUI.component;
 import javax.swing.JCheckBox;
 
 public class CheckBoxCustom extends JCheckBox{
+    private int maChucNang;
     private String hanhDong;
     private String chucNang;
 
-    public CheckBoxCustom(String chucNang, String hanhDong){
+    public CheckBoxCustom(int maChucNang, String hanhDong, String chucNang) {
         super();
+        this.maChucNang = maChucNang;
         this.hanhDong = hanhDong;
         this.chucNang = chucNang;
     }
@@ -26,6 +28,14 @@ public class CheckBoxCustom extends JCheckBox{
 
     public void setChucNang(String chucNang) {
         this.chucNang = chucNang;
+    }
+
+    public int getMaChucNang() {
+        return maChucNang;
+    }
+
+    public void setMaChucNang(int maChucNang) {
+        this.maChucNang = maChucNang;
     }
 
     

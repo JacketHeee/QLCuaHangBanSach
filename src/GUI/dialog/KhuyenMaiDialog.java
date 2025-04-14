@@ -6,8 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -25,6 +27,7 @@ import GUI.forms.KhuyenMaiForm;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import resources.base.baseTheme;
+import utils.DateCalculator;
 import utils.Validate;
 
 public class KhuyenMaiDialog extends JDialog implements ActionListener{
@@ -35,8 +38,10 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
     private String[][] attributes;
     private InputForm inputForm;
     private KhuyenMaiBUS khuyenMaiBUS;
+    private int rowSelected;
+
     
-    public KhuyenMaiDialog(KhuyenMaiForm khuyenMaiPanel, String title, String function, String type, String[][] attributes){
+    public KhuyenMaiDialog(KhuyenMaiForm khuyenMaiPanel, String title, String function, String type, String[][] attributes, int... row){
         super(khuyenMaiPanel.getMainFrame(), title, true);
         this.khuyenMaiPanel = khuyenMaiPanel;
         this.mainFrame = this.khuyenMaiPanel.getMainFrame();
@@ -45,6 +50,9 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
         inputForm = new InputForm(attributes);
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
         this.khuyenMaiBUS = khuyenMaiPanel.getKhuyenMaiBUS();
+        if(row.length == 1){
+            this.rowSelected = row[0];
+        }
         this.init();
     }
 
@@ -87,9 +95,38 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
             this.add(new JPanel(), "push y");
             this.add(panel, "right, gap right 10");
         }
-        else if(type.equals("update")){// khách hàng thì không có sửa
+        else if(type.equals("update")){
+            CustomButton btnSua = new CustomButton("Sửa");
+            btnSua.setActionCommand("update");
+            btnSua.addActionListener(this);
+            CustomButton btnHuy = new CustomButton("Hủy");
+            btnHuy.setActionCommand("exit");
+            btnHuy.addActionListener(this);
+            JPanel panel = new JPanel();
+            panel.setLayout(new MigLayout("wrap 2"));
+            panel.setBackground(Color.decode("#FFFFFF"));
+            panel.add(btnHuy);
+            panel.add(btnSua);
+            this.add(new JPanel(), "push y");
+            this.add(panel, "right, gap right 10");
 
+            //set dữ liệu cũ
+            setOldData();
         }
+    }
+
+    public void setOldData(){
+        String ten = khuyenMaiPanel.getTable().getCellData(rowSelected, 1);
+        String dKGiam = khuyenMaiPanel.getTable().getCellData(rowSelected, 2);
+        String giaTriGiam = khuyenMaiPanel.getTable().getCellData(rowSelected, 3);
+        String ngayBatDau = khuyenMaiPanel.getTable().getCellData(rowSelected, 4);
+        String ngayKetThuc = khuyenMaiPanel.getTable().getCellData(rowSelected, 5);
+
+        inputForm.getListItem().get(0).setText(ten);
+        inputForm.getListItem().get(1).setText(dKGiam);
+        inputForm.getListItem().get(2).setText(giaTriGiam);
+        inputForm.getListItem().get(3).setDateTimeByString(ngayBatDau);
+        inputForm.getListItem().get(4).setDateTimeByString(ngayKetThuc);
     }
 
     @Override
@@ -99,10 +136,16 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
                 insert();
             }
         }
+        if (e.getActionCommand().equals("update")){
+            if(validation()){
+                update();
+            }
+        }
         else if(e.getActionCommand().equals("exit")){
             this.dispose();
         }
     }
+
 
     public void insert(){
         String ten = inputForm.getListItem().get(0).getText();
@@ -118,7 +161,12 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
         if(khuyenMaiBUS.insert(kM) != 0){
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
-            String[] row = {kM.getMaKM() + "", kM.getTenKM(), kM.getDieuKienGiam(), kM.getGiaTriGiam() + "", kM.getNgayBatDau() + "", kM.getNgayKetThuc() + ""};
+            String[] row = {kM.getMaKM() + "", 
+            kM.getTenKM(), 
+            kM.getDieuKienGiam(), 
+            kM.getGiaTriGiam() + "", 
+            new DateCalculator().formatDateTimeToDateS(kM.getNgayBatDau()), 
+            new DateCalculator().formatDateTimeToDateS(kM.getNgayKetThuc())};
             khuyenMaiPanel.getTable().addDataRow(row);
             this.dispose();
         }
@@ -127,6 +175,36 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
             this.dispose();
         }
     }
+
+    public void update(){
+        int ma = Integer.parseInt(khuyenMaiPanel.getTable().getCellData(rowSelected, 0));
+        String ten = inputForm.getListItem().get(0).getText();
+        String dKGiam = inputForm.getListItem().get(1).getText();
+        String giaTriGiamS = inputForm.getListItem().get(2).getText();
+        LocalDateTime ngayBatDau = inputForm.getListItem().get(3).getDateTime();
+        LocalDateTime ngayKetThuc = inputForm.getListItem().get(4).getDateTime();
+
+        //Chuyển kiểu dữ liệu
+        BigDecimal giaTriGiam = BigDecimal.valueOf(Double.parseDouble(giaTriGiamS));
+        KhuyenMaiDTO kM = new KhuyenMaiDTO(ma, ten, dKGiam, giaTriGiam, ngayBatDau, ngayKetThuc);
+        if(khuyenMaiBUS.update(kM) != 0){
+            Notifications.getInstance().setJFrame(mainFrame);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công!");
+            String[] row = {kM.getMaKM() + "",
+            kM.getTenKM(), 
+            kM.getDieuKienGiam(), 
+            kM.getGiaTriGiam() + "", 
+            new DateCalculator().formatDateTimeToDateS(kM.getNgayBatDau()), 
+            new DateCalculator().formatDateTimeToDateS(kM.getNgayKetThuc())};
+            khuyenMaiPanel.getTable().setRowData(rowSelected, row);
+            this.dispose();
+        }
+        else{this.dispose();
+            JOptionPane.showMessageDialog(mainFrame, "Sửa thất bại!");
+            this.dispose();
+        }
+    }
+
 
     public boolean validation(){
         String ten = inputForm.getListItem().get(0).getText();

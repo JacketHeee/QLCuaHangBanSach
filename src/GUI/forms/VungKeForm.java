@@ -11,6 +11,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.ViTriVungBUS;
+import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
@@ -24,8 +25,11 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.ViTriVungDialog;
+import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.SachSearch;
+import search.VungKeSearch;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -43,6 +47,9 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private String[] header = {"Mã vùng", "Tên vùng"};
     private ViTriVungBUS viTriVungBUS;
     private MainFrame mainFrame;
+    private ArrayList<ViTriVungDTO> listKH;
+    private ArrayList<String[]> dataToShow;
+
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
@@ -63,6 +70,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -85,44 +93,12 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<ViTriVungDTO> searchBarPanel = new SearchBarPanel<>(foods, new VungKeSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -165,9 +141,15 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<ViTriVungDTO> listKH = viTriVungBUS.getAll();
+        listKH = viTriVungBUS.getAll();
+        
+        return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<ViTriVungDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(ViTriVungDTO i : listKH){
+        for(ViTriVungDTO i : inputData){
             data.add(new String[]{i.getMaVung() + "", i.getTenVung()});
         }
         return(data);
@@ -193,7 +175,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         // CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
         panel.add(new CustomScrollPane(table),"push, grow");
@@ -221,10 +203,11 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
-                break;
+                ViTriVungDialog viTriVungDialog = new ViTriVungDialog(this, "Vị trí vùng", "Sửa Vùng", "update", attributes, row);
+                viTriVungDialog.setVisible(true);
             case "remove":
                 // Logic xóa cho form này
+                System.out.println("Có");
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
                 int ma = Integer.parseInt(table.getCellData(row, 0));
@@ -271,4 +254,9 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
 
     
     
+    private void updateTable(ArrayList<ViTriVungDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
 }

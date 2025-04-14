@@ -21,6 +21,7 @@ import GUI.forms.NhanVienForm;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import resources.base.baseTheme;
+import utils.DateCalculator;
 import utils.Validate;
 
 public class NhanVienDialog extends JDialog implements ActionListener{
@@ -31,8 +32,10 @@ public class NhanVienDialog extends JDialog implements ActionListener{
     private String type;
     private String[][] attributes;
     private InputForm inputForm;
+    private int rowSelected;
+
     
-    public NhanVienDialog(NhanVienForm nhanVienPanel, String title, String function, String type, String[][] attributes){
+    public NhanVienDialog(NhanVienForm nhanVienPanel, String title, String function, String type, String[][] attributes, int... row){
         super(nhanVienPanel.getMainFrame(), title, true);
         this.nhanVienPanel = nhanVienPanel;
         this.mainFrame = this.nhanVienPanel.getMainFrame();
@@ -41,6 +44,9 @@ public class NhanVienDialog extends JDialog implements ActionListener{
         this.attributes = attributes;
         inputForm = new InputForm(attributes);
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
+        if(row.length == 1){
+            this.rowSelected = row[0];
+        }
         this.init();
     }
 
@@ -84,8 +90,35 @@ public class NhanVienDialog extends JDialog implements ActionListener{
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){
+            CustomButton btnSua = new CustomButton("Sửa");
+            btnSua.setActionCommand("update");
+            btnSua.addActionListener(this);
+            CustomButton btnHuy = new CustomButton("Hủy");
+            btnHuy.setActionCommand("exit");
+            btnHuy.addActionListener(this);
+            JPanel panel = new JPanel();
+            panel.setLayout(new MigLayout("wrap 2"));
+            panel.setBackground(Color.decode("#FFFFFF"));
+            panel.add(btnHuy);
+            panel.add(btnSua);
+            this.add(new JPanel(), "push y");
+            this.add(panel, "right, gap right 10");
 
+            //set dữ liệu cũ
+            setOldData();
         }
+    }
+
+    public void setOldData(){
+        String ten = nhanVienPanel.getTable().getCellData(rowSelected, 1);
+        String ngSinh = nhanVienPanel.getTable().getCellData(rowSelected, 2);
+        String gioiTinh = nhanVienPanel.getTable().getCellData(rowSelected, 3);
+        String soDT = nhanVienPanel.getTable().getCellData(rowSelected, 4);
+
+        inputForm.getListItem().get(0).setText(ten);
+        inputForm.getListItem().get(1).setDateByString(ngSinh);
+        inputForm.getListItem().get(2).setSelection(gioiTinh);
+        inputForm.getListItem().get(3).setText(soDT);
     }
 
     @Override
@@ -93,6 +126,11 @@ public class NhanVienDialog extends JDialog implements ActionListener{
         if (e.getActionCommand().equals("add")){
             if(validation()){
                 insert();
+            }
+        }
+        else if (e.getActionCommand().equals("update")){
+            if(validation()){
+                update();
             }
         }
         else if(e.getActionCommand().equals("exit")){
@@ -109,12 +147,44 @@ public class NhanVienDialog extends JDialog implements ActionListener{
         if(nhanVienBUS.insert(nhanVien) != 0){
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
-            String[] row = {nhanVien.getMaNV()+"", ten, ngaySinh + "", gioiTinh, soDT};
+            String[] row = {
+                nhanVien.getMaNV()+"", 
+                nhanVien.getHoTen(), 
+                new DateCalculator().formatDateToDateS(nhanVien.getNgaySinh()), 
+                nhanVien.getGioiTinh(), 
+                nhanVien.getSoDT()
+            };
             nhanVienPanel.getTable().addDataRow(row);
             this.dispose();
         }
         else{
             JOptionPane.showMessageDialog(mainFrame, "Thêm nhân viên thất bại!");
+            this.dispose();
+        }
+    }
+
+    public void update(){
+        int ma = Integer.parseInt(nhanVienPanel.getTable().getCellData(rowSelected, 0));
+        String ten = inputForm.getListItem().get(0).getText();
+        java.sql.Date ngaySinh = inputForm.getListItem().get(1).getDate();
+        String gioiTinh = inputForm.getListItem().get(2).getSelection();
+        String soDT = inputForm.getListItem().get(3).getText();
+        NhanVienDTO nhanVien = new NhanVienDTO(ma, ten, ngaySinh, gioiTinh, soDT);
+        if(nhanVienBUS.update(nhanVien) != 0){
+            Notifications.getInstance().setJFrame(mainFrame);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
+            String[] row = {
+                nhanVien.getMaNV()+"", 
+                nhanVien.getHoTen(), 
+                new DateCalculator().formatDateToDateS(nhanVien.getNgaySinh()), 
+                nhanVien.getGioiTinh(), 
+                nhanVien.getSoDT()
+            };
+            nhanVienPanel.getTable().setRowData(rowSelected, row);
+            this.dispose();
+        }
+        else{
+            JOptionPane.showMessageDialog(mainFrame, "Sửa thất bại!");
             this.dispose();
         }
     }

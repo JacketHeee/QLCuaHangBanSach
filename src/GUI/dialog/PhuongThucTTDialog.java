@@ -31,8 +31,10 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
     private String type;
     private String[][] attributes;
     private InputForm inputForm;
+    private int rowSelected;
+
     
-    public PhuongThucTTDialog(PhuongThucThanhToanForm phuongThucTTPanel, String title, String function, String type, String[][] attributes){
+    public PhuongThucTTDialog(PhuongThucThanhToanForm phuongThucTTPanel, String title, String function, String type, String[][] attributes, int... row){
         super(phuongThucTTPanel.getMainFrame(), title, true);
         this.phuongThucTTPanel = phuongThucTTPanel;
         this.mainFrame = this.phuongThucTTPanel.getMainFrame();
@@ -41,6 +43,9 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
         this.attributes = attributes;
         inputForm = new InputForm(attributes);
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
+        if(row.length == 1){
+            this.rowSelected = row[0];
+        }
         this.init();
     }
 
@@ -82,8 +87,29 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){// phương thức thanh toán thì không có sửa
+            CustomButton btnSua = new CustomButton("Sửa");
+            btnSua.setActionCommand("update");
+            btnSua.addActionListener(this);
+            CustomButton btnHuy = new CustomButton("Hủy");
+            btnHuy.setActionCommand("exit");
+            btnHuy.addActionListener(this);
+            JPanel panel = new JPanel();
+            panel.setLayout(new MigLayout("wrap 2"));
+            panel.setBackground(Color.decode("#FFFFFF"));
+            panel.add(btnHuy);
+            panel.add(btnSua);
+            this.add(new JPanel(), "push y");
+            this.add(panel, "right, gap right 10");
 
+            //set dữ liệu cũ
+            setOldData();
         }
+    }
+
+    public void setOldData(){
+        String tenPTTT = phuongThucTTPanel.getTable().getCellData(rowSelected, 1);
+
+        inputForm.getListItem().get(0).setText(tenPTTT);
     }
 
     @Override
@@ -91,6 +117,11 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
         if (e.getActionCommand().equals("add")){
             if(validation()){
                 insert();
+            }
+        }
+        else if (e.getActionCommand().equals("update")){
+            if(validation()){
+                update();
             }
         }
         else if(e.getActionCommand().equals("exit")){
@@ -109,7 +140,24 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
             this.dispose();
         }
         else{
-            JOptionPane.showMessageDialog(mainFrame, "Thêm phương thức thanh toán thất bại!");
+            JOptionPane.showMessageDialog(mainFrame, "Thêm thất bại!");
+            this.dispose();
+        }
+    }
+
+    public void update(){
+        int ma = Integer.parseInt(phuongThucTTPanel.getTable().getCellData(rowSelected, 0));
+        String ten = inputForm.getListItem().get(0).getText();
+        PhuongThucTTDTO pttt = new PhuongThucTTDTO(ma, ten);
+        if(phuongThucTTBUS.update(pttt) != 0){
+            Notifications.getInstance().setJFrame(mainFrame);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
+            String[] row = {pttt.getMaPT()+"", pttt.getTenPTTT()};
+            phuongThucTTPanel.getTable().addDataRow(row);
+            this.dispose();
+        }
+        else{
+            JOptionPane.showMessageDialog(mainFrame, "Sửa thất bại!");
             this.dispose();
         }
     }

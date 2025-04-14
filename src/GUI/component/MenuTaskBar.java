@@ -50,13 +50,11 @@ public class MenuTaskBar extends JPanel implements MouseListener {
     private ArrayList<String[]> arrCN;
     private JPanel menuChucNang;
     private ButtonTaskBar butstart;
-	private ArrayList<String[]> arrCNForNhomQuyen;
 
     
     public MenuTaskBar(MainFrame mainFrame, ArrayList<String[]> arrCN) {
         this.mainFrame = mainFrame;
         this.arrCN = arrCN;
-		this.arrCNForNhomQuyen = new ArrayList<>(arrCN.subList(1, arrCN.size()));
         init();
 	}
 
@@ -209,7 +207,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 					mainFrame.setPanel(new PhuongThucThanhToanForm(but.getText(), mainFrame));
 					break;
 				case "phanquyen":
-					mainFrame.setPanel(new PhanQuyenForm(mainFrame,but.getText(),arrCNForNhomQuyen));
+					mainFrame.setPanel(new PhanQuyenForm(mainFrame,but.getText()));
 					break;
 				case "createInput":
 					mainFrame.setPanel(new TaoPhieuNhapForm(mainFrame));

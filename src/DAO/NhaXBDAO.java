@@ -52,7 +52,7 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
     @Override
     public int update(NhaXBDTO t) {
         int rowUpdated = 0;
-        String query = "UPDATE NHAXB SET tenNXB = '%s', diaChi = '%s', soDT = '%s', email = '%s' WHERE maNXB = ?";
+        String query = "UPDATE NHAXB SET tenNXB = ?, diaChi = ?, soDT = ?, email = ? WHERE maNXB = ?";
 
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -85,6 +85,25 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
                 String email = rs.getString("email");
                 NhaXBDTO nxb = new NhaXBDTO(id, tenNXB, diaChi, soDT, email);
                 result.add(nxb);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+    public String getTenNXBByMaSach(int maSach){
+        String result = new String();
+        String sql = "SELECT tenNXB FROM SACH S JOIN NHAXB NXB ON S.maNXB = NXB.maNXB WHERE maSach = ?";
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maSach);
+        try {
+            while (rs.next()) {
+                String tenNXB = rs.getString("tenNXB");
+                result = tenNXB;
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -12,6 +12,8 @@ import BUS.ChiTietQuyenBUS;
 import BUS.KhuyenMaiBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.KhuyenMaiDTO;
+import DTO.SachDTO;
+import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -21,8 +23,12 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.KhuyenMaiDialog;
+import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.KhuyenMaiSearch;
+import search.SachSearch;
+import utils.DateCalculator;
 import utils.UIUtils;
 
 import java.awt.Cursor;
@@ -37,9 +43,12 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private int id = 11;
     private String[] header = {"Mã khuyến mãi","Tên khuyến mãi","Điều kiện giảm","Giá trị giảm", "Ngày bắt đầu", "Ngày kết thúc"};
     KhuyenMaiBUS khuyenMaiBUS;
+    private MainFrame mainFrame;
+    private CustomTable table;
+    private ArrayList<KhuyenMaiDTO> listKH;
+    private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
 
-    private MainFrame mainFrame;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
 
@@ -64,6 +73,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -85,44 +95,12 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<KhuyenMaiDTO> searchBarPanel = new SearchBarPanel<>(foods, new KhuyenMaiSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -135,7 +113,6 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
         {"edit.svg","edit"},
         {"remove.svg","remove"}
     };
-    private CustomTable table;
 
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
@@ -165,10 +142,23 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<KhuyenMaiDTO> listKM = khuyenMaiBUS.getAll();
+        listKH = khuyenMaiBUS.getAll();
+        
+        return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<KhuyenMaiDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(KhuyenMaiDTO i : listKM){
-            data.add(new String[]{i.getMaKM() + "", i.getTenKM(), i.getDieuKienGiam(), i.getGiaTriGiam() + "", i.getNgayBatDau() + "", i.getNgayKetThuc() + ""});
+        for(KhuyenMaiDTO i : inputData){
+            data.add(new String[]{
+                i.getMaKM() + "",
+                i.getTenKM(),
+                i.getDieuKienGiam(),
+                i.getGiaTriGiam() + "",
+                new DateCalculator().formatDateTimeToDateS(i.getNgayBatDau()),
+                new DateCalculator().formatDateTimeToDateS(i.getNgayBatDau())
+            });      
         }
         return(data);
     }
@@ -190,7 +180,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
 
         panel.add(new CustomScrollPane(table),"push, grow");
@@ -218,8 +208,9 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
-                break;
+            KhuyenMaiDialog khuyenMaiDialog = new KhuyenMaiDialog(this, "Khuyến mãi", "Sửa Khuyến Mãi", "update", attributes, row);
+            khuyenMaiDialog.setVisible(true);
+            break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
@@ -268,4 +259,9 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
     
  
+    private void updateTable(ArrayList<KhuyenMaiDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
 }

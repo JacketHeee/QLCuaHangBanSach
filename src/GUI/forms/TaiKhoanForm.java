@@ -11,9 +11,12 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhanVienBUS;
+import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
+import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
 import DTO.TaiKhoanDTO;
+import DTO.ViTriVungDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +26,13 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.component.search.SearchBarPanel;
 import GUI.dialog.KhachHangDialog;
 import GUI.dialog.TaiKhoanDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.SachSearch;
+import search.TaiKhoanSearch;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -40,14 +46,17 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
 
     private String title;
     private int id = 14;
-    private String[] header = {"Mã tài khoản","Username","Password","Mã Role"};
+    private String[] header = {"Mã tài khoản","Username","Password","Quyền"};
     private TaiKhoanBUS taiKhoanBUS;
     private MainFrame mainFrame;
+    private ArrayList<TaiKhoanDTO> listKH;
+    private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private NhanVienBUS nhanVienBUS;
     private CustomTable table;
+    private NhomQuyenBUS nhomQuyenBUS;
 
 
     private String[][] attributes = {
@@ -64,12 +73,14 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         this.taiKhoanBUS = TaiKhoanBUS.getInstance();
         this.nhanVienBUS = NhanVienBUS.getInstance();
+        this.nhomQuyenBUS = NhomQuyenBUS.getInstance();
         this.listAction = getListAction();
         init();
     }
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -91,44 +102,12 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<TaiKhoanDTO> searchBarPanel = new SearchBarPanel<>(foods, new TaiKhoanSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(TaiKhoanForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(TaiKhoanForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
 
@@ -185,10 +164,17 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<TaiKhoanDTO> listKH = taiKhoanBUS.getAll();
+        listKH = taiKhoanBUS.getAll();
+        
+        return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<TaiKhoanDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(TaiKhoanDTO i : listKH){
-            data.add(new String[]{i.getMaTK() + "", i.getUsername(), i.getPassword(), i.getMaRole() + ""});
+        for(TaiKhoanDTO i : inputData){
+            String tenNhomQuyen = nhomQuyenBUS.getTenByMaNhomQuyen(i.getMaRole());
+            data.add(new String[]{i.getMaTK() + "", i.getUsername(), i.getPassword(), tenNhomQuyen});
         }
         return(data);
     }
@@ -199,7 +185,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -232,7 +218,8 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(this, "Tài khoản", "Sửa tài khoản", "update", attributes, row);
+                taiKhoanDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
@@ -256,6 +243,12 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
         }
     }
 
+
+    private void updateTable(ArrayList<TaiKhoanDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
     public MainFrame getMainFrame() {
         return mainFrame;
     }
@@ -287,4 +280,22 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     public void setTable(CustomTable table) {
         this.table = table;
     }
+
+    public NhanVienBUS getNhanVienBUS() {
+        return nhanVienBUS;
+    }
+
+    public void setNhanVienBUS(NhanVienBUS nhanVienBUS) {
+        this.nhanVienBUS = nhanVienBUS;
+    }
+
+    public NhomQuyenBUS getNhomQuyenBUS() {
+        return nhomQuyenBUS;
+    }
+
+    public void setNhomQuyenBUS(NhomQuyenBUS nhomQuyenBUS) {
+        this.nhomQuyenBUS = nhomQuyenBUS;
+    }
+
+    
 }

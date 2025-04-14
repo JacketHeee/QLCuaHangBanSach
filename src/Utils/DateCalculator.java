@@ -1,6 +1,8 @@
 package utils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +59,19 @@ public class DateCalculator {
     public long getDifferenceDays() {
         long diff = dateEnd.getTime() - dateStart.getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    public String formatDateTimeToDateS(LocalDateTime dateTime){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm:ss");
+        String dateFormat = dateTime.format(dtf);
+        return(dateFormat);
+    }
+
+    public String formatDateToDateS(java.sql.Date date){
+        java.util.Date utilDate = new java.util.Date(date.getTime());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String dateFormat = sdf.format(utilDate);
+        return(dateFormat);
     }
 
     private class ModelDate {

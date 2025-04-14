@@ -11,6 +11,10 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.TacGiaBUS;
+import DTO.SachDTO;
+import DTO.TacGiaDTO;
+import DTO.TaiKhoanDTO;
+import DTO.ViTriVungDTO;
 import DTO.ChiTietQuyenDTO;
 import DTO.TacGiaDTO;
 import DTO.TaiKhoanDTO;
@@ -24,8 +28,11 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.TacGiaDialog;
+import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.SachSearch;
+import search.TacGiaSearch;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -43,6 +50,9 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     private String[] header = {"Mã tác giả", "Tên tác giả"};
     private TacGiaBUS tacGiaBUS;
     private MainFrame mainFrame;
+    private ArrayList<TacGiaDTO> listKH;
+    private ArrayList<String[]> dataToShow;
+    
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
@@ -63,6 +73,7 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -84,44 +95,12 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<TacGiaDTO> searchBarPanel = new SearchBarPanel<>(foods, new TacGiaSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -163,9 +142,15 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<TacGiaDTO> listKH = tacGiaBUS.getAll();
+        listKH = tacGiaBUS.getAll();
+        
+        return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<TacGiaDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(TacGiaDTO i : listKH){
+        for(TacGiaDTO i : inputData){
             data.add(new String[]{i.getMaTacGia() + "", i.getTenTacGia()});
         }
         return(data);
@@ -189,7 +174,7 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -218,7 +203,8 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                TacGiaDialog tacGiaDialog = new TacGiaDialog(this, "Tác giả", "Sửa Tác Giả", "update", attributes, row);
+                tacGiaDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
@@ -268,4 +254,9 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     
 
     
+    private void updateTable(ArrayList<TacGiaDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
 }

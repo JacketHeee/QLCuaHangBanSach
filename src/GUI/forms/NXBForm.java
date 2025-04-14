@@ -13,6 +13,8 @@ import BUS.ChucNangBUS;
 import BUS.NhaXBBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.NhaXBDTO;
+import DTO.SachDTO;
+import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -24,8 +26,11 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.NhaXBDialog;
+import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.NXBSearch;
+import search.SachSearch;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -43,6 +48,9 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private String[] header = {"Mã nhà xuất bản","Tên nhà xuất bản","Địa chỉ","Số điện thoại","Email"};
     NhaXBBUS nhaXBBUS;
     private MainFrame mainFrame;
+    private CustomTable table;
+    private ArrayList<NhaXBDTO> listKH;
+    private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
@@ -66,6 +74,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -87,44 +96,12 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<NhaXBDTO> searchBarPanel = new SearchBarPanel<>(foods, new NXBSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -137,7 +114,6 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
         {"edit.svg","edit"},
         {"remove.svg","remove"}
     };
-    private CustomTable table;
 
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
@@ -167,9 +143,15 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<NhaXBDTO> listKH = nhaXBBUS.getAll();
+        listKH = nhaXBBUS.getAll();
+       
+        return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<NhaXBDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(NhaXBDTO i : listKH){
+        for(NhaXBDTO i : inputData){
             data.add(new String[]{i.getMaNXB() + "", i.getTenNXB(), i.getDiaChi(), i.getSoDT(), i.getEmail()});
         }
         return(data);
@@ -194,7 +176,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -221,7 +203,8 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                NhaXBDialog nhaXBDialog = new NhaXBDialog(this, "Nhà xuất bản", "Sửa Nhà Xuất Bản", "update", attributes, row);
+                nhaXBDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
@@ -270,4 +253,10 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
 
     
     
+
+    private void updateTable(ArrayList<NhaXBDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
 }

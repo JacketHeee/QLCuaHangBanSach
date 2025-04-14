@@ -13,6 +13,8 @@ import BUS.ChucNangBUS;
 import BUS.NhanVienBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.NhanVienDTO;
+import DTO.SachDTO;
+import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -23,9 +25,13 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.component.search.SearchBarPanel;
 import GUI.dialog.NhanVienDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.NhanVienSearch;
+import search.SachSearch;
+import utils.DateCalculator;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -43,6 +49,8 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     private String[] header = {"Mã nhân viên","Họ tên","Ngày sinh","Giới tính","Số điện thoại","Mã tài khoản"};
     NhanVienBUS nhanVienBUS;
     private MainFrame mainFrame;
+    private ArrayList<NhanVienDTO> listKH;
+    private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
@@ -67,6 +75,7 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -88,44 +97,12 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<NhanVienDTO> searchBarPanel = new SearchBarPanel<>(foods, new NhanVienSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(NhanVienForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(NhanVienForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -168,10 +145,21 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<NhanVienDTO> listKH = nhanVienBUS.getAll();
+        listKH = nhanVienBUS.getAll();
+        
+       return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<NhanVienDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(NhanVienDTO i : listKH){
-            data.add(new String[]{i.getMaNV() + "", i.getHoTen(), i.getNgaySinh() + "", i.getGioiTinh(), i.getSoDT(), i.getMaTK() + ""});
+        for(NhanVienDTO i : inputData){
+            data.add(new String[]{i.getMaNV() + "", 
+            i.getHoTen(), 
+            new DateCalculator().formatDateToDateS(i.getNgaySinh()), 
+            i.getGioiTinh(), 
+            i.getSoDT(), 
+            i.getMaTK() + ""});
         }
         return(data);
     }
@@ -220,7 +208,8 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                NhanVienDialog nhanVienDialog = new NhanVienDialog(this, "Nhân viên", "Sửa Nhân Viên", "update", attributes, row);
+                nhanVienDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
@@ -244,6 +233,11 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
         }
     }
 
+    private void updateTable(ArrayList<NhanVienDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
     public NhanVienBUS getNhanVienBUS() {
         return nhanVienBUS;
     }

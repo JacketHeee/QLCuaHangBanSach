@@ -81,13 +81,17 @@ public class NhaXBBUS {
 		return(-1);
 	}
 
-	public String getTenByMaNXB(int ma){
+	public String getTenByMaNXB(int ma){	//???
 		for(NhaXBDTO nhaXBDTO : this.listNhaXB){
 			if(nhaXBDTO.getMaNXB() == ma){
 				return(nhaXBDTO.getTenNXB());
 			}
 		}
 		return(null);
+	}
+
+	public String getTenNXBByMaSach(int ma){
+		return(nhaXBDAO.getTenNXBByMaSach(ma));
 	}
 
 }

@@ -31,8 +31,10 @@ public class TheLoaiDialog extends JDialog implements ActionListener{
     private String type;
     private String[][] attributes;
     private InputForm inputForm;
+    private int rowSelected;
+
     
-    public TheLoaiDialog(TheLoaiForm theLoaiPanel, String title, String function, String type, String[][] attributes){
+    public TheLoaiDialog(TheLoaiForm theLoaiPanel, String title, String function, String type, String[][] attributes, int... row){
         super(theLoaiPanel.getMainFrame(), title, true);
         this.theLoaiPanel = theLoaiPanel;
         this.mainFrame = this.theLoaiPanel.getMainFrame();
@@ -41,6 +43,9 @@ public class TheLoaiDialog extends JDialog implements ActionListener{
         this.attributes = attributes;
         inputForm = new InputForm(attributes);
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
+        if(row.length == 1){
+            this.rowSelected = row[0];
+        }
         this.init();
     }
 
@@ -82,8 +87,29 @@ public class TheLoaiDialog extends JDialog implements ActionListener{
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){// thể loại thì không có sửa
+            CustomButton btnSua = new CustomButton("Sửa");
+            btnSua.setActionCommand("update");
+            btnSua.addActionListener(this);
+            CustomButton btnHuy = new CustomButton("Hủy");
+            btnHuy.setActionCommand("exit");
+            btnHuy.addActionListener(this);
+            JPanel panel = new JPanel();
+            panel.setLayout(new MigLayout("wrap 2"));
+            panel.setBackground(Color.decode("#FFFFFF"));
+            panel.add(btnHuy);
+            panel.add(btnSua);
+            this.add(new JPanel(), "push y");
+            this.add(panel, "right, gap right 10");
 
+            //set dữ liệu cũ
+            setOldData();
         }
+    }
+
+    public void setOldData(){
+        String tenTheLoai = theLoaiPanel.getTable().getCellData(rowSelected, 1);
+
+        inputForm.getListItem().get(0).setText(tenTheLoai);
     }
 
     @Override
@@ -91,6 +117,11 @@ public class TheLoaiDialog extends JDialog implements ActionListener{
         if (e.getActionCommand().equals("add")){
             if(validation()){
                 insert();
+            }
+        }
+        else if (e.getActionCommand().equals("update")){
+            if(validation()){
+                update();
             }
         }
         else if(e.getActionCommand().equals("exit")){
@@ -110,6 +141,23 @@ public class TheLoaiDialog extends JDialog implements ActionListener{
         }
         else{
             JOptionPane.showMessageDialog(mainFrame, "Thêm thể loại thất bại!");
+            this.dispose();
+        }
+    }
+
+    public void update(){
+        int ma = Integer.parseInt(theLoaiPanel.getTable().getCellData(rowSelected, 0));
+        String ten = inputForm.getListItem().get(0).getText();
+        TheLoaiDTO tl = new TheLoaiDTO(ma, ten);
+        if(theLoaiBUS.update(tl) != 0){
+            Notifications.getInstance().setJFrame(mainFrame);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
+            String[] row = {tl.getMaTheLoai()+"", tl.getTenTheLoai()};
+            theLoaiPanel.getTable().setRowData(rowSelected, row);
+            this.dispose();
+        }
+        else{
+            JOptionPane.showMessageDialog(mainFrame, "Sửa thất bại!");
             this.dispose();
         }
     }

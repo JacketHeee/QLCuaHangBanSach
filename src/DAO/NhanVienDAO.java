@@ -165,15 +165,21 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         return(result);
     }
 
-    // public static void main(String[] args) {
-    //     NhanVienDAO nhanVienDAO = new NhanVienDAO();
-    //     ArrayList<NhanVienDTO> list = nhanVienDAO.getAll();
-    //     for(NhanVienDTO i : list){
-    //         System.out.println(i.getMaNV() + "\t" + i.getHoTen() + "\t" + i.getGioiTinh() + "\t" + i.getSoDT() + "\t" + i.getNgaySinh() + "\t" + i.getMaTK());
-    //     }
-    //     java.sql.Date ngSinh = new java.sql.Date(1);
-    //     NhanVienDTO nhanVienDTO = new NhanVienDTO(6,"Nguyễn Ân testtest",ngSinh,"nam","0923223223");
-
-    // }
+    public String getTenNVByMaTK(int maTK){
+        String result = new String();
+        String sql = "SELECT hoTen FROM nhanVien WHERE maTK = ?";
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql, maTK);
+            while(rs.next()){
+                result = rs.getString("hoTen");
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return(result);
+    }
 
 }

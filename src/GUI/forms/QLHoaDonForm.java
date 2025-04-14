@@ -13,6 +13,8 @@ import BUS.ChucNangBUS;
 import BUS.HoaDonBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.HoaDonDTO;
+import DTO.SachDTO;
+import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -23,8 +25,11 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.QLHoaDonSearch;
+import search.SachSearch;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -42,6 +47,8 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private String[] header = {"Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
     HoaDonBUS hoaDonBUS;
     private MainFrame mainFrame;
+    private ArrayList<HoaDonDTO> listKH;
+    private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
@@ -66,6 +73,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -87,44 +95,12 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<HoaDonDTO> searchBarPanel = new SearchBarPanel<>(foods, new QLHoaDonSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     
     ///////////////////////////////////////////////////////////////
@@ -164,9 +140,15 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<HoaDonDTO> listKH = hoaDonBUS.getAll();
+        listKH = hoaDonBUS.getAll();
+        
+        return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<HoaDonDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(HoaDonDTO i : listKH){
+        for(HoaDonDTO i : inputData){
             data.add(new String[]{i.getMaHD() + "", i.getNgayBan() + "", i.getTongTien() + "", i.getMaTK() + "", i.getMaPT() + "", i.getMaKM() + "", i.getMaKH() + ""});
         }
         return(data);
@@ -178,7 +160,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),bottomActions, header);
+        table = new CustomTable(dataToShow,bottomActions, header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -228,4 +210,9 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         this.mainFrame = mainFrame;
     }
     
+    private void updateTable(ArrayList<HoaDonDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
 }

@@ -71,7 +71,7 @@ public class Validate {
     }
 
     public static boolean isStartDateAndEndDate(String startDateS, String endDateS){
-        SimpleDateFormat dateFormat = new SimpleDateFormat();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date startDate;
         java.util.Date endDate;
         try {

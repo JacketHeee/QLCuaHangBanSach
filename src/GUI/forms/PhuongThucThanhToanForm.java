@@ -12,6 +12,8 @@ import BUS.ChiTietQuyenBUS;
 import BUS.PhuongThucTTBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.PhuongThucTTDTO;
+import DTO.SachDTO;
+import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -21,8 +23,11 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.PhuongThucTTDialog;
+import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import search.PTTTSearch;
+import search.SachSearch;
 import utils.UIUtils;
 
 import java.awt.Cursor;
@@ -38,6 +43,8 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     private String[] header = {"Mã phương thức", "Tên phương thức thanh toán"};
     private PhuongThucTTBUS phuongThucTTBUS;
     private MainFrame mainFrame;
+    private ArrayList<PhuongThucTTDTO> listKH;
+    private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
@@ -59,6 +66,7 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     
     private void init() {
         setLayout(new MigLayout("wrap 1, gap 10"));
+        dataToShow = Data();
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
@@ -80,44 +88,12 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        panel.add(getPanelSearch());
+        SearchBarPanel<PhuongThucTTDTO> searchBarPanel = new SearchBarPanel<>(foods, new PTTTSearch(listKH), this::updateTable, null);
+        panel.add(searchBarPanel);
         return panel;
     }
 
     String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
-    private JTextField inputSearch;
-    private JComboBox<String> droplist;
-    private JButton butRefresh;
-    private JButton butSearch;
-
-    private JPanel getPanelSearch() {
-        JPanel panel = new JPanel(new MigLayout());
-        droplist = new JComboBox<>(foods);
-        droplist.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        
-        JPanel search = new JPanel(new MigLayout("insets 3"));
-        inputSearch = new JTextField(30);
-        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
-        inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        search.add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/search.svg")).derive(20,20));
-        butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
-        
-        search.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
-        search.add(butSearch);
-        
-        
-        butRefresh = new JButton(new FlatSVGIcon(SachForm.class.getResource("../../resources/img/icon/refresh.svg")).derive(26,26));
-        butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
-        butRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panel.add(droplist,"h 32");
-        panel.add(search,"");
-        panel.add(butRefresh,"");
-        return panel;
-    }
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -160,9 +136,15 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     }
     
     public ArrayList<String[]> Data(){
-        ArrayList<PhuongThucTTDTO> listKH = phuongThucTTBUS.getAll();
+        listKH = phuongThucTTBUS.getAll();
+        
+        return DataToShow(listKH);
+    }
+
+    public ArrayList<String[]> DataToShow(ArrayList<PhuongThucTTDTO> inputData){
+
         ArrayList<String[]> data = new ArrayList<>();
-        for(PhuongThucTTDTO i : listKH){
+        for(PhuongThucTTDTO i : inputData){
             data.add(new String[]{i.getMaPT() + "", i.getTenPTTT()});
         }
         return(data);
@@ -188,7 +170,7 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),getActionBottom(), header);
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -213,7 +195,8 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                PhuongThucTTDialog phuongThucTTDialog = new PhuongThucTTDialog(this, "Phương thức thanh toán", "Sửa Phương Thức TT", "update", attributes, row);
+                phuongThucTTDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
@@ -264,4 +247,9 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     
 
     
+    private void updateTable(ArrayList<PhuongThucTTDTO> ketqua) {
+
+        // System.out.println("con bo biet bay");
+        table.updateTable(DataToShow(ketqua));
+    }
 }

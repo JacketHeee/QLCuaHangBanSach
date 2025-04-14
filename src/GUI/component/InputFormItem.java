@@ -2,9 +2,11 @@ package GUI.component;
 
 import java.awt.Color;
 import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 import javax.swing.JComboBox;
@@ -113,6 +115,16 @@ public class InputFormItem extends JPanel{
         return((String)combobox.getSelectedItem());
     }
 
+    public void setSelection(String text){
+        for(int i = 0; i < combobox.getItemCount(); i++){
+            if(combobox.getItemAt(i).equals(text)){
+                combobox.setSelectedIndex(i);
+                return;
+            }
+        }
+        System.out.println("Lỗi không thấy giá trị combobox");
+    }
+
     public java.sql.Date getDate(){
         java.util.Date utilDate = inputDate.getDate();
         java.sql.Date sqlDate = new Date(utilDate.getTime());
@@ -126,6 +138,17 @@ public class InputFormItem extends JPanel{
 
     public void setDate(java.sql.Date sqlDate){
         inputDate.setDate(sqlDate);
+    }
+
+    public void setDateByString(String date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date utilDate = new java.util.Date();
+        try {
+            utilDate = sdf.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        inputDate.setDate(utilDate);
     }
 
     // public void setNumber(String t){
@@ -156,7 +179,27 @@ public class InputFormItem extends JPanel{
         java.util.Date fullDate = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
         inputDateTime.setDate(fullDate);
         //set thời gian
-        timeSpinner.setValue(fullDate);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fullDate);
+        // reset về mặc định tránh lỗi
+        cal.set(1970, Calendar.JANUARY, 1);
+        
+        timeSpinner.setValue(cal.getTime());
+    }
+
+    public void setDateTimeByString(String dateTimeS){   //Chưa test
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeS, formatter);
+        //set ngày
+        java.util.Date fullDate = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        inputDateTime.setDate(fullDate);
+        //set thời gian
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fullDate);
+        // reset về mặc định tránh lỗi
+        cal.set(1970, Calendar.JANUARY, 1);
+        
+        timeSpinner.setValue(cal.getTime());
     }
 
     public LocalDateTime getDateTime(){
@@ -167,7 +210,7 @@ public class InputFormItem extends JPanel{
         Calendar dateCal = Calendar.getInstance();
         dateCal.setTime(datePart);
         Calendar timeCal = Calendar.getInstance();
-        dateCal.setTime(timePart);
+        timeCal.setTime(timePart);
 
         dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
         dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));

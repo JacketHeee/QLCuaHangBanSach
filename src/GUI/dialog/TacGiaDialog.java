@@ -24,23 +24,28 @@ import resources.base.baseTheme;
 import utils.Validate;
 
 public class TacGiaDialog extends JDialog implements ActionListener{
-    private TacGiaForm TacGiaPanel;
+    private TacGiaForm tacGiaPanel;
     private MainFrame mainFrame;
-    private TacGiaBUS TacGiaBUS; 
+    private TacGiaBUS tacGiaBUS; 
     private JLabel label;
     private String type;
     private String[][] attributes;
     private InputForm inputForm;
+    private int rowSelected;
+
     
-    public TacGiaDialog(TacGiaForm TacGiaPanel, String title, String function, String type, String[][] attributes){
-        super(TacGiaPanel.getMainFrame(), title, true);
-        this.TacGiaPanel = TacGiaPanel;
-        this.mainFrame = this.TacGiaPanel.getMainFrame();
-        this.TacGiaBUS = this.TacGiaPanel.getTacGiaBUS();
+    public TacGiaDialog(TacGiaForm tacGiaPanel, String title, String function, String type, String[][] attributes, int... row){
+        super(tacGiaPanel.getMainFrame(), title, true);
+        this.tacGiaPanel = tacGiaPanel;
+        this.mainFrame = this.tacGiaPanel.getMainFrame();
+        this.tacGiaBUS = this.tacGiaPanel.getTacGiaBUS();
         this.type = type;
         this.attributes = attributes;
         inputForm = new InputForm(attributes);
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
+        if(row.length == 1){
+            this.rowSelected = row[0];
+        }
         this.init();
     }
 
@@ -81,9 +86,30 @@ public class TacGiaDialog extends JDialog implements ActionListener{
             this.add(new JPanel(), "push y");
             this.add(panel, "right, gap right 10");
         }
-        else if(type.equals("update")){// tác giả thì không có sửa
+        else if(type.equals("update")){
+            CustomButton btnSua = new CustomButton("Sửa");
+            btnSua.setActionCommand("update");
+            btnSua.addActionListener(this);
+            CustomButton btnHuy = new CustomButton("Hủy");
+            btnHuy.setActionCommand("exit");
+            btnHuy.addActionListener(this);
+            JPanel panel = new JPanel();
+            panel.setLayout(new MigLayout("wrap 2"));
+            panel.setBackground(Color.decode("#FFFFFF"));
+            panel.add(btnHuy);
+            panel.add(btnSua);
+            this.add(new JPanel(), "push y");
+            this.add(panel, "right, gap right 10");
 
+            //set dữ liệu cũ
+            setOldData();
         }
+    }
+
+    public void setOldData(){
+        String ten = tacGiaPanel.getTable().getCellData(rowSelected, 1);
+
+        inputForm.getListItem().get(0).setText(ten);
     }
 
     @Override
@@ -91,6 +117,11 @@ public class TacGiaDialog extends JDialog implements ActionListener{
         if (e.getActionCommand().equals("add")){
             if(validation()){
                 insert();
+            }
+        }
+        else if (e.getActionCommand().equals("update")){
+            if(validation()){
+                update();
             }
         }
         else if(e.getActionCommand().equals("exit")){
@@ -101,15 +132,32 @@ public class TacGiaDialog extends JDialog implements ActionListener{
     public void insert(){
         String ten = inputForm.getListItem().get(0).getText();
         TacGiaDTO tg = new TacGiaDTO(ten);
-        if(TacGiaBUS.insert(tg) != 0){
+        if(tacGiaBUS.insert(tg) != 0){
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
             String[] row = {tg.getMaTacGia()+"", tg.getTenTacGia()};
-            TacGiaPanel.getTable().addDataRow(row);
+            tacGiaPanel.getTable().addDataRow(row);
             this.dispose();
         }
         else{
             JOptionPane.showMessageDialog(mainFrame, "Thêm tác giả thất bại!");
+            this.dispose();
+        }
+    }
+
+    public void update(){
+        int ma = Integer.parseInt(tacGiaPanel.getTable().getCellData(rowSelected, 0));
+        String ten = inputForm.getListItem().get(0).getText();
+        TacGiaDTO tg = new TacGiaDTO(ma, ten);
+        if(tacGiaBUS.update(tg) != 0){
+            Notifications.getInstance().setJFrame(mainFrame);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
+            String[] row = {tg.getMaTacGia()+"", tg.getTenTacGia()};
+            tacGiaPanel.getTable().setRowData(rowSelected, row);
+            this.dispose();
+        }
+        else{
+            JOptionPane.showMessageDialog(mainFrame, "Sửa thất bại!");
             this.dispose();
         }
     }

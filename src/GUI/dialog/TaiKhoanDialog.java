@@ -38,18 +38,23 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
     private String[][] attributes;
     private InputForm inputForm;
     private String[] listItemNV;
+    private int rowSelected;
+
     
-    public TaiKhoanDialog(TaiKhoanForm taiKhoanPanel, String title, String function, String type, String[][] attributes){
+    public TaiKhoanDialog(TaiKhoanForm taiKhoanPanel, String title, String function, String type, String[][] attributes, int... row){
         super(taiKhoanPanel.getMainFrame(), title, true);
         this.taiKhoanPanel = taiKhoanPanel;
         this.mainFrame = this.taiKhoanPanel.getMainFrame();
         this.taiKhoanBUS = taiKhoanPanel.getTaiKhoanBUS();
-        this.nhanVienBUS = NhanVienBUS.getInstance();
-        this.nhomQuyenBUS = NhomQuyenBUS.getInstance();
+        this.nhanVienBUS = taiKhoanPanel.getNhanVienBUS();
+        this.nhomQuyenBUS = taiKhoanPanel.getNhomQuyenBUS();
         this.type = type;
         this.attributes = attributes;
         inputForm = new InputForm(attributes);
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
+        if(row.length == 1){
+            this.rowSelected = row[0];
+        }
         this.init();
     }
 
@@ -69,8 +74,19 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
         this.add(panel, "grow");
 
         //Cài đặt lựa chọn cmbobox
-        listItemNV = nhanVienBUS.getAllTenNVNotHaveAccount().toArray(new String[0]);
-        inputForm.getListItem().get(2).setListCombobox(listItemNV);
+        if(type.equals("add")){
+            listItemNV = nhanVienBUS.getAllTenNVNotHaveAccount().toArray(new String[0]);
+            inputForm.getListItem().get(2).setListCombobox(listItemNV);
+        }
+        else if(type.equals("update")){
+            ArrayList<String> temp = nhanVienBUS.getAllTenNVNotHaveAccount();
+            //set cbx cho nhân viên hiện tại
+            int maTK = Integer.parseInt(taiKhoanPanel.getTable().getCellData(rowSelected, 0));
+            String tenNV = nhanVienBUS.getTenNVByMaTK(maTK); 
+            temp.add(tenNV);
+            listItemNV = temp.toArray(new String[0]);
+            inputForm.getListItem().get(2).setListCombobox(listItemNV);
+        }
 
         String[] listItemRole = nhomQuyenBUS.getAllTenNhomQuyen().toArray(new String[0]);
         inputForm.getListItem().get(3).setListCombobox(listItemRole);
@@ -98,14 +114,50 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){// tài khoản thì không có sửa
+            CustomButton btnSua = new CustomButton("Sửa");
+            btnSua.setActionCommand("update");
+            btnSua.addActionListener(this);
+            CustomButton btnHuy = new CustomButton("Hủy");
+            btnHuy.setActionCommand("exit");
+            btnHuy.addActionListener(this);
+            JPanel panel = new JPanel();
+            panel.setLayout(new MigLayout("wrap 2"));
+            panel.setBackground(Color.decode("#FFFFFF"));
+            panel.add(btnHuy);
+            panel.add(btnSua);
+            this.add(new JPanel(), "push y");
+            this.add(panel, "right, gap right 10");
 
+            //set dữ liệu cũ
+            setOldData();
         }
+    }
+
+    public void setOldData(){
+        int maTK = Integer.parseInt(taiKhoanPanel.getTable().getCellData(rowSelected, 0));
+        String userName = taiKhoanPanel.getTable().getCellData(rowSelected, 1);
+        String password = taiKhoanPanel.getTable().getCellData(rowSelected, 2);
+        String tenRole = taiKhoanPanel.getTable().getCellData(rowSelected, 3);
+
+        String tenNV = nhanVienBUS.getTenNVByMaTK(maTK);
+
+        inputForm.getListItem().get(0).setText(userName);
+        inputForm.getListItem().get(1).setText(password);
+        inputForm.getListItem().get(2).setSelection(tenNV);
+        inputForm.getListItem().get(3).setSelection(tenRole);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("add")){
-            insert();
+            if(validation()){
+                insert();
+            }
+        }
+        else if (e.getActionCommand().equals("update")){
+            if(validation()){
+                update();
+            }
         }
         else if(e.getActionCommand().equals("exit")){
             this.dispose();
@@ -127,7 +179,8 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
             if(nhanVienBUS.setMaTK(maNV, taiKhoanDTO.getMaTK()) != 0){
-                String[] row = {taiKhoanDTO.getMaTK()+"", taiKhoanDTO.getUsername(), taiKhoanDTO.getPassword()};
+                String tenNQ = nhomQuyenBUS.getTenByMaNhomQuyen(taiKhoanDTO.getMaRole());
+                String[] row = {taiKhoanDTO.getMaTK()+"", taiKhoanDTO.getUsername(), taiKhoanDTO.getPassword(), tenNQ};
                 taiKhoanPanel.getTable().addDataRow(row);
                 this.dispose();
             }
@@ -141,6 +194,39 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
             this.dispose();
         }
         
+    }
+
+    public void update(){
+        int ma = Integer.parseInt(taiKhoanPanel.getTable().getCellData(rowSelected, 0));
+        String username = inputForm.getListItem().get(0).getText();
+        String password = inputForm.getListItem().get(1).getText();
+        String tenNhanVien = inputForm.getListItem().get(2).getSelection();
+        String tenNhomQuyen = inputForm.getListItem().get(3).getSelection();
+
+        int maRole = nhomQuyenBUS.getMaNhomQuyenByTen(tenNhomQuyen);
+        int maNV = nhanVienBUS.getMaNVByTen(tenNhanVien);
+
+        TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(ma, username, password, maRole);
+
+        if(taiKhoanBUS.update(taiKhoanDTO) != 0){
+            Notifications.getInstance().setJFrame(mainFrame);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
+            if(nhanVienBUS.setMaTK(maNV, taiKhoanDTO.getMaTK()) != 0){
+                String tenNQ = nhomQuyenBUS.getTenByMaNhomQuyen(taiKhoanDTO.getMaRole());
+                String[] row = {taiKhoanDTO.getMaTK()+"", taiKhoanDTO.getUsername(), taiKhoanDTO.getPassword(), tenNQ};
+                taiKhoanPanel.getTable().setRowData(rowSelected, row);
+                this.dispose();
+            }
+            else{
+                JOptionPane.showMessageDialog(mainFrame, "Lỗi gắn tài khoản cho nhân viên!");
+                this.dispose();
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(mainFrame, "Sửa thất bại!");
+            this.dispose();
+        }
+
     }
 
     public boolean validation(){

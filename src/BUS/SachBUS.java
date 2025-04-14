@@ -43,6 +43,7 @@ public class SachBUS {
 		if(sachDAO.update(sachDTO) != 0){
 			int index = getIndexByID(sachDTO.getMaSach());
 			listSach.get(index).setTenSach(sachDTO.getTenSach());
+			listSach.get(index).setGiaBan(sachDTO.getGiaBan());
 			listSach.get(index).setNamXB(sachDTO.getNamXB());
 			listSach.get(index).setMaVung(sachDTO.getMaVung());
 			listSach.get(index).setMaNXB(sachDTO.getMaNXB());
