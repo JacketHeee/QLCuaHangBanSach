@@ -22,7 +22,7 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	@Override
 	public int insert(SachDTO t) {
 		int rowInserted = 0;
-		String sql = "INSERT INTO SACH (tenSach, soLuong, giaBan, namXB, maVung, maNXB) VALUES (?,?,?,?,?,?)";
+		String sql = "INSERT INTO SACH (tenSach, soLuong, giaNhap, giaBan, namXB, maVung, maNXB) VALUES (?,?,?,?,?,?,?)";
 
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
@@ -31,6 +31,7 @@ public class SachDAO implements DAOInterface<SachDTO>{
 			sql,
 			t.getTenSach(),
 			t.getSoLuong(),
+			t.getGiaNhap(),
 			t.getGiaBan(),
 			t.getNamXB(), 
 			t.getMaVung(),
@@ -88,10 +89,11 @@ public class SachDAO implements DAOInterface<SachDTO>{
 				String tenSach = rs.getString("tenSach");
 				int soLuong = rs.getInt("soLuong");
 				BigDecimal giaBan = rs.getBigDecimal("giaBan");
+				BigDecimal giaNhap = rs.getBigDecimal("giaNhap");
 				int namXB = rs.getInt("namXB");
 				int maVung = rs.getInt("maVung");
 				int maNXB = rs.getInt("maNXB");
-				SachDTO sach = new SachDTO(id, tenSach, soLuong, giaBan, namXB, maVung, maNXB);
+				SachDTO sach = new SachDTO(id, tenSach, soLuong, giaNhap, giaBan, namXB, maVung, maNXB);
 				result.add(sach);
 			}
 			
