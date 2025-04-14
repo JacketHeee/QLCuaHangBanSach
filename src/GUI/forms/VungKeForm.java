@@ -207,7 +207,6 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
                 viTriVungDialog.setVisible(true);
             case "remove":
                 // Logic xóa cho form này
-                System.out.println("Có");
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
                 int ma = Integer.parseInt(table.getCellData(row, 0));

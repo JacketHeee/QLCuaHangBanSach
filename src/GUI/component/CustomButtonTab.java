@@ -40,7 +40,7 @@ public class CustomButtonTab extends JButton {
     public void setDefault(String color,String colorText) {
         setForeground(Color.decode(colorText));
         setBackground(Color.decode(baseTheme.backgroundColor));
-        MatteBorder bottomBorder = new MatteBorder(0,0,3,0,Color.decode(color));
+        MatteBorder bottomBorder = new MatteBorder(0,0,2,0,Color.decode(color));
         EmptyBorder padding = new EmptyBorder(8,20,8,20);
         putClientProperty("arc: ", 0);
         setBorder(BorderFactory.createCompoundBorder(bottomBorder, padding));

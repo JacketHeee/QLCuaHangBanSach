@@ -66,4 +66,17 @@ public class SearchPanel<T> extends JPanel {
 
         add(butSearch);
     }
+
+    public void setPalaceHolder(String text) {
+        inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, text);
+        inputSearch.repaint();
+        inputSearch.revalidate();
+    }
+
+    public void setVisibleButtonSearch(boolean visible) {
+        butSearch.setVisible(visible);
+        repaint();
+        revalidate();
+    }
+
 }

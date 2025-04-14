@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="512px" height="512px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   
+    .str0 {stroke:black;stroke-width:13.9996;stroke-linecap:round;stroke-linejoin:round}
+    .fil0 {fill:none}
+   
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+  <g id="_535848848">
+   <g>
+    <g>
+     <rect class="fil0 str0" x="12" y="454" width="488.772" height="51.0658" id="id_121" style="stroke: rgb(255, 255, 255);"></rect>
+     <rect class="fil0 str0" x="42" y="287" width="45.5995" height="166.516" id="id_122" style="stroke: rgb(255, 255, 255);"></rect>
+     <rect class="fil0 str0" x="138" y="316" width="45.5995" height="138.167" id="id_123" style="stroke: rgb(255, 255, 255);"></rect>
+     <rect class="fil0 str0" x="233" y="256" width="45.5995" height="198.015" id="id_124" style="stroke: rgb(255, 255, 255);"></rect>
+     <rect class="fil0 str0" x="329" y="191" width="45.5995" height="263.113" id="id_125" style="stroke: rgb(255, 255, 255);"></rect>
+     <rect class="fil0 str0" x="424" y="85" width="45.5995" height="369.16" id="id_126" style="stroke: rgb(255, 255, 255);"></rect>
+    </g>
+    <polyline class="fil0 str0" points="452,32 424,32 374,138 329,138 279,203 233,203 182,263 138,263 88,235 42,235 " id="id_127" style="stroke: rgb(255, 255, 255);"></polyline>
+    <polygon class="fil0 str0" points="485,32 452,57 452,7 " id="id_128" style="stroke: rgb(255, 255, 255);"></polygon>
+   </g>
+   <polygon class="fil0 str0" points="127,7 243,178 12,178 " id="id_129" style="stroke: rgb(255, 255, 255);"></polygon>
+   <g>
+    <circle class="fil0 str0" cx="127" cy="144" r="11" id="id_130" style="stroke: rgb(255, 255, 255);"></circle>
+    <line class="fil0 str0" x1="127" y1="50" x2="127" y2="112" id="id_131" style="stroke: rgb(255, 255, 255);"></line>
+   </g>
+  </g>
+ </g>
+</svg>
