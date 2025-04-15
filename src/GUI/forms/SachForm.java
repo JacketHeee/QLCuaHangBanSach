@@ -116,7 +116,11 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
 
         ButtonAction but;
         for (String[] x : getActionTop()) {
-            but = new ButtonAction(x[0],x[1],x[2]);
+            Runnable callback = null;
+            if (x[2].equals("importExcel")) {
+                callback = () -> updateTable(sachBUS.getAll());
+            }
+            but = new ButtonAction(x[0], x[1], x[2], callback);
             panel.add(but);
             but.setActionCommand(but.getId());
             but.addActionListener(this);

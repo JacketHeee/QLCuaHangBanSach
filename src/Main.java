@@ -17,5 +17,5 @@ public class Main {
 		FlatIntelliJLaf.setup();
 		// FlatMacDarkLaf.setup();
 		java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
-	}
+	}	
 }
