@@ -85,6 +85,7 @@ public class InputFormItem extends JPanel{
     }
 
     public void setCombobox(){
+        this.combobox.setEditable(false);
         this.add(label, "grow");
         this.add(combobox, "grow");
     }
@@ -253,5 +254,23 @@ public class InputFormItem extends JPanel{
                 .toLocalDateTime();
         return(ldt);
     }
+
+    public JTextField getTextField() {
+        return textField;
+    }
+
+    public void setTextField(JTextField textField) {
+        this.textField = textField;
+    }
+
+    public JComboBox<String> getCombobox() {
+        return combobox;
+    }
+
+    public void setCombobox(JComboBox<String> combobox) {
+        this.combobox = combobox;
+    }
+
+    
 
 }

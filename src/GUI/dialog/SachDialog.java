@@ -118,6 +118,21 @@ public class SachDialog extends JDialog implements ActionListener{
             //set dữ liệu cũ
             setOldData();
         }
+        else if(type.equals("detail")){
+            CustomButton btnHuy = new CustomButton("Thoát");
+            btnHuy.setActionCommand("exit");
+            btnHuy.addActionListener(this);
+            JPanel panel = new JPanel();
+            panel.setLayout(new MigLayout("wrap 2"));
+            panel.setBackground(Color.decode("#FFFFFF"));
+            panel.add(btnHuy);
+            this.add(new JPanel(), "push y");
+            this.add(panel, "right, gap right 10");
+
+            //set dữ liệu cũ
+            setOldData();
+            setInputForDetail();
+        }
     }
 
     public void setOldData(){
@@ -201,6 +216,14 @@ public class SachDialog extends JDialog implements ActionListener{
             this.dispose();
         }
 
+    }
+
+    public void setInputForDetail(){
+        inputForm.getListItem().get(0).getTextField().setEditable(false);
+        inputForm.getListItem().get(1).getTextField().setEditable(false);
+        inputForm.getListItem().get(2).getTextField().setEditable(false);
+        inputForm.getListItem().get(3).getCombobox().setEnabled(false);
+        inputForm.getListItem().get(4).getCombobox().setEnabled(false);
     }
 
     public boolean validation(){

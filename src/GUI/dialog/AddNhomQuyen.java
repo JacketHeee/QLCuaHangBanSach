@@ -83,6 +83,12 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
             this.oldList = getOldListUpdate();
             setListenerCheckBox();
         }
+        else if(type.equals("detail")){
+            panel.add(getInforPanel(),"pushx, growx,wrap");
+            panel.add(getActionChooser(),"push,grow");
+            setOldData();
+            setCheckBoxForDetail();
+        }
 
         add(panel);
 
@@ -145,6 +151,10 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
         fieldNameRole = new JTextField();
         if(type.equals("update")){
             fieldNameRole.setText(phanQuyenForm.getTable().getCellData(rowSelected, 1));
+        }
+        else if(type.equals("detail")){
+            fieldNameRole.setText(phanQuyenForm.getTable().getCellData(rowSelected, 1));
+            fieldNameRole.setEditable(false);
         }
         panel.add(fieldNameRole,"pushx, grow");        
         return panel;
@@ -229,6 +239,12 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
             panelbtn.add(btnHuy);
             panelbtn.add(btnSua);
             btnSua.addActionListener(this);
+            btnHuy.addActionListener(this);
+        }
+        else if(type.equals("detail")){
+            CustomButton btnHuy = new CustomButton("Thoát");    
+            btnHuy.setActionCommand("exit");
+            panelbtn.add(btnHuy);
             btnHuy.addActionListener(this);
         }
 
@@ -572,6 +588,14 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
                     listCheckBox.get(i).get(j).setSelected(false);
                 }
                 break;
+            }
+        }
+    }
+
+    public void setCheckBoxForDetail(){
+        for(int i = 0; i < listCheckBox.size(); i++){
+            for(int j = 0; j < listCheckBox.get(i).size(); j++){
+                listCheckBox.get(i).get(j).setEnabled(false);
             }
         }
     }

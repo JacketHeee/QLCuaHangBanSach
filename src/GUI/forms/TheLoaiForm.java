@@ -110,7 +110,7 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
 
     String[][] bottomActions = {
         {"edit.svg","edit"},
-        {"detail.svg","detail"},
+        {"detail.svg","detail"},    //Có không ???
         {"remove.svg","remove"}
     };
     private CustomTable table;

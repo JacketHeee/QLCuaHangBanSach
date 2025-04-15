@@ -228,6 +228,10 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                     }
                 }
                 break;
+            case "detail":
+                SachDialog sachDialogd = new SachDialog(this, "Sách", "Chi Tiết Sách", "detail", attributes, row);
+                sachDialogd.setVisible(true);
+                break;
             default:
                 System.out.println("Unknown action: " + actionId);
                 break;

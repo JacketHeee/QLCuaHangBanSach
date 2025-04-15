@@ -54,6 +54,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
     private ArrayList<String> listAction;
     private TaiKhoanDTO taiKhoan;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private ArrayList<String[]> listItemForSearch = new ArrayList<>();
 
     private String[][] attributes = {
         {"textbox","Tên khách hàng"},
@@ -89,7 +90,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
         return panel;
     }
 
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
+    String[] foods = {"Tất cả","Mã","Tên","Số điện thoại"};
 
 
     ///////////////////////////////////////////////////////////////
@@ -234,6 +235,13 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
                 System.out.print(y);
             System.out.println();
         }
+    }
+
+    public void getListItemForSearch(){
+        listItemForSearch.add(new String[] {"Tất cả","all"});
+        listItemForSearch.add(new String[] {"Mã","maKH"});
+        listItemForSearch.add(new String[] {"Tên","tenKH"});
+        listItemForSearch.add(new String[] {"Số điện thoại","maKH"});
     }
 
     public KhachHangBUS getKhachHangBUS() {

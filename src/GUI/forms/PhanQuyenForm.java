@@ -273,6 +273,11 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                     }
                 }
                 break;
+            case "detail":
+                mainFrame.glassPane.setVisible(true);
+                new AddNhomQuyen(mainFrame,this, "Chi tiết nhóm quyền", "detail", row);
+                mainFrame.glassPane.setVisible(false);
+                break;
             default:
                 System.out.println("Unknown action: " + actionId);
                 break;
