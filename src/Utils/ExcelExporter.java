@@ -14,7 +14,7 @@ public class ExcelExporter {
             Sheet sheet = workbook.createSheet("Danh sách sách");
 
             // Tạo header
-            String[] headers = {"Mã sách", "Tên sách", "Số lượng", "Giá bán", "Giá nhập", "Năm XB", "Mã vùng", "Mã NXB"};
+            String[] headers = {"Mã sách", "Tên sách", "Số lượng", "Giá bán", "Năm XB", "Mã vùng", "Mã NXB"};
             Row headerRow = sheet.createRow(0);
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);

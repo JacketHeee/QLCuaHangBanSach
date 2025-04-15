@@ -26,10 +26,10 @@ public class ExcelImporter {
 
                 SachDTO sach = new SachDTO();
                 sach.setTenSach(row.getCell(0).getStringCellValue());
-                sach.setNamXB((int) row.getCell(1).getNumericCellValue());
-                sach.setMaVung((int) row.getCell(2).getNumericCellValue());
-                sach.setMaNXB((int) row.getCell(3).getNumericCellValue());
-                sach.setSoLuong((int) row.getCell(4).getNumericCellValue());
+                sach.setGiaBan(BigDecimal.valueOf(row.getCell(1).getNumericCellValue()));
+                sach.setNamXB((int) row.getCell(2).getNumericCellValue());
+                sach.setMaVung((int) row.getCell(3).getNumericCellValue());
+                sach.setMaNXB((int) row.getCell(4).getNumericCellValue());
 
                 list.add(sach);
             }
@@ -41,15 +41,15 @@ public class ExcelImporter {
         }
     }
 
-    // public static ArrayList<SachDTO> importExcelSach(String filePath) {
-    //     try {
-    //         FileInputStream fis = new FileInputStream(filePath);
-    //         ArrayList<SachDTO> list = excelToSachs(fis);
-    //         fis.close();
-    //         return list;
-    //     } catch (IOException e) {
-    //         throw new RuntimeException("Lỗi đọc file: " + e.getMessage());
-    //     }
-    // }
+    public static ArrayList<SachDTO> importExcelSach(String filePath) {
+        try {
+            FileInputStream fis = new FileInputStream(filePath);
+            ArrayList<SachDTO> list = excelToSachs(fis);
+            fis.close();
+            return list;
+        } catch (IOException e) {
+            throw new RuntimeException("Lỗi đọc file: " + e.getMessage());
+        }
+    }
     
 }

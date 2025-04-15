@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.formdev.flatlaf.FlatClientProperties;
@@ -89,8 +90,13 @@ public class ButtonAction extends JButton {
                         ExcelImporter excelImporter = new ExcelImporter ();
                         SachBUS sachBUS = SachBUS.getInstance();
                         List<SachDTO> danhSachSach = excelImporter.importExcelSach(filePath);
+                        // for(SachDTO i : danhSachSach){
+                        //     System.out.println(i.getMaVung() + i.getMaNXB());
+                        // }
                         for(SachDTO sach : danhSachSach) {
-                            sachBUS.insert(sach);
+                            if(sachBUS.insert(sach) == 0){
+                                System.out.println("Thêm thất bại");
+                            }
                         }
                         if (reloadCallback != null) {
                             reloadCallback.run();
