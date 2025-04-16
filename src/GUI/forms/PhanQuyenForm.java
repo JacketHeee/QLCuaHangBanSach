@@ -58,6 +58,10 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private ArrayList<String> listAction;
     private ArrayList<NhomQuyenDTO> listKH; 
 
+    private String[] header = {"Mã quyền","Tên nhóm quyền"};
+
+    private String[] filter = {"Tất cả","Mã quyền","Tên nhóm quyền"};
+
 
     public PhanQuyenForm(MainFrame mainframe, String title) {
         this.mainFrame = mainframe;
@@ -96,12 +100,10 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(foods, new PhanQuyenSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(filter, new PhanQuyenSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
 
     ///////////////////////////////////////////////////////////////
@@ -160,7 +162,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(dataToShow,getActionBottom(), "Mã quyền","Tên nhóm quyền");
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;

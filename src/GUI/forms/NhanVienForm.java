@@ -60,6 +60,7 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
         {"combobox", "Giới tính"},
         {"textbox", "Số điện thoại"}
     };
+    private String[] filter = {"Tất cả", "Mã nhân viên","Họ tên","Ngày sinh","Giới tính","Số điện thoại","Mã tài khoản"};
 
 
     public NhanVienForm(String title, MainFrame mainFrame) {
@@ -97,12 +98,10 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhanVienDTO> searchBarPanel = new SearchBarPanel<>(foods, new NhanVienSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhanVienDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhanVienSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

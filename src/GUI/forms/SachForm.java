@@ -54,6 +54,8 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         //Khóa ngoại nhiều-nhiều
     };
 
+    private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Giá bán","Năm xuất bản"};
+
 
     public SachForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -91,12 +93,10 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(foods, new SachSearch(listKH), this::updateTable, null);
+        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(filter, new SachSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

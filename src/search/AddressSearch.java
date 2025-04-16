@@ -1,28 +1,31 @@
-package search;
+// package search;
 
-import java.util.ArrayList;
+// import java.util.ArrayList;
 
-import interfaces.Searchable;
-import utils.TextUtils;
+// import javax.swing.JComboBox;
 
-public class AddressSearch implements Searchable<String> {
+// import interfaces.Searchable;
+// import utils.TextUtils;
 
-    private ArrayList<String> danhSach;
+// public class AddressSearch implements Searchable<String> {
 
-    public AddressSearch(ArrayList<String> danhSach) {
-        this.danhSach = danhSach;
-    }
+//     private ArrayList<String> danhSach;
 
-    @Override
-    public ArrayList<String> search(String keyword) {
-        String keywordFormatted = TextUtils.boDau(keyword)
-                                   .toLowerCase()
-                                   .trim()
-                                   .replaceAll("\\s+", " ");
+//     public AddressSearch(ArrayList<String> danhSach) {
+//         this.danhSach = danhSach;
+//     }
 
-        return new ArrayList<>(danhSach.stream()
-        .filter(x -> TextUtils.boDau(x).toLowerCase().contains(keywordFormatted))
-        .toList()
-        );
-    }
-}
+//     @Override
+//     public ArrayList<String> search(String keyword, JComboBox<String> comboBox) {
+//         String selectedItem = (String)comboBox.getSelectedItem(); 
+//         String keywordFormatted = TextUtils.boDau(keyword)
+//                                    .toLowerCase()
+//                                    .trim()
+//                                    .replaceAll("\\s+", " ");
+
+//         return new ArrayList<>(danhSach.stream()
+//         .filter(x -> TextUtils.boDau(x).toLowerCase().contains(keywordFormatted))
+//         .toList()
+//         );
+//     }
+// }

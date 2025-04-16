@@ -58,6 +58,8 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
         {"textbox","Tên thể loại"}
     };
 
+    private String[] filter = {"Tất cả", "Mã thể loại", "Tên thể loại"};
+
     public TheLoaiForm(String title, MainFrame mainFrame) {
         this.title = title;
         this.mainFrame = mainFrame;
@@ -94,12 +96,10 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TheLoaiDTO> searchBarPanel = new SearchBarPanel<>(foods, new TheLoaiSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TheLoaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new TheLoaiSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

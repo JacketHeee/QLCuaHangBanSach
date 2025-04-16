@@ -56,6 +56,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private String[][] attributes = {
         {"textbox","Tên vùng"}
     };
+    private String[] filter = {"Tất cả","Mã vùng", "Tên vùng"};
 
     public VungKeForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -93,12 +94,10 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<ViTriVungDTO> searchBarPanel = new SearchBarPanel<>(foods, new VungKeSearch(listKH), this::updateTable, null);
+        SearchBarPanel<ViTriVungDTO> searchBarPanel = new SearchBarPanel<>(filter, new VungKeSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

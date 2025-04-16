@@ -60,6 +60,8 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
         {"textbox","Tên tác giả"}
     };
 
+    private String[] filter = {"Tất cả", "Mã tác giả", "Tên tác giả"};
+
     public TacGiaForm(String title, MainFrame mainFrame) {
         this.title = title;
         this.mainFrame = mainFrame;
@@ -95,12 +97,10 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TacGiaDTO> searchBarPanel = new SearchBarPanel<>(foods, new TacGiaSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TacGiaDTO> searchBarPanel = new SearchBarPanel<>(filter, new TacGiaSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

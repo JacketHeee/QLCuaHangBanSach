@@ -58,6 +58,8 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     private CustomTable table;
     private NhomQuyenBUS nhomQuyenBUS;
 
+    private String[] filter = {"Mã tài khoản","Username","Password","Quyền"};
+
 
     private String[][] attributes = {
         {"textbox","Tên đăng nhập"},
@@ -102,12 +104,10 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TaiKhoanDTO> searchBarPanel = new SearchBarPanel<>(foods, new TaiKhoanSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TaiKhoanDTO> searchBarPanel = new SearchBarPanel<>(filter, new TaiKhoanSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
 

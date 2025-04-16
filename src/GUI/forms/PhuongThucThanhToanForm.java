@@ -51,6 +51,7 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     private String[][] attributes = {
         {"textbox","Tên phương thức thanh toán"}
     };
+    private String[] filter = {"Tất cả","Mã phương thức", "Tên phương thức thanh toán"};
 
 
     public PhuongThucThanhToanForm(String title, MainFrame mainFrame) {
@@ -88,12 +89,10 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<PhuongThucTTDTO> searchBarPanel = new SearchBarPanel<>(foods, new PTTTSearch(listKH), this::updateTable, null);
+        SearchBarPanel<PhuongThucTTDTO> searchBarPanel = new SearchBarPanel<>(filter, new PTTTSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

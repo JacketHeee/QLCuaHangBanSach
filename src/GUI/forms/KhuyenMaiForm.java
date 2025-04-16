@@ -48,6 +48,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private ArrayList<KhuyenMaiDTO> listKH;
     private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
+    private String[] filter = {"Tất cả","Mã khuyến mãi","Tên khuyến mãi","Điều kiện giảm","Giá trị giảm", "Ngày bắt đầu", "Ngày kết thúc"};
 
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
@@ -95,12 +96,11 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<KhuyenMaiDTO> searchBarPanel = new SearchBarPanel<>(foods, new KhuyenMaiSearch(listKH), this::updateTable, null);
+        SearchBarPanel<KhuyenMaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new KhuyenMaiSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
 
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

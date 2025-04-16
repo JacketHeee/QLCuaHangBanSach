@@ -61,6 +61,8 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
         {"textbox", "Email"},
     };
 
+    private String[] filter = {"Tất cả","Mã nhà xuất bản","Tên nhà xuất bản","Địa chỉ","Số điện thoại","Email"};
+
     public NXBForm(String title, MainFrame mainFrame) {
         this.title = title;
         this.mainFrame = mainFrame;
@@ -96,12 +98,10 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhaXBDTO> searchBarPanel = new SearchBarPanel<>(foods, new NXBSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhaXBDTO> searchBarPanel = new SearchBarPanel<>(filter, new NXBSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

@@ -60,6 +60,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         {"combobox", "Mã nhà cung cáp"},    
         {"textbox", "Mã tài khoản"},    //tự get
     };
+    private String[] filter = {"Tất cả","Mã nhập","Ngày nhập","Tổng tiền","Mã nhà cung cấp","Mã tài khoản"};
 
     public QLPhieuNhapForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -96,12 +97,10 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<PhieuNhapDTO> searchBarPanel = new SearchBarPanel<>(foods, new QLPhieuNhapSearch(listKH), this::updateTable, null);
+        SearchBarPanel<PhieuNhapDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLPhieuNhapSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

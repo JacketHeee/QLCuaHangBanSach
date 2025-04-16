@@ -59,6 +59,7 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
         {"textbox", "Số điện thoại"},
         {"textbox", "Email"},
     };
+    private String[] filter = {"Tất cả", "Mã nhà cung cấp","Tên nhà cung cấp","Địa chỉ","Số điện thoại","Email"};
 
 
     public NhaCungCapForm(String title, MainFrame mainFrame) {
@@ -96,12 +97,10 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhaCungCapDTO> searchBarPanel = new SearchBarPanel<>(foods, new NhaCungCapSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhaCungCapDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhaCungCapSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {

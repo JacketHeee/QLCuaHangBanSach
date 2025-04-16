@@ -44,6 +44,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
 
+
     public TaoHoaDonForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();

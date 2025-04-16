@@ -60,6 +60,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         {"combobox", "Mã khuyến mãi"},  //tự đặt là không có khuyến mãi
         {"droplist", "Khách hàng"}  //droplist
     };
+    private String[] filter =  {"Tất cả","Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
 
     public QLHoaDonForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -95,12 +96,10 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<HoaDonDTO> searchBarPanel = new SearchBarPanel<>(foods, new QLHoaDonSearch(listKH), this::updateTable, null);
+        SearchBarPanel<HoaDonDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLHoaDonSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     
     ///////////////////////////////////////////////////////////////
