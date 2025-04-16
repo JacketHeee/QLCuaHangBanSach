@@ -11,6 +11,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import BUS.ChiTietQuyenBUS;
 import BUS.PhuongThucTTBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.PhuongThucTTDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -89,7 +90,7 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<PhuongThucTTDTO> searchBarPanel = new SearchBarPanel<>(filter, new PTTTSearch(listKH), this::updateTable, null);
+        SearchBarPanel<PhuongThucTTDTO> searchBarPanel = new SearchBarPanel<>(filter, new PTTTSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -218,6 +219,11 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<PhuongThucTTDTO> list = phuongThucTTBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

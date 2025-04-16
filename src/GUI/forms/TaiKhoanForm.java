@@ -15,6 +15,7 @@ import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
 import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 
@@ -104,7 +105,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TaiKhoanDTO> searchBarPanel = new SearchBarPanel<>(filter, new TaiKhoanSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TaiKhoanDTO> searchBarPanel = new SearchBarPanel<>(filter, new TaiKhoanSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -249,6 +250,11 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<TaiKhoanDTO> list = taiKhoanBUS.getAll();
+        updateTable(list);
+    };
     public MainFrame getMainFrame() {
         return mainFrame;
     }

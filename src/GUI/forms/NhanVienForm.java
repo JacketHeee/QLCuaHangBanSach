@@ -12,6 +12,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhanVienBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.NhanVienDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -98,7 +99,7 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhanVienDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhanVienSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhanVienDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhanVienSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -237,6 +238,12 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<NhanVienDTO> list = nhanVienBUS.getAll();
+        updateTable(list);
+    };
+
     public NhanVienBUS getNhanVienBUS() {
         return nhanVienBUS;
     }

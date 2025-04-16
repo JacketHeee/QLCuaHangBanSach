@@ -13,6 +13,7 @@ import BUS.ChucNangBUS;
 import BUS.HoaDonBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.HoaDonDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
@@ -96,7 +97,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<HoaDonDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLHoaDonSearch(listKH), this::updateTable, null);
+        SearchBarPanel<HoaDonDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLHoaDonSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -200,6 +201,11 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<HoaDonDTO> list = hoaDonBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

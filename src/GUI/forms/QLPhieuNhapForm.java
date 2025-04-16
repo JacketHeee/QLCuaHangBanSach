@@ -12,6 +12,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.PhieuNhapBUS;
 import DTO.HoaDonDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -97,7 +98,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<PhieuNhapDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLPhieuNhapSearch(listKH), this::updateTable, null);
+        SearchBarPanel<PhieuNhapDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLPhieuNhapSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -204,6 +205,11 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<PhieuNhapDTO> list = phieuNhapBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

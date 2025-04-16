@@ -86,7 +86,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
         //combobox, đối tượng có hàm trả về arraylist<DTO>, call back, null
-        SearchBarPanel<KhachHangDTO> searchBarPanel = new SearchBarPanel<>(this.filter, new KhachHangSearch(listKH), this::updateTable, null);
+        SearchBarPanel<KhachHangDTO> searchBarPanel = new SearchBarPanel<>(this.filter, new KhachHangSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -231,12 +231,17 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
 
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
-        for (KhachHangDTO x: ketqua) {
-            for (String y : new String[]{x.getMaKH() + "",x.getTenKH(),x.getSoDT(),x.getGioiTinh()})
-                System.out.print(y);
-            System.out.println();
-        }
+        // for (KhachHangDTO x: ketqua) {
+        //     for (String y : new String[]{x.getMaKH() + "",x.getTenKH(),x.getSoDT(),x.getGioiTinh()}){}
+        //     //     System.out.print(y);
+        //     // System.out.println();
+        // }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<KhachHangDTO> list = khachHangBUS.getAll();
+        updateTable(list);
+    };
 
     public KhachHangBUS getKhachHangBUS() {
         return khachHangBUS;

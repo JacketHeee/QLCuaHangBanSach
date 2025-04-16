@@ -13,6 +13,7 @@ import BUS.ChucNangBUS;
 import BUS.ViTriVungBUS;
 import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 
@@ -94,7 +95,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<ViTriVungDTO> searchBarPanel = new SearchBarPanel<>(filter, new VungKeSearch(listKH), this::updateTable, null);
+        SearchBarPanel<ViTriVungDTO> searchBarPanel = new SearchBarPanel<>(filter, new VungKeSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -225,6 +226,11 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<ViTriVungDTO> list = viTriVungBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

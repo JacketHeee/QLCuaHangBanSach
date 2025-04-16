@@ -10,6 +10,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.SachBUS;
 import BUS.ViTriVungBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
 
@@ -93,7 +94,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(filter, new SachSearch(listKH), this::updateTable, null);
+        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(filter, new SachSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -241,6 +242,11 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<SachDTO> list = sachBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

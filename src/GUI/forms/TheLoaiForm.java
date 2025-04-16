@@ -13,6 +13,7 @@ import BUS.ChucNangBUS;
 import BUS.TheLoaiBUS;
 import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import DTO.TheLoaiDTO;
 import DTO.ViTriVungDTO;
@@ -96,7 +97,7 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TheLoaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new TheLoaiSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TheLoaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new TheLoaiSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -233,6 +234,11 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<TheLoaiDTO> list = theLoaiBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

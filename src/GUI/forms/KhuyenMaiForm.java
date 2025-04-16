@@ -11,6 +11,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import BUS.ChiTietQuyenBUS;
 import BUS.KhuyenMaiBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhachHangDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -96,7 +97,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<KhuyenMaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new KhuyenMaiSearch(listKH), this::updateTable, null);
+        SearchBarPanel<KhuyenMaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new KhuyenMaiSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -232,6 +233,11 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<KhuyenMaiDTO> list = khuyenMaiBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

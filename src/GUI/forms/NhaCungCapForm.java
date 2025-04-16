@@ -12,6 +12,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhaCungCapBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.NhaCungCapDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -97,7 +98,7 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhaCungCapDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhaCungCapSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhaCungCapDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhaCungCapSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -229,6 +230,11 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<NhaCungCapDTO> list = nhaCungCapBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

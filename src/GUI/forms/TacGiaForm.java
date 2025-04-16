@@ -16,6 +16,7 @@ import DTO.TacGiaDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.TacGiaDTO;
 import DTO.TaiKhoanDTO;
 
@@ -97,7 +98,7 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TacGiaDTO> searchBarPanel = new SearchBarPanel<>(filter, new TacGiaSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TacGiaDTO> searchBarPanel = new SearchBarPanel<>(filter, new TacGiaSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -227,6 +228,11 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<TacGiaDTO> list = tacGiaBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

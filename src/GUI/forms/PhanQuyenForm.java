@@ -16,6 +16,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhomQuyenBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 
@@ -100,7 +101,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(filter, new PhanQuyenSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(filter, new PhanQuyenSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -285,6 +286,11 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<NhomQuyenDTO> list = nhomQuyenBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;

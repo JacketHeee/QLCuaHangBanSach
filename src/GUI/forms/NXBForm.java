@@ -12,6 +12,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhaXBBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.NhaXBDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -98,7 +99,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhaXBDTO> searchBarPanel = new SearchBarPanel<>(filter, new NXBSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhaXBDTO> searchBarPanel = new SearchBarPanel<>(filter, new NXBSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -226,6 +227,11 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
                 break;
         }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<NhaXBDTO> list = nhaXBBUS.getAll();
+        updateTable(list);
+    };
 
     public MainFrame getMainFrame() {
         return mainFrame;
