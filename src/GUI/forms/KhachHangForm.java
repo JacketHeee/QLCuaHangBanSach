@@ -54,7 +54,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
     private ArrayList<String> listAction;
     private TaiKhoanDTO taiKhoan;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-    private ArrayList<String[]> listItemForSearch = new ArrayList<>();
+    private String[] filter = {"Tất cả","Mã khách hàng","Tên khách hàng","Số điện thoại","Giới tính"};
 
     private String[][] attributes = {
         {"textbox","Tên khách hàng"},
@@ -85,12 +85,13 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<KhachHangDTO> searchBarPanel = new SearchBarPanel<>(foods, new KhachHangSearch(listKH), this::updateTable, null);
+        //combobox, đối tượng có hàm trả về arraylist<DTO>, call back, null
+        SearchBarPanel<KhachHangDTO> searchBarPanel = new SearchBarPanel<>(this.filter, new KhachHangSearch(listKH), this::updateTable, null);
         panel.add(searchBarPanel);
         return panel;
     }
 
-    String[] foods = {"Tất cả","Mã","Tên","Số điện thoại"};
+    
 
 
     ///////////////////////////////////////////////////////////////
@@ -235,13 +236,6 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
                 System.out.print(y);
             System.out.println();
         }
-    }
-
-    public void getListItemForSearch(){
-        listItemForSearch.add(new String[] {"Tất cả","all"});
-        listItemForSearch.add(new String[] {"Mã","maKH"});
-        listItemForSearch.add(new String[] {"Tên","tenKH"});
-        listItemForSearch.add(new String[] {"Số điện thoại","maKH"});
     }
 
     public KhachHangBUS getKhachHangBUS() {

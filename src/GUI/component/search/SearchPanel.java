@@ -1,6 +1,7 @@
 package GUI.component.search;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -22,13 +23,14 @@ public class SearchPanel<T> extends JPanel {
     private JTextField inputSearch;
     private JButton butSearch;
     private Searchable<T> searchable;
-
+    private JComboBox<String> comboBox;
     //callback de dua ket qua ra ngoai
     private Consumer<ArrayList<T>> onResultReady;
     
-    public SearchPanel(Searchable<T> searchable, Consumer<ArrayList<T>> onResultReady) {
+    public SearchPanel(Searchable<T> searchable, Consumer<ArrayList<T>> onResultReady, JComboBox<String> comboBox) {
         this.searchable = searchable; 
         this.onResultReady = onResultReady;
+        this.comboBox = comboBox;
         init();
     }
 
@@ -54,7 +56,7 @@ public class SearchPanel<T> extends JPanel {
         // Gộp phần xử lý tìm kiếm vào một method để tái sử dụng
         Runnable doSearch = () -> {
             String keyword = inputSearch.getText();
-            ArrayList<T> result = searchable.search(keyword);
+            ArrayList<T> result = searchable.search(keyword, comboBox);
             onResultReady.accept(result);
         };
 

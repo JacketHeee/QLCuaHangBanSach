@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 public class SuggestSearchPanel<T> extends JPanel {
     private JTextField inputSearch;
     private JButton butSearch;
+    //interface xây dựng sẵn
     private Searchable<T> searchable;
     private Consumer<ArrayList<T>> onResultReady;
     private int maxSuggestions = 10; // mặc định 5

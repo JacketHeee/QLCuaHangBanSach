@@ -15,22 +15,24 @@ public class SearchBarPanel<T> extends JPanel {
     private JComboBox<String> comboBox;
     private SearchPanel<T> searchPanel;
     private JButton butRefresh;
+    private String[] listCBX;// Lưu cả tên và id
 
     public SearchBarPanel(
-        String[] comboItems,
+        String[] listCBX,
         Searchable<T> searchable,
         Consumer<ArrayList<T>> onResultReady,
         Runnable onRefreshClicked // Có thể truyền null nếu không cần xử lý
     ) {
         setLayout(new MigLayout("insets 0"));
+        this.listCBX = listCBX;
 
         // Combo box
-        comboBox = new JComboBox<>(comboItems);
+        comboBox = new JComboBox<>(listCBX);
         comboBox.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
         add(comboBox, "h 32");
 
         // Search panel
-        searchPanel = new SearchPanel<>(searchable, onResultReady);
+        searchPanel = new SearchPanel<>(searchable, onResultReady, comboBox);
         add(searchPanel, "gapleft 5");
 
         // Refresh button
