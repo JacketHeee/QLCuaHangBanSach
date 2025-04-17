@@ -9,7 +9,7 @@ import interfaces.Searchable;
 import utils.TextUtils;
 
 public class SachSearch implements Searchable<SachDTO>{
-    // private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá bán","Năm xuất bản"};
+    // private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Năm xuất bản"};
     private ArrayList<SachDTO> danhSach;
 
     public SachSearch(ArrayList<SachDTO> danhSach) {
@@ -30,7 +30,6 @@ public class SachSearch implements Searchable<SachDTO>{
                 TextUtils.boDau(x.getMaSach() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getTenSach()).toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getSoLuong() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getGiaBan() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getNamXB() + "").toLowerCase().contains(keywordFormatted)
             )
             .toList()
@@ -56,14 +55,6 @@ public class SachSearch implements Searchable<SachDTO>{
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getSoLuong() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Giá bán")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getGiaBan() + "").toLowerCase().contains(keywordFormatted)
             )
             .toList()
             );

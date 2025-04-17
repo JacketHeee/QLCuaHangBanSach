@@ -61,7 +61,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         {"combobox", "Mã nhà cung cáp"},    
         {"textbox", "Mã tài khoản"},    //tự get
     };
-    private String[] filter = {"Tất cả","Mã nhập","Ngày nhập","Tổng tiền","Mã nhà cung cấp","Mã tài khoản"};
+    private String[] filter = {"Tất cả","Mã nhập","Ngày nhập","Mã nhà cung cấp","Mã tài khoản"};
 
     public QLPhieuNhapForm(String title, MainFrame mainFrame) {
         this.title = title;

@@ -9,7 +9,7 @@ import interfaces.Searchable;
 import utils.TextUtils;
 
 public class QLHoaDonSearch implements Searchable<HoaDonDTO>{
-    // private String[] header = {"Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
+    // private String[] header = {"Mã hóa đơn", "Ngày lập", " ", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
     private ArrayList<HoaDonDTO> danhSach;
 
     public QLHoaDonSearch(ArrayList<HoaDonDTO> danhSach) {
@@ -29,7 +29,6 @@ public class QLHoaDonSearch implements Searchable<HoaDonDTO>{
             .filter(x -> 
                 TextUtils.boDau(x.getMaHD() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getNgayBan() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTongTien() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getMaPT() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getMaKM() + "").toLowerCase().contains(keywordFormatted)
@@ -50,14 +49,6 @@ public class QLHoaDonSearch implements Searchable<HoaDonDTO>{
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getNgayBan() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Tổng tiền")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getTongTien() + "").toLowerCase().contains(keywordFormatted)
             )
             .toList()
             );

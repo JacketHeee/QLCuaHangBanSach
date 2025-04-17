@@ -30,7 +30,6 @@ public class NhanVienSearch implements Searchable<NhanVienDTO>{
                 TextUtils.boDau(x.getMaNV() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getHoTen()).toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getNgaySinh() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getGioiTinh() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getSoDT()).toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
             )

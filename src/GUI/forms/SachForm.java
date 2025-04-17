@@ -57,7 +57,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         {"inputKNNN", "Tác giả"}
     };
 
-    private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Giá bán","Năm xuất bản"};
+    private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Năm xuất bản"};
 
 
     public SachForm(String title, MainFrame mainFrame) {

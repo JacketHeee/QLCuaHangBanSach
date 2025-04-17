@@ -61,7 +61,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         {"combobox", "Mã khuyến mãi"},  //tự đặt là không có khuyến mãi
         {"droplist", "Khách hàng"}  //droplist
     };
-    private String[] filter =  {"Tất cả","Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
+    private String[] filter =  {"Tất cả","Mã hóa đơn", "Ngày lập", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
 
     public QLHoaDonForm(String title, MainFrame mainFrame) {
         this.title = title;
