@@ -165,6 +165,13 @@ public class DoanhThuForm extends JPanel {
         table.addDataRow(new String[] {"123","1239827"});
         table.addDataRow(new String[] {"123","1239827"});
         table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
+        table.addDataRow(new String[] {"123","1239827"});
         panel.add(table,"push,grow");
         return panel;
     }

@@ -22,6 +22,12 @@ public class InvoiceTable extends CustomTable {
         // layout.setLayoutConstraints(layout.getLayoutConstraints()+",gap 2");
     }
 
+    @Override
+    public void setDataPanelPre() {
+        dataPanel.setPreferredSize(null);
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+    }
+
     public JPanel createDataInput(String text, int row, int columnIndex) { // Thêm tham số columnIndex
         // Chuẩn hóa text khi null
         String displayText = (text == null) ? "" : text;

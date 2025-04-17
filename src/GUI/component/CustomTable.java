@@ -64,7 +64,7 @@ public class CustomTable extends JPanel implements ActionListener {
 
         // Tạo dataPanel với constraints ngay từ đầu
         dataPanel = new JPanel();
-        migLayout = new MigLayout("insets 0, fillx, gap 0", getColumnConstraints(), getRowConstraints());
+        migLayout = new MigLayout("insets 0 0 20 0, fillx, gap 0", getColumnConstraints(), getRowConstraints());
         dataPanel.setLayout(migLayout);
 
         // Thêm dữ liệu ban đầu
@@ -73,17 +73,23 @@ public class CustomTable extends JPanel implements ActionListener {
         }
 
         // Đặt PreferredSize cho dataPanel
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
-
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        setDataPanelPre();
         // Tạo JScrollPane
         
         
         // Thêm vào CustomTable
-        add(headerPanel, BorderLayout.NORTH);
+        add(headerPanel, BorderLayout.NORTH);   
         addScollPane();
 
         // Đặt kích thước mặc định cho CustomTable
-        setMinimumSize(new Dimension(400, 200));
+        // setMinimumSize(new Dimension(400, 100));
+        // setPreferredSize(null);
+    }
+
+    public void setDataPanelPre() {
+        // dataPanel.setPreferredSize(null);
+        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
     }
 
     public void setActionListener(TableActionListener listener) {
@@ -144,34 +150,6 @@ public class CustomTable extends JPanel implements ActionListener {
         return label;
     }
 
-    
-    // public void removeRow(int row) {
-    //     if (!rowLabels.containsKey(row)) return;
-        
-    //     for (Component comp : rowLabels.get(row)) {
-    //         dataPanel.remove(comp);
-    //     }
-    //     rowLabels.remove(row);
-        
-    //     Map<Integer, List<Component>> updatedRowLabels = new HashMap<>();
-    //     int newRowIndex = 1;
-    //     for (int key : rowLabels.keySet()) {
-    //         if (key != row) {
-    //             updatedRowLabels.put(newRowIndex, rowLabels.get(key));
-    //             newRowIndex++;
-    //         }
-    //     }
-
-    //     rowLabels.clear();
-    //     rowLabels.putAll(updatedRowLabels);
-    //     updateRowColors();
-    //     updateRowConstraints();
-    //     dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
-    //     dataPanel.revalidate();
-    //     dataPanel.repaint();
-    //     repaint();
-    //     revalidate();
-    // }
 
     public void removeRow(int row) {
         if (!rowLabels.containsKey(row)) return;

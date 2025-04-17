@@ -38,7 +38,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private String[] listNcc; 
     private CustomButton buttonSave;
     private CustomButton buttonCancel;
-    private InvoiceTable table;
+    private CustomTable table;
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
@@ -59,12 +59,11 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
         add(new JLabel("<html><b><font size='+2'>TẠO HÓA ĐƠN MỚI</font></b><html>"),"gaptop 20, al center,pushx");
         add(getThongtin(),"pushx, growx");
-        add(getChiTietPhieuNhap(),"pushx, growx");
+        add(getChiTietPhieuNhap(),"push, grow");
         add(panelKhuyenMai(),"pushx, growx");
         add(panelPTTT(),"pushx, growx");
         add(panelThongTinThanhToan(),"pushx, growx");
         add(getPanelAction(),"pushx, growx");
-        
     }
 
     public ArrayList<String> getListAction(){
@@ -108,10 +107,10 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         JPanel panel = getPanel("Chi tiết hóa đơn");
         panel.setLayout(new MigLayout());
         table = new InvoiceTable(null, actions, "Mã sách","Tên sách","Số lượng","Giá bán(đ)","Thành tiền(đ)");
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
         panel.add(panelActionOnTable(),"pushx,growx,wrap");
@@ -122,6 +121,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
     private ButtonAction butAddData;
     private ButtonAction butImportData;
+
     private JPanel panelActionOnTable() {
         JPanel panel = new JPanel(new MigLayout("al left"));
         butAddData = new ButtonAction("Thêm", "add.svg", "add");

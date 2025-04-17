@@ -21,6 +21,7 @@ import DTO.TaiKhoanDTO;
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomButton;
+import GUI.component.CustomTable;
 import GUI.component.InvoiceTable;
 import GUI.component.TableActionListener;
 
@@ -35,7 +36,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private String[] listNcc; 
     private CustomButton buttonSave;
     private CustomButton buttonCancel;
-    private InvoiceTable table;
+    private CustomTable table;
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
@@ -104,10 +105,10 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         JPanel panel = getPanel("Chi tiết phiếu nhập");
         panel.setLayout(new MigLayout());
         table = new InvoiceTable(null, actions, "Mã sách","Tên sách","Số lượng","Giá nhập","Thành tiền");
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
         panel.add(panelActionOnTable(),"pushx,growx");

@@ -12,6 +12,8 @@ import GUI.forms.SachForm;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.Cursor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.function.Consumer;
 
 import java.util.ArrayList;
@@ -64,6 +66,13 @@ public class SearchPanel<T> extends JPanel {
         // Sự kiện khi nhấn ENTER trong ô input
         inputSearch.addActionListener(e -> doSearch.run());
 
+        inputSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                doSearch.run();
+            }
+        });
+
         add(butSearch);
     }
 
@@ -78,5 +87,4 @@ public class SearchPanel<T> extends JPanel {
         repaint();
         revalidate();
     }
-
 }

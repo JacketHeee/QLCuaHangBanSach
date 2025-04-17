@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.ScrollPane;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -216,7 +217,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 					mainFrame.setPanel(new PhanQuyenForm(mainFrame,but.getText(),arrCNForNhomQuyen));
 					break;
 				case "createInput":
-					mainFrame.setPanel(new TaoPhieuNhapForm(mainFrame));
+					mainFrame.setPanel(new CustomScrollPane(new TaoPhieuNhapForm(mainFrame)));
 					break;
 				case "createBill":
 					mainFrame.setPanel(new CustomScrollPane(new TaoHoaDonForm(mainFrame)));
