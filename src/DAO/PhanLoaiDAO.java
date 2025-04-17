@@ -20,12 +20,29 @@ public class PhanLoaiDAO implements DAOInterface<PhanLoaiDTO> {
     
     @Override
     public int insert(PhanLoaiDTO phanLoai) {
-        return 0;
+        int rowInserted = 0;
+        String sql = "INSERT INTO PHANLOAI (maSach, maTheLoai) VALUES (?, ?)";
+            
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowInserted = jdbcUtil.executeUpdate(sql, phanLoai.getMaSach(), phanLoai.getMaTheLoai());
+        jdbcUtil.Close();
+        return rowInserted;
     }
 
     @Override
     public int delete(int id) {
         return 0;
+    }
+
+    public int delete(int maSach, int maTL){
+        int rowDeleted = 0;
+        String query = "UPDATE PHANLOAI SET TRANGTHAI = 0 WHERE maSach = ? AND maTheLoai = ?";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowDeleted = jdbcUtil.executeUpdate(query, maSach, maTL);
+        jdbcUtil.Close();
+        return rowDeleted;
     }
 
     @Override
@@ -55,5 +72,30 @@ public class PhanLoaiDAO implements DAOInterface<PhanLoaiDTO> {
         }
         jdbcUtil.Close();
         return result;
+    }
+
+    public ArrayList<Integer> getAllMaTheLoaiByMaSach(int maSach){
+        ArrayList<Integer> result = new ArrayList<>();
+        String sql = "SELECT maTheLoai FROM PHANLOAI WHERE maSach = ?";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maSach);
+        try {
+            while (rs.next()) {
+                int maTheloai = rs.getInt("maTheLoai");
+                result.add(maTheloai);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(new PhanLoaiDAO().delete(1, 5));
     }
 }

@@ -9,7 +9,7 @@ public class DanhMuc_TGDTO {
     }
 
     // Constructor đầy đủ tham số
-    public DanhMuc_TGDTO(int maTacGia, int maSach) {
+    public DanhMuc_TGDTO(int maSach, int maTacGia) {
         this.maTacGia = maTacGia;
         this.maSach = maSach;
     }

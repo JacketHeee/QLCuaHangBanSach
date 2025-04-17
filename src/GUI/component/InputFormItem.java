@@ -35,6 +35,8 @@ public class InputFormItem extends JPanel{
     private JSpinner timeSpinner;
     private JTextField textDC;
     private CustomButton btnDC;
+    private JTextField textKNNN;
+    private CustomButton btnKNNN;
 
     public InputFormItem(String type, String title){
         this.label = new JLabel(title);
@@ -74,6 +76,11 @@ public class InputFormItem extends JPanel{
                 this.btnDC = new CustomButton("Tạo");
                 setinputDC();
                 break;
+            case "inputKNNN":
+                this.textKNNN = new JTextField();
+                this.btnKNNN = new CustomButton("Tạo");
+                setinputKNNN();
+                break;    
             default:
                 break;
         }
@@ -110,10 +117,21 @@ public class InputFormItem extends JPanel{
 
     public void setinputDC(){
         this.add(label, "grow");
+        textDC.setEditable(false);
         JPanel panel = new JPanel(new MigLayout("wrap 2, insets 0", "[grow][]"));
         panel.putClientProperty(FlatClientProperties.STYLE, "background:#FFFFFF");
         panel.add(textDC, "grow, gapright 5");
         panel.add(btnDC, "grow");
+        this.add(panel, "grow");
+    }
+
+    public void setinputKNNN(){
+        this.add(label, "grow");
+        textKNNN.setEditable(false);
+        JPanel panel = new JPanel(new MigLayout("wrap 2, insets 0", "[grow][]"));
+        panel.putClientProperty(FlatClientProperties.STYLE, "background:#FFFFFF");
+        panel.add(textKNNN, "grow, gapright 5");
+        panel.add(btnKNNN, "grow");
         this.add(panel, "grow");
     }
 
@@ -253,6 +271,22 @@ public class InputFormItem extends JPanel{
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
         return(ldt);
+    }
+
+    public void setTextKNNN(String text){
+        this.textKNNN.setText(text);
+    }
+
+    public String getTextKNNN(){
+        return(this.textKNNN.getText());
+    }
+
+    public CustomButton getBtnKNNN() {
+        return btnKNNN;
+    }
+
+    public void setBtnKNNN(CustomButton btnKNNN) {
+        this.btnKNNN = btnKNNN;
     }
 
     public JTextField getTextField() {

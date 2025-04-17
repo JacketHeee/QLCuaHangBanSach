@@ -59,5 +59,16 @@ public class TheLoaiBUS {
 		}
 		return(-1);
 	}
-	
+
+	public ArrayList<String> getAllTenTheLoai(){
+		return(theLoaiDAO.getAllTenTheLoai());
+	}
+
+	public int getMaByTen(String ten){
+		return(theLoaiDAO.getMaByTen(ten));
+	}
+
+	public String getTenByMa(int ma){
+		return(theLoaiDAO.getTenByMa(ma));
+	}
 }

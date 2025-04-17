@@ -20,12 +20,29 @@ public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO> {
     
     @Override
     public int insert(DanhMuc_TGDTO dmtg) {
-        return 0;
+        int rowInserted = 0;
+        String sql = "INSERT INTO DANHMUC_TG (maSach, maTacGia) VALUES (?, ?)";
+            
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowInserted = jdbcUtil.executeUpdate(sql, dmtg.getMaSach(), dmtg.getMaTacGia());
+        jdbcUtil.Close();
+        return rowInserted;
     }
 
     @Override
     public int delete(int id) {
         return 0;
+    }
+
+    public int delete(int maSach, int maTG){
+        int rowDeleted = 0;
+        String query = "UPDATE DANHMUC_TG SET TRANGTHAI = 0 WHERE maSach = ? AND maTacGia = ?";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowDeleted = jdbcUtil.executeUpdate(query, maSach, maTG);
+        jdbcUtil.Close();
+        return rowDeleted;
     }
 
     @Override
@@ -56,4 +73,25 @@ public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public ArrayList<Integer> getAllMaTacGiaByMaSach(int maSach){
+        ArrayList<Integer> result = new ArrayList<>();
+        String sql = "SELECT maTacGia FROM DANHMUC_TG WHERE maSach = ?";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maSach);
+        try {
+            while (rs.next()) {
+                int maTacGia = rs.getInt("maTacGia");
+                result.add(maTacGia);
+            }
+           
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
 }
