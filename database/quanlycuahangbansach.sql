@@ -4,7 +4,7 @@ USE quanlycuahangbansach;
 CREATE TABLE SACH(
 	maSach INT AUTO_INCREMENT PRIMARY KEY,
 	tenSach VARCHAR(255) NOT NULL,
-	soLuong INT NOT NULL,
+	soLuong INT DEFAULT 0 NOT NULL,
 	giaBan DECIMAL(10, 2) NOT NULL,
 	namXB INT NOT NULL,
 	maVung INT NOT NULL,
@@ -15,6 +15,7 @@ CREATE TABLE SACH(
 CREATE TABLE PHANLOAI(
 	maSach INT,
    maTheLoai INT,
+   trangThai TINYINT DEFAULT 1,
    PRIMARY KEY (maSach, maTheLoai) 
 );
 
@@ -39,7 +40,8 @@ CREATE TABLE TACGIA(
 CREATE TABLE DANHMUC_TG(
   maTacGia INT,
   maSach INT,
-  PRIMARY KEY (maTacGia, maSach)
+  trangThai TINYINT DEFAULT 1,
+  PRIMARY KEY (maTacGia, maSach, trangThai)
 );
 
 CREATE TABLE NHAXB (
@@ -83,8 +85,8 @@ CREATE TABLE HOADON (
   tongTien decimal(10, 2) NOT NULL,
   maTK INT NOT NULL,
   maPT INT NOT NULL,
-  maKM INT ,
-  maKH INT,
+  maKM INT DEFAULT NULL,
+  maKH INT DEFAULT NULL,
   trangThai TINYINT DEFAULT 1
 );
 
@@ -146,7 +148,8 @@ CREATE TABLE CHITIETQUYEN(
   maRole INT,
   maChucNang INT,
   hanhDong VARCHAR(255) NOT NULL,
-  PRIMARY KEY (maRole, maChucNang, hanhDong)
+  trangThai TINYINT DEFAULT 1,
+  PRIMARY KEY (maRole, maChucNang, hanhDong, trangThai)
 );
 
 CREATE TABLE CHUCNANG ( 
@@ -163,7 +166,6 @@ CREATE TABLE KHACHHANG (
   trangThai TINYINT DEFAULT 1
 );
 
--- CHATGPT hân hạnh tài trợ
 -- Dữ liệu cho bảng VITRIVUNG
 INSERT INTO VITRIVUNG (tenVung) VALUES
 ('Kệ A1'), ('Kệ B2'), ('Kệ C3'), ('Kệ D4'), ('Kệ E5');
@@ -261,108 +263,125 @@ INSERT INTO PHUONGTHUC_TT (tenPTTT) VALUES
 
 -- Dữ liệu cho bảng KHUYENMAI
 INSERT INTO KHUYENMAI (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc) VALUES
-('Giảm 10%', 'Hóa đơn > 500k', 50000, '2024-03-01', '2024-03-31'),
-('Giảm 5%', 'Hóa đơn > 300k', 25000, '2024-03-01', '2024-03-31');
+('Giảm 10%', 'Hóa đơn > 500k', 50000, '2024-03-01T00:00:00', '2024-03-31T00:00:00'),
+('Giảm 5%', 'Hóa đơn > 300k', 25000, '2024-03-01T00:00:00', '2024-03-31T00:00:00');
 
 -- Dữ liệu cho bảng KM_PHIENBANSACH
 INSERT INTO KM_PHIENBANSACH (maKM, maSach) VALUES
 (1, '1'), (1, '2'), (2, '3');
 
 -- Dữ liệu cho bảng CHUCNANG
+-- Fix cứng
 INSERT INTO CHUCNANG (tenChucNang) VALUES 
-('book'), 
-('category'),
-('author'),
-('nxb'),
-('vungtl'),
-('ncc'),
-('createInput'),
-('qlInput'),
-('createBill'),
-('qlBill'),
-('promotion'),
-('pttt'),
-('nv'),
-('taikhoan'),
-('khachhang'),
-('phanquyen'),
-('report');
+('book'), -- 1
+('category'), -- 2
+('author'), -- 3
+('nxb'), -- 4
+('vungtl'), -- 5
+('ncc'), -- 6
+('createInput'), -- 7
+('qlInput'), -- 8
+('createBill'), -- 9
+('qlBill'), -- 10
+('promotion'), -- 11
+('pttt'), -- 12
+('nv'), -- 13
+('taikhoan'), -- 14
+('khachhang'), -- 15
+('phanquyen'), -- 16
+('report'); -- 17
 
 -- Dữ liệu cho bảng CHITIETQUYEN
 INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
-(1, 1, 'Thêm'),
-(1, 1, 'Xóa'),
-(1, 1, 'Sửa'),
 (1, 1, 'Xem'),
-(1, 2, 'Thêm'),
-(1, 2, 'Xóa'),
-(1, 2, 'Sửa'),
+(1, 1, 'Thêm'),
+(1, 1, 'Sửa'),
+(1, 1, 'Xóa'),
+
 (1, 2, 'Xem'),
-(1, 3, 'Thêm'),
-(1, 3, 'Xóa'),
-(1, 3, 'Sửa'),
+(1, 2, 'Thêm'),
+(1, 2, 'Sửa'),
+(1, 2, 'Xóa'),
+
 (1, 3, 'Xem'),
-(1, 4, 'Thêm'),
-(1, 4, 'Xóa'),
-(1, 4, 'Sửa'),
+(1, 3, 'Thêm'),
+(1, 3, 'Sửa'),
+(1, 3, 'Xóa'),
+
 (1, 4, 'Xem'),
-(1, 5, 'Thêm'),
-(1, 5, 'Xóa'),
-(1, 5, 'Sửa'),
+(1, 4, 'Thêm'),
+(1, 4, 'Sửa'),
+(1, 4, 'Xóa'),
+
 (1, 5, 'Xem'),
-(1, 6, 'Thêm'),
-(1, 6, 'Xóa'),
-(1, 6, 'Sửa'),
+(1, 5, 'Thêm'),
+(1, 5, 'Sửa'),
+(1, 5, 'Xóa'),
+
 (1, 6, 'Xem'),
-(1, 7, 'Thêm'),
-(1, 7, 'Xóa'),
-(1, 7, 'Sửa'),
+(1, 6, 'Thêm'),
+(1, 6, 'Sửa'),
+(1, 6, 'Xóa'),
+
+
 (1, 7, 'Xem'),
-(1, 8, 'Thêm'),
+
 (1, 8, 'Xem'),
-(1, 9, 'Thêm'),
+(1, 8, 'Thêm'),
+
 (1, 9, 'Xem'),
-(1, 10, 'Thêm'),
+
 (1, 10, 'Xem'),
-(1, 11, 'Thêm'),
+(1, 10, 'Thêm'),
+
 (1, 11, 'Xem'),
-(1, 12, 'Thêm'),
-(1, 12, 'Xóa'),
-(1, 12, 'Sửa'),
+(1, 11, 'Thêm'),
+(1, 11, 'Sửa'),
+(1, 11, 'Xóa'),
+
 (1, 12, 'Xem'),
-(1, 13, 'Thêm'),
-(1, 13, 'Xóa'),
-(1, 13, 'Sửa'),
+(1, 12, 'Thêm'),
+(1, 12, 'Sửa'),
+(1, 12, 'Xóa'),
+
 (1, 13, 'Xem'),
-(1, 14, 'Thêm'),
-(1, 14, 'Xóa'),
-(1, 14, 'Sửa'),
+(1, 13, 'Thêm'),
+(1, 13, 'Sửa'),
+(1, 13, 'Xóa'),
+
 (1, 14, 'Xem'),
-(1, 15, 'Thêm'),
-(1, 15, 'Xóa'),
-(1, 15, 'Sửa'),
+(1, 14, 'Thêm'),
+(1, 14, 'Sửa'),
+(1, 14, 'Xóa'),
+
 (1, 15, 'Xem'),
-(1, 16, 'Thêm'),
-(1, 16, 'Xóa'),
-(1, 16, 'Sửa'),
+(1, 15, 'Thêm'),
+(1, 15, 'Sửa'),
+(1, 15, 'Xóa'),
+
 (1, 16, 'Xem'),
-(1, 17, 'Thêm'),
-(1, 17, 'Xóa'),
-(1, 17, 'Sửa'),
+(1, 16, 'Thêm'),
+(1, 16, 'Sửa'),
+(1, 16, 'Xóa'),
+
 (1, 17, 'Xem'),
 
-
-(2, 7, 'Thêm'),
 (2, 7, 'Xem'),
-(2, 8, 'Thêm'),
-(2, 8, 'Xem'),
-(2, 9, 'Thêm'),
-(2, 9, 'Xem'),
-(2, 10, 'Thêm'),
-(2, 10, 'Xem'),
 
-(3, 15, 'Sửa'),
-(3, 15, 'Xem');
+(2, 8, 'Xem'),
+(2, 8, 'Thêm'),
+
+(2, 9, 'Xem'),
+
+(2, 10, 'Xem'),
+(2, 10, 'Thêm'),
+
+(3, 10, 'Xem'),
+(3, 10, 'Thêm'),
+
+(3, 15, 'Xem'),
+(3, 15, 'Sửa');
+
 
 ALTER TABLE SACH
 ADD CONSTRAINT SACH_VITRIVUNG FOREIGN KEY (maVung) REFERENCES VITRIVUNG(maVung);
@@ -411,13 +430,5 @@ ADD CONSTRAINT NHANVIEN FOREIGN KEY (maTK) REFERENCES TAIKHOAN(maTK);
 ALTER TABLE KM_PHIENBANSACH
 ADD CONSTRAINT km1 FOREIGN KEY (maKM) REFERENCES KHUYENMAI(maKM),
 ADD CONSTRAINT km2 FOREIGN KEY (maSach) REFERENCES SACH(maSach);
-
-
-
-
-
-
-
-
 
 

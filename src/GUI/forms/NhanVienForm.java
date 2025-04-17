@@ -12,6 +12,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhanVienBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.NhanVienDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -31,6 +32,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.NhanVienSearch;
 import search.SachSearch;
+import utils.DateCalculator;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -59,6 +61,7 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
         {"combobox", "Giới tính"},
         {"textbox", "Số điện thoại"}
     };
+    private String[] filter = {"Tất cả", "Mã nhân viên","Họ tên","Ngày sinh","Giới tính","Số điện thoại","Mã tài khoản"};
 
 
     public NhanVienForm(String title, MainFrame mainFrame) {
@@ -96,12 +99,10 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhanVienDTO> searchBarPanel = new SearchBarPanel<>(foods, new NhanVienSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhanVienDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhanVienSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -153,7 +154,12 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
 
         ArrayList<String[]> data = new ArrayList<>();
         for(NhanVienDTO i : inputData){
-            data.add(new String[]{i.getMaNV() + "", i.getHoTen(), i.getNgaySinh() + "", i.getGioiTinh(), i.getSoDT(), i.getMaTK() + ""});
+            data.add(new String[]{i.getMaNV() + "", 
+            i.getHoTen(), 
+            new DateCalculator().formatDateToDateS(i.getNgaySinh()), 
+            i.getGioiTinh(), 
+            i.getSoDT(), 
+            i.getMaTK() + ""});
         }
         return(data);
     }
@@ -202,16 +208,23 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                NhanVienDialog nhanVienDialog = new NhanVienDialog(this, "Nhân viên", "Sửa Nhân Viên", "update", attributes, row);
+                nhanVienDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(nhanVienBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -225,6 +238,12 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<NhanVienDTO> list = nhanVienBUS.getAll();
+        updateTable(list);
+    };
+
     public NhanVienBUS getNhanVienBUS() {
         return nhanVienBUS;
     }

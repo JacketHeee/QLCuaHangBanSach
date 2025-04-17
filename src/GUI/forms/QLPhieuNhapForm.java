@@ -12,6 +12,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.PhieuNhapBUS;
 import DTO.HoaDonDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -56,6 +57,13 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"inputDate","Ngày nhập"},   //tự get
+        {"textbox", "Tổng tiền"},  
+        {"combobox", "Mã nhà cung cáp"},    
+        {"textbox", "Mã tài khoản"},    //tự get
+    };
+    private String[] filter = {"Tất cả","Mã nhập","Ngày nhập","Mã nhà cung cấp","Mã tài khoản"};
 
     public QLPhieuNhapForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -92,12 +100,10 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<PhieuNhapDTO> searchBarPanel = new SearchBarPanel<>(foods, new QLPhieuNhapSearch(listKH), this::updateTable, null);
+        SearchBarPanel<PhieuNhapDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLPhieuNhapSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -206,6 +212,19 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<PhieuNhapDTO> list = phieuNhapBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+    
     private void updateTable(ArrayList<PhieuNhapDTO> ketqua) {
 
         // System.out.println("con bo biet bay");

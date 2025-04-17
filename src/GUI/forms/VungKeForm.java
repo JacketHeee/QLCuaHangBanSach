@@ -13,6 +13,7 @@ import BUS.ChucNangBUS;
 import BUS.ViTriVungBUS;
 import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 
@@ -26,6 +27,7 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.sodoComponent;
+import GUI.dialog.ViTriVungDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -59,6 +61,10 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private CustomTable tableSanPham;
     private CustomTable table;
+    private String[][] attributes = {
+        {"textbox","Tên vùng"}
+    };
+    private String[] filter = {"Tất cả","Mã vùng", "Tên vùng"};
 
     public VungKeForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -96,12 +102,10 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<ViTriVungDTO> searchBarPanel = new SearchBarPanel<>(foods, new VungKeSearch(listKH), this::updateTable, null);
+        SearchBarPanel<ViTriVungDTO> searchBarPanel = new SearchBarPanel<>(filter, new VungKeSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -262,7 +266,8 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                ViTriVungDialog viTriVungDialog = new ViTriVungDialog(this, "Vị trí vùng", "Thêm Vùng", "add", attributes);
+                viTriVungDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -278,16 +283,22 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
-                break;
+                ViTriVungDialog viTriVungDialog = new ViTriVungDialog(this, "Vị trí vùng", "Sửa Vùng", "update", attributes, row);
+                viTriVungDialog.setVisible(true);
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(viTriVungBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -296,6 +307,37 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<ViTriVungDTO> list = viTriVungBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public ViTriVungBUS getViTriVungBUS() {
+        return viTriVungBUS;
+    }
+
+    public void setViTriVungBUS(ViTriVungBUS viTriVungBUS) {
+        this.viTriVungBUS = viTriVungBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+    
     private void updateTable(ArrayList<ViTriVungDTO> ketqua) {
 
         // System.out.println("con bo biet bay");

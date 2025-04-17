@@ -37,7 +37,17 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
 
     @Override
     public int delete(int id) {
-        return 0;
+        return(0);
+    }
+
+    public int deleteByMaRoleAndMaCNAndHanhDong(int maRole, int maCN, String hanhDong) {
+        int rowDeleted = 0;
+        String query = "UPDATE CHITIETQUYEN SET TRANGTHAI = 0 WHERE maRole = ? AND maChucNang = ? AND hanhDong = ?";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowDeleted = jdbcUtil.executeUpdate(query, maRole, maCN, hanhDong);
+        jdbcUtil.Close();
+        return rowDeleted;
     }
 
     @Override
@@ -47,7 +57,7 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
 
     public ArrayList<ChiTietQuyenDTO> getAll() {
         ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM CHITIETQUYEN";
+        String sql = "SELECT * FROM CHITIETQUYEN WHERE TRANGTHAI = 1";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -70,7 +80,7 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
 
     public ArrayList<ChiTietQuyenDTO> selectChiTietQuyenByMaNQ(int maNQ){
         ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM CHITIETQUYEN WHERE maRole = ?";  
+        String sql = "SELECT * FROM CHITIETQUYEN WHERE maRole = ? AND TRANGTHAI = 1";  
     
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -93,7 +103,7 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
 
     public ArrayList<Integer> getListMaCNByMaNQ(int maNQ){
         ArrayList<Integer> result = new ArrayList<>();
-        String sql = "SELECT DISTINCT maChucNang FROM CHITIETQUYEN WHERE maRole = ?"; 
+        String sql = "SELECT DISTINCT maChucNang FROM CHITIETQUYEN WHERE maRole = ? AND TRANGTHAI = 1"; 
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         ResultSet rs = jdbcUtil.executeQuery(sql, maNQ);
@@ -112,7 +122,7 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
 
     public ArrayList<ChiTietQuyenDTO> getListChiTietQuyenByMaRoleMaCN(int maRole, int maCN){
         ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM CHITIETQUYEN WHERE maRole = ? AND maChucNang = ?";  
+        String sql = "SELECT * FROM CHITIETQUYEN WHERE maRole = ? AND maChucNang = ? AND TRANGTHAI = 1";  
 
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -133,4 +143,45 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO> {
         return(result);
     }
 
+    public ArrayList<ChiTietQuyenDTO> getListChiTietQuyenByMaRole(int maRole){
+        ArrayList<ChiTietQuyenDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM CHITIETQUYEN WHERE maRole = ? AND TRANGTHAI = 1";  
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maRole);
+        try {
+            while(rs.next()){
+                int maChucNang = rs.getInt("maChucNang");
+                String hanhDong = rs.getString("hanhDong");
+                ChiTietQuyenDTO chiTietQuyenDTO = new ChiTietQuyenDTO(maRole, maChucNang, hanhDong);
+                result.add(chiTietQuyenDTO);
+            }
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return(result);
+    }
+
+    public ArrayList<String> getAllHanhDongByMaRoleAndMaCN(int maRole, int maCN){
+        ArrayList<String> result = new ArrayList<>();
+        String sql = "SELECT hanhDong FROM CHITIETQUYEN WHERE maRole = ? AND maChucNang = ? AND TRANGTHAI = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maRole, maCN);
+        try {
+            while (rs.next()) {
+                String hanhDong = rs.getString("hanhDong");
+                result.add(hanhDong);
+            }
+            jdbcUtil.Close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

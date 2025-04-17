@@ -84,5 +84,9 @@ public class NhanVienBUS {
 		}
 		return(0);
 	}
+
+	public String getTenNVByMaTK(int maTK){
+		return(nhanVienDAO.getTenNVByMaTK(maTK));
+	}
 	
 }

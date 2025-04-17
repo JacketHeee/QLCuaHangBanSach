@@ -13,6 +13,7 @@ import BUS.ChucNangBUS;
 import BUS.TheLoaiBUS;
 import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import DTO.TheLoaiDTO;
 import DTO.ViTriVungDTO;
@@ -25,6 +26,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.TheLoaiDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -53,6 +55,11 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"textbox","Tên thể loại"}
+    };
+
+    private String[] filter = {"Tất cả", "Mã thể loại", "Tên thể loại"};
 
     public TheLoaiForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -90,12 +97,10 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TheLoaiDTO> searchBarPanel = new SearchBarPanel<>(foods, new TheLoaiSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TheLoaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new TheLoaiSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -106,7 +111,7 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
 
     String[][] bottomActions = {
         {"edit.svg","edit"},
-        {"detail.svg","detail"},
+        {"detail.svg","detail"},    //Có không ???
         {"remove.svg","remove"}
     };
     private CustomTable table;
@@ -186,7 +191,8 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                TheLoaiDialog theLoaiDialog = new TheLoaiDialog(this, "Thể loại", "Thêm Thể Loại", "add", attributes);
+                theLoaiDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -204,16 +210,23 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                TheLoaiDialog theLoaiDialog = new TheLoaiDialog(this, "Thể loại", "Sửa Thể Loại", "update", attributes, row);
+                theLoaiDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(theLoaiBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -222,6 +235,37 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<TheLoaiDTO> list = theLoaiBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public TheLoaiBUS getTheLoaiBUS() {
+        return theLoaiBUS;
+    }
+
+    public void setTheLoaiBUS(TheLoaiBUS theLoaiBUS) {
+        this.theLoaiBUS = theLoaiBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+    
     private void updateTable(ArrayList<TheLoaiDTO> ketqua) {
 
         // System.out.println("con bo biet bay");

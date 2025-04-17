@@ -7,10 +7,10 @@ import javax.swing.JOptionPane;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.SachBUS;
 import BUS.ViTriVungBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
 
@@ -21,11 +21,15 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.SachDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.SachSearch;
 import utils.UIUtils;
+
+import java.awt.Cursor;
+import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -35,13 +39,25 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private int id = 1;
     private SachBUS sachBUS;
 
-    private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá bán","Vị trí vùng"}; // Tạm thời không cài đặt giá bán
+    private String[] header = {"Mã sách","Tên sách","Số lượng tồn","Giá bán","Năm xuất bản"};
     private MainFrame mainFrame;
     private ArrayList<SachDTO> listKH;
     private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"textbox","Tên sách"},
+        {"textbox", "Giá bán"},
+        {"textbox", "Năm xuất bản"},
+        {"combobox", "Vùng"}, //FK
+        {"combobox", "Nhà xuất bản"}, //FK
+        //Khóa ngoại nhiều-nhiều
+        {"inputKNNN", "Thể loại"},
+        {"inputKNNN", "Tác giả"}
+    };
+
+    private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Năm xuất bản"};
 
 
     public SachForm(String title, MainFrame mainFrame) {
@@ -80,12 +96,10 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(foods, new SachSearch(listKH), this::updateTable, null);
+        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(filter, new SachSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -105,7 +119,11 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
 
         ButtonAction but;
         for (String[] x : getActionTop()) {
-            but = new ButtonAction(x[0],x[1],x[2]);
+            Runnable callback = null;
+            if (x[2].equals("importExcel")) {
+                callback = () -> updateTable(sachBUS.getAll());
+            }
+            but = new ButtonAction(x[0], x[1], x[2], callback);
             panel.add(but);
             but.setActionCommand(but.getId());
             but.addActionListener(this);
@@ -135,7 +153,6 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     public ArrayList<String[]> DataToShow(ArrayList<SachDTO> inputData){
 
         ArrayList<String[]> data = new ArrayList<>();
-        ViTriVungBUS vitri = ViTriVungBUS.getInstance();
 
         for(SachDTO i : inputData){
             data.add(new String[]{
@@ -143,7 +160,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 i.getTenSach(), 
                 i.getSoLuong() + "", 
                 i.getGiaBan() + "",
-                vitri.getTenByMaViTriVung(i.getMaVung()), 
+                i.getNamXB() + "", 
             });
         }
         return(data);
@@ -180,7 +197,8 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                SachDialog sachDialog = new SachDialog(this, "Sách", "Thêm Sách", "add", attributes);
+                sachDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -198,17 +216,28 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                SachDialog sachDialog = new SachDialog(this, "Sách", "Sửa Sách", "update", attributes, row);
+                sachDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(sachBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
+                break;
+            case "detail":
+                SachDialog sachDialogd = new SachDialog(this, "Sách", "Chi Tiết Sách", "detail", attributes, row);
+                sachDialogd.setVisible(true);
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);
@@ -216,6 +245,36 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<SachDTO> list = sachBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public SachBUS getSachBUS() {
+        return sachBUS;
+    }
+
+    public void setSachBUS(SachBUS sachBUS) {
+        this.sachBUS = sachBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
 
 
     private void updateTable(ArrayList<SachDTO> ketqua) {

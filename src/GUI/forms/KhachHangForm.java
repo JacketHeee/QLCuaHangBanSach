@@ -27,6 +27,7 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.KhachHangDialog;
+import interfaces.Searchable;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.KhachHangSearch;
@@ -53,6 +54,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
     private ArrayList<String> listAction;
     private TaiKhoanDTO taiKhoan;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[] filter = {"Tất cả","Mã khách hàng","Tên khách hàng","Số điện thoại","Giới tính"};
 
     private String[][] attributes = {
         {"textbox","Tên khách hàng"},
@@ -83,12 +85,13 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<KhachHangDTO> searchBarPanel = new SearchBarPanel<>(foods, new KhachHangSearch(listKH), this::updateTable, null);
+        //combobox, đối tượng có hàm trả về arraylist<DTO>, call back, null
+        SearchBarPanel<KhachHangDTO> searchBarPanel = new SearchBarPanel<>(this.filter, new KhachHangSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
 
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
+    
 
 
     ///////////////////////////////////////////////////////////////
@@ -199,16 +202,22 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                KhachHangDialog khachHangDialog = new KhachHangDialog(this, "Khách hàng", "Sửa Khách Hàng", "update", attributes, row);
+                khachHangDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
-
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(khachHangBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -222,12 +231,17 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
 
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
-        for (KhachHangDTO x: ketqua) {
-            for (String y : new String[]{x.getMaKH() + "",x.getTenKH(),x.getSoDT(),x.getGioiTinh()})
-                System.out.print(y);
-            System.out.println();
-        }
+        // for (KhachHangDTO x: ketqua) {
+        //     for (String y : new String[]{x.getMaKH() + "",x.getTenKH(),x.getSoDT(),x.getGioiTinh()}){}
+        //     //     System.out.print(y);
+        //     // System.out.println();
+        // }
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<KhachHangDTO> list = khachHangBUS.getAll();
+        updateTable(list);
+    };
 
     public KhachHangBUS getKhachHangBUS() {
         return khachHangBUS;

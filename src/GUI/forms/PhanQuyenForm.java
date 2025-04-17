@@ -16,6 +16,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhomQuyenBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 
@@ -46,7 +47,6 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private MainFrame mainFrame;
     private String title;
     private int id = 16;
-    private ArrayList<String[]> arrCN;
     private CustomTable table; 
     private ArrayList<String[]> dataToShow;
     private ArrayList<ButtonAction> buttonActionsList;
@@ -59,15 +59,18 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private ArrayList<String> listAction;
     private ArrayList<NhomQuyenDTO> listKH; 
 
+    private String[] header = {"Mã quyền","Tên nhóm quyền"};
 
-    public PhanQuyenForm(MainFrame mainframe, String title, ArrayList<String[]> arrCN) {
+    private String[] filter = {"Tất cả","Mã quyền","Tên nhóm quyền"};
+
+
+    public PhanQuyenForm(MainFrame mainframe, String title) {
         this.mainFrame = mainframe;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
         this.chucNangBUS = ChucNangBUS.getInstance();
 
         this.title = title;
-        this.arrCN = arrCN;
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();
         this.nhomQuyenBUS = NhomQuyenBUS.getInstance();
         listAction = getListAction();
@@ -98,12 +101,10 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(foods, new PhanQuyenSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(filter, new PhanQuyenSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
 
     ///////////////////////////////////////////////////////////////
@@ -162,7 +163,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(dataToShow,getActionBottom(), "Mã quyền","Tên nhóm quyền");
+        table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
         panel.add(new CustomScrollPane(table),"push, grow");
         return panel;
@@ -209,8 +210,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
             case "add":
                 mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
-                System.out.println(but.getId()+ but.getText());
-                new AddNhomQuyen(mainFrame,this, "Thêm nhóm quyền",arrCN);
+                new AddNhomQuyen(mainFrame,this, "Thêm nhóm quyền", "add");
                 mainFrame.glassPane.setVisible(false);
                 break;
         
@@ -256,17 +256,30 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                mainFrame.glassPane.setVisible(true);
+                new AddNhomQuyen(mainFrame,this, "Sửa nhóm quyền", "update", row);
+                mainFrame.glassPane.setVisible(false);
                 break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(nhomQuyenBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
+                break;
+            case "detail":
+                mainFrame.glassPane.setVisible(true);
+                new AddNhomQuyen(mainFrame,this, "Chi tiết nhóm quyền", "detail", row);
+                mainFrame.glassPane.setVisible(false);
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);
@@ -274,6 +287,20 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<NhomQuyenDTO> list = nhomQuyenBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    
 
     private void updateTable(ArrayList<NhomQuyenDTO> ketqua) {
 

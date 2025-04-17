@@ -73,4 +73,62 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public ArrayList<String> getAllTenTheLoai(){
+        ArrayList<String> result = new ArrayList<>();
+        String sql = "SELECT tenTheLoai FROM THELOAI WHERE trangThai = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                String tenTheLoai = rs.getString("tenTheloai");
+                result.add(tenTheLoai);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+    public int getMaByTen(String ten){
+        int result = -1;
+        String sql = "SELECT maTheLoai FROM THELOAI WHERE tenTheLoai = ? AND trangThai = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, ten);
+        try {
+            while (rs.next()) {
+                result = rs.getInt("maTheLoai");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+    public String getTenByMa(int maTL){
+        String result = new String();
+        String sql = "SELECT tenTheLoai FROM THELOAI WHERE maTheLoai = ? AND trangThai = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maTL);
+        try {
+            while (rs.next()) {
+                result = rs.getString("tenTheLoai");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
 }

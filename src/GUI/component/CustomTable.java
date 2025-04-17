@@ -458,4 +458,21 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.revalidate();
         dataPanel.repaint();
     }
+
+    public String getCellData(int row, int column){
+        String result = ((JLabel)rowLabels.get(row).get(column)).getText();
+        return(result);
+    }
+
+    public void setCellData(int row, int column, String text){
+        JLabel label = (JLabel)rowLabels.get(row).get(column);
+        label.setText(text);
+    }
+
+    public void setRowData(int row, String... list){
+        for(int i = 0; i < list.length; i++){
+            JLabel label = (JLabel)rowLabels.get(row).get(i);
+            label.setText(list[i]);
+        }
+    }
 }

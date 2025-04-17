@@ -59,6 +59,8 @@ public class AddressAdderDialog extends JDialog {
         addressPanel.setOnAddressAdded(address -> {
             if (onCloseCallback != null) {
                 onCloseCallback.accept(addressPanel.getSavedAddresses());
+                remove(addressPanel);
+                dispose();
             }
         });
 
@@ -94,10 +96,10 @@ public class AddressAdderDialog extends JDialog {
             JButton openDialogButton = new JButton("Mở Dialog Thêm Địa Chỉ");
             openDialogButton.addActionListener(e -> {
                 AddressAdderDialog dialog = new AddressAdderDialog(frame);
-                dialog.setVisible(true);
                 dialog.setOnCloseCallback(addresses -> {
                     System.out.println("Địa chỉ đã lưu: " + addresses);
                 });
+                dialog.setVisible(true);
             });
 
             frame.setLayout(new FlowLayout());

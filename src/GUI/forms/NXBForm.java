@@ -12,6 +12,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhaXBBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.NhaXBDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -25,6 +26,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.NhaXBDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -53,7 +55,14 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"textbox","Tên nhà xuất bản"},
+        {"inputDC", "Địa chỉ"},  
+        {"textbox", "Số điện thoại"},
+        {"textbox", "Email"},
+    };
 
+    private String[] filter = {"Tất cả","Mã nhà xuất bản","Tên nhà xuất bản","Địa chỉ","Số điện thoại","Email"};
 
     public NXBForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -90,12 +99,10 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhaXBDTO> searchBarPanel = new SearchBarPanel<>(foods, new NXBSearch(listKH), this::updateTable, null);
+        SearchBarPanel<NhaXBDTO> searchBarPanel = new SearchBarPanel<>(filter, new NXBSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -180,7 +187,8 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                NhaXBDialog nhaXBDialog = new NhaXBDialog(this, "Nhà xuất bản", "Thêm Nhà Xuất Bản", "add", attributes);
+                nhaXBDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -196,16 +204,22 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                NhaXBDialog nhaXBDialog = new NhaXBDialog(this, "Nhà xuất bản", "Sửa Nhà Xuất Bản", "update", attributes, row);
+                nhaXBDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
-
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(nhaXBBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -214,6 +228,37 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<NhaXBDTO> list = nhaXBBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public NhaXBBUS getNhaXBBUS() {
+        return nhaXBBUS;
+    }
+
+    public void setNhaXBBUS(NhaXBBUS nhaXBBUS) {
+        this.nhaXBBUS = nhaXBBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+    
 
     private void updateTable(ArrayList<NhaXBDTO> ketqua) {
 

@@ -1,5 +1,7 @@
 package utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,6 +68,39 @@ public class Validate {
             return(true);
         }
         return(false);
+    }
+
+    public static boolean isStartDateAndEndDate(String startDateS, String endDateS){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date startDate;
+        java.util.Date endDate;
+        try {
+            startDate = dateFormat.parse(startDateS);
+            endDate = dateFormat.parse(endDateS);
+            return(startDate.before(endDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi định dạng");
+            return(false);
+        }
+    }
+
+    public static boolean isStartTimeAndEndTime(String timeStartS, String timeEndS){
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        
+        java.util.Date timeStart;
+        java.util.Date timeEnd;
+        try {
+            timeStart = timeFormat.parse(timeStartS);
+            timeEnd = timeFormat.parse(timeEndS);
+            return(timeStart.before(timeEnd));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.out.println("Lỗi định dạng");
+            return(false);
+        }
+
     }
 
     // public static void main(String[] args) {

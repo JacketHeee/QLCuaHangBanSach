@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import DTO.TacGiaDTO;
 import config.JDBCUtil;
 public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
@@ -81,4 +83,63 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public ArrayList<String> getAllTenTacGia(){
+        ArrayList<String> result = new ArrayList<>();
+        String sql = "SELECT tenTacGia FROM TACGIA WHERE TRANGTHAI = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                String tenTacGia = rs.getString("tenTacGia");
+                result.add(tenTacGia);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+    public int getMaByTen(String ten){
+        int result = -1;
+        String sql = "SELECT maTacGia FROM TACGIA WHERE tenTacGia = ? AND TRANGTHAI = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, ten);
+        try {
+            while (rs.next()) {
+                result = rs.getInt("maTacGia");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+    public String getTenByMa(int maTG){
+        String result = new String();
+        String sql = "SELECT tenTacGia FROM TACGIA WHERE maTacGia = ? AND TRANGTHAI = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maTG);
+        try {
+            while (rs.next()) {
+                result = rs.getString("tenTacGia");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
 }

@@ -9,32 +9,30 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.KhuyenMaiBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhachHangDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.KhuyenMaiDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.KhuyenMaiSearch;
 import search.SachSearch;
+import utils.DateCalculator;
 import utils.UIUtils;
 
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -51,9 +49,18 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private ArrayList<KhuyenMaiDTO> listKH;
     private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
+    private String[] filter = {"Tất cả","Mã khuyến mãi","Tên khuyến mãi","Điều kiện giảm","Giá trị giảm", "Ngày bắt đầu", "Ngày kết thúc"};
 
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+
+    private String[][] attributes = {
+        {"textbox","Tên khuyến mãi"},
+        {"textbox","Điều kiện giảm"},
+        {"textbox", "Giá trị giảm"},
+        {"inputDateTime", "Ngày bắt đầu"},//làm dateTime
+        {"inputDateTime", "Ngày kết thúc"},//làm dateTime
+    };
 
 
     public KhuyenMaiForm(String title, MainFrame mainFrame) {
@@ -90,12 +97,11 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<KhuyenMaiDTO> searchBarPanel = new SearchBarPanel<>(foods, new KhuyenMaiSearch(listKH), this::updateTable, null);
+        SearchBarPanel<KhuyenMaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new KhuyenMaiSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
 
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -106,7 +112,6 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
     String[][] bottomActions = {
         {"edit.svg","edit"},
-        {"detail.svg","detail"},
         {"remove.svg","remove"}
     };
 
@@ -147,7 +152,14 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
         ArrayList<String[]> data = new ArrayList<>();
         for(KhuyenMaiDTO i : inputData){
-            data.add(new String[]{i.getMaKM() + "", i.getTenKM(), i.getDieuKienGiam(), i.getGiaTriGiam() + "", i.getNgayBatDau() + "", i.getNgayKetThuc() + ""});
+            data.add(new String[]{
+                i.getMaKM() + "",
+                i.getTenKM(),
+                i.getDieuKienGiam(),
+                i.getGiaTriGiam() + "",
+                new DateCalculator().formatDateTimeToDateS(i.getNgayBatDau()),
+                new DateCalculator().formatDateTimeToDateS(i.getNgayBatDau())
+            });      
         }
         return(data);
     }
@@ -167,8 +179,6 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
     /////////////////////////////////////////////////////////////////
 
-
-
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         table = new CustomTable(dataToShow,getActionBottom(), header);
@@ -182,7 +192,8 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                KhuyenMaiDialog khuyenMaiDialog = new KhuyenMaiDialog(this, "Khuyến mãi", "Thêm Khuyến Mãi", "add", attributes);
+                khuyenMaiDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -198,16 +209,23 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
-                break;
+            KhuyenMaiDialog khuyenMaiDialog = new KhuyenMaiDialog(this, "Khuyến mãi", "Sửa Khuyến Mãi", "update", attributes, row);
+            khuyenMaiDialog.setVisible(true);
+            break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(khuyenMaiBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -216,6 +234,37 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<KhuyenMaiDTO> list = khuyenMaiBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public KhuyenMaiBUS getKhuyenMaiBUS() {
+        return khuyenMaiBUS;
+    }
+
+    public void setKhuyenMaiBUS(KhuyenMaiBUS khuyenMaiBUS) {
+        this.khuyenMaiBUS = khuyenMaiBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+
+    
+ 
     private void updateTable(ArrayList<KhuyenMaiDTO> ketqua) {
 
         // System.out.println("con bo biet bay");

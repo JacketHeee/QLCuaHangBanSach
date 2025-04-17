@@ -59,5 +59,17 @@ public class TacGiaBUS {
 		}
 		return(-1);
 	}
+
+	public ArrayList<String> getAllTenTacGia(){
+		return(tacGiaDAO.getAllTenTacGia());
+	}
 	
+	public int getMaByTen(String ten){
+		return(tacGiaDAO.getMaByTen(ten));
+	}
+
+	public String getTenByMa(int ma){
+		return(tacGiaDAO.getTenByMa(ma));
+	}
+
 }

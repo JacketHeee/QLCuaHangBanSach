@@ -83,5 +83,9 @@ public class ViTriVungBUS {
 		}
 		return(null);
 	}
+
+	public String getTenVungByMaSach (int maSach){
+		return(viTriVungDAO.getTenVungByMaSach(maSach));
+	}
 	
 }

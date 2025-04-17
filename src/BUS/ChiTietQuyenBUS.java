@@ -55,4 +55,16 @@ public class ChiTietQuyenBUS {
 		return(chiTietQuyenDAO.getListChiTietQuyenByMaRoleMaCN(maRole, maCN));
 	}
 
+	public ArrayList<ChiTietQuyenDTO> getListChiTietQuyenByMaRole(int maRole){
+		return(chiTietQuyenDAO.getListChiTietQuyenByMaRole(maRole));
+	}
+
+	public int deleteByMaRoleAndMaCNAndHanhDong(int maRole, int maCN, String hanhDong){
+		return(chiTietQuyenDAO.deleteByMaRoleAndMaCNAndHanhDong(maRole, maCN, hanhDong));
+	}
+
+	public ArrayList<String> getAllHanhDongByMaRoleAndMaCN(int maRole, int maCN){
+		return(chiTietQuyenDAO.getAllHanhDongByMaRoleAndMaCN(maRole, maCN));
+	}
+
 }

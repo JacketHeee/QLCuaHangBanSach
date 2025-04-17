@@ -13,6 +13,7 @@ import BUS.ChucNangBUS;
 import BUS.HoaDonBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.HoaDonDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
@@ -56,6 +57,15 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     public DimGlassPane glassPane = new DimGlassPane();
+    private String[][] attributes = {
+        {"inputDate","Ngày bán"},   //tự get
+        {"textbox", "Tổng tiền"},  //cài đặt sau
+        {"textbox", "Mã tài khoản"},    //tự get
+        {"combobox", "Phương thức thanh toán"},
+        {"combobox", "Mã khuyến mãi"},  //tự đặt là không có khuyến mãi
+        {"droplist", "Khách hàng"}  //droplist
+    };
+    private String[] filter =  {"Tất cả","Mã hóa đơn", "Ngày lập", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
 
     public QLHoaDonForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -91,12 +101,10 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<HoaDonDTO> searchBarPanel = new SearchBarPanel<>(foods, new QLHoaDonSearch(listKH), this::updateTable, null);
+        SearchBarPanel<HoaDonDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLHoaDonSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     
     ///////////////////////////////////////////////////////////////
@@ -202,6 +210,19 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<HoaDonDTO> list = hoaDonBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+    
     private void updateTable(ArrayList<HoaDonDTO> ketqua) {
 
         // System.out.println("con bo biet bay");

@@ -16,6 +16,7 @@ import DTO.TacGiaDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.TacGiaDTO;
 import DTO.TaiKhoanDTO;
 
@@ -27,6 +28,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.dialog.TacGiaDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -55,6 +57,11 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private String[][] attributes = {
+        {"textbox","Tên tác giả"}
+    };
+
+    private String[] filter = {"Tất cả", "Mã tác giả", "Tên tác giả"};
 
     public TacGiaForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -91,12 +98,10 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TacGiaDTO> searchBarPanel = new SearchBarPanel<>(foods, new TacGiaSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TacGiaDTO> searchBarPanel = new SearchBarPanel<>(filter, new TacGiaSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -180,7 +185,8 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                TacGiaDialog tacGiaDialog = new TacGiaDialog(this, "Tác giả", "Thêm Tác Giả", "add", attributes);
+                tacGiaDialog.setVisible(true);
                 break;
             case "importExcel":
                 
@@ -198,16 +204,23 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                TacGiaDialog tacGiaDialog = new TacGiaDialog(this, "Tác giả", "Sửa Tác Giả", "update", attributes, row);
+                tacGiaDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(tacGiaBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -216,6 +229,37 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
         }
     }
 
+    public Runnable resetTable = () -> {
+        ArrayList<TacGiaDTO> list = tacGiaBUS.getAll();
+        updateTable(list);
+    };
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public TacGiaBUS getTacGiaBUS() {
+        return tacGiaBUS;
+    }
+
+    public void setTacGiaBUS(TacGiaBUS tacGiaBUS) {
+        this.tacGiaBUS = tacGiaBUS;
+    }
+
+    public CustomTable getTable() {
+        return table;
+    }
+
+    public void setTable(CustomTable table) {
+        this.table = table;
+    }
+    
+
+    
     private void updateTable(ArrayList<TacGiaDTO> ketqua) {
 
         // System.out.println("con bo biet bay");

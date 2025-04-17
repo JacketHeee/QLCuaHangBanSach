@@ -11,9 +11,11 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhanVienBUS;
+import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
 import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 
@@ -45,7 +47,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
 
     private String title;
     private int id = 14;
-    private String[] header = {"Mã tài khoản","Username","Password","Mã Role"};
+    private String[] header = {"Mã tài khoản","Username","Password","Quyền"};
     private TaiKhoanBUS taiKhoanBUS;
     private MainFrame mainFrame;
     private ArrayList<TaiKhoanDTO> listKH;
@@ -55,6 +57,9 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private NhanVienBUS nhanVienBUS;
     private CustomTable table;
+    private NhomQuyenBUS nhomQuyenBUS;
+
+    private String[] filter = {"Mã tài khoản","Username","Password","Quyền"};
 
 
     private String[][] attributes = {
@@ -71,6 +76,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         this.taiKhoanBUS = TaiKhoanBUS.getInstance();
         this.nhanVienBUS = NhanVienBUS.getInstance();
+        this.nhomQuyenBUS = NhomQuyenBUS.getInstance();
         this.listAction = getListAction();
         init();
     }
@@ -99,12 +105,10 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TaiKhoanDTO> searchBarPanel = new SearchBarPanel<>(foods, new TaiKhoanSearch(listKH), this::updateTable, null);
+        SearchBarPanel<TaiKhoanDTO> searchBarPanel = new SearchBarPanel<>(filter, new TaiKhoanSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
-
-    String[] foods = {"Tất cả","Phở","Bún bò","Cơm tấm","Sườn bì chả"};
 
     ///////////////////////////////////////////////////////////////
 
@@ -170,7 +174,8 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
 
         ArrayList<String[]> data = new ArrayList<>();
         for(TaiKhoanDTO i : inputData){
-            data.add(new String[]{i.getMaTK() + "", i.getUsername(), i.getPassword(), i.getMaRole() + ""});
+            String tenNhomQuyen = nhomQuyenBUS.getTenByMaNhomQuyen(i.getMaRole());
+            data.add(new String[]{i.getMaTK() + "", i.getUsername(), i.getPassword(), tenNhomQuyen});
         }
         return(data);
     }
@@ -191,8 +196,14 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(this, "Tài khoản", "Thêm tài khoản", "add", attributes);
-                taiKhoanDialog.setVisible(true);
+                ArrayList<String> listNV = nhanVienBUS.getAllTenNVNotHaveAccount();
+                if(listNV.size() == 0){
+                    JOptionPane.showMessageDialog(mainFrame, "Mọi nhân viên đã được thêm tài khoản, vui lòng thêm nhân viên!");
+                }
+                else{
+                    TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(this, "Tài khoản", "Thêm tài khoản", "add", attributes);
+                    taiKhoanDialog.setVisible(true);
+                }
                 break;
             case "importExcel":
                 
@@ -208,16 +219,23 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
             case "edit":
-                JOptionPane.showMessageDialog(this, "Con bo biet bay");
+                TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(this, "Tài khoản", "Sửa tài khoản", "update", attributes, row);
+                taiKhoanDialog.setVisible(true);
                 break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
+                int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
-                    table.removeRow(row);
-                    Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    if(taiKhoanBUS.delete(ma) != 0){
+                        table.removeRow(row);
+                        Notifications.getInstance().setJFrame(mainFrame);
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
+                    }
                 }
                 break;
             default:
@@ -232,6 +250,11 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
     }
+
+    public Runnable resetTable = () -> {
+        ArrayList<TaiKhoanDTO> list = taiKhoanBUS.getAll();
+        updateTable(list);
+    };
     public MainFrame getMainFrame() {
         return mainFrame;
     }
@@ -264,6 +287,21 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
         this.table = table;
     }
 
-    
+    public NhanVienBUS getNhanVienBUS() {
+        return nhanVienBUS;
+    }
+
+    public void setNhanVienBUS(NhanVienBUS nhanVienBUS) {
+        this.nhanVienBUS = nhanVienBUS;
+    }
+
+    public NhomQuyenBUS getNhomQuyenBUS() {
+        return nhomQuyenBUS;
+    }
+
+    public void setNhomQuyenBUS(NhomQuyenBUS nhomQuyenBUS) {
+        this.nhomQuyenBUS = nhomQuyenBUS;
+    }
+
     
 }
