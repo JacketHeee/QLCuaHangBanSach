@@ -57,8 +57,21 @@ public class Validate {
         return matcher.matches();
     }
 
-    public static boolean isDate(String i){ //Chưa validate 28 ngày tháng 2, tháng 30, 31, năm nhuận,...
-        Pattern pattern = Pattern.compile("^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)\\d{2}$");
+    public static boolean isDate(String i){ 
+        // String year = new String(); Validate năm nhuận
+        // try {
+        //     year = i.substring(i.length() - 4);
+        // } catch (Exception e) {
+        //     System.out.println("Chuỗi chưa tới 4 ký tự");
+        //     return(false);
+        // }
+        // System.out.println(year);
+        // Cụm 1: Cho ngày + / + tháng cho những tháng có 31 ngày (1, 3, 5, 7, 8, 10, 12)
+        // Cụm 2: Cho ngày + / + tháng cho những tháng có 30 ngày (4, 6, 9, 11)
+        // Cụm 3: Cho ngày + / + tháng cho tháng 2 có 28 ngày
+        //                                        [                                               Ngày + tháng                                                   ][      Năm     ]
+        //                                         [           Cụm 1                          ][             Cụm 2                ][        Cụm 3                ]                    
+        Pattern pattern = Pattern.compile("^((0?[1-9]|[12][0-9]|3[01])/(0?[13578]|1[02])|(0?[1-9]|[12][0-9]|30)/(0?[469]|11)|(0?[1-9]|1[0-9]|2[0-8])/(0?2))/(19|20)\\d{2}$");
         Matcher matcher = pattern.matcher(i);
         return matcher.matches();
     }
@@ -103,16 +116,20 @@ public class Validate {
 
     }
 
-    // public static void main(String[] args) {
-    //     String[] string = {"(023)1231234","(023)-123-1234","023-123-1234","023.123.1234","023 123 1234","0231231234"};
-    //     String[] string2 = {"(02312312334","(023)-1231234","(023)123-1234"};
+    public static void main(String[] args) {
+        // String[] string = {"(023)1231234","(023)-123-1234","023-123-1234","023.123.1234","023 123 1234","0231231234"};
+        // String[] string2 = {"(02312312334","(023)-1231234","(023)123-1234"};
 
-    //     for(String i : string){
-    //         System.out.println(Validate.isPhoneNumber(i));
-    //     }
-    //     for(String i : string2){
-    //         System.out.println(Validate.isPhoneNumber(i));
-    //     }
-    // }
+        // for(String i : string){
+        //     System.out.println(Validate.isPhoneNumber(i));
+        // }
+        // for(String i : string2){
+        //     System.out.println(Validate.isPhoneNumber(i));
+        // }
+        System.out.println(new Validate().isDate("22/02/2024"));
+
+
+
+    }
 
 }

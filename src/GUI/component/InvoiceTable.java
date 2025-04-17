@@ -143,4 +143,9 @@ public class InvoiceTable extends CustomTable {
     public void setSelectedRow(int row) {
         super.setSelectedRow(row);
     }
+
+    @Override
+    public void setDataPanelpre() {
+        dataPanel.setPreferredSize(null);
+    }
 }

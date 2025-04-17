@@ -64,7 +64,7 @@ public class CustomTable extends JPanel implements ActionListener {
 
         // Tạo dataPanel với constraints ngay từ đầu
         dataPanel = new JPanel();
-        migLayout = new MigLayout("insets 0, fillx, gap 0", getColumnConstraints(), getRowConstraints());
+        migLayout = new MigLayout("insets 0 0 20 0, fillx, gap 0", getColumnConstraints(), getRowConstraints());
         dataPanel.setLayout(migLayout);
 
         // Thêm dữ liệu ban đầu
@@ -73,8 +73,8 @@ public class CustomTable extends JPanel implements ActionListener {
         }
 
         // Đặt PreferredSize cho dataPanel
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
-
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        setDataPanelpre();
         // Tạo JScrollPane
         
         
@@ -83,7 +83,11 @@ public class CustomTable extends JPanel implements ActionListener {
         addScollPane();
 
         // Đặt kích thước mặc định cho CustomTable
-        setMinimumSize(new Dimension(400, 200));
+        // setMinimumSize(new Dimension(400, 200));
+    }
+
+    public void setDataPanelpre() {
+        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
     }
 
     public void setActionListener(TableActionListener listener) {

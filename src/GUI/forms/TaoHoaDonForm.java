@@ -38,7 +38,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private String[] listNcc; 
     private CustomButton buttonSave;
     private CustomButton buttonCancel;
-    private InvoiceTable table;
+    private CustomTable table;
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
@@ -109,10 +109,10 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         JPanel panel = getPanel("Chi tiết hóa đơn");
         panel.setLayout(new MigLayout());
         table = new InvoiceTable(null, actions, "Mã sách","Tên sách","Số lượng","Giá bán(đ)","Thành tiền(đ)");
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
         panel.add(panelActionOnTable(),"pushx,growx,wrap");
