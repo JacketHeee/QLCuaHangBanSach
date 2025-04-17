@@ -18,7 +18,10 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
+import BUS.HoaDonBUS;
+import DTO.CT_HoaDonDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.HoaDonDTO;
 import DTO.TaiKhoanDTO;
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
@@ -122,6 +125,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
     private ButtonAction butAddData;
     private ButtonAction butImportData;
+    private ButtonAction butSavePDF;
     private JPanel panelActionOnTable() {
         JPanel panel = new JPanel(new MigLayout("al left"));
         butAddData = new ButtonAction("Thêm", "add.svg", "add");
@@ -133,6 +137,12 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         butImportData.setActionCommand("importRowData");
         butImportData.addActionListener(this);
         panel.add(butImportData);
+
+        butSavePDF = new ButtonAction("Lưu PDF", "save.svg", "savePDF");
+        butSavePDF.setActionCommand("savePDF");
+        butSavePDF.addActionListener(this);
+        panel.add(butSavePDF);
+
         return panel;
     }
 
@@ -201,6 +211,12 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         return panel;   
     }
 
+    private handlePDF(){
+        try {
+            HoaDonDTO hoaDon = HoaDonBUS.getHDHienTai();
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -210,7 +226,9 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             case "addRowData":
                 table.addDataRow(null);
                 break;
-        
+            case "savePDF":
+                handlePDF();
+                break;
             default:
                 break;
         }

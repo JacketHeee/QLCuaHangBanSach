@@ -1,12 +1,11 @@
 package DAO;
 
+import DTO.CT_HoaDonDTO;
+import config.JDBCUtil;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import DTO.CT_HoaDonDTO;
-import config.JDBCUtil;
 
 public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
     private static CT_HoaDonDAO instance;
@@ -59,6 +58,25 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
         jdbcUtil.Close();
         return result;
     }
-
-
+    public ArrayList<CT_HoaDonDTO> getByMaHD(int maHD) {
+        ArrayList<CT_HoaDonDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM CT_HOADON WHERE maHD = ?";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maHD);
+        try {
+            while (rs.next()) {
+                String maSach = rs.getString("maSach");
+                int soLuong = rs.getInt("soLuong");
+                BigDecimal giaBan = rs.getBigDecimal("giaBan");
+                CT_HoaDonDTO cthd = new CT_HoaDonDTO(maSach, maHD, soLuong, giaBan);
+                result.add(cthd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+    
 }

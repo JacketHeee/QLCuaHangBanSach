@@ -63,6 +63,10 @@ public class CT_HoaDonDTO {
     public void setMaSach(String maSach) {
         this.maSach = maSach;
     }
-
+    
+    // Hàm tính thành tiền
+    public BigDecimal getThanhTien() {
+        return giaBan.multiply(BigDecimal.valueOf(soLuong));
+    }
 }
 

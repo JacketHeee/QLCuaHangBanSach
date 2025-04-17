@@ -73,6 +73,11 @@ public class ButtonAction extends JButton{
                 setBackground(Color.decode("#A8E8B9"));
                 setForeground(Color.decode(baseTheme.textColor));
                 break;
+
+                case "savePDF":
+                setBackground(Color.decode("#C1E1FF"));
+                setForeground(Color.decode(baseTheme.textColor));
+                break;
             default:
                 break;
         }

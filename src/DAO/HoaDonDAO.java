@@ -1,12 +1,12 @@
 package DAO;
 
+import DTO.HoaDonDTO;
+import config.JDBCUtil;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import DTO.HoaDonDTO;
-import config.JDBCUtil;
 
 public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
     private static HoaDonDAO instance;
@@ -106,4 +106,31 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    
+    public HoaDonDTO getByID(int maHD) {
+        HoaDonDTO hoaDon = null;
+        String sql = "SELECT * FROM HOADON WHERE maHD = ? AND trangThai = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maHD); 
+        try {
+            if (rs.next()) {
+                int id = rs.getInt("maHD");
+                LocalDateTime ngayBan = rs.getTimestamp("ngayBan").toLocalDateTime();
+                BigDecimal tongTien = rs.getBigDecimal("tongTien");
+                int maTK = rs.getInt("maTK");
+                int maPT = rs.getInt("maPT");
+                int maKM = rs.getInt("maKM");
+                int maKH = rs.getInt("maKH");
+                hoaDon = new HoaDonDTO(id, ngayBan, tongTien, maTK, maPT, maKM, maKH);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return hoaDon;
+    }
+    
 }

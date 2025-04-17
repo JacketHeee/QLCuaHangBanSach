@@ -1,8 +1,11 @@
 package BUS;
 
-import java.util.ArrayList;
+import DAO.CT_HoaDonDAO;
 import DAO.HoaDonDAO;
+import DTO.CT_HoaDonDTO;
 import DTO.HoaDonDTO;
+import java.util.ArrayList;
+import utils.PDFHoaDonExporter;
 
 public class HoaDonBUS {
     private static HoaDonBUS instance;
@@ -57,6 +60,19 @@ public class HoaDonBUS {
 
     public ArrayList<HoaDonDTO> getAll() {
         return listHoaDon;
+    }
+    
+    private ArrayList<CT_HoaDonDTO> getChiTietHoaDon(int maHD) {
+        return CT_HoaDonDAO.getInstance().getByMaHD(maHD);
+    }
+    
+    // Phương thức xuất hóa đơn ra PDF
+    public void exportHoaDon(int maHD, String folderPath, String tenNhanVien) {
+        HoaDonDTO hoaDon = hoaDonDAO.getByID(maHD); 
+        if (hoaDon != null) {
+            ArrayList<CT_HoaDonDTO> chiTietList = getChiTietHoaDon(maHD);
+            PDFHoaDonExporter.exportHoaDonToPDF(hoaDon, chiTietList, folderPath, tenNhanVien);
+        }
     }
 
     private int getIndexByID(int id) {
