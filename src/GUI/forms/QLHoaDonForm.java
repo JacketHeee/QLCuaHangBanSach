@@ -24,8 +24,11 @@ import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.DimGlassPane;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
+import GUI.dialog.AddHoaDonDialog;
+import GUI.dialog.AddNhomQuyen;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.QLHoaDonSearch;
@@ -52,6 +55,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    public DimGlassPane glassPane = new DimGlassPane();
 
     public QLHoaDonForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -162,7 +166,11 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                mainFrame.glassPane.setVisible(true);
+                ButtonAction but = (ButtonAction) e.getSource();
+                System.out.println(but.getId()+ but.getText());
+                new AddHoaDonDialog(mainFrame);
+                mainFrame.glassPane.setVisible(false);
                 break;
             case "importExcel":
                 
