@@ -1,6 +1,5 @@
 package resources.base;
 
-import java.awt.Font;
 
 public class baseTheme {
     public static String mainColor="#00713F";
@@ -13,5 +12,8 @@ public class baseTheme {
     public static String supplierLabel = "#84495F";
     public static String customerLabel = "#B85B56";
     public static String staffLabel = "#DE741C";
+
+    public static String doanhthu = "#2ecc71";
+    public static String hoadon = "#7f8c8d";
     
 }

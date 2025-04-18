@@ -193,7 +193,5 @@ public class MainFrame extends JFrame  implements ActionListener{
 
 	public void setNhanVien(NhanVienDTO nhanVien) {
 		this.nhanVien = nhanVien;
-	}
-
-	
+	}	
 }
