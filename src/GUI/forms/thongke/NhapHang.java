@@ -12,6 +12,7 @@ import GUI.component.TableNoTouch;
 import GUI.component.chart.HorizontalBarChartV2;
 import net.miginfocom.swing.MigLayout;
 import raven.chart.data.pie.DefaultPieDataset;
+import raven.chart.line.LineChart.ChartType;
 import raven.chart.pie.PieChart;
 import resources.base.baseTheme;
 
@@ -146,7 +147,7 @@ public class NhapHang extends JPanel {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10,wrap 1"));
         
         JPanel panelLabel = new JPanel(new MigLayout("insets 0, gap 10, al center center"));
-        panelLabel.add(new LabelTongQuan("Số lượng phiếu nhập","hoadon.svg","100.000",baseTheme.soLuong),"pushx,growx,sg 1");
+        panelLabel.add(new LabelTongQuan("Số lượng phiếu nhập","hoadon.svg","100000",baseTheme.soLuong),"pushx,growx,sg 1");
         panelLabel.add(new LabelTongQuan("Tổng tiền nhập (đ)","doanhthu.svg","100.000.000",baseTheme.tongTien),"pushx, growx,sg 1");
 
         panel.add(panelLabel,"pushx,growx");
@@ -157,6 +158,7 @@ public class NhapHang extends JPanel {
 
     private PieChart pieChart() {
         PieChart pieChart1 = new PieChart();
+        pieChart1.setChartType(PieChart.ChartType.DONUT_CHART);
         // pieChart1.setBackground(Color.white);
         pieChart1.setOpaque(false);
         JLabel header1 = new JLabel("<html><font><b>Top 5 sách nhập nhiều nhất</b></font></html>",JLabel.CENTER);

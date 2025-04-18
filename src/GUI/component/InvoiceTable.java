@@ -154,4 +154,45 @@ public class InvoiceTable extends CustomTable {
     public void setSelectedRow(int row) {
         super.setSelectedRow(row);
     }
+
+    @Override
+    public void updateRowData(int row, String[] newData) {
+        if (!rowLabels.containsKey(row)) {
+            return; // Hàng không tồn tại
+        }
+        if (newData == null || newData.length == 0) {
+            return; // Dữ liệu mới không hợp lệ
+        }
+
+        List<Component> rowComponents = rowLabels.get(row);
+        for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+            Component comp = rowComponents.get(i);
+            if (comp instanceof JPanel) {
+                JPanel panel = (JPanel) comp;
+                Component innerComp = panel.getComponent(0); // Lấy thành phần bên trong panel
+                String value = newData[i] != null ? newData[i] : "";
+                
+                if (innerComp instanceof JTextField) {
+                    ((JTextField) innerComp).setText(value);
+                } else if (innerComp instanceof JFormattedTextField) {
+                    try {
+                        ((JFormattedTextField) innerComp).setText(value);
+                    } catch (IllegalArgumentException e) {
+                        ((JFormattedTextField) innerComp).setText("0"); // Giá trị mặc định nếu không hợp lệ
+                    }
+                } else if (innerComp instanceof JLabel) {
+                    ((JLabel) innerComp).setText(value);
+                }
+            }
+        }
+
+        // Cập nhật dữ liệu trong mảng data
+        if (row < data.size()) {
+            data.set(row, newData);
+        }
+
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
 }

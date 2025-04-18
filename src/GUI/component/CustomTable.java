@@ -478,4 +478,30 @@ public class CustomTable extends JPanel implements ActionListener {
             label.setText(list[i]);
         }
     }
+
+    public void updateRowData(int row, String[] newData) {
+        if (!rowLabels.containsKey(row)) {
+            return; // Hàng không tồn tại
+        }
+        if (newData == null || newData.length == 0) {
+            return; // Dữ liệu mới không hợp lệ
+        }
+
+        List<Component> rowComponents = rowLabels.get(row);
+        for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+            Component comp = rowComponents.get(i);
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setText(newData[i] != null ? newData[i] : "");
+            }
+        }
+
+        // Cập nhật dữ liệu trong mảng data
+        if (row - 1 < data.size()) {
+            data.set(row - 1, newData);
+        }
+
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
 }

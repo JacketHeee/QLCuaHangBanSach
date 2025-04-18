@@ -12,6 +12,7 @@ import GUI.component.TableNoTouch;
 import GUI.component.chart.HorizontalBarChartV2;
 import net.miginfocom.swing.MigLayout;
 import raven.chart.data.pie.DefaultPieDataset;
+import raven.chart.pie.PieChart;
 import resources.base.baseTheme;
 
 import java.awt.*;
@@ -145,30 +146,40 @@ public class DoanhThuForm extends JPanel {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10,wrap 1"));
         
         JPanel panelLabel = new JPanel(new MigLayout("insets 0, gap 10, al center center"));
-        panelLabel.add(new LabelTongQuan("Tổng số hóa đơn","hoadon.svg","100.000",baseTheme.hoadon),"pushx,growx,sg 1");
+        panelLabel.add(new LabelTongQuan("Tổng số hóa đơn","hoadon.svg","100000",baseTheme.soLuong),"pushx,growx,sg 1");
         panelLabel.add(new LabelTongQuan("Doanh thu (đ)","doanhthu.svg","100.000.000",baseTheme.tongTien),"pushx, growx,sg 1");
 
         panel.add(panelLabel,"pushx,growx");
 
-        HorizontalBarChartV2 top = new HorizontalBarChartV2();
-        top.setBackground(Color.white);
-        top.setHeader(new JLabel("<html><b>Top 5 sách bán chạy nhất</b><html>", JLabel.CENTER));
-        top.setDataset(createDataHorizonetalBarchart());//add data
-        top.putClientProperty(FlatClientProperties.STYLE, ""
-                + "border:5,5,5,5,$Component.borderColor,,20");
-
-        panel.add(top,"hmin 250,pushx,growx");
+        panel.add(pieChart(),"hmin 290,pushx,growx");
         return panel;
     }
 
-    private DefaultPieDataset createDataHorizonetalBarchart() {
+    private PieChart pieChart() {
+        PieChart pieChart1 = new PieChart();
+        pieChart1.setChartType(PieChart.ChartType.DONUT_CHART);
+        // pieChart1.setBackground(Color.white);
+        pieChart1.setOpaque(false);
+        JLabel header1 = new JLabel("<html><font><b>Top 5 sách nhập nhiều nhất</b></font></html>",JLabel.CENTER);
+        header1.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:+1");
+        pieChart1.setHeader(header1);
+        pieChart1.getChartColor().addColor(Color.decode("#f87171"), Color.decode("#fb923c"), Color.decode("#fbbf24"), Color.decode("#a3e635"), Color.decode("#34d399"), Color.decode("#22d3ee"), Color.decode("#818cf8"), Color.decode("#c084fc"));
+        pieChart1.putClientProperty(FlatClientProperties.STYLE, ""
+                + "border:5,5,5,5,$Component.borderColor,,20");
+        pieChart1.setDataset(createPieData());
+        // add(pieChart1, "split 3,height 2
+        return pieChart1;
+    }
+
+    private DefaultPieDataset createPieData() {
         DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
-        Random random = new Random();
-        dataset.addValue("July (ongoing)", random.nextInt(100));
-        dataset.addValue("June", random.nextInt(100));
-        dataset.addValue("May", random.nextInt(100));
-        dataset.addValue("April", random.nextInt(100));
-        dataset.addValue("March", random.nextInt(100));
+        dataset.addValue("Hãy cứ xông pha", (int)(Math.random() * 1000));
+        dataset.addValue("Tạo hóa quên neft Hùng Mạnh", (int)(Math.random() * 1000));
+        dataset.addValue("Ai chẳng có ước mơ", (int)(Math.random() * 1000));
+        dataset.addValue("Từ chối giá như", (int)(Math.random() * 1000));
+        dataset.addValue("Con sói đầu đàn", (int)(Math.random() * 1000));
+        dataset.addValue("Các sách khác", 30);
         return dataset;
     }
 
