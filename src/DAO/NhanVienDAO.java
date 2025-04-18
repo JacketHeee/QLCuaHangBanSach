@@ -135,6 +135,25 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         return result;
     }
 
+    public ArrayList<String> getAllTenNVHaveAccount(){
+        ArrayList<String> result = new ArrayList<>();
+        String sql = "SELECT hoTen FROM NHANVIEN WHERE maTK IS not NULL";
+
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while(rs.next()){
+                String hoTen = rs.getString("hoTen");
+                result.add(hoTen);
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+    
     public int getMaNVByTenNV(String tenNV){
         int result = -1;
         String sql = "SELECT maNV FROM nhanVien WHERE hoTen = ?";

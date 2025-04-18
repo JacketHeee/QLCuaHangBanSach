@@ -10,7 +10,7 @@ public class NhanVienBUS {
 	private NhanVienDAO nhanVienDAO;
 	private ArrayList<NhanVienDTO> listNhanVien;
 	
-	private NhanVienBUS() {
+	public NhanVienBUS() {
 		nhanVienDAO = NhanVienDAO.getInstance();
 		listNhanVien = nhanVienDAO.getAll();
 	}
@@ -71,6 +71,11 @@ public class NhanVienBUS {
 	public ArrayList<String> getAllTenNVNotHaveAccount(){
 		return(nhanVienDAO.getAllTenNVNotHaveAccount());
 	}
+
+	public ArrayList<String> getAllTenNVHaveAccount(){
+		return(nhanVienDAO.getAllTenNVHaveAccount());
+	}
+
 
 	public int getMaNVByTen(String tenNV){
 		return(nhanVienDAO.getMaNVByTenNV(tenNV));

@@ -40,6 +40,7 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
     public CustomTable(ArrayList<String[]> data, String[][] actions, String... headers) {
+        // setBackground(Color.white);
         this.data = ((data == null)? new ArrayList<>(): data);
         this.actions = actions;
         this.headers = headers;
@@ -66,6 +67,8 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel = new JPanel();
         migLayout = new MigLayout("insets 0 0 20 0, fillx, gap 0", getColumnConstraints(), getRowConstraints());
         dataPanel.setLayout(migLayout);
+        // dataPanel.setOpaque(true);
+        // dataPanel.setBackground(Color.white);
 
         // Thêm dữ liệu ban đầu
         for (String[] x : this.data) {

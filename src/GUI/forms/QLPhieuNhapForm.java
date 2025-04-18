@@ -10,6 +10,9 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
+import BUS.KhachHangBUS;
+import BUS.NhaCungCapBUS;
+import BUS.NhanVienBUS;
 import BUS.PhieuNhapBUS;
 import DTO.HoaDonDTO;
 import DTO.KhuyenMaiDTO;
@@ -25,6 +28,7 @@ import java.util.List;
 
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
+import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
@@ -49,7 +53,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
 
     private String title;
     private int id = 8;
-    private String[] header = {"Mã nhập","Ngày nhập","Tổng tiền","Mã nhà cung cấp","Mã tài khoản"};
+    private String[] header = {"Mã nhập","Ngày nhập","Nhà cung cấp","Tổng tiền","Nhân viên"};
     PhieuNhapBUS phieuNhapBUS;
     private MainFrame mainFrame;
     private ArrayList<PhieuNhapDTO> listKH;
@@ -152,19 +156,72 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     public ArrayList<String[]> DataToShow(ArrayList<PhieuNhapDTO> inputData){
 
         ArrayList<String[]> data = new ArrayList<>();
+        NhaCungCapBUS ncc = new NhaCungCapBUS();
+        NhanVienBUS nv = new NhanVienBUS();
         for(PhieuNhapDTO i : inputData){
-            data.add(new String[]{i.getMaNhap() + "", i.getNgayNhap() + "", i.getTongTien() + "", i.getMaNCC() + "", i.getMaTK() + ""});
+            data.add(new String[]{i.getMaNhap() + "", i.getNgayNhap() + "",ncc.getTenByMaNhaCungCap(i.getMaNCC()),i.getTongTien()+"",nv.getTenNVByMaTK(i.getMaTK())});
         }
         return(data);
     }
     // {"Mã nhập","Ngày nhập","Tổng tiền","Mã nhà cung cấp","Mã tài khoản"};
     /////////////////////////////////////////////////////////////////
 
+    // private JPanel getMainContent() {
+    //     JPanel panel = new JPanel(new MigLayout("insets 0"));
+    //     table = new CustomTable(Data(),bottomActions, header);
+    //     table.setActionListener(this);
+    //     panel.add(new CustomScrollPane(table),"push, grow");
+    //     return panel;
+    // }
     private JPanel getMainContent() {
-        JPanel panel = new JPanel(new MigLayout("insets 0"));
-        table = new CustomTable(Data(),bottomActions, header);
+        JPanel panel = new JPanel(new MigLayout("insets 0, gap 10"));
+        table = new CustomTable(dataToShow,bottomActions, header);
         table.setActionListener(this);
-        panel.add(new CustomScrollPane(table),"push, grow");
+        panel.add(InteractPanel(),"pushy, growy");
+        panel.add(table,"push, grow");
+        return panel;
+    }
+
+    private int widthInteractPanel = 250;
+
+    private JPanel InteractPanel() {
+        JPanel panel = new JPanel(new MigLayout("insets 20 10 20 10,wrap 1,gap 10"));
+        panel.setPreferredSize(new Dimension(widthInteractPanel,100));
+        panel.add(new CustomBoldJLabel("FILTER", 2));
+        panel.add(new JLabel("Nhân viên"));
+        NhanVienBUS nv = new NhanVienBUS();
+        ArrayList<String> listNv = nv.getAllTenNVHaveAccount();
+        listNv.addFirst("Tất cả");
+        panel.add(new JComboBox<>(listNv.toArray()),"pushx,growx");
+
+        panel.add(new JLabel("Nhà cung cấp"));
+        NhaCungCapBUS kh = new NhaCungCapBUS();
+        ArrayList<String> listNcc = kh.getAllTenNhaCungCap();
+        listNcc.addFirst("Tất cả");
+
+        panel.add(new JComboBox<>(listNcc.toArray()),"pushx, growx");
+
+        panel.add(new JLabel("Từ ngày:"));
+        panel.add(new JTextField(),"pushx,grow");   
+
+        panel.add(new JLabel("Đến ngày:"));
+        panel.add(new JTextField(),"pushx,grow");    
+
+        panel.add(new JLabel("Từ số tiền (đ)"));
+        panel.add(new JTextField(),"pushx,grow");   
+
+        panel.add(new JLabel("Đến số tiền (đ)"));
+        panel.add(new JTextField(),"pushx,grow");        
+        
+        panel.setBackground(Color.white);
+
+        // JPanel action = new JPanel(new MigLayout());
+        // action.setBackground(Color.white);
+        // action.add(new JButton("Xuất Excel"));
+        // action.add(new JButton("Làm mới"));
+
+        // panel.add(action,"pushx,growx");
+
         return panel;
     }
 

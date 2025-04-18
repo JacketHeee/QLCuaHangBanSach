@@ -11,8 +11,13 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.HoaDonBUS;
+import BUS.KhachHangBUS;
+import BUS.NhaCungCapBUS;
+import BUS.NhanVienBUS;
+import BUS.TaiKhoanBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.HoaDonDTO;
+import DTO.KhachHangDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
@@ -23,6 +28,7 @@ import java.util.List;
 
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
+import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.DimGlassPane;
@@ -48,7 +54,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
 
     private String title;
     private int id = 10;
-    private String[] header = {"Mã hóa đơn", "Ngày lập", "Tổng tiền", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
+    private String[] header = {"Mã hóa đơn", "Ngày lập", "Khách hàng","Tổng tiền","Nhân viên"};
     HoaDonBUS hoaDonBUS;
     private MainFrame mainFrame;
     private ArrayList<HoaDonDTO> listKH;
@@ -152,8 +158,11 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     public ArrayList<String[]> DataToShow(ArrayList<HoaDonDTO> inputData){
 
         ArrayList<String[]> data = new ArrayList<>();
+        KhachHangBUS kh = new KhachHangBUS();
+        TaiKhoanBUS tk = new TaiKhoanBUS();
+
         for(HoaDonDTO i : inputData){
-            data.add(new String[]{i.getMaHD() + "", i.getNgayBan() + "", i.getTongTien() + "", i.getMaTK() + "", i.getMaPT() + "", i.getMaKM() + "", i.getMaKH() + ""});
+            data.add(new String[]{i.getMaHD() + "", i.getNgayBan() + "",kh.getTenByMaKhachHang(i.getMaKH()) , i.getTongTien() + "",tk.getTenByMaTaiKhoan(i.getMaTK())});
         }
         return(data);
     }
@@ -163,10 +172,54 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
 
 
     private JPanel getMainContent() {
-        JPanel panel = new JPanel(new MigLayout("insets 0"));
+        JPanel panel = new JPanel(new MigLayout("insets 0, gap 10"));
         table = new CustomTable(dataToShow,bottomActions, header);
         table.setActionListener(this);
-        panel.add(new CustomScrollPane(table),"push, grow");
+        panel.add(InteractPanel(),"pushy, growy");
+        panel.add(table,"push, grow");
+        return panel;
+    }
+
+    private int widthInteractPanel = 250;
+
+    private JPanel InteractPanel() {
+        JPanel panel = new JPanel(new MigLayout("insets 20 10 20 10,wrap 1,gap 10"));
+        panel.setPreferredSize(new Dimension(widthInteractPanel,100));
+        panel.add(new CustomBoldJLabel("FILTER", 2));
+        panel.add(new JLabel("Nhân viên"));
+        NhanVienBUS nv = new NhanVienBUS();
+        ArrayList<String> listNv = nv.getAllTenNVHaveAccount();
+        listNv.addFirst("Tất cả");
+        panel.add(new JComboBox<>(listNv.toArray()),"pushx,growx");
+
+        panel.add(new JLabel("Khách hàng"));
+        KhachHangBUS kh = new KhachHangBUS();
+        ArrayList<String> listNcc = kh.getAllTenKhachHang();
+        listNcc.addFirst("Tất cả");
+
+        panel.add(new JComboBox<>(listNcc.toArray()),"pushx, growx");
+
+        panel.add(new JLabel("Từ ngày:"));
+        panel.add(new JTextField(),"pushx,grow");   
+
+        panel.add(new JLabel("Đến ngày:"));
+        panel.add(new JTextField(),"pushx,grow");
+          
+        panel.add(new JLabel("Từ số tiền (đ)"));
+        panel.add(new JTextField(),"pushx,grow");   
+
+        panel.add(new JLabel("Đến số tiền (đ)"));
+        panel.add(new JTextField(),"pushx,grow");         
+        
+        panel.setBackground(Color.white);
+
+        // JPanel action = new JPanel(new MigLayout());
+        // action.setBackground(Color.white);
+        // action.add(new JButton("Xuất Excel"));
+        // action.add(new JButton("Làm mới"));
+
+        // panel.add(action,"pushx,growx");
+
         return panel;
     }
 

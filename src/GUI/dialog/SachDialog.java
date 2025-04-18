@@ -62,17 +62,6 @@ public class SachDialog extends JDialog implements ActionListener{
     
     public SachDialog(SachForm sachPanel, String title, String function, String type, String[][] attributes, int... row){
         super(sachPanel.getMainFrame(), title, true);
-        this.sachPanel = sachPanel;
-        this.mainFrame = this.sachPanel.getMainFrame();
-        this.sachBUS = this.sachPanel.getSachBUS();
-        this.type = type;
-        this.attributes = attributes;
-        inputForm = new InputForm(attributes);
-        this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
-        viTriVungBUS = ViTriVungBUS.getInstance();
-        nhaXBBUS = NhaXBBUS.getInstance();
-        theLoaiBUS = TheLoaiBUS.getInstance();
-        tacGiaBUS = TacGiaBUS.getInstance();
         phanLoaiBUS = PhanLoaiBUS.getInstance();
         danhMuc_TGBUS = DanhMuc_TGBUS.getInstance();
         this.oldListTL = new ArrayList<>();

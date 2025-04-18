@@ -11,7 +11,7 @@ public class KhachHangBUS {
 	private KhachHangDAO khachHangDAO;
 	private ArrayList<KhachHangDTO> listKhachHang;
 	
-	private KhachHangBUS() {
+	public KhachHangBUS() {
 		khachHangDAO = KhachHangDAO.getInstance();
 		listKhachHang = khachHangDAO.getAll();
 	}
