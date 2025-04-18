@@ -18,7 +18,6 @@ public class TongQuanForm extends JPanel implements ActionListener{
     private CustomButtonTab butTongQuan;
     private CustomButtonTab butDoanhThu;
     private CustomButtonTab butNhapHang;
-    private CustomButtonTab butTonKho;
 
     private JPanel mainPanel;
     private JPanel headJPanel;
@@ -50,26 +49,20 @@ public class TongQuanForm extends JPanel implements ActionListener{
         butTongQuan = new CustomButtonTab("Tổng quan");
         butDoanhThu = new CustomButtonTab("Doanh thu");
         butNhapHang = new CustomButtonTab("Nhập hàng");
-        butTonKho = new CustomButtonTab("Tồn kho");
 
         butTongQuan.setActionCommand("tongquan");
         butDoanhThu.setActionCommand("doanhthu");
         butNhapHang.setActionCommand("nhaphang");
-        butTonKho.setActionCommand("tonkho");
 
         butTongQuan.setSelected(true);
 
         butTongQuan.addActionListener(this);
         butDoanhThu.addActionListener(this);
         butNhapHang.addActionListener(this);
-        butTonKho.addActionListener(this);
-        
 
         headJPanel.add(butTongQuan,"growy");
         headJPanel.add(butDoanhThu,"growy");
         headJPanel.add(butNhapHang,"growy");
-        headJPanel.add(butTonKho,"growy");
-
     }
 
     
@@ -112,14 +105,8 @@ public class TongQuanForm extends JPanel implements ActionListener{
             case "nhaphang":
                 but = (CustomButtonTab) e.getSource();
                 but.setSelected(true);
-                setPanel(new CustomScrollPane(new NhapHang()));
-                break;
-            case "tonkho":
-                but = (CustomButtonTab) e.getSource();
-                but.setSelected(true);
-                setPanel(new TonKho());
-                break;
-        
+                setPanel(new NhapHang());
+                break;        
             default:
                 break;
         }

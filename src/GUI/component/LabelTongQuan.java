@@ -43,7 +43,7 @@ public class LabelTongQuan extends JPanel{
         JPanel panel = new JPanel(new MigLayout("al center center"));
         panel.setOpaque(false);
         panel.add(new JLabel(String.format("<html><b><font color='white' size='+2'>%s</font></b></html>", count)),"al left,wrap");
-        panel.add(new JLabel(String.format("<html><b><font color='white' size='+1'>%s</font></b></html>", text)),"al center,gaptop 10");
+        panel.add(new JLabel(String.format("<html><b><font color='white' size='+0'>%s</font></b></html>", text)),"al center,gaptop 10");
         
         add(panel,"push,grow");
     }

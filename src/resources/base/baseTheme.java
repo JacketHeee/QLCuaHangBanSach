@@ -15,5 +15,7 @@ public class baseTheme {
 
     public static String doanhthu = "#2ecc71";
     public static String hoadon = "#7f8c8d";
-    
+
+    public static String soLuong = "#fb923c";
+    public static String tongTien = "#1cc88a";
 }

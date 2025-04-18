@@ -2,6 +2,8 @@ package GUI.forms.thongke;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomTable;
 import GUI.component.LabelInfor;
@@ -144,7 +146,7 @@ public class DoanhThuForm extends JPanel {
         
         JPanel panelLabel = new JPanel(new MigLayout("insets 0, gap 10, al center center"));
         panelLabel.add(new LabelTongQuan("Tổng số hóa đơn","hoadon.svg","100.000",baseTheme.hoadon),"pushx,growx,sg 1");
-        panelLabel.add(new LabelTongQuan("Doanh thu (đ)","doanhthu.svg","100.000.000",baseTheme.doanhthu),"pushx, growx,sg 1");
+        panelLabel.add(new LabelTongQuan("Doanh thu (đ)","doanhthu.svg","100.000.000",baseTheme.tongTien),"pushx, growx,sg 1");
 
         panel.add(panelLabel,"pushx,growx");
 
@@ -152,6 +154,8 @@ public class DoanhThuForm extends JPanel {
         top.setBackground(Color.white);
         top.setHeader(new JLabel("<html><b>Top 5 sách bán chạy nhất</b><html>", JLabel.CENTER));
         top.setDataset(createDataHorizonetalBarchart());//add data
+        top.putClientProperty(FlatClientProperties.STYLE, ""
+                + "border:5,5,5,5,$Component.borderColor,,20");
 
         panel.add(top,"hmin 250,pushx,growx");
         return panel;
