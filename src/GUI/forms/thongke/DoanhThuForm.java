@@ -160,7 +160,7 @@ public class DoanhThuForm extends JPanel {
         pieChart1.setChartType(PieChart.ChartType.DONUT_CHART);
         // pieChart1.setBackground(Color.white);
         pieChart1.setOpaque(false);
-        JLabel header1 = new JLabel("<html><font><b>Top 5 sách nhập nhiều nhất</b></font></html>",JLabel.CENTER);
+        JLabel header1 = new JLabel("<html><font><b>Top 5 sách bán nhiều nhất</b></font></html>",JLabel.CENTER);
         header1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:+1");
         pieChart1.setHeader(header1);

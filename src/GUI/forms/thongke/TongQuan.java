@@ -5,20 +5,33 @@ import javax.swing.JPanel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import GUI.component.TableNoTouch;
+import GUI.component.chart.HorizontalBarChartV2;
 import GUI.component.chart.LineChartV2;
+import GUI.component.chart.CurveChart.CurveChart;
+import GUI.component.chart.CurveChart.ModelChart2;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Random;
+
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
+import raven.chart.bar.HorizontalBarChart;
 import raven.chart.data.category.DefaultCategoryDataset;
+import raven.chart.data.pie.DefaultPieDataset;
 import raven.chart.line.LineChart;
+import raven.chart.pie.PieChart;
+
 import java.util.Arrays;
 
 import java.util.ArrayList;
 
-import java.awt.Dimension; 
+import java.awt.Dimension;
+import java.awt.BorderLayout;
 import java.awt.Color; 
 import resources.base.baseTheme;
+import GUI.component.CustomBoldJLabel;
 import GUI.component.LabelInfor;
 
 public class TongQuan extends JPanel{
@@ -34,15 +47,15 @@ public class TongQuan extends JPanel{
         getLabel();
 
         add(headPanel,"pushx,growx,wrap,gaptop 20");
-        createLineChart();
-        getTableDoanhThu();
+        add(panelChart(),"pushx,growx,wrap");
+        add(chartArea(),"pushx,growx");
     }
 
     String[][] data = {
-        {"Cuốn sách hiện có","bookLabel.svg","100",baseTheme.bookLabel},
-        {"Nhà cung cấp","supplierLabel.svg","98",baseTheme.supplierLabel},
-        {"Khách hàng","customerLabel.svg","100",baseTheme.customerLabel},
-        {"Nhân viên","staffLabel.svg","100",baseTheme.staffLabel}
+        {"Doanh thu hôm nay","doanhthu.svg","100",baseTheme.red},
+        {"Số hóa đơn hôm nay","hoadon.svg","98",baseTheme.yellow},
+        {"Tổng nhập hàng hôm nay","supplierLabel.svg","100",baseTheme.green},
+        {"Số sách tồn thấp (<5)","bookLabel.svg","100",baseTheme.bubble}
     };
     
     private void getLabel() {
@@ -50,64 +63,104 @@ public class TongQuan extends JPanel{
             headPanel.add(new LabelInfor(x[0], x[1], x[2], x[3]),"pushx,growx");
     }
 
-    private void createLineChart() {
-        lineChart = new LineChartV2();
-        lineChart.setBackground(Color.white);
-        lineChart.setChartType(LineChart.ChartType.CURVE);
-        lineChart.putClientProperty(FlatClientProperties.STYLE, ""
-                + "border:5,5,5,5,$Component.borderColor,,20");
-        lineChart.setMinimumSize(new Dimension(200,300));
-        add(lineChart,"pushx,grow,wrap");
-        createLineChartData();
+    private JPanel panelChart() {
+        JPanel panel = new JPanel(new MigLayout("insets 10 0 10 0, wrap 1"));
+        panel.setBackground(Color.white);
+        panel.putClientProperty("arc", 10);
+
+        panel.add(new CustomBoldJLabel("Thống kê doanh thu 7 ngày gần nhất",0),"al center");
+        panel.add(curveChart(),"pushx,growx");
+        return panel;
     }
 
-    int[][] value = {
-        {100000000,1000000,10002300},
-        {100000000,1000000,100000123},
-        {23846729,24234,12000},
-        {200000000,1500000,10003210},
-        {50340000,100000,1000123},
-        {124300000,434000,123001230},
-        {100000000,1000000,100023100}
-    };
+    private CurveChart chart;
+    private CurveChart curveChart() {
+        chart = new CurveChart();
+        // chart.addLegend("Doanh thu",Color.decode(baseTheme.mainColor), Color.decode(baseTheme.green));
+        chart.addLegend("Doanh thu",new Color(54, 4, 143), new Color(104, 49, 200));
+        // chart.setOpaque(false);
+        loadDataChart();
+        return chart;
+    }
 
-    private void createLineChartData() {
-        DefaultCategoryDataset<String, String> categoryDataset = new DefaultCategoryDataset<>();
-        Calendar cal = Calendar.getInstance(); //lấy ngày giờ hiện tại
-        cal.add(Calendar.DATE, -7);  //thống kê doanh thu 7 ngày gần nhất
-       
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //"dd/MM/yyyy"
-        
+    int[] values = {100,500,100,20,900,150,400};
 
-        // addValue(value, rowKey, columnKey)
-        for (int i = 0; i < value.length; i++) {
-            String date = df.format(cal.getTime());
-            categoryDataset.addValue(value[i][0], "Doanh thu", date);
-            categoryDataset.addValue(value[i][1], "Chi phí", date);
-            categoryDataset.addValue(value[i][2], "Lợi nhuận", date);
+    private void loadDataChart() {
+        LocalDate today = LocalDate.now();
+        LocalDate startDay = today.minusDays(6);
+        Random rand = new Random();
+        int i = 0;
 
-            cal.add(Calendar.DATE, 1);
+        for (LocalDate date = startDay; !date.isAfter(today); date = date.plusDays(1)) {
+            chart.addData(new ModelChart2(date.toString(), new double[] {values[i]}));
+            i++;
         }
 
-        lineChart.setCategoryDataset(categoryDataset);
-        lineChart.getChartColor().addColor(Color.decode("#38bdf8"), Color.decode("#fb7185"), Color.decode("#34d399"));
-        JLabel header = new JLabel("<html><b><font>Thống kê doanh thu 7 ngày gần nhất</font></b></html>");
-        lineChart.setHeader(header);
+        chart.start();
     }
 
-    ArrayList<String[]> datas = new ArrayList<>(Arrays.asList(
-        new String[] {"2023-12-12", "7.000.000", "34.000.000", "30.000.000"},
-        new String[] {"2023-12-13", "8.000.000", "30.000.000", "22.000.000"},
-        new String[] {"2023-12-12", "7.000.000", "34.000.000", "30.000.000"},
-        new String[] {"2023-12-13", "8.000.000", "30.000.000", "22.000.000"},
-        new String[] {"2023-12-12", "7.000.000", "34.000.000", "30.000.000"},
-        new String[] {"2023-12-13", "8.000.000", "30.000.000", "22.000.000"},
-        new String[] {"2023-12-13", "8.000.000", "30.000.000", "22.000.000"}
-    ));
-
-    
-    private void getTableDoanhThu() {
-        TableNoTouch table = new TableNoTouch(datas, "Ngày","Vốn","Doanh thu","Lợi nhuận");
-        add(table,"push,grow");
+    private JPanel panelHorizonetalBarchart() {
+        HorizontalBarChartV2 barChart1 = new HorizontalBarChartV2();
+        
+        // JLabel header1 = new JLabel("Top 5 sách bán chạy trong 7 ngày gần nhất");
+        JLabel header1 = new CustomBoldJLabel("Top 5 sách bán chạy trong 7 ngày gần nhất",0);
+        
+        header1.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:+1;"
+                + "border:0,0,5,0");
+        barChart1.setHeader(header1);
+        barChart1.setBarColor(Color.decode(baseTheme.green));
+        barChart1.setDataset(createData());
+        
+        JPanel panel1 = new JPanel(new BorderLayout());
+        panel1.putClientProperty(FlatClientProperties.STYLE, ""
+                + "border:5,5,5,5,$Component.borderColor,,20");
+        panel1.add(barChart1);
+        // panel1.setBackground(Color.white);
+        return panel1;
     }
+
+    private DefaultPieDataset createData() {
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+        Random random = new Random();
+        dataset.addValue("Từ chối giá như", random.nextInt(100));
+        dataset.addValue("Hãy tôn trọng bản thân", random.nextInt(100));
+        dataset.addValue("Tạo hóa quên neft Hùng Mạnh", random.nextInt(100));
+        dataset.addValue("Hãy biến thành công thành thói quen", random.nextInt(100));
+        dataset.addValue("Cột sống vàng", random.nextInt(100));
+        return dataset;
+    }
+
+
+    private PieChart pieChart() {
+        PieChart pieChart1 = new PieChart();
+        pieChart1.setChartType(PieChart.ChartType.DEFAULT);
+        // pieChart1.setBackground(Color.white);
+        pieChart1.setOpaque(false);
+        JLabel header1 = new JLabel("<html><font><b>% Hóa đơn sử dụng khuyến mãi hôm nay</b></font></html>",JLabel.CENTER);
+        header1.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:+1");
+        pieChart1.setHeader(header1);
+        pieChart1.getChartColor().addColor(Color.decode(baseTheme.yellow), Color.decode(baseTheme.yellowGreen), Color.decode("#22d3ee"), Color.decode("#818cf8"), Color.decode("#c084fc"));
+        pieChart1.putClientProperty(FlatClientProperties.STYLE, ""
+                + "border:5,5,5,5,$Component.borderColor,,20");
+        pieChart1.setDataset(createPieData());
+        // add(pieChart1, "split 3,height 2
+        return pieChart1;
+    }
+
+    private DefaultPieDataset createPieData() {
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+        dataset.addValue("Không sử dụng", (int)(Math.random() * 1000));
+        dataset.addValue("Sử dụng khuyến mãi", (int)(Math.random() * 1000));
+        return dataset;
+    }
+
+    private JPanel chartArea() {
+        JPanel panel = new JPanel(new MigLayout("insets 0"));
+        panel.add(panelHorizonetalBarchart(),"pushx, grow, hmin 250, sg 1");
+        panel.add(pieChart(),"hmin 250");
+        return panel;
+    }
+
 }

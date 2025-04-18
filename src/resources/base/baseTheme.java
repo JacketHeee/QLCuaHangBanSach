@@ -18,4 +18,14 @@ public class baseTheme {
 
     public static String soLuong = "#fb923c";
     public static String tongTien = "#1cc88a";
+
+    public static String red = "#f87171";
+    public static String orga = "#fb923c";
+    public static String yellow = "#fbbf24";
+    public static String yellowGreen = "#a3e635";
+    public static String green = "#34d399";
+    public static String blue = "#22d3ee";
+    public static String bubble = "#818cf8";
+    public static String pink = "#c084fc";
+    
 }
