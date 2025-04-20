@@ -75,6 +75,13 @@ public class SearchPanel<T> extends JPanel {
             }
         });
 
+        inputSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                doSearch.run();
+            }
+        });
+
         add(butSearch);
     }
 
@@ -89,5 +96,4 @@ public class SearchPanel<T> extends JPanel {
         repaint();
         revalidate();
     }
-
 }

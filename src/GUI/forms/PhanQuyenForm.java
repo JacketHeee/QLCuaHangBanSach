@@ -2,27 +2,15 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-
 import DTO.NhomQuyenDTO;
-import DTO.PhuongThucTTDTO;
-import DTO.SachDTO;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhomQuyenBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
-import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
@@ -33,12 +21,8 @@ import GUI.dialog.AddNhomQuyen;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.PhanQuyenSearch;
-import search.SachSearch;
 import utils.UIUtils;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

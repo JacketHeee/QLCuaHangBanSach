@@ -58,13 +58,21 @@ public class Validate {
     }
 
     public static boolean isDate(String i){ 
-        // String year = new String(); Validate năm nhuận
-        // try {
-        //     year = i.substring(i.length() - 4);
-        // } catch (Exception e) {
-        //     System.out.println("Chuỗi chưa tới 4 ký tự");
-        //     return(false);
-        // }
+        String yearS = new String(); //Validate năm nhuận
+        try {
+            yearS = i.substring(i.length() - 4);
+        } catch (Exception e) {
+            System.out.println("Chuỗi chưa tới 4 ký tự");
+            return(false);
+        }
+        if(!isPositiveNumber(i)){
+            return(false);
+        }
+        int year = Integer.parseInt(yearS);
+        //Năm nhuận
+        if(year % 4 == 0){
+
+        }
         // System.out.println(year);
         // Cụm 1: Cho ngày + / + tháng cho những tháng có 31 ngày (1, 3, 5, 7, 8, 10, 12)
         // Cụm 2: Cho ngày + / + tháng cho những tháng có 30 ngày (4, 6, 9, 11)

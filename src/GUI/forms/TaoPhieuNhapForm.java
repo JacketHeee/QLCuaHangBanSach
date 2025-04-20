@@ -17,6 +17,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
@@ -27,6 +28,7 @@ import GUI.component.TableActionListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.awt.Font;
 import java.awt.Color;
@@ -42,6 +44,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private JPanel chiTietPhieuNhap;
+    private String[] headers = {"Mã sách","Tên sách","Số lượng","Giá nhập","Thành tiền"};
 
     public TaoPhieuNhapForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -104,11 +107,44 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private JPanel getChiTietPhieuNhap() {
         JPanel panel = getPanel("Chi tiết phiếu nhập");
         panel.setLayout(new MigLayout());
-        table = new InvoiceTable(null, actions, "Mã sách","Tên sách","Số lượng","Giá nhập","Thành tiền");
-        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
-        // table.addDataRow(new String[] {"1","Dang cap Nguyen Hung Manh","1","100.000","100.000"});
+        table = new InvoiceTable(
+            null
+            , actions
+            ,new InvoiceTable.DataForTable(){
+                @Override
+                public String[] getDataForTable(SachDTO sach, int soLuong) {    //Truyền vào một hàm cho InvoiceTable
+                    // String[] result;                                            //Khi invoiceTable đã có dữ liệu sachDTO
+                    // BigDecimal tongGia = tinhTongGia(sach, soLuong);            //Cho sử dụng cả hóa đơn và phiếu nhập
+                    // ArrayList<String> list = new ArrayList<>();
+                    //     list.add(sach.getMaSach() + "");
+                    //     list.add(sach.getTenSach());
+                    //     list.add(soLuong + "");
+                    //     list.add(sach.getGiaBan() + "");
+                    //     list.add(tongGia + "");
+                    // ;
+                    // result = list.toArray(new String[0]);
+                    // return(result);
+                    return(new String[]{""});
+                }   
+            }
+            , new InvoiceTable.TinhTongGia(){
+                @Override
+                public void updateTongGia(int row) {    //Truyền vào cho invoice table sử dụng để update tổng tiền ctsp khi có thay đổi
+                    // updateTongGiaBan(row);
+                }
+            }
+            , new InvoiceTable.TinhTongGiaChungTu(){    //Được callBack mỗi khi thêm mới sách/ thay đổi số lượng
+                @Override
+                public void updateTongGiaChungTu(){
+                    // updateTongTienHoaDon();
+                    // updateTTTT();
+                    // updateStatusCombobox();
+                    // updateStatusTextFieldTienTra();
+                    // updateStatusbtnThem();
+                }
+            }
+            , headers);
+
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
         panel.add(panelActionOnTable(),"pushx,growx");

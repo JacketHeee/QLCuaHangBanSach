@@ -98,4 +98,72 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public KhuyenMaiDTO getInstanceByMa(int ma){
+        KhuyenMaiDTO result = new KhuyenMaiDTO();
+        String sql = "SELECT * FROM KHUYENMAI WHERE maKM = ? AND TRANGTHAI = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, ma);
+        try {
+            while (rs.next()) {
+                String tenKM = rs.getString("tenKM");
+                String dieuKienGiam = rs.getString("dieuKienGiam");
+                BigDecimal giaTriGiam = rs.getBigDecimal("giaTriGiam");
+                LocalDateTime ngayBatDau = rs.getTimestamp("ngayBatDau").toLocalDateTime();
+                LocalDateTime ngayKetThuc = rs.getTimestamp("ngayKetThuc").toLocalDateTime();
+                
+                KhuyenMaiDTO km = new KhuyenMaiDTO(ma, tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc);
+                result = km;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+    
+    public int getMaKhuyenMaiByTen(String ten){
+        int result = -1;
+        String sql = "SELECT maKM FROM KHUYENMAI WHERE tenKM = ? AND TRANGTHAI = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, ten);
+        try {
+            while (rs.next()) {
+                int maKM = rs.getInt("maKM");
+                result = maKM;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+    public String getTenByMaKhuyenMa(int maKM){
+        String result = new String();
+        String sql = "SELECT tenKM FROM KHUYENMAI WHERE maKM = ? AND TRANGTHAI = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maKM);
+        try {
+            while (rs.next()) {
+                String tenKM = rs.getString("tenKM");
+                result = tenKM;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+
 }

@@ -88,5 +88,13 @@ public class NhanVienBUS {
 	public String getTenNVByMaTK(int maTK){
 		return(nhanVienDAO.getTenNVByMaTK(maTK));
 	}
+
+	public int getMaNVByMaTK(int maTK){
+		return(nhanVienDAO.getMaNVByMaTK(maTK));
+	}
+
+	public NhanVienDTO getInstanceByMa(int maNV){
+		return(nhanVienDAO.getInstanceByMa(maNV));
+	}
 	
 }

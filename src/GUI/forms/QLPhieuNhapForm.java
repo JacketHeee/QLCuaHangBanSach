@@ -29,6 +29,8 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
+import GUI.dialog.AddHoaDonDialog;
+import GUI.dialog.AddPhieuNhapDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.QLPhieuNhapSearch;
@@ -170,7 +172,11 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "add":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
+                mainFrame.glassPane.setVisible(true);
+                ButtonAction but = (ButtonAction) e.getSource();
+                System.out.println(but.getId()+ but.getText());
+                new AddPhieuNhapDialog(mainFrame);
+                mainFrame.glassPane.setVisible(false);
                 break;
             case "importExcel":
                 

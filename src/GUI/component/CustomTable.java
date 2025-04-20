@@ -74,19 +74,21 @@ public class CustomTable extends JPanel implements ActionListener {
 
         // Đặt PreferredSize cho dataPanel
         // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
-        setDataPanelpre();
+        setDataPanelPre();
         // Tạo JScrollPane
         
         
         // Thêm vào CustomTable
-        add(headerPanel, BorderLayout.NORTH);
+        add(headerPanel, BorderLayout.NORTH);   
         addScollPane();
 
         // Đặt kích thước mặc định cho CustomTable
-        // setMinimumSize(new Dimension(400, 200));
+        // setMinimumSize(new Dimension(400, 100));
+        // setPreferredSize(null);
     }
 
-    public void setDataPanelpre() {
+    public void setDataPanelPre() {
+        // dataPanel.setPreferredSize(null);
         dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
     }
 
@@ -148,34 +150,6 @@ public class CustomTable extends JPanel implements ActionListener {
         return label;
     }
 
-    
-    // public void removeRow(int row) {
-    //     if (!rowLabels.containsKey(row)) return;
-        
-    //     for (Component comp : rowLabels.get(row)) {
-    //         dataPanel.remove(comp);
-    //     }
-    //     rowLabels.remove(row);
-        
-    //     Map<Integer, List<Component>> updatedRowLabels = new HashMap<>();
-    //     int newRowIndex = 1;
-    //     for (int key : rowLabels.keySet()) {
-    //         if (key != row) {
-    //             updatedRowLabels.put(newRowIndex, rowLabels.get(key));
-    //             newRowIndex++;
-    //         }
-    //     }
-
-    //     rowLabels.clear();
-    //     rowLabels.putAll(updatedRowLabels);
-    //     updateRowColors();
-    //     updateRowConstraints();
-    //     dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
-    //     dataPanel.revalidate();
-    //     dataPanel.repaint();
-    //     repaint();
-    //     revalidate();
-    // }
 
     public void removeRow(int row) {
         if (!rowLabels.containsKey(row)) return;
@@ -469,7 +443,6 @@ public class CustomTable extends JPanel implements ActionListener {
         }
 
         rowLabels.put(row, labels);
-
         // Cập nhật rowHeights nếu cần
         if (row >= rowHeights.length) {
             int[] newRowHeights = new int[row + 1];
@@ -501,4 +474,36 @@ public class CustomTable extends JPanel implements ActionListener {
             label.setText(list[i]);
         }
     }
+
+    public void updateRowData(int row, String[] newData) {
+        if (!rowLabels.containsKey(row)) {
+            return; // Hàng không tồn tại
+        }
+        if (newData == null || newData.length == 0) {
+            return; // Dữ liệu mới không hợp lệ
+        }
+
+        List<Component> rowComponents = rowLabels.get(row);
+        for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+            Component comp = rowComponents.get(i);
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setText(newData[i] != null ? newData[i] : "");
+            }
+        }
+
+        // Cập nhật dữ liệu trong mảng data
+        if (row - 1 < data.size()) {
+            data.set(row - 1, newData);
+        }
+
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+
+    public Map<Integer, List<Component>> getRowLabels() {
+        return rowLabels;
+    }
+
+    
 }

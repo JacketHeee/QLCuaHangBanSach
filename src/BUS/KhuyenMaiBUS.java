@@ -73,19 +73,16 @@ public class KhuyenMaiBUS {
 		return(result);
 	}
 	public int getMaKhuyenMaiByTen(String ten){
-		for(KhuyenMaiDTO KhuyenMaiDTO : this.listKhuyenMai){
-			if(KhuyenMaiDTO.getTenKM().equals(ten)){
-				return(KhuyenMaiDTO.getMaKM());
-			}
-		}
-		return(-1);
+		return(khuyenMaiDAO.getMaKhuyenMaiByTen(ten));
 	}
 	public String getTenByMaKhuyenMai(int ma){
-		for(KhuyenMaiDTO KhuyenMaiDTO : this.listKhuyenMai){
-			if(KhuyenMaiDTO.getMaKM() == ma){
-				return(KhuyenMaiDTO.getTenKM());
-			}
-		}
-		return(null);
+		return(khuyenMaiDAO.getTenByMaKhuyenMa(ma));
 	}
+    public KhuyenMaiDTO getInstanceByMa(int ma){
+        return(khuyenMaiDAO.getInstanceByMa(ma));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new KhuyenMaiBUS().getMaKhuyenMaiByTen("Tiền mặt"));
+    }
 }

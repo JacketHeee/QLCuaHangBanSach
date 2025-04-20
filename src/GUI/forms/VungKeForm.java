@@ -2,44 +2,30 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.ViTriVungBUS;
-import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
-import GUI.component.CustomScrollPane;
+import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.ViTriVungDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
-import search.SachSearch;
 import search.VungKeSearch;
+import utils.ImageUtils;
 import utils.UIUtils;
 
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 
 public class VungKeForm extends JPanel implements TableActionListener, ActionListener {
 
@@ -58,6 +44,8 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         {"textbox","Tên vùng"}
     };
     private String[] filter = {"Tất cả","Mã vùng", "Tên vùng"};
+    private CustomTable tableSanPham;
+    private CustomTable table;
 
     public VungKeForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -76,7 +64,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
 
         add(getHeader(),"pushx, growx");
         add(getActions(),"pushx, growx");
-        add(getMainContent(),"push,grow, gaptop 15");
+        add(getMainContent(),"push,grow");
 
     }
 
@@ -111,7 +99,6 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         {"edit.svg","edit"},
         {"remove.svg","remove"}
     };
-    private CustomTable table;
 
     private JPanel getActions() {
         JPanel panel = new JPanel(new MigLayout("gap 10"));
@@ -172,15 +159,89 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     /////////////////////////////////////////////////////////////////
 
 
+    String[][] actionOnTableSanPham = {
+        {"detail.svg","detail"}
+    };
 
     private JPanel getMainContent() {
-        JPanel panel = new JPanel(new MigLayout("insets 0"));
+        JPanel panel = new JPanel(new MigLayout("insets 0","[][]","[][]"));
+
         table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
+
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
+        table.addDataRow(new String[] {"1","A1"});
         // CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
-        panel.add(new CustomScrollPane(table),"push, grow");
+        panel.add(getSoDo(),"");
+
+        
+        panel.add(panelSanPhamTuongUng(),"span 1 2, pushy,growy,wrap");
+
+        panel.add(table,"push, grow");
         return panel;
     }
+
+    private JPanel panelSanPhamTuongUng() {
+        JPanel panel = new JPanel(new MigLayout("insets 10,wrap 1"));
+        panel.putClientProperty(FlatClientProperties.STYLE,"arc: 10");
+
+        panel.setBackground(Color.white);
+        panel.add(new CustomBoldJLabel("Các sản phẩm có trong vùng",1),"pushx, gapbottom 5");
+
+        tableSanPham = new CustomTable(null, actionOnTableSanPham, "Mã sách","Tên sách");
+        tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        
+        panel.add(tableSanPham,"push,grow");
+
+
+
+
+        return panel;
+    }
+
+    private JPanel getSoDo() {
+        JPanel panel = new JPanel(new MigLayout("insets 0")); 
+        // sodoComponent panel = new sodoComponent();
+        // panel.setLayout(new MigLayout("insets 0"));
+
+        // panel.add(new JLabel("<html><b><font size='+1'>Sơ đồ cửa hàng</font></b></html>"),"pushx,growx, wrap");
+
+        // ImageIcon originalIcon = new ImageIcon(getClass().getResource("/resources/img/sodo1.png"));
+
+        // // Resize ảnh nè:
+        // Image resizedImage = originalIcon.getImage().getScaledInstance(700, 457, Image.SCALE_SMOOTH);
+
+        // // Gắn lại vào ImageIcon mới
+        // ImageIcon resizedIcon = new ImageIcon(resizedImage);
+
+        // Rồi gắn vào JLabel
+        panel.setBackground(Color.white);
+        panel.putClientProperty(FlatClientProperties.STYLE, "arc: 10");
+        JLabel label = new JLabel(ImageUtils.getHighQualityResizedIcon(getClass(), "/resources/img/sodo1.png", 900, 500));
+        panel.add(label,"al center");
+        // panel.add(new JLabel(new FlatSVGIcon(VungKeForm.class.getResource("/resources/img/sodo.svg")).derive(700, 457)));
+        return panel; 
+    }
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
