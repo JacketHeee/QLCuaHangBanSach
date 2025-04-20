@@ -35,7 +35,7 @@ public class SachDTO {
 		this.maNXB = maNXB;
 	}
 
-    // Constructor khi insert (không có mã sách)
+
     public SachDTO(int maSach, String tenSach, BigDecimal giaBan, 
                    int namXB, int maVung, int maNXB) {
         this.maSach = maSach;
@@ -45,16 +45,33 @@ public class SachDTO {
         this.maVung = maVung;
         this.maNXB = maNXB;
     }
-
+// Constructor khi insert (không có mã sách)
     public SachDTO(String tenSach, int soLuong, BigDecimal giaBan, 
-    int namXB, int maVung, int maNXB) {
-this.tenSach = tenSach;
-this.soLuong = soLuong;
-this.giaBan = giaBan;
-this.namXB = namXB;
-this.maVung = maVung;
-this.maNXB = maNXB;
-}
+        int namXB, int maVung, int maNXB) {
+        this.tenSach = tenSach;
+        this.soLuong = soLuong;
+        this.giaBan = giaBan;
+        this.namXB = namXB;
+        this.maVung = maVung;
+        this.maNXB = maNXB;
+    }
+
+    public SachDTO(String tenSach, 
+        int namXB, int maVung, int maNXB) {
+        this.tenSach = tenSach;
+        this.namXB = namXB;
+        this.maVung = maVung;
+        this.maNXB = maNXB;
+    }
+
+    public SachDTO(int maSach, String tenSach, 
+        int namXB, int maVung, int maNXB) {
+        this.maSach = maSach;
+        this.tenSach = tenSach;
+        this.namXB = namXB;
+        this.maVung = maVung;
+        this.maNXB = maNXB;
+    }
 
     public int getMaSach() {
         return maSach;

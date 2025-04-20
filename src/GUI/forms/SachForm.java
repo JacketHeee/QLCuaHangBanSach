@@ -48,7 +48,6 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private String[][] attributes = {
         {"textbox","Tên sách"},
-        {"textbox", "Giá bán"},
         {"textbox", "Năm xuất bản"},
         {"combobox", "Vùng"}, //FK
         {"combobox", "Nhà xuất bản"}, //FK

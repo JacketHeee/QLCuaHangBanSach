@@ -106,4 +106,12 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public int getNextID(){
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int nextID = jdbcUtil.getAutoIncrement("HOADON");
+        jdbcUtil.Close();
+        return(nextID);
+    }
 }

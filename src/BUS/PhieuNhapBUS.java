@@ -62,5 +62,9 @@ public class PhieuNhapBUS {
 		}
 		return(-1);
 	}
+
+	public int getNextID(){
+		return(phieuNhapDAO.getNextID());
+	}
 	
 }
