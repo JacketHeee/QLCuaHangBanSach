@@ -504,4 +504,49 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.revalidate();
         dataPanel.repaint();
     }
+
+
+    public void replaceColumnComponent(int columnIndex, String componentType) {
+        if (columnIndex < 0 || columnIndex >= headers.length) {
+            throw new IllegalArgumentException("Column index out of bounds");
+        }
+
+        for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+            int row = entry.getKey();
+            List<Component> components = entry.getValue();
+            Component oldComponent = components.get(columnIndex);
+
+            // Xóa component cũ khỏi dataPanel
+            dataPanel.remove(oldComponent);
+
+            // Tạo component mới dựa trên componentType
+            Component newComponent;
+            if ("JTextField".equalsIgnoreCase(componentType)) {
+                String text = (oldComponent instanceof JLabel) ? ((JLabel) oldComponent).getText() : "";
+                JTextField textField = new JTextField(text);
+                textField.setPreferredSize(new Dimension(150, 30));
+                textField.setHorizontalAlignment(SwingConstants.CENTER);
+                textField.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
+                newComponent = textField;
+            } else if ("JPanel".equalsIgnoreCase(componentType)) {
+                JPanel panel = new JPanel();
+                panel.setPreferredSize(new Dimension(150, 30));
+                panel.setOpaque(true);
+                panel.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
+                newComponent = panel;
+            } else {
+                throw new IllegalArgumentException("Unsupported component type: " + componentType);
+            }
+
+            // Thêm component mới vào dataPanel
+            dataPanel.add(newComponent, "grow,cell " + columnIndex + " " + (row - 1));
+
+            // Cập nhật rowLabels
+            components.set(columnIndex, newComponent);
+        }
+
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
 }
