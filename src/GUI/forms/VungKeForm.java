@@ -15,6 +15,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
+import GUI.component.sodoComponent;
 import GUI.dialog.ViTriVungDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
@@ -40,12 +41,12 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private CustomTable tableSanPham;
+    private CustomTable table;
     private String[][] attributes = {
         {"textbox","Tên vùng"}
     };
     private String[] filter = {"Tất cả","Mã vùng", "Tên vùng"};
-    private CustomTable tableSanPham;
-    private CustomTable table;
 
     public VungKeForm(String title, MainFrame mainFrame) {
         this.title = title;

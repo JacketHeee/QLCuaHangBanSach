@@ -10,7 +10,7 @@ public class TaiKhoanBUS {
 	private TaiKhoanDAO taiKhoanDAO;
 	private ArrayList<TaiKhoanDTO> listTaiKhoan;
 	
-	private TaiKhoanBUS() {
+	public TaiKhoanBUS() {
 		taiKhoanDAO = TaiKhoanDAO.getInstance();
 		listTaiKhoan = taiKhoanDAO.getAll();
 	}

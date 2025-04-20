@@ -61,7 +61,6 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private MainFrame mainFrame;
     private TaiKhoanDTO taiKhoan;
     private NhanVienDTO nhanVienDTO;
-    private String[] headers = new String[] {"Mã sách","Tên sách","Số lượng","Giá bán(đ)","Thành tiền(đ)"};
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private KhachHangBUS khachHangBUS;
@@ -78,6 +77,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private BigDecimal tongThanhToan;
     private JComboBox<String> comboboxKM;
     private JComboBox<String> comboboxPTTT;
+    private String[] headers = new String[] {"Mã sách","Tên sách","Số lượng","Giá bán(đ)","Thành tiền(đ)"};
+    private String[] headerType = {"inputMa","label","inputNumber","label","label"};
 
     public TaoHoaDonForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -194,6 +195,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                 }
             }
             ,headers
+            ,headerType
         );
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);

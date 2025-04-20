@@ -41,7 +41,7 @@ public class ButtonAction extends JButton {
         init();
         setBackgroundButton();
         addDefaultAction();
-    }
+    }   
 
     private void init() {
         setCursor(new Cursor(Cursor.HAND_CURSOR));

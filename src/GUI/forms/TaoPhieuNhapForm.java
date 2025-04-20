@@ -1,6 +1,7 @@
 package GUI.forms;
 
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -45,12 +46,15 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private JPanel chiTietPhieuNhap;
     private String[] headers = {"Mã sách","Tên sách","Số lượng","Giá nhập","Thành tiền"};
+    private String[] headerType = {"inputMa","label","inputNumber","inputNumber","label"};
+    private JTextField textFieldLoiNhuan;
 
     public TaoPhieuNhapForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         this.listAction = getListAction();
+        this.textFieldLoiNhuan = new JTextField();
 
         init();
     }
@@ -62,6 +66,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         add(getThongtin(),"pushx, growx");
         chiTietPhieuNhap = getChiTietPhieuNhap();
         add(chiTietPhieuNhap,"pushx, growx");
+        add(panelThongTinNhapHang(), "pushx, align right");
         add(getTongTien(),"pushx, growx");
         add(getPanelAction(),"pushx, growx");
         
@@ -113,13 +118,13 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
             ,new InvoiceTable.DataForTable(){
                 @Override
                 public String[] getDataForTable(SachDTO sach, int soLuong) {    //Truyền vào một hàm cho InvoiceTable
-                    // String[] result;                                            //Khi invoiceTable đã có dữ liệu sachDTO
-                    // BigDecimal tongGia = tinhTongGia(sach, soLuong);            //Cho sử dụng cả hóa đơn và phiếu nhập
-                    // ArrayList<String> list = new ArrayList<>();
-                    //     list.add(sach.getMaSach() + "");
-                    //     list.add(sach.getTenSach());
-                    //     list.add(soLuong + "");
-                    //     list.add(sach.getGiaBan() + "");
+                    String[] result;                                            //Khi invoiceTable đã có dữ liệu sachDTO
+                    BigDecimal tongGia = tinhTongGia(sach, soLuong);            //Cho sử dụng cả hóa đơn và phiếu nhập
+                    ArrayList<String> list = new ArrayList<>();
+                        list.add(sach.getMaSach() + "");
+                        list.add(sach.getTenSach());
+                        list.add(soLuong + "");
+                        list.add(sach.getGiaBan() + "");
                     //     list.add(tongGia + "");
                     // ;
                     // result = list.toArray(new String[0]);
@@ -143,11 +148,22 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
                     // updateStatusbtnThem();
                 }
             }
-            , headers);
+            , headers
+            ,headerType
+        );
 
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
         panel.add(panelActionOnTable(),"pushx,growx");
+        return panel;
+    }
+
+    
+    private JPanel panelThongTinNhapHang() {
+        JPanel panel = new JPanel(new MigLayout("al right"));
+        panel.add(new JLabel("Phần trăm lợi nhuận(%)"),"sg 1");
+        panel.add(textFieldLoiNhuan,"sg 2,grow");
+        panel.add(new JLabel("%"), "wrap");
         return panel;
     }
 
@@ -218,8 +234,6 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         
     }
 
-
-    
     @Override
     public void onActionPerformed(String actionId, int row) {
         switch (actionId) {
@@ -239,5 +253,10 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         }
     }
 
+
+    public BigDecimal tinhTongGia(SachDTO sach, int soLuong){
+        BigDecimal result = (sach.getGiaBan()).multiply(BigDecimal.valueOf(soLuong));
+        return(result);
+    }
     
 }

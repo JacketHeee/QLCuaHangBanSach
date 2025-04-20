@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.ScrollPane;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -119,7 +118,6 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 
 	//button information
 	private JPanel butInfor;
-	private int heightButtonInfor = 80;
 	private JPanel createButtonInfor() {
 		JPanel but = new JPanel(new MigLayout("","[]10[]","[]")); 
 

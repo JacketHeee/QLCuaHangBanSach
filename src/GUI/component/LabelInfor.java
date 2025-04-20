@@ -39,10 +39,10 @@ public class LabelInfor extends JPanel{
         setLayout(new MigLayout("al center center,gap 10"));
         setBackground(Color.decode(background));
         setBorder(new EmptyBorder(10,10,10,10));
-        add(new JLabel(new FlatSVGIcon(LabelInfor.class.getResource("../../resources/img/icon/"+icon)).derive(80, 80)),"pushx, al right");
+        add(new JLabel(new FlatSVGIcon(LabelInfor.class.getResource("../../resources/img/icon/"+icon)).derive(60, 60)),"pushx, al right");
         JPanel panel = new JPanel(new MigLayout("al center center"));
         panel.setOpaque(false);
-        panel.add(new JLabel(String.format("<html><b><font color='white' size='+3'>%s</font></b></html>", count)),"al left,wrap");
+        panel.add(new JLabel(String.format("<html><b><font color='white' size='+2'>%s</font></b></html>", count)),"al left,wrap");
         panel.add(new JLabel(String.format("<html><b><font color='white'>%s</font></b></html>", text)),"al center,gaptop 10");
         
         add(panel,"push,grow");

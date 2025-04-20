@@ -39,11 +39,11 @@ public class LabelTongQuan extends JPanel{
         setLayout(new MigLayout("al center center,gap 10"));
         setBackground(Color.decode(background));
         setBorder(new EmptyBorder(10,10,10,10));
-        add(new JLabel(new FlatSVGIcon(LabelInfor.class.getResource("../../resources/img/icon/"+icon)).derive(50, 50)),"pushx, al right");
+        add(new JLabel(new FlatSVGIcon(LabelInfor.class.getResource("../../resources/img/icon/"+icon)).derive(50, 50)));
         JPanel panel = new JPanel(new MigLayout("al center center"));
         panel.setOpaque(false);
-        panel.add(new JLabel(String.format("<html><b><font color='white' size='+2'>%s</font></b></html>", count)),"al left,wrap");
-        panel.add(new JLabel(String.format("<html><b><font color='white' size='+1'>%s</font></b></html>", text)),"al center,gaptop 10");
+        panel.add(new JLabel(String.format("<html><b><font color='white' size='+2'>%s</font></b></html>", count)),"al center,pushx,wrap");
+        panel.add(new JLabel(String.format("<html><b><font color='white' size='+0'>%s</font></b></html>", text)),"al center,pushx,gaptop 10");
         
         add(panel,"push,grow");
     }

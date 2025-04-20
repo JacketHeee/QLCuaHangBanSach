@@ -11,7 +11,7 @@ public class NhaCungCapBUS {
 	private NhaCungCapDAO nhaCungCapDAO;
 	private ArrayList<NhaCungCapDTO> listNhaCungCap;
 	
-	private NhaCungCapBUS() {
+	public NhaCungCapBUS() {
 		nhaCungCapDAO = NhaCungCapDAO.getInstance();
 		listNhaCungCap = nhaCungCapDAO.getAll();
 	}

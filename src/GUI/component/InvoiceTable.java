@@ -24,12 +24,14 @@ public class InvoiceTable extends CustomTable{
     private DataForTable dataForTableFN;
     private TinhTongGia tinhTongGia;
     private TinhTongGiaChungTu tinhTongGiaChungTu;
+    private String[] headerType;
 
-    public InvoiceTable(ArrayList<String[]> data, String[][] actions, DataForTable dataForTableFN, TinhTongGia tinhTongGia, TinhTongGiaChungTu tinhTongGiaChungTu, String... headers) {
+    public InvoiceTable(ArrayList<String[]> data, String[][] actions, DataForTable dataForTableFN, TinhTongGia tinhTongGia, TinhTongGiaChungTu tinhTongGiaChungTu, String[] headers, String[] headerType) { // do có super làm hơi xấu
         super(data, actions, headers);
         // Gọi constructor của lớp cha CustomTable
         // MigLayout layout = (MigLayout)getDataPanel().getLayout();
         // layout.setLayoutConstraints(layout.getLayoutConstraints()+",gap 2");
+        this.headerType = headerType;
         this.dataForTableFN = dataForTableFN;
         this.tinhTongGia = tinhTongGia;
         this.tinhTongGiaChungTu = tinhTongGiaChungTu;
@@ -43,6 +45,11 @@ public class InvoiceTable extends CustomTable{
     }
 
     //set ô
+    @Override
+    public void updateRowColors() {
+
+    }
+
     public JPanel createDataInput(String text, int row, int columnIndex) { // Thêm tham số columnIndex
         // Chuẩn hóa text khi null
         String displayText = (text == null) ? "" : text;
@@ -50,7 +57,7 @@ public class InvoiceTable extends CustomTable{
         
 
         // Cột đầu tiên (index 0) là JTextField
-        if (columnIndex == 0) {
+        if (this.headerType[columnIndex].equals("inputMa")) {
             TextFieldListSach textField = new TextFieldListSach(
                 sachBUS.getAll()
                 , new TextFieldListSach.CallBack(){ //  CallBack sau khi textFieldListSach trả về sachDTO lụm được 
@@ -75,7 +82,7 @@ public class InvoiceTable extends CustomTable{
             panel.add(textField,"push,growx");
         }
 
-        else if (columnIndex == 2) {
+        else if (this.headerType[columnIndex].equals("inputNumber")) {
             JFormattedTextField textFieldSL = new JFormattedTextField();
             NumberFormatter formatter = new NumberFormatter(NumberFormat.getIntegerInstance());
             formatter.setAllowsInvalid(false);

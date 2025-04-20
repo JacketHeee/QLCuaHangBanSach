@@ -11,7 +11,7 @@ public class HorizontalBarChartV2 extends HorizontalBarChart{
     }
 
     public void setFormatNumber() {
-        valuesFormat = new DecimalFormat("₫ #,##0.00");
+        valuesFormat = new DecimalFormat("#,##0");
     }
 
 }

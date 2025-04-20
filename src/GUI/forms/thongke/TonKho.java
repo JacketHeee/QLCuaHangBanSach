@@ -158,6 +158,4 @@ public class TonKho extends JPanel {
         new String[] {"1", "Con bo biet bay", " 100", "50","150","1"},
         new String[] {"1", "Con bo biet bay", " 100", "50","150","1"}
     ));
-    
-
 }

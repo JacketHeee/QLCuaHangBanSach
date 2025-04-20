@@ -63,7 +63,7 @@ public class SearchPanel<T> extends JPanel {
         };
 
         // Sự kiện khi nhấn nút tìm
-        // butSearch.addActionListener(e -> doSearch.run());
+        butSearch.addActionListener(e -> doSearch.run());
 
         // // Sự kiện khi nhấn ENTER trong ô input
         // inputSearch.addActionListener(e -> doSearch.run());
