@@ -30,7 +30,8 @@ public class CustomTable extends JPanel implements ActionListener {
     protected JPanel headerPanel;
     protected JPanel dataPanel;
     protected CustomScrollPane scrollPane;
-
+    //Callback sự kiện chọn hàng
+    protected OnSelectRowListener onSelectRowListener;
     //set
     private TableActionListener actionListener;
     
@@ -46,6 +47,21 @@ public class CustomTable extends JPanel implements ActionListener {
         this.headers = headers;
         this.columnWidths = new int[headers.length];
         this.rowHeights = new int[this.data.size() + 1]; // +1 cho header
+        this.init();
+    }
+    //Cho form cần sự kiện chọn vào hàng
+    public CustomTable(ArrayList<String[]> data, String[][] actions, OnSelectRowListener onSelectRowListener, String... headers) {
+        // setBackground(Color.white);
+        this.data = ((data == null)? new ArrayList<>(): data);
+        this.actions = actions;
+        this.headers = headers;
+        this.onSelectRowListener = onSelectRowListener;
+        this.columnWidths = new int[headers.length];
+        this.rowHeights = new int[this.data.size() + 1]; // +1 cho header
+        this.init();
+    }
+
+    public void init(){
         for (int i = 0; i < headers.length; i++) {
             columnWidths[i] = 150;
         }
@@ -228,6 +244,9 @@ public class CustomTable extends JPanel implements ActionListener {
                 lbl.setBackground(previousColor);
             }
         }
+
+        JLabel label = (JLabel)(rowLabels.get(row).get(0));
+        System.out.println((label).getText());
 
         selectedRow = row;
         for (Component lbl : rowLabels.get(selectedRow)) {
@@ -434,6 +453,9 @@ public class CustomTable extends JPanel implements ActionListener {
                     }
                     if (currentRow != -1) {
                         setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
+                        if(onSelectRowListener != null);{
+                            onSelectRowListener.OnSelectRow(row);
+                        }
                     }
                 }
             });
@@ -504,9 +526,14 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.repaint();
     }
 
+
     public Map<Integer, List<Component>> getRowLabels() {
         return rowLabels;
     }
 
+    // Hàm call back để xử lý thêm khi người dùng nhấn chọn 1 hàng (hiện tại có vùng kệ sử dụng)
+    public interface OnSelectRowListener{
+        public void OnSelectRow(int row);
+    }
     
 }

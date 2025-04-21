@@ -18,13 +18,55 @@ public class InputForm extends JPanel{
     } 
 
     public void init(){
-        this.setLayout(new MigLayout("wrap 1, insets 0 10 0 10", "[grow]"));
         this.setBackground(Color.decode("#FFFFFF"));
- 
+        if(!existsAnh()){
+            this.setInputForm();
+        }
+        else{
+            this.setInputFormAnh();
+        }
+    }
+
+    public void setInputForm(){
+        this.setLayout(new MigLayout("wrap 1, insets 0 10 0 10", "[grow]"));
         for(int i = 0; i < arr.length; i++){
             listItem.add(new InputFormItem(arr[i][0], arr[i][1]));
             this.add(listItem.get(i), "grow");
         }
+    }
+
+    public void setInputFormAnh(){  //tạm thời cài đặt ảnh ở cuối
+        System.out.println("luv");
+        for(int i = 0; i < arr.length; i++){
+            listItem.add(new InputFormItem(arr[i][0], arr[i][1]));
+        }
+
+        this.setLayout(new MigLayout("wrap 2, insets 0", "[][grow]"));
+        JPanel panelAnh = new JPanel();
+        panelAnh.setLayout(new MigLayout());
+        panelAnh.setBackground(Color.decode("#FFFFFF"));
+        JPanel panel = new JPanel();
+        panel.setLayout(new MigLayout("wrap 1, insets 0 10 0 10", "[grow]"));
+        panel.setBackground(Color.decode("#FFFFFF"));
+
+        panelAnh.add(listItem.get(listItem.size()-1));
+
+        for(int i = 0; i < listItem.size() - 1; i++){
+            panel.add(listItem.get(i), "grow");
+        }
+
+        this.add(panelAnh);
+        this.add(panel, "grow");
+
+    }
+
+    public boolean existsAnh(){
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i][0].equals("inputAnh")){
+                return(true);
+            }
+        }
+        return(false);
     }
 
     public ArrayList<InputFormItem> getListItem() {

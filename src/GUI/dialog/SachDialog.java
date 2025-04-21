@@ -102,7 +102,7 @@ public class SachDialog extends JDialog implements ActionListener{
 
         int originalSize = 250;
         int rowsize = 70;
-        this.setSize(new Dimension(300, originalSize + rowsize * attributes.length));
+        this.setSize(new Dimension(600, originalSize + rowsize * (attributes.length-1))); // trừ 1 tại thêm cái ảnh á :<<
         this.add(panel, "grow");
 
         //Cài đặt lựa chọn cmbobox
@@ -188,6 +188,7 @@ public class SachDialog extends JDialog implements ActionListener{
 
         String listTL = new String();
         String listTG = new String();
+
         for(int i : phanLoaiBUS.getAllMaTheLoaiByMaSach(ma)){
             listTL += theLoaiBUS.getTenByMa(i) + ", ";
         }
@@ -197,12 +198,15 @@ public class SachDialog extends JDialog implements ActionListener{
         String newListTL = removeLastCommaForFKNN(listTL);
         String newListTG = removeLastCommaForFKNN(listTG);
 
+        String path = sachBUS.getPathByMa(ma);
+
         inputForm.getListItem().get(0).setText(ten);
         inputForm.getListItem().get(1).setText(namXB);
         inputForm.getListItem().get(2).setSelection(tenVung);
         inputForm.getListItem().get(3).setSelection(tenNXB);
         inputForm.getListItem().get(4).setTextKNNN(newListTL);
         inputForm.getListItem().get(5).setTextKNNN(newListTG);
+        inputForm.getListItem().get(6).setAnh(path);
 
         //Lấy gtri 2 list cho update
         getOldList();
@@ -257,11 +261,13 @@ public class SachDialog extends JDialog implements ActionListener{
         int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
         int maNXB = nhaXBBUS.getMaNXBByTen(tenNhaXB);
 
-        SachDTO sach = new SachDTO(ten, namXB, maVung, maNXB);
+        String path = inputForm.getListItem().get(6).getPath();
+
+        SachDTO sach = new SachDTO(ten, namXB, maVung, maNXB, path);
         if(sachBUS.insert(sach) != 0){
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
-            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", tenVung + ""};
+            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", sach.getGiaBan() + "", sach.getNamXB() + ""};
             sachPanel.getTable().addDataRow(row);
             this.dispose();
         }
@@ -286,11 +292,13 @@ public class SachDialog extends JDialog implements ActionListener{
         int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
         int maNXB = nhaXBBUS.getMaNXBByTen(tenNhaXB);
 
-        SachDTO sach = new SachDTO(ma, ten, namXB, maVung, maNXB);
+        String path = inputForm.getListItem().get(6).getPath();
+
+        SachDTO sach = new SachDTO(ma, ten, namXB, maVung, maNXB, path);
         if(sachBUS.update(sach) != 0){
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
-            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", sach.getNamXB() + ""};
+            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", sach.getGiaBan() + "", sach.getNamXB() + ""};
             sachPanel.getTable().setRowData(rowSelected, row);
             this.dispose();
         }
@@ -310,6 +318,9 @@ public class SachDialog extends JDialog implements ActionListener{
         inputForm.getListItem().get(1).getTextField().setEditable(false);
         inputForm.getListItem().get(2).getCombobox().setEnabled(false);
         inputForm.getListItem().get(3).getCombobox().setEnabled(false);
+        inputForm.getListItem().get(4).setEditKNNN(false);
+        inputForm.getListItem().get(5).setEditKNNN(false);
+        inputForm.getListItem().get(6).setEdit(false);
     }
 
     public String removeLastCommaForFKNN(String text) {
@@ -402,6 +413,8 @@ public class SachDialog extends JDialog implements ActionListener{
     public boolean validation(){
         String ten = inputForm.getListItem().get(0).getText();
         String namXB = inputForm.getListItem().get(1).getText();
+        String theLoai = inputForm.getListItem().get(4).getTextKNNN();
+        String tacGia = inputForm.getListItem().get(5).getTextKNNN();
         if(Validate.isEmpty(ten)){
             JOptionPane.showMessageDialog(mainFrame, "Tên sách không được để trống!");
             return(false);
@@ -412,6 +425,14 @@ public class SachDialog extends JDialog implements ActionListener{
         }
         if(!Validate.isYear(namXB)){
             JOptionPane.showMessageDialog(mainFrame, "Năm xuất bản phải nhập đúng định dạng!");
+            return(false);
+        }
+        if(Validate.isEmpty(theLoai)){
+            JOptionPane.showMessageDialog(mainFrame, "Thể loại không được để trống!");
+            return(false);
+        }
+        if(Validate.isEmpty(tacGia)){
+            JOptionPane.showMessageDialog(mainFrame, "Tác giả không được để trống!");
             return(false);
         }
         return(true);

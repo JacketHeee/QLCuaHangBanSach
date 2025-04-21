@@ -69,29 +69,11 @@ public class SachBUS {
 		return(sachDAO.getInstanceByID(maSach));
 	}
 
-	// public void importFromExcel(ArrayList<SachDTO> importedList){
-	// 	for(SachDTO sachMoi : importedList){
-	// 		int index = -1;
-			
-	// 		// Kiểm tra sách đã tồn tại theo tên sách
-	// 		for(int i = 0; i < listSach.size(); i++){
-	// 			if(listSach.get(i).getTenSach().equalsIgnoreCase(sachMoi.getTenSach())){
-	// 				index = i;
-	// 				break;
-	// 			}
-	// 		}
-			
-	// 		if(index != -1){
-	// 			// Đã có => Cập nhật số lượng
-	// 			SachDTO sachCu = listSach.get(index);
-	// 			int newSoLuong = sachCu.getSoLuong() + sachMoi.getSoLuong();
-	// 			sachCu.setSoLuong(newSoLuong);
-	// 			sachDAO.update(sachCu);
-	// 		} else {
-	// 			// Chưa có => Thêm mới
-	// 			this.insert(sachMoi);
-	// 		}
-	// 	}
-	// }
+	public ArrayList<SachDTO> getAllSachByMaVung(int ma){
+		return(sachDAO.getAllSachByMaVung(ma));
+	}
 	
+	public String getPathByMa(int ma){
+		return(sachDAO.getPathByMa(ma));
+	}
 }
