@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import DAO.CT_HoaDonDAO;
 import DTO.CT_HoaDonDTO;
+import DTO.KM_SachDTO;
 
 public class CT_HoaDonBUS {
 	private static CT_HoaDonBUS instance;
@@ -26,4 +27,11 @@ public class CT_HoaDonBUS {
 		return(this.listCT_HoaDon);
 	}
 	
+	public int insert(CT_HoaDonDTO ct_HoaDon){
+		if(cT_HoaDonDAO.insert(ct_HoaDon) != 0){
+			this.listCT_HoaDon.add(ct_HoaDon);
+			return(1);
+		}
+		return(0);
+	}
 }

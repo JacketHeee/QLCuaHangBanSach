@@ -63,6 +63,8 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     public DimGlassPane glassPane = new DimGlassPane();
+    private KhachHangBUS khachHangBUS;
+    private NhanVienBUS nhanVienBUS;
     private String[][] attributes = {
         {"inputDate","Ngày bán"},   //tự get
         {"textbox", "Tổng tiền"},  //cài đặt sau
@@ -80,6 +82,8 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         hoaDonBUS = HoaDonBUS.getInstance();
         this.listAction = getListAction();
+        this.khachHangBUS = KhachHangBUS.getInstance();
+        this.nhanVienBUS = NhanVienBUS.getInstance();
         init();
     }
     
@@ -230,7 +234,21 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                 mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
                 System.out.println(but.getId()+ but.getText());
-                new AddHoaDonDialog(mainFrame);
+                AddHoaDonDialog addHoaDonDialog = new AddHoaDonDialog(mainFrame);
+                addHoaDonDialog.getTaoHoaDonForm().setCallBack(new TaoHoaDonForm.GetDataCallBack() {
+                    @Override
+                    public void setData(HoaDonDTO hoaDon) {
+                        String tenKH = khachHangBUS.getTenByMaKhachHang(hoaDon.getMaKH());
+                        String tenNV = nhanVienBUS.getTenNVByMaTK(hoaDon.getMaTK());
+                        table.addDataRow(new String[] {
+                            hoaDon.getMaHD() + ""
+                            , hoaDon.getNgayBan() + ""
+                            , tenKH
+                            , tenNV
+                        });
+                    }  
+                });
+                addHoaDonDialog.setVisible(true);
                 mainFrame.glassPane.setVisible(false);
                 break;
             case "importExcel":
