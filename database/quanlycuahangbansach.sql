@@ -115,10 +115,11 @@ CREATE TABLE KHUYENMAI (
   trangThai TINYINT DEFAULT 1
 );
 
-CREATE TABLE KM_PHIENBANSACH (
+CREATE TABLE KM_SACH(
   maKM INT,
   maSach INT,
-  PRIMARY KEY (maKM, maSach)
+  trangThai TINYINT DEFAULT 1, 
+  PRIMARY KEY (maKM, maSach, trangThai)
 );
 
 CREATE TABLE NHANVIEN ( 
@@ -240,6 +241,8 @@ INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT, maTK) VALUES
 ('Tống Phùng', '1995-02-02', 'Nữ', '0911000002', 5);
 
 -- Dữ liệu cho bảng KHACHHANG
+INSERT INTO KHACHHANG (tenKH, soDT, gioiTinh, trangThai) VALUES
+('Anonymous', 'x', 'x', '0');
 INSERT INTO KHACHHANG (tenKH, soDT, gioiTinh) VALUES
 ('Phạm Văn C', '0988111222', 'Nam'),
 ('Lê Thị D', '0977111222', 'Nữ'),
@@ -271,12 +274,14 @@ INSERT INTO PHUONGTHUC_TT (tenPTTT) VALUES
 ('Tiền mặt'), ('Chuyển khoản'), ('Thẻ tín dụng');
 
 -- Dữ liệu cho bảng KHUYENMAI
+INSERT INTO khuyenmai (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc, TrangThai) VALUES
+('Anonymous','x',0,'2024-03-01T00:00:00', '2024-03-31T00:00:00', 0);
 INSERT INTO KHUYENMAI (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc) VALUES
 ('Giảm 10%', 'Hóa đơn > 500k', 50000, '2024-03-01T00:00:00', '2024-03-31T00:00:00'),
 ('Giảm 5%', 'Hóa đơn > 300k', 25000, '2024-03-01T00:00:00', '2024-03-31T00:00:00');
 
--- Dữ liệu cho bảng KM_PHIENBANSACH
-INSERT INTO KM_PHIENBANSACH (maKM, maSach) VALUES
+-- Dữ liệu cho bảng KM_SACH
+INSERT INTO KM_SACH (maKM, maSach) VALUES
 (1, '1'), (1, '2'), (2, '3');
 
 -- Dữ liệu cho bảng CHUCNANG
@@ -436,7 +441,7 @@ ADD CONSTRAINT KH_HD FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH);
 ALTER TABLE NHANVIEN
 ADD CONSTRAINT NHANVIEN FOREIGN KEY (maTK) REFERENCES TAIKHOAN(maTK);
 
-ALTER TABLE KM_PHIENBANSACH
+ALTER TABLE KM_SACH
 ADD CONSTRAINT km1 FOREIGN KEY (maKM) REFERENCES KHUYENMAI(maKM),
 ADD CONSTRAINT km2 FOREIGN KEY (maSach) REFERENCES SACH(maSach);
 
