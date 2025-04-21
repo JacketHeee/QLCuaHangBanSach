@@ -373,12 +373,13 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                     table.removeRow(row);
                     Notifications.getInstance().setJFrame(mainFrame);
                     Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    updateTongTienHoaDon();
+                    updateTTTT();
+                    updateStatusCombobox();
+                    updateStatusTextFieldTienTra();
+                    updateStatusbtnThem();
                 }
-                updateTongTienHoaDon();
-                updateTTTT();
-                updateStatusCombobox();
-                updateStatusTextFieldTienTra();
-                updateStatusbtnThem();
+
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);
@@ -453,6 +454,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     //Hàm này được gọi mỗi khi thêm sách mới; thay đổi cbx khuyến mãi; xóa
     public void updateTongTienHoaDon(){ //Mỗi lần thêm phải tính lại hết
         Map<Integer, List<Component>> rowLabels = table.getRowLabels();
+        // System.out.println(rowLabels.get(0).get(1));
         int index = 0;
         BigDecimal result = new BigDecimal(0);
         for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){

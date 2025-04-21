@@ -182,7 +182,7 @@ public class CustomTable extends JPanel implements ActionListener {
         // Cập nhật lại toàn bộ các hàng trong dataPanel
         dataPanel.removeAll(); // Xóa toàn bộ để thêm lại từ đầu
         Map<Integer, List<Component>> updatedRowLabels = new HashMap<>();
-        int newRowIndex = 1;
+        int newRowIndex = 0;
     
         // Tạo lại rowLabels với các chỉ số mới
         for (int key : rowLabels.keySet()) 
@@ -453,7 +453,7 @@ public class CustomTable extends JPanel implements ActionListener {
                     }
                     if (currentRow != -1) {
                         setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
-                        if(onSelectRowListener != null);{
+                        if(onSelectRowListener != null){
                             onSelectRowListener.OnSelectRow(row);
                         }
                     }

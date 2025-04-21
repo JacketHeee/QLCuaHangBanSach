@@ -25,6 +25,7 @@ import BUS.TacGiaBUS;
 import BUS.TheLoaiBUS;
 import BUS.ViTriVungBUS;
 import DTO.DanhMuc_TGDTO;
+import DTO.KM_SachDTO;
 import DTO.PhanLoaiDTO;
 import DTO.SachDTO;
 import DTO.TacGiaDTO;
@@ -47,7 +48,8 @@ public class SachDialog extends JDialog implements ActionListener{
     private InputForm inputForm;
     //old data
     private ArrayList<Integer> oldListTL; 
-    private ArrayList<Integer> oldListTG;                
+    private ArrayList<Integer> oldListTG;    
+    private ArrayList<Integer> oldListKM;            
 
     //Lấy khóa ngoại
     private ViTriVungBUS viTriVungBUS;
@@ -77,6 +79,7 @@ public class SachDialog extends JDialog implements ActionListener{
         this.danhMuc_TGBUS = DanhMuc_TGBUS.getInstance();
         this.oldListTL = new ArrayList<>();
         this.oldListTG = new ArrayList<>();
+        this.oldListKM = new ArrayList<>();
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
         this.viTriVungBUS = ViTriVungBUS.getInstance();
         this.nhaXBBUS = NhaXBBUS.getInstance();
@@ -123,8 +126,10 @@ public class SachDialog extends JDialog implements ActionListener{
     public void setListenerBtnKNNN(){
         inputForm.getListItem().get(4).getBtnKNNN().setActionCommand("theloai");
         inputForm.getListItem().get(5).getBtnKNNN().setActionCommand("tacgia");
+        inputForm.getListItem().get(6).getBtnKNNN().setActionCommand("khuyenmai");
         inputForm.getListItem().get(4).getBtnKNNN().addActionListener(this);
         inputForm.getListItem().get(5).getBtnKNNN().addActionListener(this);
+        inputForm.getListItem().get(6).getBtnKNNN().addActionListener(this);
     }
 
     public void setButton(){
@@ -188,6 +193,7 @@ public class SachDialog extends JDialog implements ActionListener{
 
         String listTL = new String();
         String listTG = new String();
+        String listKM = new String();
 
         for(int i : phanLoaiBUS.getAllMaTheLoaiByMaSach(ma)){
             listTL += theLoaiBUS.getTenByMa(i) + ", ";
@@ -195,8 +201,12 @@ public class SachDialog extends JDialog implements ActionListener{
         for(int i : danhMuc_TGBUS.getAllMaTacGiaByMaSach(ma)){
             listTG += tacGiaBUS.getTenByMa(i) + ", ";
         }
+        for(int i : kM_SachBUS.getAllMaKMByMaSach(ma)){
+            listKM += khuyenMaiBUS.getTenByMaKhuyenMai(i) + ", ";
+        }
         String newListTL = removeLastCommaForFKNN(listTL);
         String newListTG = removeLastCommaForFKNN(listTG);
+        String newListKM = removeLastCommaForFKNN(listKM);
 
         String path = sachBUS.getPathByMa(ma);
 
@@ -206,7 +216,8 @@ public class SachDialog extends JDialog implements ActionListener{
         inputForm.getListItem().get(3).setSelection(tenNXB);
         inputForm.getListItem().get(4).setTextKNNN(newListTL);
         inputForm.getListItem().get(5).setTextKNNN(newListTG);
-        inputForm.getListItem().get(6).setAnh(path);
+        inputForm.getListItem().get(6).setTextKNNN(newListKM);
+        inputForm.getListItem().get(7).setAnh(path);
 
         //Lấy gtri 2 list cho update
         getOldList();
@@ -250,6 +261,17 @@ public class SachDialog extends JDialog implements ActionListener{
             );
             knnnDialog.setVisible(true);
         }
+        else if (e.getActionCommand().equals("khuyenmai")){
+            String[] listFK = khuyenMaiBUS.getAllTenKhuyenMai().toArray(new String[0]);
+
+            KNNNDialog knnnDialog = new KNNNDialog(mainFrame, "Khuyến mãi","khuyến mãi", listFK, data -> {
+                    String newData = removeLastCommaForFKNN(data);
+
+                    this.inputForm.getListItem().get(6).setTextKNNN(newData);
+                } 
+            );
+            knnnDialog.setVisible(true);
+        }
     }
 
     public void insert(){
@@ -261,7 +283,7 @@ public class SachDialog extends JDialog implements ActionListener{
         int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
         int maNXB = nhaXBBUS.getMaNXBByTen(tenNhaXB);
 
-        String path = inputForm.getListItem().get(6).getPath();
+        String path = inputForm.getListItem().get(7).getPath();
 
         SachDTO sach = new SachDTO(ten, namXB, maVung, maNXB, path);
         if(sachBUS.insert(sach) != 0){
@@ -278,8 +300,10 @@ public class SachDialog extends JDialog implements ActionListener{
         //Insert khóa ngoại
         String listTL = this.inputForm.getListItem().get(4).getTextKNNN();
         String listTG = this.inputForm.getListItem().get(5).getTextKNNN();
+        String listKM = this.inputForm.getListItem().get(6).getTextKNNN();
         InsertListPhanLoai(sach.getMaSach(), listTL);
         InsertListDanhMucTG(sach.getMaSach(), listTG);
+        InsertListKM_Sach(sach.getMaSach(), listKM);
     }
 
     public void update(){
@@ -292,7 +316,7 @@ public class SachDialog extends JDialog implements ActionListener{
         int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
         int maNXB = nhaXBBUS.getMaNXBByTen(tenNhaXB);
 
-        String path = inputForm.getListItem().get(6).getPath();
+        String path = inputForm.getListItem().get(7).getPath();
 
         SachDTO sach = new SachDTO(ma, ten, namXB, maVung, maNXB, path);
         if(sachBUS.update(sach) != 0){
@@ -310,6 +334,7 @@ public class SachDialog extends JDialog implements ActionListener{
         //cập nhật xuống DAO
         UpdateListPhanloai();
         UpdateListDanhMuc_TG();
+        UpdateListKM_SACH();
 
     }
 
@@ -348,6 +373,17 @@ public class SachDialog extends JDialog implements ActionListener{
             int ma = tacGiaBUS.getMaByTen(i);
             DanhMuc_TGDTO pl = new DanhMuc_TGDTO(maSach, ma); 
             danhMuc_TGBUS.insert(pl);
+        }
+    }
+
+    public void InsertListKM_Sach(int maSach, String x){
+        String[] list = x.split(", ");
+        if(list.length != 1){   //Có thể không có khuyến mãi (vì split chuỗi rỗng ra length = 1 :<<)
+            for(String i : list){
+                int ma = khuyenMaiBUS.getMaKhuyenMaiByTen(i);
+                KM_SachDTO pl = new KM_SachDTO(ma, maSach); 
+                kM_SachBUS.insert(pl);
+            }
         }
     }
 
@@ -398,6 +434,29 @@ public class SachDialog extends JDialog implements ActionListener{
         }
     }
 
+    public void UpdateListKM_SACH(){
+        //oldListKM
+        int maSach = Integer.parseInt(sachPanel.getTable().getCellData(rowSelected, 0));
+        String[] temp = inputForm.getListItem().get(6).getTextKNNN().split(", ");
+        ArrayList<Integer> newListKM = new ArrayList<>();
+        for(int i = 0; i < temp.length; i++){
+            newListKM.add(khuyenMaiBUS.getMaKhuyenMaiByTen(temp[i]));
+        }
+        //Thực hiện delete nếu cũ có mới không có
+        for(int i : oldListKM){
+            if(!newListKM.contains(i)){
+                kM_SachBUS.delete(maSach, i);
+            }
+        }
+        //Thực hiện insert nếu cũ không có mới có
+        for(int i : newListKM){
+            if(!oldListTL.contains(i)){
+                KM_SachDTO kmSach = new KM_SachDTO(i, maSach);
+                kM_SachBUS.insert(kmSach);
+            }
+        }
+    }
+
     //Lấy ds cũ
     public void getOldList(){
         int ma = Integer.parseInt(sachPanel.getTable().getCellData(rowSelected, 0)); 
@@ -406,6 +465,9 @@ public class SachDialog extends JDialog implements ActionListener{
         }
         for(int i : danhMuc_TGBUS.getAllMaTacGiaByMaSach(ma)){
             oldListTG.add(i);
+        }
+        for(int i : kM_SachBUS.getAllMaKMByMaSach(ma)){
+            oldListKM.add(i);
         }
     }
 

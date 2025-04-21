@@ -54,7 +54,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         //Khóa ngoại nhiều-nhiều
         {"inputKNNN", "Thể loại"},
         {"inputKNNN", "Tác giả"},
-        // {"inputKNNN", "Khuyến mãi"}  ?????
+        {"inputKNNN", "Khuyến mãi"},
         {"inputAnh", "Ảnh"}
     };
 
