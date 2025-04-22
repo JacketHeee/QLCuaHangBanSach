@@ -10,22 +10,24 @@ public class SachDTO {
     private int namXB;
     private int maVung;
     private int maNXB;
+    private String anh;
 
     // Constructor mặc định
     public SachDTO() {}
 
 	//constructor cho insert
 	public SachDTO( String tenSach, BigDecimal giaBan, int namXB,
-			int maVung, int maNXB) {
+			int maVung, int maNXB, String anh) {
 		this.tenSach = tenSach;
 		this.giaBan = giaBan;
 		this.namXB = namXB;
 		this.maVung = maVung;
 		this.maNXB = maNXB;
+        this.anh = anh;
 	}
 
 	public SachDTO(int maSach, String tenSach, int soLuong, BigDecimal giaBan, int namXB,
-			int maVung, int maNXB) {
+			int maVung, int maNXB, String anh) {
 		this.maSach = maSach;
 		this.tenSach = tenSach;
         this.soLuong = soLuong;
@@ -33,28 +35,50 @@ public class SachDTO {
 		this.namXB = namXB;
 		this.maVung = maVung;
 		this.maNXB = maNXB;
+        this.anh = anh;
 	}
 
-    // Constructor khi insert (không có mã sách)
+
     public SachDTO(int maSach, String tenSach, BigDecimal giaBan, 
-                   int namXB, int maVung, int maNXB) {
+                   int namXB, int maVung, int maNXB, String anh) {
         this.maSach = maSach;
         this.tenSach = tenSach;
         this.giaBan = giaBan;
         this.namXB = namXB;
         this.maVung = maVung;
         this.maNXB = maNXB;
+        this.anh = anh;
+    }
+// Constructor khi insert (không có mã sách)
+    public SachDTO(String tenSach, int soLuong, BigDecimal giaBan, 
+        int namXB, int maVung, int maNXB, String anh) {
+        this.tenSach = tenSach;
+        this.soLuong = soLuong;
+        this.giaBan = giaBan;
+        this.namXB = namXB;
+        this.maVung = maVung;
+        this.maNXB = maNXB;
+        this.anh = anh;
     }
 
-    public SachDTO(String tenSach, int soLuong, BigDecimal giaBan, 
-    int namXB, int maVung, int maNXB) {
-this.tenSach = tenSach;
-this.soLuong = soLuong;
-this.giaBan = giaBan;
-this.namXB = namXB;
-this.maVung = maVung;
-this.maNXB = maNXB;
-}
+    public SachDTO(String tenSach, 
+        int namXB, int maVung, int maNXB, String anh) {
+        this.tenSach = tenSach;
+        this.namXB = namXB;
+        this.maVung = maVung;
+        this.maNXB = maNXB;
+        this.anh = anh;
+    }
+
+    public SachDTO(int maSach, String tenSach, 
+        int namXB, int maVung, int maNXB, String anh) {
+        this.maSach = maSach;
+        this.tenSach = tenSach;
+        this.namXB = namXB;
+        this.maVung = maVung;
+        this.maNXB = maNXB;
+        this.anh = anh;
+    }
 
     public int getMaSach() {
         return maSach;
@@ -110,6 +134,14 @@ this.maNXB = maNXB;
 
     public void setMaNXB(int maNXB) {
         this.maNXB = maNXB;
+    }
+
+    public String getAnh() {
+        return anh;
+    }
+
+    public void setAnh(String anh) {
+        this.anh = anh;
     }
 
     

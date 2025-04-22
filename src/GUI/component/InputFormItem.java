@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,6 +38,8 @@ public class InputFormItem extends JPanel{
     private CustomButton btnDC;
     private JTextField textKNNN;
     private CustomButton btnKNNN;
+    //Cho ảnh
+    private PanelPicture panelPicture;
 
     public InputFormItem(String type, String title){
         this.label = new JLabel(title);
@@ -81,6 +84,10 @@ public class InputFormItem extends JPanel{
                 this.btnKNNN = new CustomButton("Tạo");
                 setinputKNNN();
                 break;    
+            case "inputAnh":
+                this.panelPicture = new PanelPicture();
+                setinputAnh();
+                break;
             default:
                 break;
         }
@@ -134,6 +141,12 @@ public class InputFormItem extends JPanel{
         panel.add(btnKNNN, "grow");
         this.add(panel, "grow");
     }
+
+    public void setinputAnh(){
+        this.setLayout(new MigLayout("wrap 1"));
+        this.add(panelPicture);
+    }
+
 
     public void setListCombobox(String... list){
         for(String i : list){
@@ -273,6 +286,14 @@ public class InputFormItem extends JPanel{
         return(ldt);
     }
 
+    public String getPath(){
+        return(this.panelPicture.getPath());
+    }
+
+    public void setAnh(String path){
+        this.panelPicture.setAnh(path);
+    }
+
     public void setTextKNNN(String text){
         this.textKNNN.setText(text);
     }
@@ -305,6 +326,12 @@ public class InputFormItem extends JPanel{
         this.combobox = combobox;
     }
 
+    public void setEdit(boolean i){
+        this.panelPicture.setEdit(i);
+    }
     
+    public void setEditKNNN(boolean i){
+        this.btnKNNN.setEnabled(i);
+    }
 
 }

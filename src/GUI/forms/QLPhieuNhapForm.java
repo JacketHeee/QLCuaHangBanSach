@@ -39,6 +39,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.QLPhieuNhapSearch;
 import search.SachSearch;
+import utils.FormatterUtil;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -159,7 +160,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         NhaCungCapBUS ncc = new NhaCungCapBUS();
         NhanVienBUS nv = new NhanVienBUS();
         for(PhieuNhapDTO i : inputData){
-            data.add(new String[]{i.getMaNhap() + "", i.getNgayNhap() + "",ncc.getTenByMaNhaCungCap(i.getMaNCC()),i.getTongTien()+"",nv.getTenNVByMaTK(i.getMaTK())});
+            data.add(new String[]{i.getMaNhap() + "", i.getNgayNhap() + "",ncc.getTenByMaNhaCungCap(i.getMaNCC()),FormatterUtil.formatNumberVN(i.getTongTien()),nv.getTenNVByMaTK(i.getMaTK())});
         }
         return(data);
     }

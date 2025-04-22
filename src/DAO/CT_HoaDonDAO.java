@@ -21,7 +21,20 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
     
     @Override
     public int insert(CT_HoaDonDTO cthd) {
-        return 0;
+        int rowInserted = 0;
+        String sql = "INSERT INTO CT_HOADON (maSach, maHD, soLuong, giaBan) VALUES (?, ?, ?, ?)";
+            
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowInserted = jdbcUtil.executeUpdate(
+            sql
+            , cthd.getMaSach()
+            , cthd.getMaHD()
+            , cthd.getSoLuong()
+            , cthd.getGiaBan()
+        );
+        jdbcUtil.Close();
+        return rowInserted;
     }
 
     @Override
@@ -44,7 +57,7 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
         ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
             while (rs.next()) {
-                String maSach = rs.getString("maSach");
+                int maSach = rs.getInt("maSach");
                 int maHD = rs.getInt("maHD");
                 int soLuong = rs.getInt("soLuong");
                 BigDecimal giaBan = rs.getBigDecimal("giaBan");

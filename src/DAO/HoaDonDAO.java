@@ -22,13 +22,14 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
     @Override
     public int insert(HoaDonDTO t) {
         int rowInserted = 0;
-        String sql = "INSERT INTO HOADON (ngayBan, tongTien, maTK, maPT, maKM, maKH) VALUES (?,?,?,?,?,?)";
-
+        String sql = "INSERT INTO HOADON (maHD,ngayBan, tongTien, maTK, maPT, maKM, maKH) VALUES (?,?,?,?,?,?,?)";
+        
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         int nextID = jdbcUtil.getAutoIncrement("HOADON");
         rowInserted = jdbcUtil.executeUpdate(
             sql,
+            nextID,
             t.getNgayBan(),
             t.getTongTien(),
             t.getMaTK(),
@@ -105,5 +106,13 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
         }
         jdbcUtil.Close();
         return result;
+    }
+
+    public int getNextID(){
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int nextID = jdbcUtil.getAutoIncrement("HOADON");
+        jdbcUtil.Close();
+        return(nextID);
     }
 }

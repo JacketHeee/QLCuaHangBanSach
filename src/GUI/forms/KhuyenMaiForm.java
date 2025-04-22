@@ -30,6 +30,7 @@ import raven.toast.Notifications;
 import search.KhuyenMaiSearch;
 import search.SachSearch;
 import utils.DateCalculator;
+import utils.FormatterUtil;
 import utils.UIUtils;
 
 import java.awt.Cursor;
@@ -156,7 +157,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 i.getMaKM() + "",
                 i.getTenKM(),
                 i.getDieuKienGiam(),
-                i.getGiaTriGiam() + "",
+                FormatterUtil.formatNumberVN(i.getGiaTriGiam()),
                 new DateCalculator().formatDateTimeToDateS(i.getNgayBatDau()),
                 new DateCalculator().formatDateTimeToDateS(i.getNgayBatDau())
             });      

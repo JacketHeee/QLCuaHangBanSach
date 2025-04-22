@@ -92,4 +92,13 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public int getNextID(){
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        int nextID = jdbcUtil.getAutoIncrement("PHIEUNHAP");
+        jdbcUtil.Close();
+        return(nextID);
+    }
+
 }

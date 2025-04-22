@@ -71,4 +71,5 @@ public class TheLoaiBUS {
 	public String getTenByMa(int ma){
 		return(theLoaiDAO.getTenByMa(ma));
 	}
+
 }

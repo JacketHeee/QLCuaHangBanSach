@@ -3,6 +3,8 @@
 package GUI.component;
 
 import net.miginfocom.swing.MigLayout;
+import utils.TextUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -30,7 +32,8 @@ public class CustomTable extends JPanel implements ActionListener {
     protected JPanel headerPanel;
     protected JPanel dataPanel;
     protected CustomScrollPane scrollPane;
-
+    //Callback sự kiện chọn hàng
+    protected OnSelectRowListener onSelectRowListener;
     //set
     private TableActionListener actionListener;
     
@@ -46,6 +49,21 @@ public class CustomTable extends JPanel implements ActionListener {
         this.headers = headers;
         this.columnWidths = new int[headers.length];
         this.rowHeights = new int[this.data.size() + 1]; // +1 cho header
+        this.init();
+    }
+    //Cho form cần sự kiện chọn vào hàng
+    public CustomTable(ArrayList<String[]> data, String[][] actions, OnSelectRowListener onSelectRowListener, String... headers) {
+        // setBackground(Color.white);
+        this.data = ((data == null)? new ArrayList<>(): data);
+        this.actions = actions;
+        this.headers = headers;
+        this.onSelectRowListener = onSelectRowListener;
+        this.columnWidths = new int[headers.length];
+        this.rowHeights = new int[this.data.size() + 1]; // +1 cho header
+        this.init();
+    }
+
+    public void init(){
         for (int i = 0; i < headers.length; i++) {
             columnWidths[i] = 150;
         }
@@ -129,6 +147,13 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
     public JLabel createDataLabel(String text, int row) {
+        // int lim = (int) 110/(headers.length);
+        // if (text!=null && text.length() > lim) {
+        //     text = text.substring(0, lim-3) + "...";
+        // }
+
+        // text = TextUtils.orverFlowText(text, 110, headers.length);
+
         JLabel label = new JLabel(text);
         label.setBorder(new EmptyBorder(10, 5, 10, 5));
         label.setOpaque(true);
@@ -137,6 +162,7 @@ public class CustomTable extends JPanel implements ActionListener {
         label.setVerticalAlignment(SwingConstants.CENTER);
         return label;
     }
+
 
     public JPanel createActionPanel(int row) {
 
@@ -213,7 +239,7 @@ public class CustomTable extends JPanel implements ActionListener {
         // Cập nhật màu và kích thước
         updateRowColors();
         updateRowConstraints();
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
         dataPanel.revalidate();
         dataPanel.repaint();
         repaint();
@@ -228,6 +254,9 @@ public class CustomTable extends JPanel implements ActionListener {
                 lbl.setBackground(previousColor);
             }
         }
+
+        JLabel label = (JLabel)(rowLabels.get(row).get(0));
+        System.out.println((label).getText());
 
         selectedRow = row;
         for (Component lbl : rowLabels.get(selectedRow)) {
@@ -355,6 +384,7 @@ public class CustomTable extends JPanel implements ActionListener {
 
         // Thông báo sự kiện lên listener nếu có
         if (actionListener != null) {
+            System.out.println(but.getId());
             actionListener.onActionPerformed(but.getId(), buttonRow);
         }
     }
@@ -403,16 +433,18 @@ public class CustomTable extends JPanel implements ActionListener {
     public void addDataRow(String[] data) {
         int row = rowLabels.size() + 1;
         // System.out.println(row);
-        ArrayList<Component> labels = new ArrayList<>();
         final Color defaultColor = (row % 2 == 0 ? evenRowColor : oddRowColor);
-
+        
         // / Xử lý trường hợp data là null
         String[] rowData = (data == null) ? new String[headers.length] : data;
+        
         if (data == null) {
             for (int i = 0; i < rowData.length; i++) {
                 rowData[i] = ""; // Điền giá trị rỗng cho dòng trống
             }
         }
+
+        ArrayList<Component> labels = new ArrayList<>();
 
         for (int i = 0; i < Math.min(rowData.length, headers.length); i++) {
             JLabel label = createDataLabel(rowData[i], row);
@@ -434,6 +466,9 @@ public class CustomTable extends JPanel implements ActionListener {
                     }
                     if (currentRow != -1) {
                         setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
+                        if(onSelectRowListener != null){
+                            onSelectRowListener.OnSelectRow(row);
+                        }
                     }
                 }
             });
@@ -446,6 +481,7 @@ public class CustomTable extends JPanel implements ActionListener {
         }
 
         rowLabels.put(row, labels);
+
         // Cập nhật rowHeights nếu cần
         if (row >= rowHeights.length) {
             int[] newRowHeights = new int[row + 1];
@@ -471,14 +507,14 @@ public class CustomTable extends JPanel implements ActionListener {
         label.setText(text);
     }
 
-    public void setRowData(int row, String... list){
-        for(int i = 0; i < list.length; i++){
-            JLabel label = (JLabel)rowLabels.get(row).get(i);
-            label.setText(list[i]);
-        }
-    }
+    // public void setRowData(int row, String... list){
+    //     for(int i = 0; i < list.length; i++){
+    //         JLabel label = (JLabel)rowLabels.get(row).get(i);
+    //         label.setText(list[i]);
+    //     }
+    // }
 
-    public void updateRowData(int row, String[] newData) {
+    public void setRowData(int row, String... newData) {
         if (!rowLabels.containsKey(row)) {
             return; // Hàng không tồn tại
         }
@@ -488,6 +524,35 @@ public class CustomTable extends JPanel implements ActionListener {
 
         List<Component> rowComponents = rowLabels.get(row);
         for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+            // newData[i] = TextUtils.orverFlowText(newData[i], 110, headers.length);
+            Component comp = rowComponents.get(i);
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setText(newData[i] != null ? newData[i] : "");
+            }
+        }
+
+        // Cập nhật dữ liệu trong mảng data
+        if (row - 1 < data.size()) {
+            data.set(row - 1, newData);
+        }
+
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+
+
+    public void updateRowData(int row, String... newData) {
+        if (!rowLabels.containsKey(row)) {
+            return; // Hàng không tồn tại
+        }
+        if (newData == null || newData.length == 0) {
+            return; // Dữ liệu mới không hợp lệ
+        }
+
+        List<Component> rowComponents = rowLabels.get(row);
+        for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+            // TextUtils.orverFlowText(newData[i], 110, headers.length);
             Component comp = rowComponents.get(i);
             if (comp instanceof JLabel) {
                 ((JLabel) comp).setText(newData[i] != null ? newData[i] : "");
@@ -552,5 +617,9 @@ public class CustomTable extends JPanel implements ActionListener {
         return rowLabels;
     }
 
+    // Hàm call back để xử lý thêm khi người dùng nhấn chọn 1 hàng (hiện tại có vùng kệ sử dụng)
+    public interface OnSelectRowListener{
+        public void OnSelectRow(int row);
+    }
     
 }

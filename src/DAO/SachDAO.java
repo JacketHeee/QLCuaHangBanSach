@@ -22,7 +22,7 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	@Override
 	public int insert(SachDTO t) {
 		int rowInserted = 0;
-		String sql = "INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB) VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO SACH (tenSach, namXB, maVung, maNXB, anh) VALUES (?,?,?,?,?)";
 
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
@@ -30,11 +30,12 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		rowInserted = jdbcUtil.executeUpdate(
 			sql,
 			t.getTenSach(),
-			t.getGiaBan(),
 			t.getNamXB(), 
 			t.getMaVung(),
-			t.getMaNXB()
+			t.getMaNXB(),
+			t.getAnh()
 		);
+		t.setGiaBan(new BigDecimal(0));
 		jdbcUtil.Close();
 		t.setMaSach(nextID);
 		return rowInserted;
@@ -54,19 +55,20 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	@Override
 	public int update(SachDTO t) {
 		int rowUpdated = 0;
-		String query = "UPDATE SACH SET tenSach = ?, giaBan = ?, namXB = ?, maVung = ?, maNXB = ? WHERE maSach = ?";
+		String query = "UPDATE SACH SET tenSach = ?, namXB = ?, maVung = ?, maNXB = ?, anh = ? WHERE maSach = ?";
 
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
 		rowUpdated = jdbcUtil.executeUpdate(
 			query,
 			t.getTenSach(),
-			t.getGiaBan(),
 			t.getNamXB(),
 			t.getMaVung(),
 			t.getMaNXB(),
+			t.getAnh(),
 			t.getMaSach()
 		);
+		t.setGiaBan(new BigDecimal(0));
 		jdbcUtil.Close();
 		return rowUpdated;
 	}
@@ -89,7 +91,8 @@ public class SachDAO implements DAOInterface<SachDTO>{
 				int namXB = rs.getInt("namXB");
 				int maVung = rs.getInt("maVung");
 				int maNXB = rs.getInt("maNXB");
-				SachDTO sach = new SachDTO(id, tenSach, soLuong, giaBan, namXB, maVung, maNXB);
+				String anh = rs.getString("anh");
+				SachDTO sach = new SachDTO(id, tenSach, soLuong, giaBan, namXB, maVung, maNXB, anh);
 				result.add(sach);
 			}
 			
@@ -117,7 +120,8 @@ public class SachDAO implements DAOInterface<SachDTO>{
 				int namXB = rs.getInt("namXB");
 				int maVung = rs.getInt("maVung");
 				int maNXB = rs.getInt("maNXB");
-				result = new SachDTO(id, tenSach, soLuong, giaBan, namXB, maVung, maNXB);
+				String anh = rs.getString("anh");
+				result = new SachDTO(id, tenSach, soLuong, giaBan, namXB, maVung, maNXB, anh);
 			}
 			
 		} catch (SQLException e) {
@@ -127,4 +131,56 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		jdbcUtil.Close();
 		return result;
 	}
+
+	public ArrayList<SachDTO> getAllSachByMaVung(int maVung){
+		ArrayList<SachDTO> result = new ArrayList<>();
+		String sql = "SELECT * FROM SACH WHERE maVung = ? AND TRANGTHAI = 1";
+		
+		
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		ResultSet rs = jdbcUtil.executeQuery(sql, maVung);
+		try {
+			while(rs.next()) {
+				int id = rs.getInt("maSach");
+				String tenSach = rs.getString("tenSach");
+				int soLuong = rs.getInt("soLuong");
+				BigDecimal giaBan = rs.getBigDecimal("giaBan");
+				int namXB = rs.getInt("namXB");
+				int maNXB = rs.getInt("maNXB");
+				String anh = rs.getString("anh");
+				SachDTO sach = new SachDTO(id, tenSach, soLuong, giaBan, namXB, maVung, maNXB, anh);
+				result.add(sach);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		jdbcUtil.Close();
+		return result;
+	}
+
+	public String getPathByMa(int ma){
+		String result = new String();
+		String sql = "SELECT anh FROM SACH WHERE maSach = ? AND TRANGTHAI = 1";
+		
+		
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		ResultSet rs = jdbcUtil.executeQuery(sql, ma);
+		try {
+			while(rs.next()) {
+				String anh = rs.getString("anh");
+				result = anh;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		jdbcUtil.Close();
+		return result;
+	}
+
 }

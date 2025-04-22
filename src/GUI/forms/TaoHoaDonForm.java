@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import utils.FormatterUtil;
 import utils.UIUtils;
 import utils.Validate;
 
@@ -11,20 +12,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
+import GUI.component.CustomTextFieldSL;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.CT_HoaDonBUS;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
+import BUS.HoaDonBUS;
 import BUS.KhachHangBUS;
 import BUS.KhuyenMaiBUS;
 import BUS.NhanVienBUS;
 import BUS.PhuongThucTTBUS;
+import DTO.CT_HoaDonDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.HoaDonDTO;
 import DTO.KhachHangDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.NhanVienDTO;
@@ -36,6 +42,8 @@ import GUI.component.CustomButton;
 import GUI.component.CustomTable;
 import GUI.component.InvoiceTable;
 import GUI.component.TableActionListener;
+import GUI.component.search.TextFieldListSach;
+import GUI.dialog.AddHoaDonDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +51,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.awt.Font;
@@ -67,6 +78,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private KhuyenMaiBUS khuyenMaiBUS;
     private PhuongThucTTBUS phuongThucTTBUS;
     private NhanVienBUS nhanVienBUS;
+    private HoaDonBUS hoaDonBUS;
+    private CT_HoaDonBUS ct_HoaDonBUS;
     private BigDecimal tongTienHoaDon;
     private JLabel lblTongTienHoaDon;
     private JLabel lblTongTienHang;
@@ -77,8 +90,12 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private BigDecimal tongThanhToan;
     private JComboBox<String> comboboxKM;
     private JComboBox<String> comboboxPTTT;
+    private JComboBox<String> comboboxKH;
     private String[] headers = new String[] {"Mã sách","Tên sách","Số lượng","Giá bán(đ)","Thành tiền(đ)"};
     private String[] headerType = {"inputMa","label","inputNumber","label","label"};
+    private String maHD;
+    private GetDataCallBack getDataCallBack;
+    private AddHoaDonDialog addHoaDonDialog;
 
     public TaoHoaDonForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -96,11 +113,19 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         this.khuyenMaiBUS = KhuyenMaiBUS.getInstance();
         this.phuongThucTTBUS = PhuongThucTTBUS.getInstance();
         this.nhanVienBUS = NhanVienBUS.getInstance();
+        this.hoaDonBUS = HoaDonBUS.getInstance();
+        this.ct_HoaDonBUS = CT_HoaDonBUS.getInstance();
         this.getListKH();
         this.getListKM();
         this.getPTTT();
         this.getNV();
+        this.getMaHD();
         init();
+    }
+
+    public TaoHoaDonForm(MainFrame mainFrame,AddHoaDonDialog addHoaDonDialog) {
+        this(mainFrame);
+        this.addHoaDonDialog = addHoaDonDialog;
     }
 
     
@@ -134,9 +159,13 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         panel.setLayout(new MigLayout("","[][]","[][]"));
         
         panel.add(new JLabel("<html><font size='+1'><b>Nhân viên: </b>"+nhanVienDTO.getHoTen()+"</font></html>"),"pushx,growx");
-        panel.add(new JLabel("<html><font size='+1'><b>Mã hóa đơn: </b> 109820938</font></html>"),"pushx,growx,wrap");
+        panel.add(new JLabel("<html><font size='+1'><b>Mã hóa đơn: </b> "+ maHD +"</font></html>"),"pushx,growx,wrap");
         panel.add(getPanelNhaCungCap(),"pushx,growx");
-        panel.add(new JLabel("<html><font size='+1'><b>Ngày bán: </b> 20/12/2025</font></html>"),"pushx,growx");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String day = sdf.format(new Date());
+
+        panel.add(new JLabel("<html><font size='+1'><b>Ngày bán: </b>"+day+"</font></html>"),"pushx,growx");
         return panel; 
     }
 
@@ -144,10 +173,12 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private JPanel getPanelNhaCungCap() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         panel.add(new JLabel("<html><font size='+1'><b>Khách hàng: </b></font></html>"));
-        JComboBox combo = new JComboBox(listKH);
-        combo.setFont(new Font(combo.getFont().getName(),Font.PLAIN,16));
-        combo.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth: 0");
-        panel.add(combo);
+
+        comboboxKH = new JComboBox<>(listKH);
+
+        comboboxKH.setFont(new Font(comboboxKH.getFont().getName(),Font.PLAIN,16));
+        comboboxKH.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth: 0");
+        panel.add(comboboxKH);
         return panel;
     }
 
@@ -172,7 +203,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                         list.add(sach.getTenSach());
                         list.add(soLuong + "");
                         list.add(sach.getGiaBan() + "");
-                        list.add(tongGia + "");
+                        list.add(tongGia+"");
                     ;
                     result = list.toArray(new String[0]);
                     return(result);
@@ -192,6 +223,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                     updateStatusCombobox();
                     updateStatusTextFieldTienTra();
                     updateStatusbtnThem();
+                    updateTienKhachDua();
                 }
             }
             ,headers
@@ -322,10 +354,12 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                 break;
             case "btnLuu":
                 TaoHoaDon();
+                addHoaDonDialog.setVisible(false);
                 break;
             case "comboboxKM":
                 updateTienKhuyenMai();
                 updateTongTienHoaDon();
+                updateTienKhachDua();
                 updateTTTT();
                 break;
             default:
@@ -334,6 +368,11 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
         // TODO Auto-generated method stub
         
+    }
+
+    //gọi callback để đóng dialog hóa đơn 
+    public void closeDialog(Runnable callback) {
+        callback.run();
     }
     //set text field tiền khách đưa
     public void setTextFieldKDListener(){
@@ -361,12 +400,13 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                     table.removeRow(row);
                     Notifications.getInstance().setJFrame(mainFrame);
                     Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    updateTongTienHoaDon();
+                    updateTTTT();
+                    updateStatusCombobox();
+                    updateStatusTextFieldTienTra();
+                    updateStatusbtnThem();
                 }
-                updateTongTienHoaDon();
-                updateTTTT();
-                updateStatusCombobox();
-                updateStatusTextFieldTienTra();
-                updateStatusbtnThem();
+
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);
@@ -405,7 +445,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
         JLabel labelTT = getLabelTongTien(row, rowLabels);
         JLabel labelGB = getLabelGiaban(row, rowLabels);
-        JFormattedTextField textFieldSL = getTextFieldSL(row, rowLabels); 
+        CustomTextFieldSL textFieldSL = getTextFieldSL(row, rowLabels); 
 
         int soLuong = Integer.parseInt(textFieldSL.getText());
         BigDecimal giaBan = BigDecimal.valueOf(Double.parseDouble(labelGB.getText()));
@@ -414,6 +454,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         labelTT.setText(tongGia + "");
     }
 
+    ///////////////////////////Các hàm get Component trong Map 
     public JLabel getLabelTongTien(int row, Map<Integer, List<Component>> rowLabels){
         JLabel label = null;
         Component cpn = rowLabels.get(row).get(4);
@@ -430,17 +471,28 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         return(label);
     }
 
-    public JFormattedTextField getTextFieldSL(int row, Map<Integer, List<Component>> rowLabels){
-        JFormattedTextField textField = null;
+    public CustomTextFieldSL getTextFieldSL(int row, Map<Integer, List<Component>> rowLabels){
+        CustomTextFieldSL textField = null;
         Component cpn = rowLabels.get(row).get(2);
         JPanel panel = (JPanel)cpn;
-        textField = (JFormattedTextField)panel.getComponent(0);
+        textField = (CustomTextFieldSL)panel.getComponent(0);
         return(textField);
     }
+
+    public TextFieldListSach getTextFieldMaSach(int row, Map<Integer, List<Component>> rowLabels){
+        TextFieldListSach textField = null;
+        Component cpn = rowLabels.get(row).get(0);
+        JPanel panel = (JPanel)cpn;
+        textField = (TextFieldListSach)panel.getComponent(0);
+        return(textField);
+    }
+    ///////////////////////////Các hàm get Component trong Map 
+
 
     //Hàm này được gọi mỗi khi thêm sách mới; thay đổi cbx khuyến mãi; xóa
     public void updateTongTienHoaDon(){ //Mỗi lần thêm phải tính lại hết
         Map<Integer, List<Component>> rowLabels = table.getRowLabels();
+        // System.out.println(rowLabels.get(0).get(1));
         int index = 0;
         BigDecimal result = new BigDecimal(0);
         for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
@@ -460,10 +512,6 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
 
     
-        //Set trạng thái combobox
-        
-        //Set trạng thái textField
-
 
     }
 
@@ -489,6 +537,13 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     public void updateStatusbtnThem(){        
         setStatusBtnThem(true);
     }
+
+    public void updateTienKhachDua(){
+        this.textFieldTienKhachDua.setText(this.tongThanhToan+ "");
+        textFieldTienKhachDua.repaint();
+        textFieldTienKhachDua.revalidate();
+    }
+
     /////////////////////////////////////////////////////////////////// Các dữ liệu cần update khi thêm sách/ thay đổi số lượng/ thay đổi cbx KM
 
     /////////////////////////////////////////////////////////////////// Các setter label, textField, các hàm tính toán
@@ -554,6 +609,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     public void setStatusBtnThem(boolean i){
         this.butAddData.setEnabled(i);
     }
+
     /////////////////////////////////////////////////////////////////// Các setter label, textField, các hàm tính toán
 
     /////////////////////////////////////////////////////////////////////////// Xử Lý Table
@@ -561,13 +617,56 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     /////////////////////////////////////////////////////////////////////////// Add hóa đơn
 
     public void TaoHoaDon(){
+        //Thuộc tính: maHD, ngayBan, tongTien, maTK, maPT, maKM, maKH
+        //Khóa ngoại NN: Sach
         if(listSPIsEmpty()){
             JOptionPane.showMessageDialog(mainFrame, "Chưa có sản phẩm nào được thêm!");
             return;
         }
-        JOptionPane.showMessageDialog(mainFrame, "Gút chóp!");
-        //
-        //update hoadon cần khóa ngoại maTK(có sẵn), maPT(cpx), maKM(có thể có gtmđ), maKH(có thể có gtmđ)
+        LocalDateTime ngayBan = LocalDateTime.now();
+        System.out.print(ngayBan.toString());
+        BigDecimal tongTien = this.tongThanhToan;
+        int maTK = this.taiKhoan.getMaTK();
+        int maPT = phuongThucTTBUS.getMaPhuongThucTTByTen((String)comboboxPTTT.getSelectedItem());
+
+        int maKM;
+        int maKH;
+        if(!comboboxKM.getSelectedItem().equals("Không có")){
+            maKM = khuyenMaiBUS.getMaKhuyenMaiByTen((String)comboboxKM.getSelectedItem());
+        }
+        else{
+            maKM = 1;//không có khuyến mãi
+        }
+
+        if(!comboboxKH.getSelectedItem().equals("Anonymous")){
+            maKH = khachHangBUS.getMaKhachHangByTen((String)comboboxKH.getSelectedItem());
+        }
+        else{
+            maKH = 1;
+        }
+
+        HoaDonDTO hoaDon = new HoaDonDTO(ngayBan, tongTien, maTK, maPT, maKM, maKH);
+        if(hoaDonBUS.insert(hoaDon) != 0){
+            JOptionPane.showMessageDialog(mainFrame, "luv u");
+        }
+
+        insertSach();   //thêm khóa ngoại nhiều nhiều
+
+        getDataCallBack.setData(hoaDon);
+    }
+
+    public void insertSach(){
+        //maSach, maHD, soLuong, giaBan
+        Map<Integer, List<Component>> rowLabels = table.getRowLabels();
+        int maHD = Integer.parseInt(this.maHD);
+        for(Map.Entry<Integer, List<Component>> i : table.getRowLabels().entrySet()){
+            int row = i.getKey();
+            int maSach = Integer.parseInt(getTextFieldMaSach(row, rowLabels).getText());
+            int soLuong = Integer.parseInt(getTextFieldSL(row, rowLabels).getText());
+            BigDecimal giaBan = BigDecimal.valueOf(Double.parseDouble(getLabelGiaban(row, rowLabels).getText()));
+            CT_HoaDonDTO ct_HoaDon = new CT_HoaDonDTO(maSach, maHD, soLuong, giaBan);
+            ct_HoaDonBUS.insert(ct_HoaDon);
+        }
     }
 
     public boolean listSPIsEmpty(){
@@ -584,7 +683,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
     public void getListKH(){
         ArrayList<String> temp = khachHangBUS.getAllTenKhachHang();
-        temp.add(0, "Khách vãng lai");
+        temp.add(0, "Anonymous");
         this.listKH = temp.toArray(new String[0]);
     }
     
@@ -605,5 +704,16 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         NhanVienDTO nhanVien = nhanVienBUS.getInstanceByMa(maNV);
         this.nhanVienDTO = nhanVien;
     }
+
+    public void getMaHD(){
+        this.maHD = hoaDonBUS.getNextID() + "";
+    }
     
+    public void setCallBack(GetDataCallBack getDataCallBack){
+        this.getDataCallBack = getDataCallBack;
+    }
+
+    public interface GetDataCallBack {
+        public void setData(HoaDonDTO hoaDon);
+    }
 }

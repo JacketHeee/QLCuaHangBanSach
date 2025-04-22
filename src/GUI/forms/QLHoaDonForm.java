@@ -40,6 +40,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.QLHoaDonSearch;
 import search.SachSearch;
+import utils.FormatterUtil;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -63,6 +64,8 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     public DimGlassPane glassPane = new DimGlassPane();
+    private KhachHangBUS khachHangBUS;
+    private NhanVienBUS nhanVienBUS;
     private String[][] attributes = {
         {"inputDate","Ngày bán"},   //tự get
         {"textbox", "Tổng tiền"},  //cài đặt sau
@@ -80,6 +83,8 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         hoaDonBUS = HoaDonBUS.getInstance();
         this.listAction = getListAction();
+        this.khachHangBUS = KhachHangBUS.getInstance();
+        this.nhanVienBUS = NhanVienBUS.getInstance();
         init();
     }
     
@@ -162,7 +167,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         TaiKhoanBUS tk = new TaiKhoanBUS();
 
         for(HoaDonDTO i : inputData){
-            data.add(new String[]{i.getMaHD() + "", i.getNgayBan() + "",kh.getTenByMaKhachHang(i.getMaKH()) , i.getTongTien() + "",tk.getTenByMaTaiKhoan(i.getMaTK())});
+            data.add(new String[]{i.getMaHD() + "", FormatterUtil.formatDateTime(i.getNgayBan()),kh.getTenByMaKhachHang(i.getMaKH()) , FormatterUtil.formatNumberVN(i.getTongTien()),tk.getTenByMaTaiKhoan(i.getMaTK())});
         }
         return(data);
     }
@@ -230,7 +235,22 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                 mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
                 System.out.println(but.getId()+ but.getText());
-                new AddHoaDonDialog(mainFrame);
+                AddHoaDonDialog addHoaDonDialog = new AddHoaDonDialog(mainFrame);
+                addHoaDonDialog.getTaoHoaDonForm().setCallBack(new TaoHoaDonForm.GetDataCallBack() {
+                    @Override
+                    public void setData(HoaDonDTO hoaDon) {
+                        String tenKH = khachHangBUS.getTenByMaKhachHang(hoaDon.getMaKH());
+                        String tenNV = nhanVienBUS.getTenNVByMaTK(taiKhoan.getMaTK());
+                        table.addDataRow(new String[]{
+                            hoaDon.getMaHD() + "", 
+                            FormatterUtil.formatDateTime(hoaDon.getNgayBan()),
+                            tenKH, 
+                            FormatterUtil.formatNumberVN(hoaDon.getTongTien()),
+                            tenNV
+                        });
+                    }  
+                });
+                addHoaDonDialog.setVisible(true);
                 mainFrame.glassPane.setVisible(false);
                 break;
             case "importExcel":

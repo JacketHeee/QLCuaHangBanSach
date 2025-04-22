@@ -4,8 +4,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import com.formdev.flatlaf.FlatClientProperties;
 import BUS.ChiTietQuyenBUS;
+import BUS.SachBUS;
 import BUS.ViTriVungBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 
@@ -13,9 +15,12 @@ import java.util.ArrayList;
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomBoldJLabel;
+import GUI.component.CustomButton;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.sodoComponent;
+import GUI.dialog.PopupSachDetail;
+import GUI.dialog.SachDialog;
 import GUI.dialog.ViTriVungDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
@@ -48,12 +53,15 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     };
     private String[] filter = {"Tất cả","Mã vùng", "Tên vùng"};
 
+    private SachBUS sachBUS;
+
     public VungKeForm(String title, MainFrame mainFrame) {
         this.title = title;
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         viTriVungBUS = ViTriVungBUS.getInstance();
-        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();   
+        this.sachBUS = SachBUS.getInstance();            
         this.listAction = getListAction();
 
         init();
@@ -167,23 +175,32 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0","[][]","[][]"));
 
-        table = new CustomTable(dataToShow,getActionBottom(), header);
+        table = new CustomTable(
+            dataToShow
+            , getActionBottom()
+            , new CustomTable.OnSelectRowListener() {
+                @Override
+                public void OnSelectRow(int row) {
+                    loadTableSach(row);
+                }
+            }
+            , header);
         table.setActionListener(this);
 
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
-        table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
+        // table.addDataRow(new String[] {"1","A1"});
         // CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
         panel.add(getSoDo(),"");
 
@@ -202,18 +219,17 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         panel.add(new CustomBoldJLabel("Các sản phẩm có trong vùng",1),"pushx, gapbottom 5");
 
         tableSanPham = new CustomTable(null, actionOnTableSanPham, "Mã sách","Tên sách");
-        tableSanPham.addDataRow(new String[]{"1","Con bo"});
-        tableSanPham.addDataRow(new String[]{"1","Con bo"});
-        tableSanPham.addDataRow(new String[]{"1","Con bo"});
-        tableSanPham.addDataRow(new String[]{"1","Con bo"});
-        tableSanPham.addDataRow(new String[]{"1","Con bo"});
-        tableSanPham.addDataRow(new String[]{"1","Con bo"});
-        tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        // tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        // tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        // tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        // tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        // tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        // tableSanPham.addDataRow(new String[]{"1","Con bo"});
+        // tableSanPham.addDataRow(new String[]{"1","Con bo"});
+
+        tableSanPham.setActionListener(this);
         
         panel.add(tableSanPham,"push,grow");
-
-
-
 
         return panel;
     }
@@ -267,6 +283,10 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
             case "edit":
                 ViTriVungDialog viTriVungDialog = new ViTriVungDialog(this, "Vị trí vùng", "Sửa Vùng", "update", attributes, row);
                 viTriVungDialog.setVisible(true);
+                // System.out.println();
+                // Notifications.getInstance().setJFrame(mainFrame);
+                // Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER,"Sửa thành công!");
+            break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
@@ -282,6 +302,12 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
                         JOptionPane.showMessageDialog(mainFrame, "Xóa thất bại!");
                     }
                 }
+                break;
+            case "detail":
+                int maSach = Integer.parseInt(tableSanPham.getCellData(row, 0));
+                PopupSachDetail popup = new PopupSachDetail(maSach);
+                JLabel label = (JLabel)tableSanPham.getRowLabels().get(row).get(0);
+                popup.show(label, 10, label.getHeight());
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);
@@ -324,5 +350,22 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
 
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
+    }
+
+    public void loadTableSach(int row){
+        int ma = getMaVungKeByRowIndex(row);
+        ArrayList<SachDTO> listSach = sachBUS.getAllSachByMaVung(ma);
+        ArrayList<String[]> data = new ArrayList<>();
+        for(int i = 0; i < listSach.size(); i++){
+            String[] info = {listSach.get(i).getMaSach() + "", listSach.get(i).getTenSach()}; //action
+            data.add(info);
+        }
+        tableSanPham.updateTable(data);
+    }
+
+    public int getMaVungKeByRowIndex(int row){
+        JLabel label = (JLabel)this.table.getRowLabels().get(row).get(0);
+        int ma = Integer.parseInt(label.getText());
+        return(ma);
     }
 }

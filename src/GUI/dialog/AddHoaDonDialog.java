@@ -12,16 +12,25 @@ import GUI.forms.TaoHoaDonForm;
 
 public class AddHoaDonDialog extends JDialog{
     private MainFrame mainFrame;
+    private TaoHoaDonForm taoHoaDonForm;
 
     public AddHoaDonDialog(MainFrame mainFrame) {
         super(mainFrame,"",true);
         this.mainFrame = mainFrame;
-        add(new CustomScrollPane(new TaoHoaDonForm(mainFrame)));
+        this.taoHoaDonForm = new TaoHoaDonForm(mainFrame,this);
+        add(new CustomScrollPane(taoHoaDonForm));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = 1200;
         int height = screenSize.height;
         setSize(width,height);
         setLocationRelativeTo(mainFrame);
-        setVisible(true);
-    } 
+    }
+
+    public TaoHoaDonForm getTaoHoaDonForm() {
+        return taoHoaDonForm;
+    }
+
+    public void setTaoHoaDonForm(TaoHoaDonForm taoHoaDonForm) {
+        this.taoHoaDonForm = taoHoaDonForm;
+    }     
 }

@@ -67,4 +67,8 @@ public class HoaDonBUS {
         }
         return -1;
     }
+
+    public int getNextID(){
+        return(hoaDonDAO.getNextID());
+    }
 }

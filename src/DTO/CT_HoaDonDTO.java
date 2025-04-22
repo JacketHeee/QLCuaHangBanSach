@@ -3,7 +3,7 @@ package DTO;
 import java.math.BigDecimal;
 
 public class CT_HoaDonDTO {
-    private String maSach;  // Đã thay đổi kiểu từ String thành int
+    private int maSach;  // Đã thay đổi kiểu từ String thành int
     private int maHD;    // Đã thay đổi kiểu từ String thành int
     private int soLuong;
     private BigDecimal giaBan;
@@ -21,7 +21,7 @@ public class CT_HoaDonDTO {
         return maHD;
     }
 
-    public CT_HoaDonDTO(String maSach, int maHD, int soLuong, BigDecimal giaBan) {
+    public CT_HoaDonDTO(int maSach, int maHD, int soLuong, BigDecimal giaBan) {
         this.maSach = maSach;
         this.maHD = maHD;
         this.soLuong = soLuong;
@@ -48,19 +48,11 @@ public class CT_HoaDonDTO {
         this.giaBan = giaBan;
     }
 
-    public String getmaSach() {
+    public int getMaSach() {
         return maSach;
     }
 
-    public void setmaSach(String maSach) {
-        this.maSach = maSach;
-    }
-
-    public String getMaSach() {
-        return maSach;
-    }
-
-    public void setMaSach(String maSach) {
+    public void setMaSach(int maSach) {
         this.maSach = maSach;
     }
 

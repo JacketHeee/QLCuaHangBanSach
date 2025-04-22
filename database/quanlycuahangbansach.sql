@@ -5,10 +5,11 @@ CREATE TABLE SACH(
 	maSach INT AUTO_INCREMENT PRIMARY KEY,
 	tenSach VARCHAR(255) NOT NULL,
 	soLuong INT DEFAULT 0 NOT NULL,
-	giaBan DECIMAL(10, 2) NOT NULL,
+	giaBan DECIMAL(10, 2) DEFAULT 0 NOT NULL,
 	namXB INT NOT NULL,
 	maVung INT NOT NULL,
 	maNXB INT NOT NULL,
+	anh VARCHAR(255), -- sửa lại not null sau
 	trangThai TINYINT DEFAULT 1
 );
 
@@ -114,10 +115,11 @@ CREATE TABLE KHUYENMAI (
   trangThai TINYINT DEFAULT 1
 );
 
-CREATE TABLE KM_PHIENBANSACH (
+CREATE TABLE KM_SACH(
   maKM INT,
   maSach INT,
-  PRIMARY KEY (maKM, maSach)
+  trangThai TINYINT DEFAULT 1, 
+  PRIMARY KEY (maKM, maSach, trangThai)
 );
 
 CREATE TABLE NHANVIEN ( 
@@ -167,8 +169,9 @@ CREATE TABLE KHACHHANG (
 );
 
 -- Dữ liệu cho bảng VITRIVUNG
+-- Cài đặt cứng
 INSERT INTO VITRIVUNG (tenVung) VALUES
-('Kệ A1'), ('Kệ B2'), ('Kệ C3'), ('Kệ D4'), ('Kệ E5');
+('Vùng A'), ('Vùng B'), ('Vùng C'), ('Vùng D'),('Vùng E'),('Vùng F'), ('Vùng G'), ('Vùng H');
 
 -- Dữ liệu cho bảng THELOAI
 INSERT INTO THELOAI (tenTheloai) VALUES
@@ -187,12 +190,19 @@ INSERT INTO NHAXB (tenNXB, diaChi, soDT, email) VALUES
 ('NXB Thế Giới', 'Đà Nẵng, VN', '0945678901', 'nxbtg@gmail.com');
 
 -- Dữ liệu cho bảng SACH
-INSERT INTO SACH (tenSach, soLuong, giaBan, namXB, maVung, maNXB) VALUES
-('Đắc Nhân Tâm', 2, 2000, 2019, 1, 5),
-('Harry Potter',2, 2000, 2000, 2, 2),
-('1984', 1949,2, 2000, 3, 3),
-('Rừng Na Uy',2, 2000, 1987, 4, 4),
-('Tôi thấy hoa vàng trên cỏ xanh',2, 2000, 2015, 5, 1);
+INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB) VALUES
+('Lập Trình Java Cơ Bản', 120000, 2020, 1, 3),
+('Cấu Trúc Dữ Liệu & Giải Thuật', 135000, 2021, 4, 2),
+('Thiết Kế Cơ Sở Dữ Liệu MySQL', 150000, 2019, 2, 1),
+('Python Cho Người Mới Bắt Đầu', 98000, 2023, 5, 4),
+('Thuật Toán Nâng Cao', 200000, 2022, 8, 5),
+('Học C++ Từ Cơ Bản Đến Nâng Cao', 170000, 2018, 3, 2),
+('Lập Trình Web Với JavaScript', 160000, 2021, 6, 3),
+('Phân Tích Dữ Liệu Với Excel', 90000, 2020, 7, 1),
+('Kỹ Thuật Phần Mềm', 145000, 2017, 2, 4),
+('Lập Trình Android Căn Bản', 155000, 2022, 1, 5);
+
+
 
 -- Dữ liệu cho bảng PHANLOAI
 INSERT INTO PHANLOAI (maSach, maTheLoai) VALUES
@@ -231,6 +241,8 @@ INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT, maTK) VALUES
 ('Tống Phùng', '1995-02-02', 'Nữ', '0911000002', 5);
 
 -- Dữ liệu cho bảng KHACHHANG
+INSERT INTO KHACHHANG (tenKH, soDT, gioiTinh, trangThai) VALUES
+('Anonymous', 'x', 'x', '0');
 INSERT INTO KHACHHANG (tenKH, soDT, gioiTinh) VALUES
 ('Phạm Văn C', '0988111222', 'Nam'),
 ('Lê Thị D', '0977111222', 'Nữ'),
@@ -262,12 +274,14 @@ INSERT INTO PHUONGTHUC_TT (tenPTTT) VALUES
 ('Tiền mặt'), ('Chuyển khoản'), ('Thẻ tín dụng');
 
 -- Dữ liệu cho bảng KHUYENMAI
+INSERT INTO khuyenmai (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc, TrangThai) VALUES
+('Anonymous','x',0,'2024-03-01T00:00:00', '2024-03-31T00:00:00', 0);
 INSERT INTO KHUYENMAI (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc) VALUES
 ('Giảm 10%', 'Hóa đơn > 500k', 50000, '2024-03-01T00:00:00', '2024-03-31T00:00:00'),
 ('Giảm 5%', 'Hóa đơn > 300k', 25000, '2024-03-01T00:00:00', '2024-03-31T00:00:00');
 
--- Dữ liệu cho bảng KM_PHIENBANSACH
-INSERT INTO KM_PHIENBANSACH (maKM, maSach) VALUES
+-- Dữ liệu cho bảng KM_SACH
+INSERT INTO KM_SACH (maKM, maSach) VALUES
 (1, '1'), (1, '2'), (2, '3');
 
 -- Dữ liệu cho bảng CHUCNANG
@@ -427,8 +441,16 @@ ADD CONSTRAINT KH_HD FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH);
 ALTER TABLE NHANVIEN
 ADD CONSTRAINT NHANVIEN FOREIGN KEY (maTK) REFERENCES TAIKHOAN(maTK);
 
-ALTER TABLE KM_PHIENBANSACH
+ALTER TABLE KM_SACH
 ADD CONSTRAINT km1 FOREIGN KEY (maKM) REFERENCES KHUYENMAI(maKM),
 ADD CONSTRAINT km2 FOREIGN KEY (maSach) REFERENCES SACH(maSach);
+
+
+
+
+
+
+
+
 
 

@@ -26,6 +26,7 @@ import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.SachSearch;
+import utils.FormatterUtil;
 import utils.UIUtils;
 
 import java.awt.Cursor;
@@ -48,14 +49,14 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private String[][] attributes = {
         {"textbox","Tên sách"},
-        {"textbox", "Giá bán"},
         {"textbox", "Năm xuất bản"},
         {"combobox", "Vùng"}, //FK
         {"combobox", "Nhà xuất bản"}, //FK
         //Khóa ngoại nhiều-nhiều
         {"inputKNNN", "Thể loại"},
         {"inputKNNN", "Tác giả"},
-        // {"inputKNNN", "Khuyến mãi"}  ?????
+        {"inputKNNN", "Khuyến mãi"},
+        {"inputAnh", "Ảnh"}
     };
 
     private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Năm xuất bản"};
@@ -160,7 +161,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 i.getMaSach() + "", 
                 i.getTenSach(), 
                 i.getSoLuong() + "", 
-                i.getGiaBan() + "",
+                FormatterUtil.formatNumberVN(i.getGiaBan()),
                 i.getNamXB() + "", 
             });
         }

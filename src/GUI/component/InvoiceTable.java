@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,6 @@ public class InvoiceTable extends CustomTable{
         // Chuẩn hóa text khi null
         String displayText = (text == null) ? "" : text;
         JPanel panel = new JPanel(new MigLayout("insets 0,al center center"));
-        
 
         // Cột đầu tiên (index 0) là JTextField
         if (this.headerType[columnIndex].equals("inputMa")) {
@@ -83,11 +83,12 @@ public class InvoiceTable extends CustomTable{
         }
 
         else if (this.headerType[columnIndex].equals("inputNumber")) {
-            JFormattedTextField textFieldSL = new JFormattedTextField();
-            NumberFormatter formatter = new NumberFormatter(NumberFormat.getIntegerInstance());
-            formatter.setAllowsInvalid(false);
-            textFieldSL = new JFormattedTextField(formatter); //ngăn chặn nhập ký tự khác
-            formatter.setCommitsOnValidEdit(true); //cập nhật ngay khi hợp lệ
+            CustomTextFieldSL textFieldSL = new CustomTextFieldSL();
+            // DecimalFormat plainFormat = new DecimalFormat("#");//fix tạm, tại đang hiển thị dấu ,
+            // NumberFormatter formatter = new NumberFormatter(plainFormat);
+            // formatter.setAllowsInvalid(false);
+            // textFieldSL = new CustomTextFieldSL(formatter); //ngăn chặn nhập ký tự khác
+            // formatter.setCommitsOnValidEdit(true); //cập nhật ngay khi hợp lệ
             textFieldSL.setText("1"); // để tạm mốt format lại
             textFieldSL.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth:0");
             textFieldSL.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Số lượng");
@@ -203,39 +204,6 @@ public class InvoiceTable extends CustomTable{
         String result = ((JLabel)rowLabels.get(row).get(column)).getText();
         return(result);
     }
-    // @Override
-    // public void setCellData(int row, int column, String text){
-    //     Component temp = getComponentFromPanel((JPanel)rowLabels.get(row).get(column));
-    //     if(column == 0){
-    //         TextFieldListSach textField = (TextFieldListSach)(temp);
-    //         textField.setText(text);
-    //     }
-    //     else if(column == 2){
-    //         JFormattedTextField textField = (JFormattedTextField)(temp);
-    //         textField.setText(text);
-    //     }
-    //     else{
-    //         JLabel label = (JLabel)(temp);
-    //         label.setText(text);
-    //     }
-    // }
-    // @Override
-    // public void setRowData(int row, String... list){
-    //     for(int i = 0; i < list.length; i++){
-    //         setCellData(row, i, list[i]);
-    //     }
-    // }
-
-    // public Component getComponentFromPanel(JPanel panel){
-    //     Component[] cpn = panel.getComponents();
-    //     for(Component i : cpn){
-    //         //trong table chỉ có TextFieldListSach, JLabel, JFormattedTextField
-    //         if(i instanceof JLabel || i instanceof TextFieldListSach || i instanceof JFormattedTextField){
-    //             return(i);
-    //         }
-    //     }
-    //     return(null);
-    // }
 
     @Override
     public void updateRowData(int row, String[] newData) {
@@ -256,11 +224,11 @@ public class InvoiceTable extends CustomTable{
                 
                 if (innerComp instanceof JTextField) {
                     ((JTextField) innerComp).setText(value);
-                } else if (innerComp instanceof JFormattedTextField) {
+                } else if (innerComp instanceof CustomTextFieldSL) {
                     try {
-                        ((JFormattedTextField) innerComp).setText(value);
+                        ((CustomTextFieldSL) innerComp).setText(value);
                     } catch (IllegalArgumentException e) {
-                        ((JFormattedTextField) innerComp).setText("0"); // Giá trị mặc định nếu không hợp lệ
+                        ((CustomTextFieldSL) innerComp).setText("0"); // Giá trị mặc định nếu không hợp lệ
                     }
                 } else if (innerComp instanceof JLabel) {
                     ((JLabel) innerComp).setText(value);
@@ -278,13 +246,13 @@ public class InvoiceTable extends CustomTable{
         dataPanel.repaint();
     }
 
-    public JFormattedTextField getTextFieldSL(int row){
-        JFormattedTextField textField = null;
+    public CustomTextFieldSL getTextFieldSL(int row){
+        CustomTextFieldSL textField = null;
         for(int i = 0; i < headers.length; i++){
             if(headers[i].equals("Số lượng")){
                 Component cpn = rowLabels.get(row).get(i);
                 JPanel panel = (JPanel)cpn;
-                textField = (JFormattedTextField)panel.getComponent(0);
+                textField = (CustomTextFieldSL)panel.getComponent(0);
                 break;
             }
         }
@@ -293,12 +261,12 @@ public class InvoiceTable extends CustomTable{
 
     public int getSoLuongSach(int row){
         int result = -1;
-        JFormattedTextField textField = getTextFieldSL(row);
+        CustomTextFieldSL textField = getTextFieldSL(row);
         result = Integer.parseInt(textField.getText());
         return(result);
     }
 
-    public void setListenerTextFieldSL(JFormattedTextField textFieldSL, int row){
+    public void setListenerTextFieldSL(CustomTextFieldSL textFieldSL, int row){   //setListener khi thay đổi cột số lượng
         textFieldSL.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -322,7 +290,7 @@ public class InvoiceTable extends CustomTable{
     //     System.out.println("luv");
     //     JLabel lblTongTien =  getLabelTongTien(row);
     //     JLabel lblGiaBan = getLabelGiaban(row);
-    //     JFormattedTextField textFieldSL = getTextFieldSL(row);
+    //     CustomTextFieldSL textFieldSL = getTextFieldSL(row);
     //     int soLuong = -1;
     //     BigDecimal giaBan = new BigDecimal(-1);
 
@@ -352,4 +320,5 @@ public class InvoiceTable extends CustomTable{
     public interface TinhTongGiaChungTu{
         public void updateTongGiaChungTu();
     }
+
 }
