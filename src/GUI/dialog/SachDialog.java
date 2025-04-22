@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.DanhMuc_TGBUS;
+import BUS.KM_SachBUS;
+import BUS.KhuyenMaiBUS;
 import BUS.NhaXBBUS;
 import BUS.PhanLoaiBUS;
 import BUS.SachBUS;
@@ -54,8 +56,10 @@ public class SachDialog extends JDialog implements ActionListener{
     //Lấy khóa ngoại nhiều nhiều
     private TheLoaiBUS theLoaiBUS;
     private TacGiaBUS tacGiaBUS;
+    private KhuyenMaiBUS khuyenMaiBUS;
     private PhanLoaiBUS phanLoaiBUS;
     private DanhMuc_TGBUS danhMuc_TGBUS;
+    private KM_SachBUS kM_SachBUS;
 
     private int rowSelected;
 

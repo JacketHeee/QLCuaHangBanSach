@@ -54,7 +54,8 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         {"combobox", "Nhà xuất bản"}, //FK
         //Khóa ngoại nhiều-nhiều
         {"inputKNNN", "Thể loại"},
-        {"inputKNNN", "Tác giả"}
+        {"inputKNNN", "Tác giả"},
+        // {"inputKNNN", "Khuyến mãi"}  ?????
     };
 
     private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Năm xuất bản"};

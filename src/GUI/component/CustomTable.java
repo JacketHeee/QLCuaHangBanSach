@@ -446,7 +446,6 @@ public class CustomTable extends JPanel implements ActionListener {
         }
 
         rowLabels.put(row, labels);
-
         // Cập nhật rowHeights nếu cần
         if (row >= rowHeights.length) {
             int[] newRowHeights = new int[row + 1];
@@ -549,4 +548,9 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.revalidate();
         dataPanel.repaint();
     }
+    public Map<Integer, List<Component>> getRowLabels() {
+        return rowLabels;
+    }
+
+    
 }

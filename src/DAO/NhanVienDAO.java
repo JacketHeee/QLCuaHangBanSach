@@ -201,4 +201,46 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         return(result);
     }
 
+    public int getMaNVByMaTK(int maTK){
+        int result = -1;
+        String sql = "SELECT maNV FROM nhanVien WHERE maTK = ?";
+        try {
+            JDBCUtil jdbcUtil = new JDBCUtil();
+            jdbcUtil.Open();
+            ResultSet rs = jdbcUtil.executeQuery(sql, maTK);
+            while(rs.next()){
+                result = rs.getInt("maNV");
+            }
+            jdbcUtil.Close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return(result);
+    }
+
+    public NhanVienDTO getInstanceByMa(int maNV){
+        NhanVienDTO result = new NhanVienDTO();
+        String sql = "SELECT * FROM NHANVIEN WHERE MANV = ? AND TRANGTHAI = 1"; 
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maNV);
+        try {
+            while (rs.next()) {
+                String hoTen = rs.getString("hoTen");
+                Date ngaySinh = rs.getDate("ngaySinh");
+                String gioiTinh = rs.getString("gioiTinh");
+                String soDT = rs.getString("soDT");
+                int maTK = rs.getInt("maTK");
+                
+                NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, ngaySinh, gioiTinh, soDT, maTK);
+                result = nv;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
+
 }

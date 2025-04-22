@@ -100,4 +100,31 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		jdbcUtil.Close();
 		return result;
 	}
+
+	public SachDTO getInstanceByID(int maSach){
+		SachDTO result = null;
+		String sql = "SELECT * FROM SACH WHERE maSach = ? AND TRANGTHAI = 1";
+		
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		ResultSet rs = jdbcUtil.executeQuery(sql, maSach);
+		try {
+			while(rs.next()) {
+				int id = rs.getInt("maSach");
+				String tenSach = rs.getString("tenSach");
+				int soLuong = rs.getInt("soLuong");
+				BigDecimal giaBan = rs.getBigDecimal("giaBan");
+				int namXB = rs.getInt("namXB");
+				int maVung = rs.getInt("maVung");
+				int maNXB = rs.getInt("maNXB");
+				result = new SachDTO(id, tenSach, soLuong, giaBan, namXB, maVung, maNXB);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		jdbcUtil.Close();
+		return result;
+	}
 }

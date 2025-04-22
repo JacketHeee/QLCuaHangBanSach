@@ -2,28 +2,17 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.ViTriVungBUS;
-import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import DTO.ViTriVungDTO;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomBoldJLabel;
-import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.sodoComponent;
@@ -31,20 +20,13 @@ import GUI.dialog.ViTriVungDialog;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
-import search.SachSearch;
 import search.VungKeSearch;
 import utils.ImageUtils;
 import utils.UIUtils;
 
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 public class VungKeForm extends JPanel implements TableActionListener, ActionListener {
 

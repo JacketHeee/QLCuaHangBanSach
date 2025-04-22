@@ -48,6 +48,9 @@
 
 //         Runnable doSearch = () -> {
 //             String keyword = inputSearch.getText();
+//             ArrayList<T> result = searchable.search(keyword);
+
+//             onResultReady.accept(result);
 //             // ArrayList<T> result = searchable.search(keyword);
 
 //             // onResultReady.accept(result);
