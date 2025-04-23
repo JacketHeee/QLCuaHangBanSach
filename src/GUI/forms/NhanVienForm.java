@@ -46,7 +46,7 @@ import javax.swing.JButton;
 public class NhanVienForm extends JPanel implements TableActionListener, ActionListener{
 
     private String title;
-    private int id = 13;
+    private int id = 11;
     private String[] header = {"Mã nhân viên","Họ tên","Ngày sinh","Giới tính","Số điện thoại","Mã tài khoản"};
     NhanVienBUS nhanVienBUS;
     private MainFrame mainFrame;

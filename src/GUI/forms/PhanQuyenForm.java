@@ -30,7 +30,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
     private MainFrame mainFrame;
     private String title;
-    private int id = 16;
+    private int id = 14;
     private CustomTable table; 
     private ArrayList<String[]> dataToShow;
     private ArrayList<ButtonAction> buttonActionsList;

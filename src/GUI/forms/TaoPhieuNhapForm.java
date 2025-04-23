@@ -18,13 +18,19 @@ import javax.swing.border.Border;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.CT_PhieuNhapBUS;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhaCungCapBUS;
 import BUS.NhanVienBUS;
 import BUS.PhieuNhapBUS;
+import BUS.SachBUS;
+import DTO.CT_HoaDonDTO;
+import DTO.CT_PhieuNhapDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.HoaDonDTO;
 import DTO.NhaCungCapDTO;
+import DTO.PhieuNhapDTO;
 import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
 import GUI.MainFrame;
@@ -34,6 +40,7 @@ import GUI.component.CustomTable;
 import GUI.component.CustomTextFieldSL;
 import GUI.component.InvoiceTable;
 import GUI.component.TableActionListener;
+import GUI.component.search.TextFieldListSach;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +49,7 @@ import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,10 +75,17 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private NhanVienBUS nhanVienBUS;
     private NhaCungCapBUS nhaCungCapBUS;
     private PhieuNhapBUS phieuNhapBUS;
+    private CT_PhieuNhapBUS ct_PhieuNhapBUS;
+    private JComboBox<String> comboboxNCC;   
+    private String maNhap;
+    private SachBUS sachBUS;
+
     private String tenNhanVien;
     private BigDecimal tongTienPhieuNhap;
     private JLabel lblTongTienPN;
     private String maPhieuNhap;
+
+    private GetDataCallBack getDataCallBack;
 
     public TaoPhieuNhapForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -82,9 +97,12 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         this.nhanVienBUS = NhanVienBUS.getInstance();
         this.nhaCungCapBUS = NhaCungCapBUS.getInstance();
         this.phieuNhapBUS = PhieuNhapBUS.getInstance();
+        this.ct_PhieuNhapBUS = CT_PhieuNhapBUS.getInstance();
+        this.sachBUS = SachBUS.getInstance();
         setTenNhanVien();
         setListNCC();
         setMaPhieuNhap();
+        getMaNhap();
         init();
     }
 
@@ -131,10 +149,10 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private JPanel getPanelNhaCungCap() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         panel.add(new JLabel("<html><font size='+1'><b>Nhà cung cấp: </b></font></html>"));
-        JComboBox combo = new JComboBox(listNcc);
-        combo.setFont(new Font(combo.getFont().getName(),Font.PLAIN,16));
-        combo.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth: 0");
-        panel.add(combo);
+        comboboxNCC = new JComboBox<>(listNcc);
+        comboboxNCC.setFont(new Font(comboboxNCC.getFont().getName(),Font.PLAIN,16));
+        comboboxNCC.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth: 0");
+        panel.add(comboboxNCC);
         return panel;
     }
 
@@ -271,7 +289,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
                 updateStatusbtnThem(false); //Sau khi nhấn nút thêm thì tạm khóa nút thêm
                 break;
             case "btnLuu":
-                JOptionPane.showMessageDialog(mainFrame, "gút chóp!");
+                themPhieuNhap();
                 break;
             default:
                 break;
@@ -361,6 +379,13 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         return(textField);
     }
     
+    public TextFieldListSach getTextFieldMaSach(int row, Map<Integer, List<Component>> rowLabels){
+        TextFieldListSach textField = null;
+        Component cpn = rowLabels.get(row).get(0);
+        JPanel panel = (JPanel)cpn;
+        textField = (TextFieldListSach)panel.getComponent(0);
+        return(textField);
+    }
 
     public void updateStatusTextFieldLoiNhuan(){
         if(listSPIsEmpty()){
@@ -397,7 +422,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         this.textFieldLoiNhuan.setEditable(i);
     }
 
-    //Khác với phiếu nhập, nếu đã nhấn nút thêm thì khóa ngay textField % lợi nhuận
+    //Nếu đã nhấn nút thêm thì khóa textField % lợi nhuận (khác với hóa đơn)
     public boolean listSPIsEmpty(){
         if(this.table.getRowLabels().isEmpty()){
             return(true);
@@ -405,6 +430,64 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         return(false);
     }
 
+    ////////////////////////////////////////////////////////////////////////////thêm phiếu nhập
+    public void themPhieuNhap(){
+//Thuộc tính: maNhap, ngayNhap, tongTien, maNCC, maTK
+        //Khóa ngoại NN: Sach
+        if(listSPIsEmpty()){
+            JOptionPane.showMessageDialog(mainFrame, "Chưa có sản phẩm nào được thêm!");
+            return;
+        }
+        LocalDateTime ngayNhap = LocalDateTime.now();
+        BigDecimal tongTien = this.tongTienPhieuNhap;
+        int maTK = this.taiKhoan.getMaTK();
+        int maNCC = this.nhaCungCapBUS.getMaNhaCungCapByTen((String)comboboxNCC.getSelectedItem());
+
+        PhieuNhapDTO phieuNhap = new PhieuNhapDTO(ngayNhap, tongTien, maNCC, maTK);
+        if(phieuNhapBUS.insert(phieuNhap) != 0){
+            JOptionPane.showMessageDialog(mainFrame, "Thêm phiếu nhập thành công");
+        }
+
+        insertSach();   //thêm khóa ngoại nhiều nhiều
+        setGiaBanSach();    //cài đặt giá bán cho sách theo lợi nhuận
+
+        getDataCallBack.setData(phieuNhap);
+    }
+
+    public void insertSach(){
+                //maSach, maNhap, soLuong, giaNhap
+        Map<Integer, List<Component>> rowLabels = table.getRowLabels();
+        int maNhap = Integer.parseInt(this.maNhap);
+        for(Map.Entry<Integer, List<Component>> i : table.getRowLabels().entrySet()){
+            int row = i.getKey();
+            int maSach = Integer.parseInt(getTextFieldMaSach(row, rowLabels).getText());
+            int soLuong = Integer.parseInt(getTextFieldSL(row, rowLabels).getText());
+            BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(getTextFieldGiaNhap(row, rowLabels).getText()));
+            CT_PhieuNhapDTO ct_Nhap = new CT_PhieuNhapDTO(maSach, maNhap, soLuong, giaNhap);
+            ct_PhieuNhapBUS.insert(ct_Nhap);
+        }
+    }
+
+    public void setGiaBanSach(){
+        Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
+        for(int i = 0; i < rowLabels.size(); i++){
+            int maSach = Integer.parseInt(getTextFieldSL(i, rowLabels).getText());
+            SachDTO sach = sachBUS.getInstanceByID(maSach);
+            BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(getTextFieldGiaNhap(i, rowLabels).getText()));
+            BigDecimal tienSach = getGiaBanSach(giaNhap);
+            sach.setGiaBan(tienSach);
+            sachBUS.update(sach);
+        }
+    }
+
+    public BigDecimal getGiaBanSach(BigDecimal giaNhap){    //Lấy giá bán
+        BigDecimal phanTram = getPhanTramLoiNhuan();
+        return(giaNhap.multiply(phanTram));
+    }       
+
+
+
+    ////////////////////////////////////////////////////////////////////////////thêm phiếu nhập
     public void setTenNhanVien(){
         this.tenNhanVien = nhanVienBUS.getTenNVByMaTK(this.taiKhoan.getMaTK());
     }
@@ -416,6 +499,18 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
     public void setMaPhieuNhap(){
         this.maPhieuNhap = phieuNhapBUS.getNextID() + "";
+    }
+
+    public void getMaNhap(){
+        this.maNhap = phieuNhapBUS.getNextID() + "";
+    }
+
+    public void setCallBack(GetDataCallBack getDataCallBack){
+        this.getDataCallBack = getDataCallBack;
+    }
+
+    public interface GetDataCallBack {
+        public void setData(PhieuNhapDTO phieuNhap);
     }
 
 }

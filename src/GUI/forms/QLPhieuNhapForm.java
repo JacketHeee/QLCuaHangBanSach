@@ -53,7 +53,7 @@ import javax.swing.JButton;
 public class QLPhieuNhapForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
-    private int id = 8;
+    private int id = 7;
     private String[] header = {"Mã nhập","Ngày nhập","Nhà cung cấp","Tổng tiền","Nhân viên"};
     PhieuNhapBUS phieuNhapBUS;
     private MainFrame mainFrame;
@@ -62,6 +62,8 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private TaiKhoanDTO taiKhoan;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
+    private NhanVienBUS nhanVienBUS;
+    private NhaCungCapBUS nhaCungCapBUS;
     private String[][] attributes = {
         {"inputDate","Ngày nhập"},   //tự get
         {"textbox", "Tổng tiền"},  
@@ -74,7 +76,9 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         this.title = title;
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
-        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance(); 
+        this.nhanVienBUS = NhanVienBUS.getInstance();
+        this.nhaCungCapBUS = NhaCungCapBUS.getInstance();              
 
         phieuNhapBUS = PhieuNhapBUS.getInstance();
         this.listAction = getListAction();
@@ -232,8 +236,21 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
             case "add":
                 mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
-                System.out.println(but.getId()+ but.getText());
-                new AddPhieuNhapDialog(mainFrame);
+                AddPhieuNhapDialog addPhieuNhapDialog = new AddPhieuNhapDialog(mainFrame);
+                addPhieuNhapDialog.getTaoPhieuNhapForm().setCallBack(new TaoPhieuNhapForm.GetDataCallBack() {
+                    @Override
+                    public void setData(PhieuNhapDTO phieuNhap) {
+                        String tenNCC = nhaCungCapBUS.getTenByMaNhaCungCap(phieuNhap.getMaNCC());
+                        String tenNV = nhanVienBUS.getTenNVByMaTK(phieuNhap.getMaTK());
+                        table.addDataRow(new String[] {
+                            phieuNhap.getMaNhap() + ""
+                            , phieuNhap.getNgayNhap() + ""
+                            , tenNCC
+                            , tenNV
+                        });
+                    }  
+                });
+                addPhieuNhapDialog.setVisible(true);
                 mainFrame.glassPane.setVisible(false);
                 break;
             case "importExcel":

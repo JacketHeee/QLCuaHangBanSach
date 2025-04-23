@@ -70,7 +70,6 @@ public class PanelPicture extends JPanel{
                         labelAnh.setIcon(icon);
                     }
                     else{
-                        labelAnh.setForeground(java.awt.Color.black);
                         try {
                             URL url = new File(path).toURI().toURL();
                             FlatSVGIcon svgIcon = new FlatSVGIcon(url).derive(150, 200);
@@ -86,7 +85,7 @@ public class PanelPicture extends JPanel{
         });
     }
 
-    public void setAnh(String path){
+    public void setAnh(String path){  
         if(!path.toLowerCase().endsWith(".svg")){
             ImageIcon originalIcon = new ImageIcon(path);
             Image image = originalIcon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);

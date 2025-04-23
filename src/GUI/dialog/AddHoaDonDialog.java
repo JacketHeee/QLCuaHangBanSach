@@ -11,8 +11,8 @@ import GUI.component.CustomScrollPane;
 import GUI.forms.TaoHoaDonForm;
 
 public class AddHoaDonDialog extends JDialog{
-    private MainFrame mainFrame;
     private TaoHoaDonForm taoHoaDonForm;
+    private MainFrame mainFrame;
 
     public AddHoaDonDialog(MainFrame mainFrame) {
         super(mainFrame,"",true);

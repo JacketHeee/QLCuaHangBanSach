@@ -54,7 +54,7 @@ import javax.swing.JButton;
 public class QLHoaDonForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
-    private int id = 10;
+    private int id = 8;
     private String[] header = {"Mã hóa đơn", "Ngày lập", "Khách hàng","Tổng tiền","Nhân viên"};
     HoaDonBUS hoaDonBUS;
     private MainFrame mainFrame;
@@ -234,7 +234,6 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
             case "add":
                 mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
-                System.out.println(but.getId()+ but.getText());
                 AddHoaDonDialog addHoaDonDialog = new AddHoaDonDialog(mainFrame);
                 addHoaDonDialog.getTaoHoaDonForm().setCallBack(new TaoHoaDonForm.GetDataCallBack() {
                     @Override

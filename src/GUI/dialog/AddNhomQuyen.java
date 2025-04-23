@@ -265,12 +265,10 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
         listAllowSelect.add(new String[]{"Thể loại", "category", "Xem Thêm Sửa Xóa"});
         listAllowSelect.add(new String[]{"Tác giả", "author", "Xem Thêm Sửa Xóa"});
         listAllowSelect.add(new String[]{"Nhà xuất bản", "nxb", "Xem Thêm Sửa Xóa"});
-        listAllowSelect.add(new String[]{"Vùng kệ", "vungtl", "Xem Thêm Sửa Xóa"}); // Có làm giao diện vùng kệ k ?
+        listAllowSelect.add(new String[]{"Vùng kệ", "vungtl", "Xem Thêm Sửa Xóa"}); 
         listAllowSelect.add(new String[]{"Nhà cung cấp", "ncc", "Xem Thêm Sửa Xóa"});
-        listAllowSelect.add(new String[]{"Tạo phiếu nhập", "createInput", "Xem"});
-        listAllowSelect.add(new String[]{"Quản lý phiếu nhập", "qlInput", "Xem Thêm"}); //?
-        listAllowSelect.add(new String[]{"Tạo hóa đơn", "createBill", "Xem"});
-        listAllowSelect.add(new String[]{"Quản lý hóa đơn", "qlBill", "Xem Thêm"}); //?
+        listAllowSelect.add(new String[]{"Quản lý phiếu nhập", "qlInput", "Xem Thêm"}); 
+        listAllowSelect.add(new String[]{"Quản lý hóa đơn", "qlBill", "Xem Thêm"}); 
         listAllowSelect.add(new String[]{"Khuyến mãi", "promotion", "Xem Thêm Sửa Xóa"});
         listAllowSelect.add(new String[]{"Phương thức thanh toán", "pttt", "Xem Thêm Sửa Xóa"});
         listAllowSelect.add(new String[]{"Nhân viên", "nv", "Xem Thêm Sửa Xóa"});

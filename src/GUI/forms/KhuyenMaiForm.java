@@ -42,7 +42,7 @@ import javax.swing.JButton;
 public class KhuyenMaiForm extends JPanel implements TableActionListener, ActionListener{
 
     private String title;
-    private int id = 11;
+    private int id = 9;
     private String[] header = {"Mã khuyến mãi","Tên khuyến mãi","Điều kiện giảm","Giá trị giảm", "Ngày bắt đầu", "Ngày kết thúc"};
     KhuyenMaiBUS khuyenMaiBUS;
     private MainFrame mainFrame;
