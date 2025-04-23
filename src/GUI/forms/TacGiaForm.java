@@ -177,7 +177,7 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
-        panel.add(new CustomScrollPane(table),"push, grow");
+        panel.add(table,"push, grow");
         return panel;
     }
 

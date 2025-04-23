@@ -6,6 +6,8 @@ import DTO.ModelTinhThanh.JsonParser;
 import DTO.ModelTinhThanh.Province;
 import DTO.ModelTinhThanh.Ward;
 import net.miginfocom.swing.MigLayout;
+import resources.base.baseTheme;
+
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
@@ -56,7 +58,8 @@ public class AddressAdderPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(255, 87, 34)), 
                 "Thêm Địa Chỉ Mới",
-                0, 0, new Font(FlatRobotoFont.FAMILY, Font.BOLD, 16), new Color(255, 87, 34)));
+                0, 0, new Font(FlatRobotoFont.FAMILY, Font.BOLD, 16), Color.decode(baseTheme.mainColor)));
+                // 0, 0, new Font(FlatRobotoFont.FAMILY, Font.BOLD, 16), new Color(255, 87, 34)));
         setBackground(new Color(250, 250, 250));
 
         JLabel provinceLabel = new JLabel("Tỉnh/Thành phố:");
