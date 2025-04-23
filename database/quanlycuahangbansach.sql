@@ -1,3 +1,4 @@
+DROP DATABASE quanlycuahangbansach;
 CREATE DATABASE quanlycuahangbansach;
 USE quanlycuahangbansach;
 
@@ -190,17 +191,17 @@ INSERT INTO NHAXB (tenNXB, diaChi, soDT, email) VALUES
 ('NXB Thế Giới', 'Đà Nẵng, VN', '0945678901', 'nxbtg@gmail.com');
 
 -- Dữ liệu cho bảng SACH
-INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB) VALUES
-('Lập Trình Java Cơ Bản', 120000, 2020, 1, 3),
-('Cấu Trúc Dữ Liệu & Giải Thuật', 135000, 2021, 4, 2),
-('Thiết Kế Cơ Sở Dữ Liệu MySQL', 150000, 2019, 2, 1),
-('Python Cho Người Mới Bắt Đầu', 98000, 2023, 5, 4),
-('Thuật Toán Nâng Cao', 200000, 2022, 8, 5),
-('Học C++ Từ Cơ Bản Đến Nâng Cao', 170000, 2018, 3, 2),
-('Lập Trình Web Với JavaScript', 160000, 2021, 6, 3),
-('Phân Tích Dữ Liệu Với Excel', 90000, 2020, 7, 1),
-('Kỹ Thuật Phần Mềm', 145000, 2017, 2, 4),
-('Lập Trình Android Căn Bản', 155000, 2022, 1, 5);
+INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB, anh) VALUES
+('Lập Trình Java Cơ Bản', 120000, 2020, 1, 3, 'src/img_product/sach1.jpg'),
+('Cấu Trúc Dữ Liệu & Giải Thuật', 135000, 2021, 4, 2, 'src/img_product/sach1.jpg'),
+('Thiết Kế Cơ Sở Dữ Liệu MySQL', 150000, 2019, 2, 1, 'src/img_product/sach1.jpg'),
+('Python Cho Người Mới Bắt Đầu', 98000, 2023, 5, 4, 'src/img_product/sach1.jpg'),
+('Thuật Toán Nâng Cao', 200000, 2022, 8, 5, '../img_product/sach1.jpg'),
+('Học C++ Từ Cơ Bản Đến Nâng Cao', 170000, 2018, 3, 2, 'src/img_product/sach1.jpg'),
+('Lập Trình Web Với JavaScript', 160000, 2021, 6, 3, 'src/img_product/sach1.jpg'),
+('Phân Tích Dữ Liệu Với Excel', 90000, 2020, 7, 1, 'src/img_product/sach1.jpg'),
+('Kỹ Thuật Phần Mềm', 145000, 2017, 2, 4, 'src/img_product/sach1.jpg'),
+('Lập Trình Android Căn Bản', 155000, 2022, 1, 5, 'src/img_product/sach2.svg');
 
 
 
@@ -293,17 +294,15 @@ INSERT INTO CHUCNANG (tenChucNang) VALUES
 ('nxb'), -- 4
 ('vungtl'), -- 5
 ('ncc'), -- 6
-('createInput'), -- 7
-('qlInput'), -- 8
-('createBill'), -- 9
-('qlBill'), -- 10
-('promotion'), -- 11
-('pttt'), -- 12
-('nv'), -- 13
-('taikhoan'), -- 14
-('khachhang'), -- 15
-('phanquyen'), -- 16
-('report'); -- 17
+('qlInput'), -- 7
+('qlBill'), -- 8
+('promotion'), -- 9
+('pttt'), -- 10
+('nv'), -- 11
+('taikhoan'), -- 12
+('khachhang'), -- 13
+('phanquyen'), -- 14
+('report'); -- 15
 
 -- Dữ liệu cho bảng CHITIETQUYEN
 INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
@@ -339,14 +338,20 @@ INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
 
 
 (1, 7, 'Xem'),
+(1, 7, 'Thêm'),
 
 (1, 8, 'Xem'),
 (1, 8, 'Thêm'),
 
 (1, 9, 'Xem'),
+(1, 9, 'Thêm'),
+(1, 9, 'Sửa'),
+(1, 9, 'Xóa'),
 
 (1, 10, 'Xem'),
 (1, 10, 'Thêm'),
+(1, 10, 'Sửa'),
+(1, 10, 'Xóa'),
 
 (1, 11, 'Xem'),
 (1, 11, 'Thêm'),
@@ -368,33 +373,7 @@ INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
 (1, 14, 'Sửa'),
 (1, 14, 'Xóa'),
 
-(1, 15, 'Xem'),
-(1, 15, 'Thêm'),
-(1, 15, 'Sửa'),
-(1, 15, 'Xóa'),
-
-(1, 16, 'Xem'),
-(1, 16, 'Thêm'),
-(1, 16, 'Sửa'),
-(1, 16, 'Xóa'),
-
-(1, 17, 'Xem'),
-
-(2, 7, 'Xem'),
-
-(2, 8, 'Xem'),
-(2, 8, 'Thêm'),
-
-(2, 9, 'Xem'),
-
-(2, 10, 'Xem'),
-(2, 10, 'Thêm'),
-
-(3, 10, 'Xem'),
-(3, 10, 'Thêm'),
-
-(3, 15, 'Xem'),
-(3, 15, 'Sửa');
+(1, 15, 'Xem');
 
 
 ALTER TABLE SACH
