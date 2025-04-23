@@ -44,7 +44,7 @@ import javax.swing.JButton;
 public class KhachHangForm extends JPanel implements TableActionListener, ActionListener{
 
     private String title;
-    private int id = 15;
+    private int id = 13;
     private KhachHangBUS khachHangBUS;
     private String[] header = {"Mã khách hàng","Tên khách hàng","Số điện thoại","Giới tính"};
     private MainFrame mainFrame;

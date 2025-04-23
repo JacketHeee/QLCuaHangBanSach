@@ -46,7 +46,7 @@ import javax.swing.JButton;
 public class TaiKhoanForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
-    private int id = 14;
+    private int id = 12;
     private String[] header = {"Mã tài khoản","Username","Password","Quyền"};
     private TaiKhoanBUS taiKhoanBUS;
     private MainFrame mainFrame;

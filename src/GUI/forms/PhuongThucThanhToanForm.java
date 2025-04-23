@@ -40,7 +40,7 @@ import javax.swing.JButton;
 public class PhuongThucThanhToanForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
-    private int id = 12;
+    private int id = 10;
     private String[] header = {"Mã phương thức", "Tên phương thức thanh toán"};
     private PhuongThucTTBUS phuongThucTTBUS;
     private MainFrame mainFrame;

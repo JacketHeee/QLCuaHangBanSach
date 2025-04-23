@@ -53,7 +53,7 @@ import javax.swing.JButton;
 public class QLHoaDonForm extends JPanel implements TableActionListener, ActionListener {
 
     private String title;
-    private int id = 10;
+    private int id = 8;
     private String[] header = {"Mã hóa đơn", "Ngày lập", "Khách hàng","Tổng tiền","Nhân viên"};
     HoaDonBUS hoaDonBUS;
     private MainFrame mainFrame;

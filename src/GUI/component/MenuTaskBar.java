@@ -212,12 +212,6 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 				case "phanquyen":
 					mainFrame.setPanel(new PhanQuyenForm(mainFrame,but.getText()));
 					break;
-				case "createInput":
-					mainFrame.setPanel(new CustomScrollPane(new TaoPhieuNhapForm(mainFrame)));
-					break;
-				case "createBill":
-					mainFrame.setPanel(new CustomScrollPane(new TaoHoaDonForm(mainFrame)));
-					break;
 				case "report":
 					mainFrame.setPanel(new TongQuanForm());
 					break;
