@@ -82,5 +82,4 @@ public class KhuyenMaiBUS {
         return(khuyenMaiDAO.getInstanceByMa(ma));
     }
 
-
 }

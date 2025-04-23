@@ -116,17 +116,21 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
     }
 
     public void setOldData(){
-        String ten = khuyenMaiPanel.getTable().getCellData(rowSelected, 1);
-        String dKGiam = khuyenMaiPanel.getTable().getCellData(rowSelected, 2);
-        String giaTriGiam = khuyenMaiPanel.getTable().getCellData(rowSelected, 3);
-        String ngayBatDau = khuyenMaiPanel.getTable().getCellData(rowSelected, 4);
-        String ngayKetThuc = khuyenMaiPanel.getTable().getCellData(rowSelected, 5);
+        int ma = Integer.parseInt(khuyenMaiPanel.getTable().getCellData(rowSelected, 0));
+        KhuyenMaiDTO khuyenMai = khuyenMaiBUS.getInstanceByMa(ma);
 
-        inputForm.getListItem().get(0).setText(ten);
-        inputForm.getListItem().get(1).setText(dKGiam);
-        inputForm.getListItem().get(2).setText(giaTriGiam);
-        inputForm.getListItem().get(3).setDateTimeByString(ngayBatDau);
-        inputForm.getListItem().get(4).setDateTimeByString(ngayKetThuc);
+
+        // String ten = khuyenMaiPanel.getTable().getCellData(rowSelected, 1);
+        // String dKGiam = khuyenMaiPanel.getTable().getCellData(rowSelected, 2);
+        // String giaTriGiam = khuyenMaiPanel.getTable().getCellData(rowSelected, 3);
+        // String ngayBatDau = khuyenMaiPanel.getTable().getCellData(rowSelected, 4);
+        // String ngayKetThuc = khuyenMaiPanel.getTable().getCellData(rowSelected, 5);
+
+        inputForm.getListItem().get(0).setText(khuyenMai.getTenKM());
+        inputForm.getListItem().get(1).setText(khuyenMai.getDieuKienGiam());
+        inputForm.getListItem().get(2).setText(khuyenMai.getGiaTriGiam() + "");
+        inputForm.getListItem().get(3).setDateTime(khuyenMai.getNgayBatDau());
+        inputForm.getListItem().get(4).setDateTime(khuyenMai.getNgayKetThuc());
     }
 
     @Override

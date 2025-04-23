@@ -31,6 +31,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.InputForm;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.AddHoaDonDialog;
@@ -53,7 +54,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
 
     private String title;
     private int id = 7;
-    private String[] header = {"Mã nhập","Ngày nhập","Nhà cung cấp","Tổng tiền","Nhân viên"};
+    private String[] header = {"Mã nhập","Ngày nhập", "Nhà cung cấp", "Tổng tiền"};
     PhieuNhapBUS phieuNhapBUS;
     private MainFrame mainFrame;
     private ArrayList<PhieuNhapDTO> listKH;
@@ -70,6 +71,10 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         {"textbox", "Mã tài khoản"},    //tự get
     };
     private String[] filter = {"Tất cả","Mã nhập","Ngày nhập","Mã nhà cung cấp","Mã tài khoản"};
+
+    private String[] listInputFormItem;
+    private InputForm inputFormSearch;
+
 
     public QLPhieuNhapForm(String title, MainFrame mainFrame) {
         this.title = title;

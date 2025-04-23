@@ -101,5 +101,9 @@ public class NhanVienBUS {
 	public NhanVienDTO getInstanceByMa(int maNV){
 		return(nhanVienDAO.getInstanceByMa(maNV));
 	}
+
+	public ArrayList<String> getAllTenNVJoined(){
+		return(nhanVienDAO.getAllTenNVJoined());
+	}
 	
 }

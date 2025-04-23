@@ -107,8 +107,8 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
     public void setDataPanelPre() {
-        // dataPanel.setPreferredSize(null);
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        dataPanel.setPreferredSize(null);
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
     }
 
     public void setActionListener(TableActionListener listener) {

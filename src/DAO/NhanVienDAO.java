@@ -242,5 +242,21 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         return result;
     }
 
-
+    public ArrayList<String> getAllTenNVJoined(){
+        ArrayList<String> result = new ArrayList<>();
+        String sql = "SELECT hoTen FROM NHANVIEN"; 
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                String hoTen = rs.getString("hoTen");
+                result.add(hoTen);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
 }
