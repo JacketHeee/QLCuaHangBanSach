@@ -55,13 +55,14 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	@Override
 	public int update(SachDTO t) {
 		int rowUpdated = 0;
-		String query = "UPDATE SACH SET tenSach = ?, namXB = ?, maVung = ?, maNXB = ?, anh = ? WHERE maSach = ?";
+		String query = "UPDATE SACH SET tenSach = ?, giaBan = ?, namXB = ?, maVung = ?, maNXB = ?, anh = ? WHERE maSach = ?";
 
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
 		rowUpdated = jdbcUtil.executeUpdate(
 			query,
 			t.getTenSach(),
+			t.getGiaBan(),
 			t.getNamXB(),
 			t.getMaVung(),
 			t.getMaNXB(),

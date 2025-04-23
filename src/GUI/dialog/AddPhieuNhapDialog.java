@@ -11,17 +11,26 @@ import GUI.component.CustomScrollPane;
 import GUI.forms.TaoPhieuNhapForm;
 
 public class AddPhieuNhapDialog extends JDialog{
-    private MainFrame mainFrame;
+    private TaoPhieuNhapForm taoPhieuNhapForm;
 
     public AddPhieuNhapDialog(MainFrame mainFrame) {
         super(mainFrame,"",true);
-        this.mainFrame = mainFrame;
-        add(new CustomScrollPane(new TaoPhieuNhapForm(mainFrame)));
+        this.taoPhieuNhapForm = new TaoPhieuNhapForm(mainFrame);
+        add(new CustomScrollPane(taoPhieuNhapForm));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = 1200;
         int height = screenSize.height;
         setSize(width,height);
         setLocationRelativeTo(mainFrame);
-        setVisible(true);
+    }
+
+    public TaoPhieuNhapForm getTaoPhieuNhapForm() {
+        return taoPhieuNhapForm;
+    }
+
+    public void setTaoPhieuNhapForm(TaoPhieuNhapForm taoPhieuNhapForm) {
+        this.taoPhieuNhapForm = taoPhieuNhapForm;
     } 
+
+    
 }

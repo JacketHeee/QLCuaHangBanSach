@@ -628,7 +628,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
         HoaDonDTO hoaDon = new HoaDonDTO(ngayBan, tongTien, maTK, maPT, maKM, maKH);
         if(hoaDonBUS.insert(hoaDon) != 0){
-            JOptionPane.showMessageDialog(mainFrame, "luv u");
+            JOptionPane.showMessageDialog(mainFrame, "Thêm hóa đơn thành công");
         }
 
         insertSach();   //thêm khóa ngoại nhiều nhiều

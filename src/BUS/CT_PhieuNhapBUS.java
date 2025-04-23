@@ -25,5 +25,12 @@ public class CT_PhieuNhapBUS {
 	public ArrayList<CT_PhieuNhapDTO> getAll(){
 		return(this.listCT_PhieuNhap);
 	}
+	public int insert(CT_PhieuNhapDTO ct_Nhap){
+		if(cT_PhieuNhapDAO.insert(ct_Nhap) != 0){
+			this.listCT_PhieuNhap.add(ct_Nhap);
+			return(1);
+		}
+		return(0);
+	}
 	
 }

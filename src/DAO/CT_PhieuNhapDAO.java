@@ -21,7 +21,20 @@ public class CT_PhieuNhapDAO implements DAOInterface<CT_PhieuNhapDTO> {
     
     @Override
     public int insert(CT_PhieuNhapDTO ctpn) {
-        return 0;
+        int rowInserted = 0;
+        String sql = "INSERT INTO CT_PHIEUNHAP (maSach, maNhap, soLuongNhap, giaNhap) VALUES (?, ?, ?, ?)";
+            
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        rowInserted = jdbcUtil.executeUpdate(
+            sql
+            , ctpn.getmaSach()
+            , ctpn.getMaNhap()
+            , ctpn.getSoLuongNhap() + ""
+            , ctpn.getGiaNhap() + ""
+        );
+        jdbcUtil.Close();
+        return rowInserted;
     }
 
     @Override
@@ -43,7 +56,7 @@ public class CT_PhieuNhapDAO implements DAOInterface<CT_PhieuNhapDTO> {
         ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
             while (rs.next()) {
-                String maSach = rs.getString("maSach");
+                int maSach = rs.getInt("maSach");
                 int maNhap = rs.getInt("maNhap");
                 int soLuongNhap = rs.getInt("soLuongNhap");
                 BigDecimal giaNhap = rs.getBigDecimal("giaNhap");

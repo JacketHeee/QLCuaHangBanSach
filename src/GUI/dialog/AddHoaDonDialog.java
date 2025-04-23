@@ -11,12 +11,10 @@ import GUI.component.CustomScrollPane;
 import GUI.forms.TaoHoaDonForm;
 
 public class AddHoaDonDialog extends JDialog{
-    private MainFrame mainFrame;
     private TaoHoaDonForm taoHoaDonForm;
 
     public AddHoaDonDialog(MainFrame mainFrame) {
         super(mainFrame,"",true);
-        this.mainFrame = mainFrame;
         this.taoHoaDonForm = new TaoHoaDonForm(mainFrame);
         add(new CustomScrollPane(taoHoaDonForm));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
