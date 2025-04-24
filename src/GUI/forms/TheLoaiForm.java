@@ -14,6 +14,7 @@ import BUS.TheLoaiBUS;
 import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
 import DTO.KhuyenMaiDTO;
+import DTO.NhaXBDTO;
 import DTO.TaiKhoanDTO;
 import DTO.TheLoaiDTO;
 
@@ -26,13 +27,16 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.TheLoaiDialog;
+import excel.NhaXBExcelImport;
 import excel.TheLoaiExcelExport;
+import excel.TheLoaiExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 
 import search.TheLoaiSearch;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -196,8 +200,21 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
                 TheLoaiDialog theLoaiDialog = new TheLoaiDialog(this, "Thể loại", "Thêm Thể Loại", "add", attributes);
                 theLoaiDialog.setVisible(true);
                 break;
-            case "importExcel":
-                
+           case "importExcel":
+                List<TheLoaiDTO> importedData = ExcelImporter.importFromExcel(new TheLoaiExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (TheLoaiDTO tl : importedData) {
+                       if (theLoaiBUS.insert(tl) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(theLoaiBUS.getAll());
+              }
                 break;
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();

@@ -21,11 +21,14 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.PhuongThucTTDialog;
 import excel.PhuongThucThanhToanExcelExport;
+import excel.PhuongThucThanhToanExcelImport;
+import excel.TaiKhoanExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.PTTTSearch;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -184,7 +187,20 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
                 phuongThucTTDialog.setVisible(true);
                 break;
             case "importExcel":
-                
+                List<PhuongThucTTDTO> importedData = ExcelImporter.importFromExcel(new PhuongThucThanhToanExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (PhuongThucTTDTO tk : importedData) {
+                       if (phuongThucTTBUS.insert(tk) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(phuongThucTTBUS.getAll());
+              }
                 break;
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();

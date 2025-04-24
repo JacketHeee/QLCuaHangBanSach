@@ -9,6 +9,7 @@ import BUS.ChiTietQuyenBUS;
 import BUS.KhachHangBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.KhachHangDTO;
+import DTO.KhachHangDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -22,12 +23,14 @@ import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.KhachHangDialog;
 import excel.KhachHangExcelExport;
+import excel.KhachHangExcelImport;
 import excel.TaiKhoanExcelExport;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.KhachHangSearch;
 import search.TaiKhoanSearch;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -187,8 +190,22 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
                 khachHangDialog.setVisible(true);
                 break;
             case "importExcel":
-                
+                List<KhachHangDTO> importedData = ExcelImporter.importFromExcel(new KhachHangExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (KhachHangDTO kh : importedData) {
+                       if (khachHangBUS.insert(kh) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(khachHangBUS.getAll());
+              }
                 break;
+           
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();
                 String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();

@@ -23,12 +23,15 @@ import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.NhanVienDialog;
 import excel.NhanVienExcelExport;
+import excel.NhanVienExcelImport;
+import excel.TaiKhoanExcelImport;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.NhanVienSearch;
 import search.NhanVienSearch;
 import utils.DateCalculator;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -194,7 +197,20 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
             nhanVienDialog.setVisible(true);
                 break;
             case "importExcel":
-                
+                List<NhanVienDTO> importedData = ExcelImporter.importFromExcel(new NhanVienExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (NhanVienDTO nv : importedData) {
+                       if (nhanVienBUS.insert(nv) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(nhanVienBUS.getAll());
+              }
                 break;
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();

@@ -23,13 +23,13 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.AddNhomQuyen;
-import excel.KhachHangExcelExport;
 import excel.NhomQuyenExcelExport;
+import excel.NhomQuyenExcelImport;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
-import search.KhachHangSearch;
 import search.PhanQuyenSearch;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -210,6 +210,23 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 new AddNhomQuyen(mainFrame,this, "Thêm nhóm quyền", "add");
                 mainFrame.glassPane.setVisible(false);
                 break;
+            case "importExcel":
+                List<NhomQuyenDTO> importedData = ExcelImporter.importFromExcel(new NhomQuyenExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (NhomQuyenDTO nq : importedData) {
+                       if (nhomQuyenBUS.insert(nq) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Đã import thành công " + count + " dòng!");
+                   updateTable(nhomQuyenBUS.getAll());
+              }
+                break;
+               
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();
                 String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();

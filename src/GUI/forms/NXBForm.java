@@ -7,7 +7,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import BUS.ChiTietQuyenBUS;
 import BUS.NhaXBBUS;
 import DTO.ChiTietQuyenDTO;
-
+import DTO.NhaCungCapDTO;
 import DTO.NhaXBDTO;
 import DTO.TaiKhoanDTO;
 
@@ -20,12 +20,15 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.NhaXBDialog;
+import excel.NhaCungCapExcelImport;
 import excel.NhaXBExcelExport;
+import excel.NhaXBExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.NXBSearch;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -187,8 +190,21 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
                 NhaXBDialog nhaXBDialog = new NhaXBDialog(this, "Nhà xuất bản", "Thêm Nhà Xuất Bản", "add", attributes);
                 nhaXBDialog.setVisible(true);
                 break;
-            case "importExcel":
-                
+           case "importExcel":
+                List<NhaXBDTO> importedData = ExcelImporter.importFromExcel(new NhaXBExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (NhaXBDTO nxb : importedData) {
+                       if (nhaXBBUS.insert(nxb) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(nhaXBBUS.getAll());
+              }
                 break;
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();

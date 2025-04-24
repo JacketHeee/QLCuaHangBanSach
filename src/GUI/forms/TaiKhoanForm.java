@@ -10,6 +10,7 @@ import BUS.NhanVienBUS;
 import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhachHangDTO;
 import DTO.TaiKhoanDTO;
 
 
@@ -23,11 +24,14 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.TaiKhoanDialog;
+import excel.KhachHangExcelImport;
 import excel.TaiKhoanExcelExport;
+import excel.TaiKhoanExcelImport;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.TaiKhoanSearch;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -204,8 +208,22 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
                 }
                 break;
             case "importExcel":
-                
+                List<TaiKhoanDTO> importedData = ExcelImporter.importFromExcel(new TaiKhoanExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (TaiKhoanDTO tk : importedData) {
+                       if (taiKhoanBUS.insert(tk) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(taiKhoanBUS.getAll());
+              }
                 break;
+           
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();
                 String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();

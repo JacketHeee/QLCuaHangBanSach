@@ -10,6 +10,7 @@ import BUS.KhuyenMaiBUS;
 import DTO.ChiTietQuyenDTO;
 
 import DTO.KhuyenMaiDTO;
+import DTO.PhuongThucTTDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -22,12 +23,15 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.KhuyenMaiDialog;
 import excel.KhuyenMaiExcelExport;
+import excel.KhuyenMaiExcelImport;
+import excel.PhuongThucThanhToanExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.KhuyenMaiSearch;
 import utils.DateCalculator;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -197,7 +201,20 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 khuyenMaiDialog.setVisible(true);
                 break;
             case "importExcel":
-                
+                List<KhuyenMaiDTO> importedData = ExcelImporter.importFromExcel(new KhuyenMaiExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (KhuyenMaiDTO km : importedData) {
+                       if (khuyenMaiBUS.insert(km) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(khuyenMaiBUS.getAll());
+              }
                 break;
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();

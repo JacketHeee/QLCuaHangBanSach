@@ -28,7 +28,9 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.NhaCungCapDialog;
+import excel.KhuyenMaiExcelImport;
 import excel.NhaCungCapExcelExport;
+import excel.NhaCungCapExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -36,6 +38,7 @@ import search.NhaCungCapSearch;
 import search.NhaCungCapSearch;
 import search.SachSearch;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -201,8 +204,21 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
                 NhaCungCapDialog nhaCungCapDialog = new NhaCungCapDialog(this, "Nhà cung cấp", "Thêm Nhà Cung Cấp", "add", attributes);
                 nhaCungCapDialog.setVisible(true);
                 break;
-            case "importExcel":
-                
+           case "importExcel":
+                List<NhaCungCapDTO> importedData = ExcelImporter.importFromExcel(new NhaCungCapExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (NhaCungCapDTO ncc : importedData) {
+                       if (nhaCungCapBUS.insert(ncc) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(nhaCungCapBUS.getAll());
+              }
                 break;
             case "exportExcel":
                 String keyword = searchBarPanel.getSearchField().getText().trim();

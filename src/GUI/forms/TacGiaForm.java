@@ -11,6 +11,7 @@ import DTO.TacGiaDTO;
 import DTO.TaiKhoanDTO;
 import DTO.TacGiaDTO;
 import DTO.ChiTietQuyenDTO;
+import DTO.NhaXBDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,15 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.TacGiaDialog;
+import excel.NhaXBExcelImport;
 import excel.TacGiaExcelExport;
+import excel.TacGiaExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.TacGiaSearch;
 import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
@@ -183,8 +187,21 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
                 TacGiaDialog tacGiaDialog = new TacGiaDialog(this, "Tác giả", "Thêm Tác Giả", "add", attributes);
                 tacGiaDialog.setVisible(true);
                 break;
-            case "importExcel":
-                
+           case "importExcel":
+                List<TacGiaDTO> importedData = ExcelImporter.importFromExcel(new TacGiaExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (TacGiaDTO tg : importedData) {
+                       if (tacGiaBUS.insert(tg) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(tacGiaBUS.getAll());
+              }
                 break;
 
             case "exportExcel":
