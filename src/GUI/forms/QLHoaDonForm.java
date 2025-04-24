@@ -288,9 +288,6 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                 mainFrame.glassPane.setVisible(false);
                 break;
 
-            case "xac nhan":
-                JOptionPane.showMessageDialog(mainFrame, "hi");
-                break;
             case "importExcel":
                 
                 break;
@@ -315,6 +312,13 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                     Notifications.getInstance().setJFrame(mainFrame);
                     Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
                 }
+                break;
+            case "detail":
+                int maHD = Integer.parseInt(this.table.getCellData(row, 0));
+                HoaDonDTO hoaDon = hoaDonBUS.getInstanceByID(maHD);
+                AddHoaDonDialog addHoaDonDialog = new AddHoaDonDialog(mainFrame, hoaDon);
+                addHoaDonDialog.setVisible(true);
+                mainFrame.glassPane.setVisible(false);
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);

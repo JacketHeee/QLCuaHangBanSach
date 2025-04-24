@@ -184,4 +184,26 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		return result;
 	}
 
+	public String getTenByMa(int ma){
+		String result = new String();
+		String sql = "SELECT tenSach FROM SACH WHERE maSach = ? AND TRANGTHAI = 1";
+		
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		ResultSet rs = jdbcUtil.executeQuery(sql, ma);
+		try {
+			while(rs.next()) {
+				String ten = rs.getString("tenSach");
+				result = ten;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		jdbcUtil.Close();
+		return result;
+	}
+
+
 }

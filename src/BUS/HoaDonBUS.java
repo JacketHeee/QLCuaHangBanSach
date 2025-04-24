@@ -108,5 +108,9 @@ public class HoaDonBUS {
     public BigDecimal getTienThoi(BigDecimal tienKhachDua, BigDecimal tongTien){
         return(tienKhachDua.subtract(tongTien));
     } 
+
+    public HoaDonDTO getInstanceByID(int id){
+        return(hoaDonDAO.getInstanceByID(id));
+    }
     
 }

@@ -33,5 +33,9 @@ public class CT_HoaDonBUS {
 			return(1);
 		}
 		return(0);
+		
+	}
+	public ArrayList<CT_HoaDonDTO> getListCTHDByMaHD(int maHD){
+		return(cT_HoaDonDAO.getListCTHDByMaHD(maHD));
 	}
 }

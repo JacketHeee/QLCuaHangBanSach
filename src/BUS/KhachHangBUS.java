@@ -79,12 +79,7 @@ public class KhachHangBUS {
 		return(-1);
 	}
 	public String getTenByMaKhachHang(int ma){
-		for(KhachHangDTO KhachHangDTO : this.listKhachHang){
-			if(KhachHangDTO.getMaKH() == ma){
-				return(KhachHangDTO.getTenKH());
-			}
-		}
-		return(null);
+		return(khachHangDAO.getTenByMaKhachHang(ma));
 	}
 	
 }

@@ -73,5 +73,29 @@ public class CT_HoaDonDAO implements DAOInterface<CT_HoaDonDTO> {
         return result;
     }
 
+    public ArrayList<CT_HoaDonDTO> getListCTHDByMaHD(int maHD){
+        ArrayList<CT_HoaDonDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM CT_HOADON WHERE maHD = ?";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maHD);
+        try {
+            while (rs.next()) {
+                int maSach = rs.getInt("maSach");
+                int soLuong = rs.getInt("soLuong");
+                BigDecimal giaBan = rs.getBigDecimal("giaBan");
+                
+                CT_HoaDonDTO cthd = new CT_HoaDonDTO(maSach, maHD, soLuong, giaBan);
+                result.add(cthd);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
 
 }

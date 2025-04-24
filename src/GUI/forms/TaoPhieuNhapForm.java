@@ -326,6 +326,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         CustomTextFieldSL textFieldSL = getTextFieldSL(row, rowLabels); 
 
         int soLuong = Integer.parseInt(textFieldSL.getText());
+        System.out.println(textFieldGN.getText());
         BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(textFieldGN.getText()));
         BigDecimal tongGia = giaNhap.multiply(BigDecimal.valueOf(soLuong));
 

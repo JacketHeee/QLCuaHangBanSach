@@ -114,4 +114,30 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
         jdbcUtil.Close();
         return(nextID);
     }
+
+    public HoaDonDTO getInstanceByID(int id){
+        HoaDonDTO result = new HoaDonDTO();
+        String sql = "SELECT * FROM HOADON WHERE maHD = ? AND trangThai = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, id);
+        try {
+            while (rs.next()) {
+                LocalDateTime ngayBan = rs.getTimestamp("ngayBan").toLocalDateTime();
+                BigDecimal tongTien = rs.getBigDecimal("tongTien");
+                int maTK = rs.getInt("maTK");
+                int maPT = rs.getInt("maPT");
+                int maKM = rs.getInt("maKM");
+                int maKH = rs.getInt("maKH");
+                HoaDonDTO hoaDon = new HoaDonDTO(id, ngayBan, tongTien, maTK, maPT, maKM, maKH);
+                result = hoaDon;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
 }

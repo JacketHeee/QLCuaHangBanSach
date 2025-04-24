@@ -1,6 +1,8 @@
 package GUI.component;
 
 import net.miginfocom.swing.MigLayout;
+import utils.Validate;
+
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
 
@@ -51,7 +53,7 @@ public class InvoiceTable extends CustomTable{
 
     }
 
-    public JPanel createDataInput(String text, int row, int columnIndex) { // Thêm tham số columnIndex
+    public JPanel createDataInput(String text, int row, int columnIndex, String data[]) { // Thêm tham số columnIndex
         // Chuẩn hóa text khi null
         String displayText = (text == null) ? "" : text;
         JPanel panel = new JPanel(new MigLayout("insets 0,al center center"));
@@ -89,7 +91,13 @@ public class InvoiceTable extends CustomTable{
             // formatter.setAllowsInvalid(false);
             // textFieldSL = new CustomTextFieldSL(formatter); //ngăn chặn nhập ký tự khác
             // formatter.setCommitsOnValidEdit(true); //cập nhật ngay khi hợp lệ
-            textFieldSL.setText("1"); // để tạm mốt format lại
+
+            if(data!=null){
+                textFieldSL.setText(data[columnIndex]);
+            }
+            else {
+                textFieldSL.setText("1"); 
+            }
             textFieldSL.putClientProperty(FlatClientProperties.STYLE, "focusWidth: 0; innerFocusWidth:0");
             textFieldSL.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Số lượng");
             textFieldSL.setHorizontalAlignment(SwingConstants.CENTER);
@@ -162,7 +170,7 @@ public class InvoiceTable extends CustomTable{
 
         //Chỗ này chèn vào Panel
         for (int i = 0; i <headers.length ; i++) {
-            JPanel label = createDataInput(rowData[i], row,i);
+            JPanel label = createDataInput(rowData[i], row,i, data);
             labels.add(label);
             dataPanel.add(label, "gapbottom 2,grow,cell " + i + " " + (row));
         }

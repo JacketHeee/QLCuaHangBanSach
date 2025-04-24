@@ -65,6 +65,10 @@ public class SachBUS {
 		return(-1);
 	}
 
+	public String getTenByMa(int ma){
+		return(sachDAO.getTenByMa(ma));
+	}
+
 	public SachDTO getInstanceByID(int maSach){
 		return(sachDAO.getInstanceByID(maSach));
 	}

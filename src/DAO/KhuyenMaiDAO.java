@@ -101,7 +101,7 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
 
     public KhuyenMaiDTO getInstanceByMa(int ma){
         KhuyenMaiDTO result = new KhuyenMaiDTO();
-        String sql = "SELECT * FROM KHUYENMAI WHERE maKM = ? AND TRANGTHAI = 1";
+        String sql = "SELECT * FROM KHUYENMAI WHERE maKM = ?";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -147,7 +147,7 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
 
     public String getTenByMaKhuyenMa(int maKM){
         String result = new String();
-        String sql = "SELECT tenKM FROM KHUYENMAI WHERE maKM = ? AND TRANGTHAI = 1";
+        String sql = "SELECT tenKM FROM KHUYENMAI WHERE maKM = ?";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
