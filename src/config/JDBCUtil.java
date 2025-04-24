@@ -18,8 +18,10 @@ public class JDBCUtil {
 
 	public void Open(){
 		try {
+			// 1. Đăng ký Driver và tạo kết nối với DB
 			Driver driver = new com.mysql.cj.jdbc.Driver();
 			DriverManager.registerDriver(driver);
+			// 2. Tạo kết nối với cơ sở dữ liệu 
 			String url = "jdbc:mysql://localhost:3306/quanlycuahangbansach";
 			Properties info = new Properties();
 			info.setProperty("characterEncoding", "utf-8");
@@ -34,6 +36,7 @@ public class JDBCUtil {
 
 	public void Close(){
 		try {
+			// 6. Đóng kết nối
 			this.connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -44,9 +47,11 @@ public class JDBCUtil {
 	public ResultSet executeQuery (String sql, Object... params){
 		ResultSet rs = null;
 		try {
-			pst = this.connection.prepareStatement(sql);
-			setParams(params);
-			rs = pst.executeQuery();
+			// 3. Chuẩn bị form Query + truyêng param để xây dựng từ form Query -> Câu truy vấn hoàn chỉnh
+			pst = this.connection.prepareStatement(sql); // Chuẩn bị form Query chứa các ? ?? ? ?? 
+			setParams(params); //Gán các tham số vào form QueryQuery
+			// 4. thực hiện truy vấn 
+			rs = pst.executeQuery(); 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

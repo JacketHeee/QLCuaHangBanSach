@@ -43,7 +43,8 @@ public class QLPhieuNhapSearch implements Searchable<PhieuNhapDTO>{
             .toList()
             );
         }
-        else if(selectedItem.equals("Ngày nhập")){
+        //Ngày nhập
+        else {
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getNgayNhap() + "").toLowerCase().contains(keywordFormatted)
@@ -51,23 +52,7 @@ public class QLPhieuNhapSearch implements Searchable<PhieuNhapDTO>{
             .toList()
             );
         }
-        else if(selectedItem.equals("Mã nhà cung cấp")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaNCC() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        //Mã tài khoản
-        else {
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
+
     }
 
 }

@@ -175,7 +175,8 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
         ArrayList<String[]> data = new ArrayList<>();
         for(TaiKhoanDTO i : inputData){
             String tenNhomQuyen = nhomQuyenBUS.getTenByMaNhomQuyen(i.getMaRole());
-            data.add(new String[]{i.getMaTK() + "", i.getUsername(), i.getPassword(), tenNhomQuyen});
+            NhanVienBUS nv = new NhanVienBUS();
+            data.add(new String[]{i.getMaTK() + "", i.getUsername(), nv.getTenNVByMaTK(i.getMaTK()), tenNhomQuyen});
         }
         return(data);
     }

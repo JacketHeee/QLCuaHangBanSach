@@ -32,6 +32,7 @@ import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.DimGlassPane;
+import GUI.component.InputForm;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.AddHoaDonDialog;
@@ -74,7 +75,17 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         {"combobox", "Mã khuyến mãi"},  //tự đặt là không có khuyến mãi
         {"droplist", "Khách hàng"}  //droplist
     };
-    private String[] filter =  {"Tất cả","Mã hóa đơn", "Ngày lập", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
+    private String[] filter =  {"Tất cả","Mã hóa đơn", "Ngày lập", "Mã phương thức", "Mã khuyến mãi"};
+
+    String[][] listIFI = {
+        {"combobox","Nhân viên"},
+        {"combobox","Khách hàng"},
+        {"inputDate","Từ ngày"},
+        {"inputDate","Đến ngày"},
+        {"inputSL","Từ số tiền(đ)"},
+        {"inputSL","Đến số tiền(đ)"}
+    };
+    InputForm inputFormSearch;
 
     public QLHoaDonForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -85,6 +96,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         this.listAction = getListAction();
         this.khachHangBUS = KhachHangBUS.getInstance();
         this.nhanVienBUS = NhanVienBUS.getInstance();
+        this.inputFormSearch = new InputForm(listIFI);
         init();
     }
     
@@ -179,42 +191,54 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10"));
         table = new CustomTable(dataToShow,bottomActions, header);
+        table.setMaxTextWidth(85);
+        
         table.setActionListener(this);
         panel.add(InteractPanel(),"pushy, growy");
         panel.add(table,"push, grow");
         return panel;
     }
-
     private int widthInteractPanel = 250;
 
     private JPanel InteractPanel() {
         JPanel panel = new JPanel(new MigLayout("insets 20 10 20 10,wrap 1,gap 10"));
         panel.setPreferredSize(new Dimension(widthInteractPanel,100));
         panel.add(new CustomBoldJLabel("FILTER", 2));
-        panel.add(new JLabel("Nhân viên"));
-        NhanVienBUS nv = new NhanVienBUS();
-        ArrayList<String> listNv = nv.getAllTenNVHaveAccount();
-        listNv.addFirst("Tất cả");
-        panel.add(new JComboBox<>(listNv.toArray()),"pushx,growx");
 
-        panel.add(new JLabel("Khách hàng"));
-        KhachHangBUS kh = new KhachHangBUS();
-        ArrayList<String> listNcc = kh.getAllTenKhachHang();
-        listNcc.addFirst("Tất cả");
+        ArrayList<String> listNVtemp = nhanVienBUS.getAllTenNVJoined(); //Lấy cả  những nhân viên đã nghỉ làm
+        String[] listNV = listNVtemp.toArray(new String[0]);
+        ArrayList<String> listKHtemp = khachHangBUS.getAllTenKhachHang();
+        String[] listKH = listKHtemp.toArray(new String[0]);
+        inputFormSearch.getListItem().get(0).setListCombobox(listNV);
+        inputFormSearch.getListItem().get(1).setListCombobox(listKH);
 
-        panel.add(new JComboBox<>(listNcc.toArray()),"pushx, growx");
+        // panel.add(new JLabel("Nhân viên"));
+        // NhanVienBUS nv = new NhanVienBUS();
+        // ArrayList<String> listNv = nv.getAllTenNVHaveAccount();
+        // listNv.addFirst("Tất cả");
+        // panel.add(new JComboBox<>(listNv.toArray()),"pushx,growx");
 
-        panel.add(new JLabel("Từ ngày:"));
-        panel.add(new JTextField(),"pushx,grow");   
+        // panel.add(new JLabel("Khách hàng"));
+        // KhachHangBUS kh = new KhachHangBUS();
+        // ArrayList<String> listNcc = kh.getAllTenKhachHang();
+        // listNcc.addFirst("Tất cả");
 
-        panel.add(new JLabel("Đến ngày:"));
-        panel.add(new JTextField(),"pushx,grow");
+        // panel.add(new JComboBox<>(listNcc.toArray()),"pushx, growx");
+
+        // panel.add(new JLabel("Từ ngày:"));
+        // panel.add(new JTextField(),"pushx,grow");   
+
+        // panel.add(new JLabel("Đến ngày:"));
+        // panel.add(new JTextField(),"pushx,grow");
           
-        panel.add(new JLabel("Từ số tiền (đ)"));
-        panel.add(new JTextField(),"pushx,grow");   
 
-        panel.add(new JLabel("Đến số tiền (đ)"));
-        panel.add(new JTextField(),"pushx,grow");         
+        // panel.add(new JLabel("Từ số tiền (đ)"));
+        // panel.add(new JTextField(),"pushx,grow");   
+
+        // panel.add(new JLabel("Đến số tiền (đ)"));
+        // panel.add(new JTextField(),"pushx,grow");     
+        
+        panel.add(inputFormSearch, "pushx,growx");
         
         panel.setBackground(Color.white);
 

@@ -31,6 +31,7 @@ import GUI.component.ButtonAction;
 import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
+import GUI.component.InputForm;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.AddHoaDonDialog;
@@ -54,7 +55,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
 
     private String title;
     private int id = 7;
-    private String[] header = {"Mã nhập","Ngày nhập","Nhà cung cấp","Tổng tiền","Nhân viên"};
+    private String[] header = {"Mã nhập","Ngày nhập", "Nhà cung cấp", "Tổng tiền"};
     PhieuNhapBUS phieuNhapBUS;
     private MainFrame mainFrame;
     private ArrayList<PhieuNhapDTO> listKH;
@@ -71,6 +72,10 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         {"textbox", "Mã tài khoản"},    //tự get
     };
     private String[] filter = {"Tất cả","Mã nhập","Ngày nhập","Mã nhà cung cấp","Mã tài khoản"};
+
+    private String[] listInputFormItem;
+    private InputForm inputFormSearch;
+
 
     public QLPhieuNhapForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -164,7 +169,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         NhaCungCapBUS ncc = new NhaCungCapBUS();
         NhanVienBUS nv = new NhanVienBUS();
         for(PhieuNhapDTO i : inputData){
-            data.add(new String[]{i.getMaNhap() + "", i.getNgayNhap() + "",ncc.getTenByMaNhaCungCap(i.getMaNCC()),FormatterUtil.formatNumberVN(i.getTongTien()),nv.getTenNVByMaTK(i.getMaTK())});
+            data.add(new String[]{i.getMaNhap() + "", FormatterUtil.formatDateTime(i.getNgayNhap()) + "",ncc.getTenByMaNhaCungCap(i.getMaNCC()),FormatterUtil.formatNumberVN(i.getTongTien()),nv.getTenNVByMaTK(i.getMaTK())});
         }
         return(data);
     }
@@ -181,6 +186,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10"));
         table = new CustomTable(dataToShow,bottomActions, header);
+        table.setMaxTextWidth(85);
         table.setActionListener(this);
         panel.add(InteractPanel(),"pushy, growy");
         panel.add(table,"push, grow");
@@ -244,9 +250,9 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                         String tenNV = nhanVienBUS.getTenNVByMaTK(phieuNhap.getMaTK());
                         table.addDataRow(new String[] {
                             phieuNhap.getMaNhap() + ""
-                            , phieuNhap.getNgayNhap() + ""
+                            , FormatterUtil.formatDateTime(phieuNhap.getNgayNhap())
                             , tenNCC
-                            , tenNV
+                            , FormatterUtil.formatNumberVN(phieuNhap.getTongTien())
                         });
                     }  
                 });

@@ -345,7 +345,8 @@ public class SachDialog extends JDialog implements ActionListener{
         inputForm.getListItem().get(3).getCombobox().setEnabled(false);
         inputForm.getListItem().get(4).setEditKNNN(false);
         inputForm.getListItem().get(5).setEditKNNN(false);
-        inputForm.getListItem().get(6).setEdit(false);
+        inputForm.getListItem().get(6).setEditKNNN(false);
+        inputForm.getListItem().get(7).setEdit(false);
     }
 
     public String removeLastCommaForFKNN(String text) {

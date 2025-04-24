@@ -158,8 +158,8 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 i.getTenKM(),
                 i.getDieuKienGiam(),
                 FormatterUtil.formatNumberVN(i.getGiaTriGiam()),
-                new DateCalculator().formatDateTimeToDateS(i.getNgayBatDau()),
-                new DateCalculator().formatDateTimeToDateS(i.getNgayBatDau())
+                FormatterUtil.formatDateTime(i.getNgayBatDau()),
+                FormatterUtil.formatDateTime(i.getNgayBatDau())
             });      
         }
         return(data);

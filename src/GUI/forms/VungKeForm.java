@@ -206,7 +206,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
 
         
         panel.add(panelSanPhamTuongUng(),"span 1 2, pushy,growy,wrap");
-
+        table.setMaxTextWidth(75);
         panel.add(table,"push, grow");
         return panel;
     }

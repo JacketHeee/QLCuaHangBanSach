@@ -66,6 +66,7 @@ public class DoanhThuForm extends JPanel {
         TableNoTouch table;
         if (select.equals("Khách hàng")) {
             table = new TableNoTouch(null, headerKhachHang);
+            table.setMaxTextWidth(80);
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
@@ -84,6 +85,7 @@ public class DoanhThuForm extends JPanel {
         }
         else {
             table = new TableNoTouch(null, headerSach);
+            table.setMaxTextWidth(80);
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
@@ -190,6 +192,7 @@ public class DoanhThuForm extends JPanel {
         // panel.setBackground(Color.white);
         panel.add(new CustomBoldJLabel("Hóa đơn tương ứng", 1),"pushx, al center"); 
         CustomTable table = new CustomTable(null, new String[][] {{"detail.svg","detail"}},"Mã hóa đơn","Tổng tiền");
+        table.setMaxTextWidth(30);
         table.addDataRow(new String[] {"123","1239827"});
         table.addDataRow(new String[] {"123","1239827"});
         table.addDataRow(new String[] {"123","1239827"});

@@ -177,8 +177,8 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
                         list.add(sach.getMaSach() + "");
                         list.add(sach.getTenSach());
                         list.add(soLuong + "");
-                        list.add(FormatterUtil.formatNumberVN(giaNhap));
-                        list.add(FormatterUtil.formatNumberVN(tongGia));
+                        list.add(giaNhap + "");
+                        list.add(tongGia + "");
                     ;
                     result = list.toArray(new String[0]);
                     return(result);

@@ -67,6 +67,7 @@ public class NhapHang extends JPanel {
         TableNoTouch table;
         if (select.equals("Nhà cung cấp")) {
             table = new TableNoTouch(null, headerKhachHang);
+            table.setMaxTextWidth(80);
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
@@ -85,6 +86,7 @@ public class NhapHang extends JPanel {
         }
         else {
             table = new TableNoTouch(null, headerSach);
+            table.setMaxTextWidth(80);
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
             table.addDataRow(new String[] {"1","Con bo biet bay","30","900.000.000"});
@@ -129,6 +131,7 @@ public class NhapHang extends JPanel {
 
         }
         
+       
 
         panel.add(table,"push,grow");
         
@@ -190,6 +193,7 @@ public class NhapHang extends JPanel {
         // panel.setBackground(Color.white);
         panel.add(new CustomBoldJLabel("Phiếu nhập tương ứng", 1),"pushx, al center"); 
         CustomTable table = new CustomTable(null, new String[][] {{"detail.svg","detail"}},"Mã phiếu nhập","Tổng tiền");
+        table.setMaxTextWidth(30);
         table.addDataRow(new String[] {"123","1239827"});
         table.addDataRow(new String[] {"123","1239827"});
         table.addDataRow(new String[] {"123","1239827"});

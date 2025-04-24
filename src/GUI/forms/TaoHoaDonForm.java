@@ -359,8 +359,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             case "comboboxKM":
                 updateTienKhuyenMai();
                 updateTongTienHoaDon();
-                updateTienKhachDua();
                 updateTTTT();
+                updateTienKhachDua();
                 break;
             default:
                 break;

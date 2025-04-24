@@ -38,6 +38,7 @@ public class InputFormItem extends JPanel{
     private CustomButton btnDC;
     private JTextField textKNNN;
     private CustomButton btnKNNN;
+    private CustomTextFieldSL textSL;
     //Cho ảnh
     private PanelPicture panelPicture;
 
@@ -88,6 +89,9 @@ public class InputFormItem extends JPanel{
                 this.panelPicture = new PanelPicture();
                 setinputAnh();
                 break;
+            case "inputSL":
+                this.textSL = new CustomTextFieldSL();
+                setInputSL();
             default:
                 break;
         }
@@ -152,6 +156,19 @@ public class InputFormItem extends JPanel{
         for(String i : list){
             this.combobox.addItem(i);
         }
+    }
+
+    public void setInputSL(){
+        this.add(label, "grow");
+        this.add(textSL, "grow");
+    }
+
+    public void setTextSL(String i){
+        this.textSL.setText(i);
+    }
+
+    public String getTextSL(){
+        return(this.textSL.getText());
     }
 
     public String getText(){

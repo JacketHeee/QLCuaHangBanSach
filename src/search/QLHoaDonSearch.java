@@ -53,14 +53,6 @@ public class QLHoaDonSearch implements Searchable<HoaDonDTO>{
             .toList()
             );
         }
-        else if(selectedItem.equals("Mã tài khoản")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
         else if(selectedItem.equals("Mã phương thức")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
