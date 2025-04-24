@@ -2,19 +2,13 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.KhachHangBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.KhachHangDTO;
-import DTO.SachDTO;
-import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -27,21 +21,24 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.KhachHangDialog;
-import interfaces.Searchable;
+import excel.KhachHangExcelExport;
+import excel.TaiKhoanExcelExport;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.KhachHangSearch;
-import search.SachSearch;
+import search.TaiKhoanSearch;
+import utils.ExcelExporter;
 import utils.UIUtils;
 
-import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
+
 
 public class KhachHangForm extends JPanel implements TableActionListener, ActionListener{
+
+    private SearchBarPanel<KhachHangDTO> searchBarPanel;
+    private List<KhachHangDTO> filteredList = new ArrayList<>();
 
     private String title;
     private int id = 15;
@@ -84,14 +81,15 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
     ////////////////////////////////////////////////////////////////////
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        //combobox, đối tượng có hàm trả về arraylist<DTO>, call back, null
-        SearchBarPanel<KhachHangDTO> searchBarPanel = new SearchBarPanel<>(this.filter, new KhachHangSearch(listKH), this::updateTable, resetTable);
+        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)), "pushx");
+    
+        // GÁN ĐÚNG cho biến thành viên
+        this.searchBarPanel = new SearchBarPanel<>(filter, new KhachHangSearch(listKH), this::updateTable, resetTable);
+    
         panel.add(searchBarPanel);
         return panel;
     }
-
-    
+ 
 
 
     ///////////////////////////////////////////////////////////////
@@ -192,7 +190,15 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
                 
                 break;
             case "exportExcel":
-                
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+                List<KhachHangDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                    ? filteredList
+                    : khachHangBUS.getAll();
+
+                KhachHangExcelExport exporter = new KhachHangExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, KhachHangDTO.class);
                 break;
             default:
         }
@@ -228,7 +234,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
 
 
     private void updateTable(ArrayList<KhachHangDTO> ketqua) {
-
+        this.filteredList = ketqua;
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
         // for (KhachHangDTO x: ketqua) {
@@ -236,6 +242,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
         //     //     System.out.print(y);
         //     // System.out.println();
         // }
+
     }
 
     public Runnable resetTable = () -> {

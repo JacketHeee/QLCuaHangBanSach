@@ -2,43 +2,41 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.KhuyenMaiBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhachHangDTO;
+
 import DTO.KhuyenMaiDTO;
-import DTO.SachDTO;
-import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.KhuyenMaiDialog;
+import excel.KhuyenMaiExcelExport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.KhuyenMaiSearch;
-import search.SachSearch;
 import utils.DateCalculator;
+import utils.ExcelExporter;
 import utils.UIUtils;
 
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-
 public class KhuyenMaiForm extends JPanel implements TableActionListener, ActionListener{
+
+    private SearchBarPanel<KhuyenMaiDTO> searchBarPanel;
+    private List<KhuyenMaiDTO> filteredList = new ArrayList<>();
 
     private String title;
     private int id = 11;
@@ -96,8 +94,11 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<KhuyenMaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new KhuyenMaiSearch(listKH), this::updateTable, resetTable);
+        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)), "pushx");
+    
+        // GÁN ĐÚNG cho biến thành viên
+        this.searchBarPanel = new SearchBarPanel<>(filter, new KhuyenMaiSearch(listKH), this::updateTable, resetTable);
+    
         panel.add(searchBarPanel);
         return panel;
     }
@@ -199,7 +200,15 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 
                 break;
             case "exportExcel":
-                
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+                List<KhuyenMaiDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                    ? filteredList
+                    : khuyenMaiBUS.getAll();
+
+                KhuyenMaiExcelExport exporter = new KhuyenMaiExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, KhuyenMaiDTO.class);
                 break;
             default:
         }
@@ -267,7 +276,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
  
     private void updateTable(ArrayList<KhuyenMaiDTO> ketqua) {
 
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
 }

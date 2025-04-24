@@ -14,6 +14,7 @@ import BUS.NhaCungCapBUS;
 import DTO.ChiTietQuyenDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.NhaCungCapDTO;
+import DTO.NhaCungCapDTO;
 import DTO.SachDTO;
 import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
@@ -27,11 +28,14 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.NhaCungCapDialog;
+import excel.NhaCungCapExcelExport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.NhaCungCapSearch;
+import search.NhaCungCapSearch;
 import search.SachSearch;
+import utils.ExcelExporter;
 import utils.UIUtils;
 
 import java.awt.Color;
@@ -43,6 +47,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 public class NhaCungCapForm extends JPanel implements TableActionListener, ActionListener {
+
+    private SearchBarPanel<NhaCungCapDTO> searchBarPanel;
+    private List<NhaCungCapDTO> filteredList = new ArrayList<>();
 
     private String title;
     private int id = 6;
@@ -94,14 +101,17 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
         }
         return(result);
     }
-
-    private JPanel getHeader() {
+        private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhaCungCapDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhaCungCapSearch(listKH), this::updateTable, resetTable);
+        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)), "pushx");
+    
+        // GÁN ĐÚNG cho biến thành viên
+        this.searchBarPanel = new SearchBarPanel<>(filter, new NhaCungCapSearch(listKH), this::updateTable, resetTable);
+    
         panel.add(searchBarPanel);
         return panel;
     }
+    
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -195,8 +205,17 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
                 
                 break;
             case "exportExcel":
-                
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+                List<NhaCungCapDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                    ? filteredList
+                    : nhaCungCapBUS.getAll();
+
+                NhaCungCapExcelExport exporter = new NhaCungCapExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, NhaCungCapDTO.class);
                 break;
+
             default:
                 break;
         }
@@ -260,11 +279,8 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
         this.table = table;
     }
 
-    
-
     private void updateTable(ArrayList<NhaCungCapDTO> ketqua) {
-
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
 

@@ -40,7 +40,7 @@ public class ButtonAction extends JButton {
         this.reloadCallback = reloadCallback;
         init();
         setBackgroundButton();
-        addDefaultAction();
+        // addDefaultAction();
     }   
 
     private void init() {
@@ -69,75 +69,6 @@ public class ButtonAction extends JButton {
         }
     }
 
-    // Thêm action mặc định nếu là importExcel
-    private void addDefaultAction() {
-        if ("importExcel".equals(id)) {
-            this.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Chọn file Excel để nhập");
-                    fileChooser.setAcceptAllFileFilterUsed(false);
-                    fileChooser.setFileFilter(new FileNameExtensionFilter("Excel Files (*.xlsx)", "xlsx"));
-
-                    int result = fileChooser.showOpenDialog(null);
-                    if (result == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        String filePath = selectedFile.getAbsolutePath();
-
-                        // TODO: Gọi hàm xử lý import ở đây
-                        System.out.println("Đã chọn file: " + filePath);
-                        ExcelImporter excelImporter = new ExcelImporter ();
-                        SachBUS sachBUS = SachBUS.getInstance();
-                        List<SachDTO> danhSachSach = excelImporter.importExcelSach(filePath);
-                        // for(SachDTO i : danhSachSach){
-                        //     System.out.println(i.getMaVung() + i.getMaNXB());
-                        // }
-                        for(SachDTO sach : danhSachSach) {
-                            if(sachBUS.insert(sach) == 0){
-                                System.out.println("Thêm thất bại");
-                            }
-                        }
-                        if (reloadCallback != null) {
-                            reloadCallback.run();
-                        }
-                    }
-                }
-            });
-        }
-
-        else if ("exportExcel".equals(id)) {
-            this.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
-                    fileChooser.setFileFilter(new FileNameExtensionFilter("Excel Files (*.xlsx)", "xlsx"));
-        
-                    int result = fileChooser.showSaveDialog(null);
-                    if (result == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        String filePath = selectedFile.getAbsolutePath();
-        
-                        // Nếu người dùng chưa thêm đuôi .xlsx thì tự thêm
-                        if (!filePath.toLowerCase().endsWith(".xlsx")) {
-                            filePath += ".xlsx";
-                        }
-        
-                        // Gọi hàm export
-                        SachBUS sachBUS = SachBUS.getInstance();
-                        List<SachDTO> danhSachSach = sachBUS.getAll();
-                        ExcelExporter.exportSachListToExcel(danhSachSach, filePath);
-        
-                        System.out.println("Đã export file: " + filePath);
-                    }
-                }
-            });
-        }
-        
-    }
-
-    // Getter & Setter
     public String getText() {
         return text;
     }
@@ -150,8 +81,8 @@ public class ButtonAction extends JButton {
         return iconImg;
     }
 
-    public void setIcon(String icon) {
-        this.iconImg = icon;
+    public void setIconImg(String iconImg) {
+        this.iconImg = iconImg;
     }
 
     public String getId() {
@@ -161,4 +92,8 @@ public class ButtonAction extends JButton {
     public void setId(String id) {
         this.id = id;
     }
+
+
+    
+
 }

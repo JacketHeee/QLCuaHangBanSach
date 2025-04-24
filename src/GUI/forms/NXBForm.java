@@ -2,20 +2,13 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.NhaXBBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
+
 import DTO.NhaXBDTO;
-import DTO.SachDTO;
-import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -27,22 +20,21 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.NhaXBDialog;
+import excel.NhaXBExcelExport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.NXBSearch;
-import search.SachSearch;
+import utils.ExcelExporter;
 import utils.UIUtils;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-
 public class NXBForm extends JPanel implements TableActionListener, ActionListener{
+
+    private SearchBarPanel<NhaXBDTO> searchBarPanel;
+    private List<NhaXBDTO> filteredList = new ArrayList<>();
 
     private String title;
     private int id = 4;
@@ -53,6 +45,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     private ArrayList<NhaXBDTO> listKH;
     private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
+    private NhaXBBUS NhaXBBUS;
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private String[][] attributes = {
@@ -98,11 +91,15 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhaXBDTO> searchBarPanel = new SearchBarPanel<>(filter, new NXBSearch(listKH), this::updateTable, resetTable);
+        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)), "pushx");
+    
+        // GÁN ĐÚNG cho biến thành viên
+        this.searchBarPanel = new SearchBarPanel<>(filter, new NXBSearch(listKH), this::updateTable, resetTable);
+    
         panel.add(searchBarPanel);
         return panel;
     }
+    
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -194,8 +191,16 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
                 
                 break;
             case "exportExcel":
-                
-                break;
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+                List<NhaXBDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                    ? filteredList
+                    : nhaXBBUS.getAll();
+
+                NhaXBExcelExport exporter = new NhaXBExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, NhaXBDTO.class);
+                break;   
             default:
         }
     }
@@ -261,8 +266,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
     
 
     private void updateTable(ArrayList<NhaXBDTO> ketqua) {
-
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
 }

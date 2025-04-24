@@ -2,20 +2,14 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.NhanVienBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
 import DTO.NhanVienDTO;
-import DTO.SachDTO;
-import DTO.ViTriVungDTO;
+import DTO.NhanVienDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -28,22 +22,22 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.NhanVienDialog;
+import excel.NhanVienExcelExport;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.NhanVienSearch;
-import search.SachSearch;
+import search.NhanVienSearch;
 import utils.DateCalculator;
+import utils.ExcelExporter;
 import utils.UIUtils;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-
 public class NhanVienForm extends JPanel implements TableActionListener, ActionListener{
+
+    private SearchBarPanel<NhanVienDTO> searchBarPanel;
+    private List<NhanVienDTO> filteredList = new ArrayList<>();
 
     private String title;
     private int id = 13;
@@ -98,8 +92,11 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
     
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhanVienDTO> searchBarPanel = new SearchBarPanel<>(filter, new NhanVienSearch(listKH), this::updateTable, resetTable);
+        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)), "pushx");
+    
+        // GÁN ĐÚNG cho biến thành viên
+        this.searchBarPanel = new SearchBarPanel<>(filter, new NhanVienSearch(listKH), this::updateTable, resetTable);
+    
         panel.add(searchBarPanel);
         return panel;
     }
@@ -200,7 +197,15 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
                 
                 break;
             case "exportExcel":
-                
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+                List<NhanVienDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                    ? filteredList
+                    : nhanVienBUS.getAll();
+
+                NhanVienExcelExport exporter = new NhanVienExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, NhanVienDTO.class);
                 break;
             default:
         }
@@ -235,7 +240,7 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
 
     private void updateTable(ArrayList<NhanVienDTO> ketqua) {
 
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
 
