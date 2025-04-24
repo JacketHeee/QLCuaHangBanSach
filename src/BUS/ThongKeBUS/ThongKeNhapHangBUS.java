@@ -1,8 +1,9 @@
 package BUS.ThongKeBUS;
 
-import dao.ImportDAO;
-import dto.ImportDTO;
-import dto.ImportStatsDTO;
+import DAO.ThongKeDAO.ThongKeNhapHangDAO;
+import DTO.PhieuNhapDTO;
+import DTO.ThongKe.ThongKeDoanhThuDTO;
+import DTO.ThongKe.ThongKeNhapHangDTO;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -11,19 +12,23 @@ import java.util.List;
 import java.util.Locale;
 
 public class ThongKeNhapHangBUS {
-    private ImportDAO importDAO;
+    private ThongKeNhapHangDAO thongKeNhapHangDAO;
 
     public ThongKeNhapHangBUS() {
-        this.importDAO = new ImportDAO();
+        this.thongKeNhapHangDAO = new ThongKeNhapHangDAO();
     }
 
-    public List<ImportStatsDTO> getImportStats(Date startDate, Date endDate, String type) {
+    public List<ThongKeNhapHangDTO> getImportStats(Date startDate, Date endDate, String type) {
         try {
             if ("book".equalsIgnoreCase(type)) {
-                return importDAO.getImportByBook(startDate, endDate);
+                return thongKeNhapHangDAO.getImportByBook(startDate, endDate);
             } else if ("employee".equalsIgnoreCase(type)) {
-                return importDAO.getImportByEmployee(startDate, endDate);
+                return thongKeNhapHangDAO.getImportByEmployee(startDate, endDate);
             }
+            else if ("ncc".equalsIgnoreCase(type)) {
+                return thongKeNhapHangDAO.getImportBySupplier(startDate, endDate);
+            }
+
             return new ArrayList<>();
         } catch (Exception e) {
             e.printStackTrace();
@@ -31,12 +36,15 @@ public class ThongKeNhapHangBUS {
         }
     }
 
-    public List<ImportDTO> getImports(String id, Date startDate, Date endDate, String type) {
+    public List<PhieuNhapDTO> getImports(String id, Date startDate, Date endDate, String type) {
         try {
             if ("book".equalsIgnoreCase(type)) {
-                return importDAO.getImportsByBook(id, startDate, endDate);
+                return thongKeNhapHangDAO.getImportsByBook(id, startDate, endDate);
             } else if ("employee".equalsIgnoreCase(type)) {
-                return importDAO.getImportsByEmployee(id, startDate, endDate);
+                return thongKeNhapHangDAO.getImportsByEmployee(id, startDate, endDate);
+            }
+            else if ("ncc".equalsIgnoreCase(type)) {
+                return thongKeNhapHangDAO.getImportsBySupplier(id, startDate, endDate);
             }
             return new ArrayList<>();
         } catch (Exception e) {
@@ -47,7 +55,7 @@ public class ThongKeNhapHangBUS {
 
     public String[] getTotalImport(Date startDate, Date endDate) {
         try {
-            double[] result = importDAO.getTotalImport(startDate, endDate);
+            double[] result = thongKeNhapHangDAO.getTotalImport(startDate, endDate);
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             return new String[]{String.valueOf((int) result[0]), currencyFormat.format(result[1])};
         } catch (Exception e) {
@@ -55,4 +63,23 @@ public class ThongKeNhapHangBUS {
             return new String[]{"0", "0"};
         }
     }
+
+    public List<ThongKeNhapHangDTO> getTop5Books(Date startDate, Date endDate) {
+        try {
+            return thongKeNhapHangDAO.getTop5Books(startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<ThongKeNhapHangDTO> getTop5NCC(Date startDate, Date endDate) {
+        try {
+            return thongKeNhapHangDAO.getTop5Suppliers(startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }

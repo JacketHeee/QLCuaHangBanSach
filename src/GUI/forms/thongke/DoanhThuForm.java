@@ -170,6 +170,7 @@ public class DoanhThuForm extends JPanel implements ActionListener {
         return panel;
     }
 
+    JPanel panelPie;
     
     private JPanel getTongQuan() {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10,wrap 1"));
@@ -181,8 +182,9 @@ public class DoanhThuForm extends JPanel implements ActionListener {
 
         panel.add(panelLabel,"pushx,growx");
 
+        // panelPie = panelPieChart();
         pieChartt = pieChart();
-        panel.add(pieChartt,"hmin 290,pushx,growx");
+        panel.add(pieChartt,"h 290::290,pushx,growx");
         return panel;
     }
 
@@ -191,17 +193,15 @@ public class DoanhThuForm extends JPanel implements ActionListener {
         pieChart1.setChartType(PieChart.ChartType.DONUT_CHART);
         // pieChart1.setBackground(Color.white);
         pieChart1.setOpaque(false);
-
-        JLabel header1;
-
-        header1 = new JLabel("<html><font><b>Top 5 sách bán nhiều nhất</b></font></html>",JLabel.CENTER);
-
+        JLabel header1 = new JLabel("<html><font><b>Top 5</b></font></html>",JLabel.CENTER);
         header1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:+1");
         pieChart1.setHeader(header1);
+
         pieChart1.getChartColor().addColor(Color.decode("#f87171"), Color.decode("#fb923c"), Color.decode("#fbbf24"), Color.decode("#a3e635"), Color.decode("#34d399"), Color.decode("#22d3ee"), Color.decode("#818cf8"), Color.decode("#c084fc"));
         pieChart1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "border:5,5,5,5,$Component.borderColor,,20");
+
         pieChart1.setDataset(createPieData(listTop5Sach));
         // add(pieChart1, "split 3,height 2
         return pieChart1;
@@ -245,21 +245,21 @@ public class DoanhThuForm extends JPanel implements ActionListener {
         table = newTable;
         panelTable.add(table, "push,grow");
         // Cập nhật giao diện
-        JLabel header1;
+
         if (((String)comboBox.getSelectedItem()).equals("Khách hàng")) {
-            header1 = new JLabel("<html><font><b>Top 5 sách bán nhiều nhất</b></font></html>",JLabel.CENTER);
-            header1.putClientProperty(FlatClientProperties.STYLE, ""
-                    + "font:+1");
-            pieChartt.setHeader(header1);
+            // headerPieChart.setText("<html><font><b>Top 5 khách hàng mua nhiều nhất</b></font></html>");
             pieChartt.setDataset(createPieData(lisTop5Kh));
         }
         else {
-            header1 = new JLabel("<html><font><b>Top 5 khách hàng mua nhiều nhất</b></font></html>",JLabel.CENTER);
-            header1.putClientProperty(FlatClientProperties.STYLE, ""
-                    + "font:+1");
-            pieChartt.setHeader(header1);
+            // headerPieChart.setText("<html><font><b>Top 5 sách bán chạy nhất</b></font></html>");
             pieChartt.setDataset(createPieData(listTop5Sach));
         }
+
+        // headerPieChart.repaint();
+        // headerPieChart.revalidate();
+
+        // panelPie.repaint();
+        // panelPie.revalidate();
         
         panelTable.revalidate();
         panelTable.repaint();
