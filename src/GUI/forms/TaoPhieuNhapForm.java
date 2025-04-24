@@ -5,6 +5,7 @@ import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import utils.FormatterUtil;
 import utils.UIUtils;
 
 import javax.swing.JLabel;

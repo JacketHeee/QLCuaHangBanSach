@@ -3,6 +3,8 @@
 package GUI.component;
 
 import net.miginfocom.swing.MigLayout;
+import utils.TextUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,6 +36,8 @@ public class CustomTable extends JPanel implements ActionListener {
     protected OnSelectRowListener onSelectRowListener;
     //set
     private TableActionListener actionListener;
+
+    protected int maxTextWidth = 110;
     
 
     public JPanel getDataPanel() {
@@ -145,6 +149,13 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
     public JLabel createDataLabel(String text, int row) {
+        // int lim = (int) 110/(headers.length);
+        // if (text!=null && text.length() > lim) {
+        //     text = text.substring(0, lim-3) + "...";
+        // }
+
+        text = TextUtils.orverFlowText(text, maxTextWidth, headers.length);
+
         JLabel label = new JLabel(text);
         label.setBorder(new EmptyBorder(10, 5, 10, 5));
         label.setOpaque(true);
@@ -154,10 +165,11 @@ public class CustomTable extends JPanel implements ActionListener {
         return label;
     }
 
+
     public JPanel createActionPanel(int row) {
 
         JPanel label = new JPanel(new MigLayout("al center center, gap 10"));
-        label.setPreferredSize(new Dimension(150, 30));
+        // label.setPreferredSize(new Dimension(150, 30));
         label.setOpaque(true);
         label.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
 
@@ -182,7 +194,7 @@ public class CustomTable extends JPanel implements ActionListener {
         // Cập nhật lại toàn bộ các hàng trong dataPanel
         dataPanel.removeAll(); // Xóa toàn bộ để thêm lại từ đầu
         Map<Integer, List<Component>> updatedRowLabels = new HashMap<>();
-        int newRowIndex = 0;
+        int newRowIndex = 1;
     
         // Tạo lại rowLabels với các chỉ số mới
         for (int key : rowLabels.keySet()) 
@@ -229,7 +241,7 @@ public class CustomTable extends JPanel implements ActionListener {
         // Cập nhật màu và kích thước
         updateRowColors();
         updateRowConstraints();
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
         dataPanel.revalidate();
         dataPanel.repaint();
         repaint();
@@ -299,7 +311,8 @@ public class CustomTable extends JPanel implements ActionListener {
         }
         columnWidths[columnIndex] = width;
         updateColumnConstraints();
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
     }
@@ -318,7 +331,8 @@ public class CustomTable extends JPanel implements ActionListener {
         }
         rowHeights[rowIndex] = height;
         updateRowConstraints();
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
     }
@@ -374,6 +388,7 @@ public class CustomTable extends JPanel implements ActionListener {
 
         // Thông báo sự kiện lên listener nếu có
         if (actionListener != null) {
+            System.out.println(but.getId());
             actionListener.onActionPerformed(but.getId(), buttonRow);
         }
     }
@@ -402,7 +417,9 @@ public class CustomTable extends JPanel implements ActionListener {
         
         // Cập nhật constraints và kích thước
         updateRowConstraints();
-        dataPanel.setPreferredSize(new Dimension((headers.length + (actions != null ? 1 : 0)) * 150, rowLabels.size() * 30));
+        // dataPanel.setPreferredSize(new Dimension((headers.length + (actions != null ? 1 : 0)) * 150, rowLabels.size() * 30));
+        // dataPanel.setPreferredSize(new Dimension((headers.length + (actions != null ? 1 : 0)) * 150, rowLabels.size() * 30));
+        dataPanel.setPreferredSize(null);
         
         // Khôi phục trạng thái chọn hàng nếu có thể
         if (previouslySelectedRow != -1 && previouslySelectedRow <= rowLabels.size()) {
@@ -422,16 +439,18 @@ public class CustomTable extends JPanel implements ActionListener {
     public void addDataRow(String[] data) {
         int row = rowLabels.size() + 1;
         // System.out.println(row);
-        ArrayList<Component> labels = new ArrayList<>();
         final Color defaultColor = (row % 2 == 0 ? evenRowColor : oddRowColor);
-
+        
         // / Xử lý trường hợp data là null
         String[] rowData = (data == null) ? new String[headers.length] : data;
+        
         if (data == null) {
             for (int i = 0; i < rowData.length; i++) {
                 rowData[i] = ""; // Điền giá trị rỗng cho dòng trống
             }
         }
+
+        ArrayList<Component> labels = new ArrayList<>();
 
         for (int i = 0; i < Math.min(rowData.length, headers.length); i++) {
             JLabel label = createDataLabel(rowData[i], row);
@@ -454,7 +473,7 @@ public class CustomTable extends JPanel implements ActionListener {
                     if (currentRow != -1) {
                         setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
                         if(onSelectRowListener != null){
-                            onSelectRowListener.OnSelectRow(row);
+                            onSelectRowListener.OnSelectRow(currentRow); // đổi row->currentRow
                         }
                     }
                 }
@@ -468,6 +487,7 @@ public class CustomTable extends JPanel implements ActionListener {
         }
 
         rowLabels.put(row, labels);
+
         // Cập nhật rowHeights nếu cần
         if (row >= rowHeights.length) {
             int[] newRowHeights = new int[row + 1];
@@ -478,7 +498,8 @@ public class CustomTable extends JPanel implements ActionListener {
             rowHeights = newRowHeights;
         }
         updateRowConstraints();
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
     }
@@ -493,14 +514,14 @@ public class CustomTable extends JPanel implements ActionListener {
         label.setText(text);
     }
 
-    public void setRowData(int row, String... list){
-        for(int i = 0; i < list.length; i++){
-            JLabel label = (JLabel)rowLabels.get(row).get(i);
-            label.setText(list[i]);
-        }
-    }
+    // public void setRowData(int row, String... list){
+    //     for(int i = 0; i < list.length; i++){
+    //         JLabel label = (JLabel)rowLabels.get(row).get(i);
+    //         label.setText(list[i]);
+    //     }
+    // }
 
-    public void updateRowData(int row, String[] newData) {
+    public void setRowData(int row, String... newData) {
         if (!rowLabels.containsKey(row)) {
             return; // Hàng không tồn tại
         }
@@ -510,6 +531,7 @@ public class CustomTable extends JPanel implements ActionListener {
 
         List<Component> rowComponents = rowLabels.get(row);
         for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+            newData[i] = TextUtils.orverFlowText(newData[i], maxTextWidth, headers.length);
             Component comp = rowComponents.get(i);
             if (comp instanceof JLabel) {
                 ((JLabel) comp).setText(newData[i] != null ? newData[i] : "");
@@ -527,6 +549,77 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
 
+    public void updateRowData(int row, String... newData) {
+        if (!rowLabels.containsKey(row)) {
+            return; // Hàng không tồn tại
+        }
+        if (newData == null || newData.length == 0) {
+            return; // Dữ liệu mới không hợp lệ
+        }
+
+        List<Component> rowComponents = rowLabels.get(row);
+        for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+            TextUtils.orverFlowText(newData[i], maxTextWidth, headers.length);
+            Component comp = rowComponents.get(i);
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setText(newData[i] != null ? newData[i] : "");
+            }
+        }
+
+        // Cập nhật dữ liệu trong mảng data
+        if (row - 1 < data.size()) {
+            data.set(row - 1, newData);
+        }
+
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+
+
+    public void replaceColumnComponent(int columnIndex, String componentType) {
+        if (columnIndex < 0 || columnIndex >= headers.length) {
+            throw new IllegalArgumentException("Column index out of bounds");
+        }
+
+        for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+            int row = entry.getKey();
+            List<Component> components = entry.getValue();
+            Component oldComponent = components.get(columnIndex);
+
+            // Xóa component cũ khỏi dataPanel
+            dataPanel.remove(oldComponent);
+
+            // Tạo component mới dựa trên componentType
+            Component newComponent;
+            if ("JTextField".equalsIgnoreCase(componentType)) {
+                String text = (oldComponent instanceof JLabel) ? ((JLabel) oldComponent).getText() : "";
+                JTextField textField = new JTextField(text);
+                textField.setPreferredSize(new Dimension(150, 30));
+                textField.setHorizontalAlignment(SwingConstants.CENTER);
+                textField.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
+                newComponent = textField;
+            } else if ("JPanel".equalsIgnoreCase(componentType)) {
+                JPanel panel = new JPanel();
+                panel.setPreferredSize(new Dimension(150, 30));
+                panel.setOpaque(true);
+                panel.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
+                newComponent = panel;
+            } else {
+                throw new IllegalArgumentException("Unsupported component type: " + componentType);
+            }
+
+            // Thêm component mới vào dataPanel
+            dataPanel.add(newComponent, "grow,cell " + columnIndex + " " + (row - 1));
+
+            // Cập nhật rowLabels
+            components.set(columnIndex, newComponent);
+        }
+
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
     public Map<Integer, List<Component>> getRowLabels() {
         return rowLabels;
     }
@@ -534,6 +627,30 @@ public class CustomTable extends JPanel implements ActionListener {
     // Hàm call back để xử lý thêm khi người dùng nhấn chọn 1 hàng (hiện tại có vùng kệ sử dụng)
     public interface OnSelectRowListener{
         public void OnSelectRow(int row);
+    }
+
+
+    // Hàm mới để đặt maxTextWidth và làm mới bảng
+    public void setMaxTextWidth(int newMaxTextWidth) {
+        if (newMaxTextWidth <= 0) {
+            throw new IllegalArgumentException("maxTextWidth must be positive");
+        }
+        this.maxTextWidth = newMaxTextWidth;
+
+        // Cập nhật lại văn bản cho tất cả các ô trong bảng
+        for (int row = 1; row <= rowLabels.size(); row++) {
+            List<Component> components = rowLabels.get(row);
+            for (int col = 0; col < Math.min(components.size(), headers.length); col++) {
+                Component comp = components.get(col);
+                if (comp instanceof JLabel && col < headers.length) {
+                    String originalText = col < data.get(row - 1).length ? data.get(row - 1)[col] : "";
+                    ((JLabel) comp).setText(TextUtils.orverFlowText(originalText, maxTextWidth, headers.length));
+                }
+            }
+        }
+
+        dataPanel.revalidate();
+        dataPanel.repaint();
     }
     
 }

@@ -41,6 +41,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.QLPhieuNhapSearch;
 import search.SachSearch;
+import utils.FormatterUtil;
 import utils.UIUtils;
 import utils.Validate;
 
@@ -185,7 +186,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         NhaCungCapBUS ncc = new NhaCungCapBUS();
         NhanVienBUS nv = new NhanVienBUS();
         for(PhieuNhapDTO i : inputData){
-            data.add(new String[]{i.getMaNhap() + "", i.getNgayNhap() + "",ncc.getTenByMaNhaCungCap(i.getMaNCC()),i.getTongTien()+"",nv.getTenNVByMaTK(i.getMaTK())});
+            data.add(new String[]{i.getMaNhap() + "", FormatterUtil.formatDateTime(i.getNgayNhap()) + "",ncc.getTenByMaNhaCungCap(i.getMaNCC()),FormatterUtil.formatNumberVN(i.getTongTien()),nv.getTenNVByMaTK(i.getMaTK())});
         }
         return(data);
     }
@@ -202,6 +203,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10"));
         table = new CustomTable(dataToShow,bottomActions, header);
+        table.setMaxTextWidth(85);
         table.setActionListener(this);
         panel.add(InteractPanel(),"pushy, growy");
         panel.add(table,"push, grow");
@@ -271,9 +273,9 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                         String tenNV = nhanVienBUS.getTenNVByMaTK(phieuNhap.getMaTK());
                         table.addDataRow(new String[] {
                             phieuNhap.getMaNhap() + ""
-                            , phieuNhap.getNgayNhap() + ""
+                            , FormatterUtil.formatDateTime(phieuNhap.getNgayNhap())
                             , tenNCC
-                            , tenNV
+                            , FormatterUtil.formatNumberVN(phieuNhap.getTongTien())
                         });
                     }  
                 });

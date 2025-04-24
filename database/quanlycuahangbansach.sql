@@ -1,4 +1,3 @@
-DROP DATABASE quanlycuahangbansach;
 CREATE DATABASE quanlycuahangbansach;
 USE quanlycuahangbansach;
 

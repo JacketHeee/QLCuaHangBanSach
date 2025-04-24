@@ -26,6 +26,7 @@ import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.SachSearch;
+import utils.FormatterUtil;
 import utils.UIUtils;
 
 import java.awt.Cursor;
@@ -160,7 +161,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 i.getMaSach() + "", 
                 i.getTenSach(), 
                 i.getSoLuong() + "", 
-                i.getGiaBan() + "",
+                FormatterUtil.formatNumberVN(i.getGiaBan()),
                 i.getNamXB() + "", 
             });
         }

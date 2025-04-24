@@ -100,7 +100,9 @@ public class TongQuanForm extends JPanel implements ActionListener{
             case "doanhthu":
                 but = (CustomButtonTab) e.getSource();
                 but.setSelected(true);
+                System.out.println("con bo biet bay");
                 setPanel(new DoanhThuForm());
+                System.out.println("con bo biet bay");
                 break;
             case "nhaphang":
                 but = (CustomButtonTab) e.getSource();

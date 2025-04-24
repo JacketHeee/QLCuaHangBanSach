@@ -173,7 +173,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     };
 
     private JPanel getMainContent() {
-        JPanel panel = new JPanel(new MigLayout("insets 0","[][]","[][]"));
+        JPanel panel = new JPanel(new MigLayout("insets 0, gap 5","[][]","[][]"));
 
         table = new CustomTable(
             dataToShow
@@ -202,11 +202,11 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         // table.addDataRow(new String[] {"1","A1"});
         // table.addDataRow(new String[] {"1","A1"});
         // CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
-        panel.add(getSoDo(),"");
+        panel.add(getSoDo(),"al center");
 
         
         panel.add(panelSanPhamTuongUng(),"span 1 2, pushy,growy,wrap");
-
+        table.setMaxTextWidth(75);
         panel.add(table,"push, grow");
         return panel;
     }
@@ -219,6 +219,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         panel.add(new CustomBoldJLabel("Các sản phẩm có trong vùng",1),"pushx, gapbottom 5");
 
         tableSanPham = new CustomTable(null, actionOnTableSanPham, "Mã sách","Tên sách");
+        tableSanPham.setMaxTextWidth(35);
         // tableSanPham.addDataRow(new String[]{"1","Con bo"});
         // tableSanPham.addDataRow(new String[]{"1","Con bo"});
         // tableSanPham.addDataRow(new String[]{"1","Con bo"});
@@ -252,7 +253,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         // Rồi gắn vào JLabel
         panel.setBackground(Color.white);
         panel.putClientProperty(FlatClientProperties.STYLE, "arc: 10");
-        JLabel label = new JLabel(ImageUtils.getHighQualityResizedIcon(getClass(), "/resources/img/sodo1.png", 900, 500));
+        JLabel label = new JLabel(ImageUtils.getHighQualityResizedIcon(getClass(), "/resources/img/sodo1.png", 780, 450));
         panel.add(label,"al center");
         // panel.add(new JLabel(new FlatSVGIcon(VungKeForm.class.getResource("/resources/img/sodo.svg")).derive(700, 457)));
         return panel; 
@@ -283,6 +284,10 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
             case "edit":
                 ViTriVungDialog viTriVungDialog = new ViTriVungDialog(this, "Vị trí vùng", "Sửa Vùng", "update", attributes, row);
                 viTriVungDialog.setVisible(true);
+                // System.out.println();
+                // Notifications.getInstance().setJFrame(mainFrame);
+                // Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER,"Sửa thành công!");
+            break;
             case "remove":
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
@@ -349,6 +354,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     }
 
     public void loadTableSach(int row){
+        System.out.println("con hcokajdlkj fhskladfjh lkadfhj lksdfj");
         int ma = getMaVungKeByRowIndex(row);
         ArrayList<SachDTO> listSach = sachBUS.getAllSachByMaVung(ma);
         ArrayList<String[]> data = new ArrayList<>();

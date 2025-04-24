@@ -42,6 +42,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.QLHoaDonSearch;
 import search.SachSearch;
+import utils.FormatterUtil;
 import utils.UIUtils;
 import utils.Validate;
 
@@ -181,11 +182,11 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     public ArrayList<String[]> DataToShow(ArrayList<HoaDonDTO> inputData){
 
         ArrayList<String[]> data = new ArrayList<>();
-        // KhachHangBUS kh = new KhachHangBUS();
-        // TaiKhoanBUS tk = new TaiKhoanBUS();
+        KhachHangBUS kh = new KhachHangBUS();
+        TaiKhoanBUS tk = new TaiKhoanBUS();
 
         for(HoaDonDTO i : inputData){
-            data.add(new String[]{i.getMaHD() + "", i.getNgayBan() + "",khachHangBUS.getTenByMaKhachHang(i.getMaKH()) , i.getTongTien() + "",nhanVienBUS.getTenNVByMaTK(i.getMaTK())});
+            data.add(new String[]{i.getMaHD() + "", FormatterUtil.formatDateTime(i.getNgayBan()),kh.getTenByMaKhachHang(i.getMaKH()) , FormatterUtil.formatNumberVN(i.getTongTien()),tk.getTenByMaTaiKhoan(i.getMaTK())});
         }
         return(data);
     }
@@ -197,12 +198,13 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10"));
         table = new CustomTable(dataToShow,bottomActions, header);
+        table.setMaxTextWidth(85);
+        
         table.setActionListener(this);
         panel.add(InteractPanel(),"pushy, growy");
         panel.add(table,"push, grow");
         return panel;
     }
-
     private int widthInteractPanel = 250;
 
     private JPanel InteractPanel() {
@@ -275,12 +277,13 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                     @Override
                     public void setData(HoaDonDTO hoaDon) {
                         String tenKH = khachHangBUS.getTenByMaKhachHang(hoaDon.getMaKH());
-                        String tenNV = nhanVienBUS.getTenNVByMaTK(hoaDon.getMaTK());
-                        table.addDataRow(new String[] {
-                            hoaDon.getMaHD() + ""
-                            , hoaDon.getNgayBan() + ""
-                            , tenKH
-                            , tenNV
+                        String tenNV = nhanVienBUS.getTenNVByMaTK(taiKhoan.getMaTK());
+                        table.addDataRow(new String[]{
+                            hoaDon.getMaHD() + "", 
+                            FormatterUtil.formatDateTime(hoaDon.getNgayBan()),
+                            tenKH, 
+                            FormatterUtil.formatNumberVN(hoaDon.getTongTien()),
+                            tenNV
                         });
                     }  
                 });

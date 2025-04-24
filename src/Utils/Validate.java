@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,19 +62,84 @@ public class Validate {
         return matcher.matches();
     }
 
-    public static boolean isDate(String dateStr){ 
-        if(!dateStr.matches("\\d{1,2}/\\d{1,2}/\\d{4}")){
-            return(false);
+    // public static boolean isDate(String i){ 
+    //     String yearS = new String(); //Validate năm nhuận
+    //     try {
+    //         yearS = i.substring(i.length() - 4);
+    //     } catch (Exception e) {
+    //         System.out.println("Chuỗi chưa tới 4 ký tự");
+    //         return(false);
+    //     }
+    //     if(!isPositiveNumber(i)){
+    //         return(false);
+    //     }
+    //     int year = Integer.parseInt(yearS);
+    //     //Năm nhuận
+    //     if(year % 4 == 0){
+
+    //     }
+    //     // System.out.println(year);
+    //     // Cụm 1: Cho ngày + / + tháng cho những tháng có 31 ngày (1, 3, 5, 7, 8, 10, 12)
+    //     // Cụm 2: Cho ngày + / + tháng cho những tháng có 30 ngày (4, 6, 9, 11)
+    //     // Cụm 3: Cho ngày + / + tháng cho tháng 2 có 28 ngày
+    //     //                                        [                                               Ngày + tháng                                                   ][      Năm     ]
+    //     //                                         [           Cụm 1                          ][             Cụm 2                ][        Cụm 3                ]                    
+    //     Pattern pattern = Pattern.compile("^((0?[1-9]|[12][0-9]|3[01])/(0?[13578]|1[02])|(0?[1-9]|[12][0-9]|30)/(0?[469]|11)|(0?[1-9]|1[0-9]|2[0-8])/(0?2))/(19|20)\\d{2}$");
+    //     Matcher matcher = pattern.matcher(i);
+    //     return matcher.matches();
+    // }
+
+    public static boolean isDate(String dateStr) { //Kết hợp regex cơ bản + xử lý logic
+        // Kiểm tra định dạng cơ bản bằng regex
+        if (!dateStr.matches("\\d{1,2}/\\d{1,2}/\\d{4}")) { //kiểm tra xem có đúng định dang chuỗi chưa
+            return false;
         }
+
+        // Sử dụng DateTimeFormatter với định dạng linh hoạt
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         try {
-            LocalDate date = LocalDate.parse(dateStr, formatter);
+            LocalDate date = LocalDate.parse(dateStr, formatter); //dùng LocalDate chuyển đổi từ chuỗi sang LocalDate theo format ngày,
             int year = date.getYear();
             return year >= 1900 && year <= 2099;
-        } catch (Exception e) {
-            return(false);
+        } catch (DateTimeParseException e) { //nếu chuyển không thành công có nghĩa chuỗi đúng với định dạng ngày, nhưng ngày không hợp lệ
+            return false;
         }
     }
+    /* Công việc kiểm tra isDate chia ra làm 2 công việc: 
+        1. Kiểm tra định dạng ngày (dùng regex)
+        2. Kiểm tra tính hợp lệ của ngày (năm nhuận, 28, 29 ngày ...) Tận dụng sự chuyển đổi từ String->LocalDate
+//////////////
+Những gì LocalDate.parse kiểm tra
+Khi bạn gọi LocalDate.parse(dateStr, formatter) với một chuỗi dateStr (ví dụ: "1/1/2025") và một DateTimeFormatter (ví dụ: ofPattern("d/M/yyyy")), quá trình phân tích sẽ:
+
+    Kiểm tra định dạng chuỗi:
+        Chuỗi dateStr phải khớp với mẫu định dạng được khai báo trong formatter.
+        Ví dụ: Với DateTimeFormatter.ofPattern("d/M/yyyy"), chuỗi phải có dạng:
+        Ngày: 1 hoặc 2 chữ số (1-31).
+        Tháng: 1 hoặc 2 chữ số (1-12).
+        Năm: 4 chữ số (ví dụ: 2025).
+        Phân tách bằng dấu /.
+        Nếu định dạng không khớp (ví dụ: "1-1-2025" hoặc "abc"), DateTimeParseException sẽ được ném ra.
+
+    Kiểm tra tính hợp lệ của ngày tháng:
+        Sau khi phân tích chuỗi thành ngày, tháng, năm, LocalDate sẽ kiểm tra xem các giá trị này có tạo thành một ngày hợp lệ hay không. Cụ thể:
+        Tháng: Phải nằm trong khoảng 1-12.
+        Ngày: Phải hợp lệ với tháng và năm tương ứng:
+        Các tháng 1, 3, 5, 7, 8, 10, 12: Tối đa 31 ngày.
+        Các tháng 4, 6, 9, 11: Tối đa 30 ngày.
+        Tháng 2:
+        Tối đa 28 ngày trong năm không nhuận.
+        Tối đa 29 ngày trong năm nhuận (năm nhuận là năm chia hết cho 4, nhưng không chia hết cho 100, trừ khi chia hết cho 400).
+        Năm: LocalDate hỗ trợ các năm trong khoảng rất rộng (thường từ -999,999,999 đến +999,999,999), nên hầu như không có giới hạn thực tế về năm.
+        Nếu ngày không hợp lệ, ví dụ:
+        "31/4/2025" (tháng 4 chỉ có 30 ngày).
+        "29/2/2021" (2021 không phải năm nhuận, nên ngày 29/2 không hợp lệ).
+        thì DateTimeParseException sẽ được ném ra.
+        
+    Tạo đối tượng LocalDate:
+        Nếu tất cả các kiểm tra trên đều vượt qua, LocalDate.parse sẽ tạo ra một đối tượng LocalDate biểu diễn ngày tháng hợp lệ.
+        Ví dụ: "1/1/2025" sẽ được chuyển thành LocalDate biểu diễn ngày 1 tháng 1 năm 2025.
+     */
 
     public static boolean lengthGreaterThan(String s, int i){
         if(s.length() > i){
@@ -167,9 +233,6 @@ public class Validate {
         //     System.out.println(Validate.isPhoneNumber(i));
         // }
         System.out.println(new Validate().isDate("22/02/2024"));
-
-
-
     }
 
 }
