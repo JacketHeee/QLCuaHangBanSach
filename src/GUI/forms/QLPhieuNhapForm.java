@@ -29,6 +29,7 @@ import java.util.List;
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomBoldJLabel;
+import GUI.component.CustomButton;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.InputForm;
@@ -41,6 +42,7 @@ import raven.toast.Notifications;
 import search.QLPhieuNhapSearch;
 import search.SachSearch;
 import utils.UIUtils;
+import utils.Validate;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -83,6 +85,9 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         {"inputSL","Đến số tiền(đ)"}
     };
 
+    private CustomButton btnXacNhan;
+    private QLPhieuNhapSearch qlPhieuNhapSearch;
+
     public QLPhieuNhapForm(String title, MainFrame mainFrame) {
         this.title = title;
         this.mainFrame = mainFrame;
@@ -94,6 +99,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         phieuNhapBUS = PhieuNhapBUS.getInstance();
         this.inputFormSearch = new InputForm(listIFI);
         this.listAction = getListAction();
+        this.btnXacNhan = new CustomButton("Xác nhận");
         init();
     }
     
@@ -121,7 +127,10 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<PhieuNhapDTO> searchBarPanel = new SearchBarPanel<>(filter, new QLPhieuNhapSearch(listKH), this::updateTable, resetTable);
+
+        qlPhieuNhapSearch = new QLPhieuNhapSearch(listKH);
+
+        SearchBarPanel<PhieuNhapDTO> searchBarPanel = new SearchBarPanel<>(filter, qlPhieuNhapSearch, this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -232,6 +241,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         // panel.add(new JTextField(),"pushx,grow");        
         
         panel.add(inputFormSearch, "pushx, grow");
+        panel.add(btnXacNhan, "pushx, align right, gapright 20");
         panel.setBackground(Color.white);
 
         // JPanel action = new JPanel(new MigLayout());
@@ -240,6 +250,9 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         // action.add(new JButton("Làm mới"));
 
         // panel.add(action,"pushx,growx");
+
+        btnXacNhan.setActionCommand("xac nhan");
+        setListenerBtnXacNhan();
 
         return panel;
     }
@@ -301,6 +314,70 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         }
     }
 
+    public void setListenerBtnXacNhan(){
+        this.btnXacNhan.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Loc();
+            }
+        });
+    }
+
+        public void Loc(){
+        String selectNV = this.inputFormSearch.getListItem().get(0).getSelection();
+        String selectNCC = this.inputFormSearch.getListItem().get(1).getSelection();
+        String ngayBatDauS = this.inputFormSearch.getListItem().get(2).getDateString();
+        String ngayKetThucS = this.inputFormSearch.getListItem().get(3).getDateString();
+        String tienFst = this.inputFormSearch.getListItem().get(4).getTextSL();
+        String tienScnd = this.inputFormSearch.getListItem().get(5).getTextSL();
+
+        if(Validation(ngayBatDauS, ngayKetThucS, tienFst, tienScnd)){
+            ArrayList<PhieuNhapDTO> currentList = qlPhieuNhapSearch.getDanhSachHienTai();//list theo thanh tìm kiếm
+            ArrayList<PhieuNhapDTO> updateList;    //làm theo kiểu lọc bộ lọc đầu -> delete bộ lọc phía sau
+            //Xét mã nhân viên
+                if(selectNV.equals("Tất cả")){
+                    updateList = new ArrayList<>(currentList);  //Copy sang, không xài tham chiếu
+                }
+                else{
+                    updateList = new ArrayList<>();
+                    for(PhieuNhapDTO i : currentList){
+                        String tenNV = nhanVienBUS.getTenNVByMaTK(i.getMaTK());
+                        if(tenNV.equals(selectNV)){
+                            updateList.add(i);
+                        }
+                    }   
+                }
+            //Xét mã nhà cung cấp
+                if(!selectNCC.equals("Tất cả")){
+                    for(int i = updateList.size() - 1 ; i >= 0; i--){   //quá hay
+                        String tenNCC = nhaCungCapBUS.getTenByMaNhaCungCap(updateList.get(i).getMaNCC());
+                        if(!tenNCC.equals(selectNCC)){
+                            updateList.remove(i);
+                        }
+                    }
+                }//Nếu là tất cả thì giữ nguyên đứa cũ
+            //Xét ngày bắt đầu ngày kết thúc
+                if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS)){
+                    for(int i = updateList.size() - 1; i >= 0; i--){
+                        if(!Validate.isBetweenStartDateAndEndDate(ngayBatDauS, ngayKetThucS, updateList.get(i).getNgayNhap())){
+                            updateList.remove(i);
+                        }
+                    }
+                }//Nếu là tất cả thì giữ nguyên đứa cũ
+            //Xét giá bắt đầu, giá kết thúc
+                if(!tienFst.equals("0") && !tienScnd.equals("0")){
+                    for(int i = updateList.size() - 1; i >= 0; i--){
+                        if(!Validate.isBetweenTuGiaDenGia(tienFst, tienScnd, updateList.get(i).getTongTien())){
+                            updateList.remove(i);
+                        }
+                    }
+                }
+
+                updateTable(updateList);
+            } 
+
+    }
+
     public Runnable resetTable = () -> {
         ArrayList<PhieuNhapDTO> list = phieuNhapBUS.getAll();
         updateTable(list);
@@ -318,5 +395,41 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
 
         // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
+    }
+
+    public boolean Validation(String ngayBatDauS, String ngayKetThucS, String tienFst, String tienScnd){
+        if(!Validate.isEmpty(ngayBatDauS) && !Validate.isDate(ngayBatDauS)){
+            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải đúng định dạng");
+            return(false);
+        }
+        else if(!Validate.isEmpty(ngayKetThucS) && !Validate.isDate(ngayKetThucS)){
+            JOptionPane.showMessageDialog(mainFrame, "Ngày kết thúc phải đúng định dạng");
+            return(false);
+        }
+        else if(Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS)){
+            JOptionPane.showMessageDialog(mainFrame, "Vui lòng nhập ngày bắt đầu");
+            return(false);
+        }
+        else if(!Validate.isEmpty(ngayBatDauS) && Validate.isEmpty(ngayKetThucS)){
+            JOptionPane.showMessageDialog(mainFrame, "Vui lòng nhập ngày kết thúc");
+            return(false);
+        }
+        else if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS) && !Validate.isStartDateAndEndDate(ngayBatDauS, ngayKetThucS)){
+            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải trước ngày kết thúc");
+            return(false);
+        }
+        else if(tienFst.equals("0") && !tienScnd.equals("0")){
+            JOptionPane.showMessageDialog(mainFrame, "Vui lòng nhập tiền vào ô từ số tiền(đ)");
+            return(false);
+        }
+        else if(!tienFst.equals("0") && tienScnd.equals("0")){
+            JOptionPane.showMessageDialog(mainFrame, "Vui lòng nhập tiền vào ô đến số tiền(đ)");
+            return(false);
+        }
+        else if(!tienScnd.equals("0") && !tienFst.equals("0") && !Validate.isGiaBatDauGiaKetThuc(tienFst, tienScnd)){
+            JOptionPane.showMessageDialog(mainFrame, "Tiền (Từ số tiền) phải nhỏ hơn tiền (Tổng số tiền)");
+            return(false);
+        }
+        return(true);
     }
 }

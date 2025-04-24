@@ -87,7 +87,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
         {"inputSL","Đến số tiền(đ)"}
     };
     InputForm inputFormSearch;
-    CustomButton btnXacNhan;
+    private CustomButton btnXacNhan;
     private QLHoaDonSearch qlHoaDonSearch;
 
     public QLHoaDonForm(String title, MainFrame mainFrame) {
