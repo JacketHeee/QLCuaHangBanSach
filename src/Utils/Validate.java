@@ -1,8 +1,10 @@
 package utils;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
@@ -177,6 +179,47 @@ Khi bạn gọi LocalDate.parse(dateStr, formatter) với một chuỗi dateStr 
             return(false);
         }
 
+    }
+
+    // public static boolean isNgayBatDauNgayKetThuc(String ngayBatDau, String ngayKetThuc){
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    //     LocalDate startDate = LocalDate.parse(ngayBatDau, formatter);
+    //     LocalDate endDate = LocalDate.parse(ngayKetThuc, formatter);
+
+    //     if(startDate.isBefore(endDate) || startDate.isEqual(endDate)){// có thể bằng ngày kết thúc
+    //         return(true);
+    //     }
+    //     return(false);
+    // }
+
+    public static boolean isGiaBatDauGiaKetThuc(String giaBatDau, String giaKetThuc){
+        BigDecimal giaBD = BigDecimal.valueOf(Double.parseDouble(giaBatDau));
+        BigDecimal giaKT = BigDecimal.valueOf(Double.parseDouble(giaKetThuc));
+        return(giaBD.compareTo(giaKT) < 0);
+    }
+
+    public static boolean isBetweenStartDateAndEndDate(String ngayBatDau, String ngayKetThuc, LocalDateTime time){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate timeHD = time.toLocalDate();
+        LocalDate startDate = LocalDate.parse(ngayBatDau, formatter);
+        LocalDate endDate = LocalDate.parse(ngayKetThuc, formatter);
+
+        if(startDate.isBefore(timeHD) && endDate.isAfter(timeHD) || startDate.isEqual(timeHD) || endDate.isEqual(timeHD)){
+            return(true);
+        }
+        return(false);
+    }
+
+    public static boolean isBetweenTuGiaDenGia(String tienFst, String tienScn, BigDecimal tien){
+        BigDecimal tien1 = BigDecimal.valueOf(Double.parseDouble(tienFst));
+        BigDecimal tien2 = BigDecimal.valueOf(Double.parseDouble(tienScn));
+
+        if(tien1.compareTo(tien) < 0 && tien2.compareTo(tien) > 0 || tien1.compareTo(tien) == 0 || tien2.compareTo(tien) == 0){
+            return(true);
+        }
+        return(false);
     }
 
     public static void main(String[] args) {

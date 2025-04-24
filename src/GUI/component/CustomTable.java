@@ -473,7 +473,7 @@ public class CustomTable extends JPanel implements ActionListener {
                     if (currentRow != -1) {
                         setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
                         if(onSelectRowListener != null){
-                            onSelectRowListener.OnSelectRow(row);
+                            onSelectRowListener.OnSelectRow(currentRow); // đổi row->currentRow
                         }
                     }
                 }

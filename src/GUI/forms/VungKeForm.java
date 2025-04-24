@@ -354,6 +354,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     }
 
     public void loadTableSach(int row){
+        System.out.println("con hcokajdlkj fhskladfjh lkadfhj lksdfj");
         int ma = getMaVungKeByRowIndex(row);
         ArrayList<SachDTO> listSach = sachBUS.getAllSachByMaVung(ma);
         ArrayList<String[]> data = new ArrayList<>();

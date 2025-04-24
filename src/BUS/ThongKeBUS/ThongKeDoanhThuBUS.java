@@ -1,8 +1,5 @@
 package BUS.ThongKeBUS;
 
-import dao.RevenueDAO;
-import dto.InvoiceDTO;
-import dto.RevenueStatsDTO;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -10,19 +7,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import DAO.ThongKeDAO.ThongKeDoanhThuDAO;
+import DTO.HoaDonDTO;
+import DTO.ThongKe.ThongKeDoanhThuDTO;
+
 public class ThongKeDoanhThuBUS {
-    private ThongKeDoanhThuBUS revenueDAO;
+    private ThongKeDoanhThuDAO doanhThuDAO;
 
     public ThongKeDoanhThuBUS() {
-        this.revenueDAO = new ThongKeDoanhThuDAO();
+        this.doanhThuDAO = new ThongKeDoanhThuDAO();
     }
 
-    public List<RevenueStatsDTO> getRevenueStats(Date startDate, Date endDate, String type) {
+    // get thoong ke theo sach hoac khach hang 
+    public List<ThongKeDoanhThuDTO> getRevenueStats(Date startDate, Date endDate, String type) {
         try {
             if ("book".equalsIgnoreCase(type)) {
-                return revenueDAO.getRevenueByBook(startDate, endDate);
+                return doanhThuDAO.getRevenueByBook(startDate, endDate);
             } else if ("customer".equalsIgnoreCase(type)) {
-                return revenueDAO.getRevenueByCustomer(startDate, endDate);
+                return doanhThuDAO.getRevenueByCustomer(startDate, endDate);
             }
             return new ArrayList<>();
         } catch (Exception e) {
@@ -31,12 +33,13 @@ public class ThongKeDoanhThuBUS {
         }
     }
 
-    public List<InvoiceDTO> getInvoices(String id, Date startDate, Date endDate, String type) {
+    //get hoa down tuong tung voi id 
+    public List<HoaDonDTO> getInvoices(String id, Date startDate, Date endDate, String type) {
         try {
             if ("book".equalsIgnoreCase(type)) {
-                return revenueDAO.getInvoicesByBook(id, startDate, endDate);
+                return doanhThuDAO.getInvoicesByBook(id, startDate, endDate);
             } else if ("customer".equalsIgnoreCase(type)) {
-                return revenueDAO.getInvoicesByCustomer(id, startDate, endDate);
+                return doanhThuDAO.getInvoicesByCustomer(id, startDate, endDate);
             }
             return new ArrayList<>();
         } catch (Exception e) {
@@ -45,9 +48,10 @@ public class ThongKeDoanhThuBUS {
         }
     }
 
+    //get so hoa don va tong doanh thu 
     public String[] getTotalRevenue(Date startDate, Date endDate) {
         try {
-            double[] result = revenueDAO.getTotalRevenue(startDate, endDate);
+            double[] result = doanhThuDAO.getTotalRevenue(startDate, endDate);
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             return new String[]{String.valueOf((int) result[0]), currencyFormat.format(result[1])};
         } catch (Exception e) {
@@ -56,9 +60,18 @@ public class ThongKeDoanhThuBUS {
         }
     }
 
-    public List<RevenueStatsDTO> getTop5Books(Date startDate, Date endDate) {
+    public List<ThongKeDoanhThuDTO> getTop5Books(Date startDate, Date endDate) {
         try {
-            return revenueDAO.getTop5Books(startDate, endDate);
+            return doanhThuDAO.getTop5Books(startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<ThongKeDoanhThuDTO> getTop5Kh(Date startDate, Date endDate) {
+        try {
+            return doanhThuDAO.getTop5Customers(startDate, endDate);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
