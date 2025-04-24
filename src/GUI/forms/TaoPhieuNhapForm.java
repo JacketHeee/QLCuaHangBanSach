@@ -5,7 +5,6 @@ import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
-import utils.FormatterUtil;
 import utils.UIUtils;
 
 import javax.swing.JLabel;
@@ -327,7 +326,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         CustomTextFieldSL textFieldSL = getTextFieldSL(row, rowLabels); 
 
         int soLuong = Integer.parseInt(textFieldSL.getText());
-        System.out.println(textFieldGN.getText());
+        // System.out.println(textFieldGN.getText()); //
         BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(textFieldGN.getText()));
         BigDecimal tongGia = giaNhap.multiply(BigDecimal.valueOf(soLuong));
 
@@ -365,11 +364,11 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     }
 
     public CustomTextFieldSL getTextFieldGiaNhap(int row, Map<Integer, List<Component>> rowLabels){
-        CustomTextFieldSL label = null;
+        CustomTextFieldSL textField = null;
         Component cpn = rowLabels.get(row).get(3);
         JPanel panel = (JPanel)cpn;
-        label = (CustomTextFieldSL)panel.getComponent(0);
-        return(label);
+        textField = (CustomTextFieldSL)panel.getComponent(0);
+        return(textField);
     }
 
     public CustomTextFieldSL getTextFieldSL(int row, Map<Integer, List<Component>> rowLabels){
@@ -472,11 +471,12 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     public void setGiaBanSach(){
         Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
         for(int i = 0; i < rowLabels.size(); i++){
-            int maSach = Integer.parseInt(getTextFieldSL(i, rowLabels).getText());
+            int maSach = Integer.parseInt(getTextFieldMaSach(i, rowLabels).getText());
             SachDTO sach = sachBUS.getInstanceByID(maSach);
             BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(getTextFieldGiaNhap(i, rowLabels).getText()));
             BigDecimal tienSach = getGiaBanSach(giaNhap);
             sach.setGiaBan(tienSach);
+            
             sachBUS.update(sach);
         }
     }

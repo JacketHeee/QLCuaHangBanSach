@@ -395,7 +395,6 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
     
     private void updateTable(ArrayList<PhieuNhapDTO> ketqua) {
 
-        // System.out.println("con bo biet bay");
         table.updateTable(DataToShow(ketqua));
     }
 

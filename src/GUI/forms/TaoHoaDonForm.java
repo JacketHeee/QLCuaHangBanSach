@@ -548,7 +548,6 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     //Hàm này được gọi mỗi khi thêm sách mới; thay đổi cbx khuyến mãi; xóa
     public void updateTongTienHoaDon(){ //Mỗi lần thêm phải tính lại hết
         Map<Integer, List<Component>> rowLabels = table.getRowLabels();
-        // System.out.println(rowLabels.get(0).get(1));
         int index = 0;
         BigDecimal result = new BigDecimal(0);
         for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
@@ -666,7 +665,6 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             return;
         }
         LocalDateTime ngayBan = LocalDateTime.now();
-        System.out.print(ngayBan.toString());
         BigDecimal tongTien = this.tongThanhToan;
         int maTK = this.taiKhoan.getMaTK();
         int maPT = phuongThucTTBUS.getMaPhuongThucTTByTen((String)comboboxPTTT.getSelectedItem());
@@ -806,7 +804,6 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             return;
         }
         for(int i = 0; i < comboboxKM.getItemCount(); i++){
-            System.out.println(text + comboboxKM.getItemAt(i));
             if(comboboxKM.getItemAt(i).equals(text)){
                 comboboxKM.setSelectedIndex(i);
                 return;

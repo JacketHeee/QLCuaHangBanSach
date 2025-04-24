@@ -258,7 +258,6 @@ public class CustomTable extends JPanel implements ActionListener {
         }
 
         JLabel label = (JLabel)(rowLabels.get(row).get(0));
-        System.out.println((label).getText());
 
         selectedRow = row;
         for (Component lbl : rowLabels.get(selectedRow)) {
@@ -388,7 +387,6 @@ public class CustomTable extends JPanel implements ActionListener {
 
         // Thông báo sự kiện lên listener nếu có
         if (actionListener != null) {
-            System.out.println(but.getId());
             actionListener.onActionPerformed(but.getId(), buttonRow);
         }
     }
@@ -438,7 +436,6 @@ public class CustomTable extends JPanel implements ActionListener {
     
     public void addDataRow(String[] data) {
         int row = rowLabels.size() + 1;
-        // System.out.println(row);
         final Color defaultColor = (row % 2 == 0 ? evenRowColor : oddRowColor);
         
         // / Xử lý trường hợp data là null

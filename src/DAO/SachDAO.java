@@ -69,7 +69,7 @@ public class SachDAO implements DAOInterface<SachDTO>{
 			t.getAnh(),
 			t.getMaSach()
 		);
-		t.setGiaBan(new BigDecimal(0));
+
 		jdbcUtil.Close();
 		return rowUpdated;
 	}

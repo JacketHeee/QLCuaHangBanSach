@@ -175,7 +175,6 @@ public class InvoiceTable extends CustomTable{
             dataPanel.add(label, "gapbottom 2,grow,cell " + i + " " + (row));
         }
 
-        // System.out.print(labels.size());
 
         JPanel panel = createActionPanel(row);
         labels.add(panel);
