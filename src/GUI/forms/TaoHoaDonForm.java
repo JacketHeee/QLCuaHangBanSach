@@ -189,7 +189,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                 @Override
                 public String[] getDataForTable(SachDTO sach, int soLuong) {    //Truyền vào một hàm cho InvoiceTable
                     String[] result;                                            //Khi invoiceTable đã có dữ liệu sachDTO
-                    BigDecimal tongGia = tinhTongGia(sach, soLuong);            //Cho sử dụng cả hóa đơn và phiếu nhập
+                    BigDecimal tongGia = hoaDonBUS.tinhTongGia(sach, soLuong);            //Cho sử dụng cả hóa đơn và phiếu nhập
                     ArrayList<String> list = new ArrayList<>();
                         list.add(sach.getMaSach() + "");
                         list.add(sach.getTenSach());
@@ -351,6 +351,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                 updateTienKhuyenMai();
                 updateTongTienHoaDon();
                 updateTTTT();
+                updateTienKhachDua();
                 break;
             default:
                 break;
@@ -420,10 +421,10 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         }
     }
 
-    public BigDecimal tinhTongGia(SachDTO sach, int soLuong){
-        BigDecimal result = (sach.getGiaBan()).multiply(BigDecimal.valueOf(soLuong));
-        return(result);
-    }
+    // public BigDecimal tinhTongGia(SachDTO sach, int soLuong){
+    //     BigDecimal result = (sach.getGiaBan()).multiply(BigDecimal.valueOf(soLuong));
+    //     return(result);
+    // }
 
     //update cột thành tiền(đ) của một chi tiết sản phẩm
     public void updateTongGiaBan(int row){
@@ -434,7 +435,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
         int soLuong = Integer.parseInt(textFieldSL.getText());
         BigDecimal giaBan = BigDecimal.valueOf(Double.parseDouble(labelGB.getText()));
-        BigDecimal tongGia = giaBan.multiply(BigDecimal.valueOf(soLuong));
+        BigDecimal tongGia = hoaDonBUS.tinhTongGia(giaBan, soLuong);
 
         labelTT.setText(tongGia + "");
     }
@@ -543,31 +544,30 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         //Tính toán khuyến mãi ở đây
         String tenKM = (String)comboboxKM.getSelectedItem();
         BigDecimal khuyenMai = getTienKM();
-        this.tongThanhToan = tinhKhuyenMai(giaTienHoaDon, khuyenMai);
+        this.tongThanhToan = hoaDonBUS.tinhKhuyenMai(giaTienHoaDon, khuyenMai);
 
         lblTongThanhToan.setText(String.format(template, tongThanhToan));
     }
 
     public BigDecimal getTienKM(){
         String tenKM = (String)comboboxKM.getSelectedItem();
-
-        if(tenKM.equals("Không có")){
-            return(new BigDecimal(0));
-        }
-        int maKM = khuyenMaiBUS.getMaKhuyenMaiByTen(tenKM);
-        KhuyenMaiDTO khuyenMai = khuyenMaiBUS.getInstanceByMa(maKM);
-        return(khuyenMai.getGiaTriGiam());
+        // if(tenKM.equals("Không có")){
+        //     return(new BigDecimal(0));
+        // }
+        // int maKM = khuyenMaiBUS.getMaKhuyenMaiByTen(tenKM);
+        // KhuyenMaiDTO khuyenMai = khuyenMaiBUS.getInstanceByMa(maKM);
+        return(hoaDonBUS.getTienKhuyenMai(tenKM));
     }
 
-    public BigDecimal tinhKhuyenMai(BigDecimal giaBanDau, BigDecimal soTienKM){
-        //Giảm theo phần trăm
-        // 0 < soTienKM < 1
-        if(soTienKM.compareTo(BigDecimal.valueOf(1)) < 0 && soTienKM.compareTo(BigDecimal.valueOf(0)) > 0){
-            return(giaBanDau.multiply(soTienKM));
-        }
-        //Giảm theo giá bán
-        return(giaBanDau.subtract(soTienKM));
-    }
+    // public BigDecimal tinhKhuyenMai(BigDecimal giaBanDau, BigDecimal soTienKM){
+    //     //Giảm theo phần trăm
+    //     // 0 < soTienKM < 1
+    //     if(soTienKM.compareTo(BigDecimal.valueOf(1)) < 0 && soTienKM.compareTo(BigDecimal.valueOf(0)) > 0){
+    //         return(giaBanDau.multiply(soTienKM));
+    //     }
+    //     //Giảm theo giá bán
+    //     return(giaBanDau.subtract(soTienKM));
+    // }
 
     public void updateTienThoi(){
         if(getTienThoi().compareTo(new BigDecimal(0)) < 0){
@@ -585,7 +585,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         }
         BigDecimal tienKhachDua = BigDecimal.valueOf(Double.parseDouble(textFieldTienKhachDua.getText())); 
         BigDecimal tongTien = this.tongThanhToan;
-        return(tienKhachDua.subtract(tongTien));
+        // return(tienKhachDua.subtract(tongTien));
+        return(hoaDonBUS.getTienThoi(tienKhachDua, tongTien));
     }
     //Xử lý nút thêm không cho thêm mới khi chưa điền thông tin
     public void setStatusBtnThem(boolean i){

@@ -1,7 +1,11 @@
 package utils;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,31 +61,18 @@ public class Validate {
         return matcher.matches();
     }
 
-    public static boolean isDate(String i){ 
-        String yearS = new String(); //Validate năm nhuận
+    public static boolean isDate(String dateStr){ 
+        if(!dateStr.matches("\\d{1,2}/\\d{1,2}/\\d{4}")){
+            return(false);
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         try {
-            yearS = i.substring(i.length() - 4);
+            LocalDate date = LocalDate.parse(dateStr, formatter);
+            int year = date.getYear();
+            return year >= 1900 && year <= 2099;
         } catch (Exception e) {
-            System.out.println("Chuỗi chưa tới 4 ký tự");
             return(false);
         }
-        if(!isPositiveNumber(i)){
-            return(false);
-        }
-        int year = Integer.parseInt(yearS);
-        //Năm nhuận
-        if(year % 4 == 0){
-
-        }
-        // System.out.println(year);
-        // Cụm 1: Cho ngày + / + tháng cho những tháng có 31 ngày (1, 3, 5, 7, 8, 10, 12)
-        // Cụm 2: Cho ngày + / + tháng cho những tháng có 30 ngày (4, 6, 9, 11)
-        // Cụm 3: Cho ngày + / + tháng cho tháng 2 có 28 ngày
-        //                                        [                                               Ngày + tháng                                                   ][      Năm     ]
-        //                                         [           Cụm 1                          ][             Cụm 2                ][        Cụm 3                ]                    
-        Pattern pattern = Pattern.compile("^((0?[1-9]|[12][0-9]|3[01])/(0?[13578]|1[02])|(0?[1-9]|[12][0-9]|30)/(0?[469]|11)|(0?[1-9]|1[0-9]|2[0-8])/(0?2))/(19|20)\\d{2}$");
-        Matcher matcher = pattern.matcher(i);
-        return matcher.matches();
     }
 
     public static boolean lengthGreaterThan(String s, int i){
@@ -122,6 +113,47 @@ public class Validate {
             return(false);
         }
 
+    }
+
+    // public static boolean isNgayBatDauNgayKetThuc(String ngayBatDau, String ngayKetThuc){
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    //     LocalDate startDate = LocalDate.parse(ngayBatDau, formatter);
+    //     LocalDate endDate = LocalDate.parse(ngayKetThuc, formatter);
+
+    //     if(startDate.isBefore(endDate) || startDate.isEqual(endDate)){// có thể bằng ngày kết thúc
+    //         return(true);
+    //     }
+    //     return(false);
+    // }
+
+    public static boolean isGiaBatDauGiaKetThuc(String giaBatDau, String giaKetThuc){
+        BigDecimal giaBD = BigDecimal.valueOf(Double.parseDouble(giaBatDau));
+        BigDecimal giaKT = BigDecimal.valueOf(Double.parseDouble(giaKetThuc));
+        return(giaBD.compareTo(giaKT) < 0);
+    }
+
+    public static boolean isBetweenStartDateAndEndDate(String ngayBatDau, String ngayKetThuc, LocalDateTime time){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate timeHD = time.toLocalDate();
+        LocalDate startDate = LocalDate.parse(ngayBatDau, formatter);
+        LocalDate endDate = LocalDate.parse(ngayKetThuc, formatter);
+
+        if(startDate.isBefore(timeHD) && endDate.isAfter(timeHD) || startDate.isEqual(timeHD) || endDate.isEqual(timeHD)){
+            return(true);
+        }
+        return(false);
+    }
+
+    public static boolean isBetweenTuGiaDenGia(String tienFst, String tienScn, BigDecimal tien){
+        BigDecimal tien1 = BigDecimal.valueOf(Double.parseDouble(tienFst));
+        BigDecimal tien2 = BigDecimal.valueOf(Double.parseDouble(tienScn));
+
+        if(tien1.compareTo(tien) < 0 && tien2.compareTo(tien) > 0 || tien1.compareTo(tien) == 0 || tien2.compareTo(tien) == 0){
+            return(true);
+        }
+        return(false);
     }
 
     public static void main(String[] args) {

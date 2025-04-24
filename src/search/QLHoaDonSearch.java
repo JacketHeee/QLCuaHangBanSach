@@ -11,9 +11,11 @@ import utils.TextUtils;
 public class QLHoaDonSearch implements Searchable<HoaDonDTO>{
     // private String[] header = {"Mã hóa đơn", "Ngày lập", " ", "Mã tài khoản", "Mã phương thức", "Mã khuyến mãi", "Mã khách hàng"};
     private ArrayList<HoaDonDTO> danhSach;
+    private ArrayList<HoaDonDTO> danhSachHienTai;
 
     public QLHoaDonSearch(ArrayList<HoaDonDTO> danhSach) {
         this.danhSach = danhSach;
+        this.danhSachHienTai = danhSach;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class QLHoaDonSearch implements Searchable<HoaDonDTO>{
                                    .replaceAll("\\s+", " ");
 
         if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
+            ArrayList<HoaDonDTO> list = new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaHD() + "").toLowerCase().contains(keywordFormatted)
                 || TextUtils.boDau(x.getNgayBan() + "").toLowerCase().contains(keywordFormatted)
@@ -36,49 +38,28 @@ public class QLHoaDonSearch implements Searchable<HoaDonDTO>{
             )
             .toList()
             );
+            setDanhSachHienTai(list);
+            return(list);
         }
-        else if(selectedItem.equals("Mã hóa đơn")){
-            return new ArrayList<>(danhSach.stream()
+        else {  //Mã hóa đơn
+            ArrayList<HoaDonDTO> list = new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaHD() + "").toLowerCase().contains(keywordFormatted)
             )
             .toList()
             );
-        }
-        else if(selectedItem.equals("Ngày lập")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getNgayBan() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã phương thức")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaPT() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã khuyến mãi")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaKM() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        //Mã khách hàng
-        else {
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaKH() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
+            setDanhSachHienTai(list);
+            return(list);
         }
 
+    }
+
+    public void setDanhSachHienTai(ArrayList<HoaDonDTO> listHD){
+        this.danhSachHienTai = listHD;
+    }
+
+    public ArrayList<HoaDonDTO> getDanhSachHienTai(){
+        return(this.danhSachHienTai);
     }
 
 }

@@ -1,16 +1,21 @@
 package BUS;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import DAO.HoaDonDAO;
 import DTO.HoaDonDTO;
+import DTO.KhuyenMaiDTO;
+import DTO.SachDTO;
 
 public class HoaDonBUS {
     private static HoaDonBUS instance;
     private HoaDonDAO hoaDonDAO;
     private ArrayList<HoaDonDTO> listHoaDon;
+    private KhuyenMaiBUS khuyenMaiBUS;
 
     private HoaDonBUS() {
         hoaDonDAO = HoaDonDAO.getInstance();
+        khuyenMaiBUS = KhuyenMaiBUS.getInstance();
         listHoaDon = hoaDonDAO.getAll();
     }
 
@@ -71,4 +76,37 @@ public class HoaDonBUS {
     public int getNextID(){
         return(hoaDonDAO.getNextID());
     }
+    
+    public BigDecimal tinhTongGia(SachDTO sach, int soLuong){
+        BigDecimal result = (sach.getGiaBan()).multiply(BigDecimal.valueOf(soLuong));
+        return(result);
+    }
+
+    public BigDecimal tinhTongGia(BigDecimal giaBan, int soLuong){
+        return(giaBan.multiply(BigDecimal.valueOf(soLuong)));
+    }
+
+    public BigDecimal getTienKhuyenMai(String tenKM){
+        if(tenKM.equals("Không có")){
+            return(new BigDecimal(0));
+        }
+        int maKM = khuyenMaiBUS.getMaKhuyenMaiByTen(tenKM);
+        KhuyenMaiDTO khuyenMai = khuyenMaiBUS.getInstanceByMa(maKM);
+        return(khuyenMai.getGiaTriGiam());
+    }
+
+    public BigDecimal tinhKhuyenMai(BigDecimal giaBanDau, BigDecimal soTienKM){
+        //Giảm theo phần trăm
+        // 0 < soTienKM < 1
+        if(soTienKM.compareTo(BigDecimal.valueOf(1)) < 0 && soTienKM.compareTo(BigDecimal.valueOf(0)) > 0){
+            return(giaBanDau.multiply(soTienKM));
+        }
+        //Giảm theo giá bán
+        return(giaBanDau.subtract(soTienKM));
+    }
+    
+    public BigDecimal getTienThoi(BigDecimal tienKhachDua, BigDecimal tongTien){
+        return(tienKhachDua.subtract(tongTien));
+    } 
+    
 }
