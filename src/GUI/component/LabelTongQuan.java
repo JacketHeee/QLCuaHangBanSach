@@ -25,6 +25,7 @@ public class LabelTongQuan extends JPanel{
     private String count;
     private String background;
     private int cornerRadius = 15; // độ bo góc
+    private JLabel labelTongQuan;
     
     public LabelTongQuan(String text,String icon, String count,String background) {
         this.text = text;
@@ -42,7 +43,8 @@ public class LabelTongQuan extends JPanel{
         add(new JLabel(new FlatSVGIcon(LabelInfor.class.getResource("../../resources/img/icon/"+icon)).derive(50, 50)));
         JPanel panel = new JPanel(new MigLayout("al center center"));
         panel.setOpaque(false);
-        panel.add(new JLabel(String.format("<html><b><font color='white' size='+2'>%s</font></b></html>", count)),"al center,pushx,wrap");
+        labelTongQuan = new JLabel(String.format("<html><b><font color='white' size='+2'>%s</font></b></html>", count));
+        panel.add(labelTongQuan,"al center,pushx,wrap");
         panel.add(new JLabel(String.format("<html><b><font color='white' size='+0'>%s</font></b></html>", text)),"al center,pushx,gaptop 10");
         
         add(panel,"push,grow");
@@ -89,9 +91,8 @@ public class LabelTongQuan extends JPanel{
     }
 
     public void setCount(String count) {
-        this.count = count;
-        refresh();
+        this.labelTongQuan.setText(String.format("<html><b><font color='white' size='+2'>%s</font></b></html>", count));
     }
-
+ 
     
 }

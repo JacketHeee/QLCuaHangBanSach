@@ -31,7 +31,6 @@ public class InputFormItem extends JPanel{
     private JTextField textField;
     private JComboBox<String> combobox;
     private JDateChooser inputDate;
-    // private JFormattedTextField numberField;
     private JDateChooser inputDateTime;
     private JSpinner timeSpinner;
     private JTextField textDC;
@@ -42,10 +41,13 @@ public class InputFormItem extends JPanel{
     //Cho ảnh
     private PanelPicture panelPicture;
 
+    private MigLayout migLayout;
+
     public InputFormItem(String type, String title){
         this.label = new JLabel(title);
+        this.migLayout = new MigLayout("wrap 1", "[grow]");
         this.setBackground(Color.decode("#FFFFFF"));
-        this.setLayout(new MigLayout("wrap 1", "[grow]"));
+        this.setLayout(migLayout);
         switch (type) {
             case "textbox":
                 this.textField = new JTextField();
@@ -231,13 +233,6 @@ public class InputFormItem extends JPanel{
         inputDate.setDate(utilDate);
     }
 
-    // public void setNumber(String t){
-    //     this.numberField.setText(t);
-    // }
-
-    // public String getNumber(){
-
-    // }
     //Lấy ngày kiểu string từ dateTime
     public String getDateTimeString(){
         String result = ((JTextField) inputDateTime.getDateEditor().getUiComponent()).getText();
@@ -349,6 +344,15 @@ public class InputFormItem extends JPanel{
     
     public void setEditKNNN(boolean i){
         this.btnKNNN.setEnabled(i);
+    }
+
+    public void setLayoutConstraint(){
+        this.migLayout.setLayoutConstraints("wrap 2");
+        this.migLayout.setColumnConstraints("[][grow]");
+    }
+
+    public void setBackground(String color){
+        this.setBackground(Color.decode(color));
     }
 
 }
