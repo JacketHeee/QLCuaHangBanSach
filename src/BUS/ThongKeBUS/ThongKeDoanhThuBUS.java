@@ -77,4 +77,61 @@ public class ThongKeDoanhThuBUS {
             return new ArrayList<>();
         }
     }
+
+    public List<ThongKeDoanhThuDTO> getRevenueStats(String type) {
+        try {
+            if ("book".equalsIgnoreCase(type)) {
+                return doanhThuDAO.getRevenueByBook();
+            } else if ("customer".equalsIgnoreCase(type)) {
+                return doanhThuDAO.getRevenueByCustomer();
+            }
+            return new ArrayList<>();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<HoaDonDTO> getInvoices(String id, String type) {
+        try {
+            if ("book".equalsIgnoreCase(type)) {
+                return doanhThuDAO.getInvoicesByBook(id);
+            } else if ("customer".equalsIgnoreCase(type)) {
+                return doanhThuDAO.getInvoicesByCustomer(id);
+            }
+            return new ArrayList<>();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public String[] getTotalRevenue() {
+        try {
+            double[] result = doanhThuDAO.getTotalRevenue();
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            return new String[]{String.valueOf((int) result[0]), currencyFormat.format(result[1])};
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new String[]{"0", "0"};
+        }
+    }
+
+    public List<ThongKeDoanhThuDTO> getTop5Books() {
+        try {
+            return doanhThuDAO.getTop5Books();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<ThongKeDoanhThuDTO> getTop5Kh() {
+        try {
+            return doanhThuDAO.getTop5Customers();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 }

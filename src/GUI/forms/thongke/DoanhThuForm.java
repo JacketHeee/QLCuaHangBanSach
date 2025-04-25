@@ -11,7 +11,10 @@ import DTO.SachDTO;
 import DTO.ThongKe.ThongKeDoanhThuDTO;
 import GUI.MainFrame;
 import GUI.component.CustomBoldJLabel;
+import GUI.component.CustomButton;
 import GUI.component.CustomTable;
+import GUI.component.InputForm;
+import GUI.component.InputFormItem;
 import GUI.component.LabelInfor;
 import GUI.component.LabelTongQuan;
 import GUI.component.TableActionListener;
@@ -23,10 +26,13 @@ import raven.chart.data.pie.DefaultPieDataset;
 import raven.chart.pie.PieChart;
 import resources.base.baseTheme;
 import utils.FormatterUtil;
+import utils.Validate;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,6 +65,15 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
 
     private MainFrame mainFrame;
     private HoaDonBUS hoaDonBUS;
+    private InputFormItem inputStartDate;  
+    private InputFormItem inputEndDate;
+
+    private CustomButton btnLoc;
+    private boolean flag = false;
+
+    private LabelTongQuan labelTongQuanTHD;
+    private LabelTongQuan labelTongQuanTDT;
+
 
     public DoanhThuForm(MainFrame mainFrame) {
         doanhThuBUS = new ThongKeDoanhThuBUS();
@@ -74,16 +89,16 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         add(getMainContent(),"push,grow, gaptop 10");
     }
 
-    private void loadData() {
-        Calendar cal = Calendar.getInstance();
+    private void loadDataWithDate() {
+        // Calendar cal = Calendar.getInstance();
 
         // startDate: 01/05/2025
-        cal.set(2025, Calendar.APRIL, 1);
-        startDate = cal.getTime();
+        // cal.set(2025, Calendar.APRIL, 1);
+        // startDate = cal.getTime();
 
         // endDate: 01/01/2027 (vì 24 tháng sau tháng 4/2025 là tháng 4/2027)
-        cal.set(2027, Calendar.APRIL, 1);
-        endDate = cal.getTime();
+        // cal.set(2027, Calendar.APRIL, 1);
+        // endDate = cal.getTime();
             
         listSach = doanhThuBUS.getRevenueStats(startDate,endDate,"book");
         listKH = doanhThuBUS.getRevenueStats(startDate,endDate,"customer");
@@ -91,6 +106,15 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
 
         listTop5Sach = doanhThuBUS.getTop5Books(startDate, endDate);
         lisTop5Kh = doanhThuBUS.getTop5Kh(startDate, endDate);
+    }
+
+    private void loadData(){
+        listSach = doanhThuBUS.getRevenueStats("book");
+        listKH = doanhThuBUS.getRevenueStats("customer");
+        tongHD_TongDT = doanhThuBUS.getTotalRevenue();
+
+        listTop5Sach = doanhThuBUS.getTop5Books();
+        lisTop5Kh = doanhThuBUS.getTop5Kh();
     }
 
     private JPanel getHeader() {
@@ -101,11 +125,32 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         comboBox.addActionListener(this);
         panel.add(comboBox);
         panel.add(new JLabel(),"pushx"); 
-        panel.add(new JLabel("Từ ngày"));
-        panel.add(new JTextField(20));
-        panel.add(new JLabel("Đến"));
-        panel.add(new JTextField(20));
-        panel.add(new JButton("Lọc"));
+
+        inputStartDate = new InputFormItem("inputDate", "Từ ngày");
+        inputEndDate = new InputFormItem("inputDate", "Đến");
+        inputStartDate.setBackground(baseTheme.selectedButton);
+        inputEndDate.setBackground(baseTheme.selectedButton);
+        inputEndDate.setLayoutConstraint();
+        inputStartDate.setLayoutConstraint();
+
+        panel.add(inputStartDate, "grow, pushx");
+        // panel.add(new JLabel("Từ ngày"));
+        // panel.add(new JTextField(20));
+
+        panel.add(inputEndDate, "grow, pushx");
+        // panel.add(new JLabel("Đến"));
+        // panel.add(new JTextField(20));
+        
+        btnLoc = new CustomButton("Lọc");
+        btnLoc.setActionCommand("Loc");
+        btnLoc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Loc();
+            }
+        });
+        panel.add(btnLoc);
+
         return panel;
     }
 
@@ -146,7 +191,12 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
             @Override
             public void OnSelectRow(int row) {
                 System.out.println("hang " + row);
-                loadTable(row);
+                if(flag){
+                    loadTableWidthDate(row);
+                }
+                else{
+                    loadTable(row);
+                }
             }
         }, headerSach);
         tableSach.setMaxTextWidth(80);
@@ -155,7 +205,12 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
             @Override
             public void OnSelectRow(int row) {
                 System.out.println("khach " +  row);
-                loadTable(row);
+                if(flag){
+                    loadTableWidthDate(row);
+                }
+                else{
+                    loadTable(row);
+                }
             }
         }, headerKhachHang);
         tableKhachHang.setMaxTextWidth(80);
@@ -186,8 +241,10 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         
         JPanel panelLabel = new JPanel(new MigLayout("insets 0, gap 10, al center center"));
 
-        panelLabel.add(new LabelTongQuan("Tổng số hóa đơn","hoadon.svg",tongHD_TongDT[0],baseTheme.soLuong),"pushx,growx,sg 1");
-        panelLabel.add(new LabelTongQuan("Doanh thu (đ)","doanhthu.svg",tongHD_TongDT[1],baseTheme.tongTien),"pushx, growx,sg 1");
+        labelTongQuanTHD = new LabelTongQuan("Tổng số hóa đơn","hoadon.svg",tongHD_TongDT[0],baseTheme.soLuong);
+        panelLabel.add(labelTongQuanTHD, "pushx,growx,sg 1");
+        labelTongQuanTDT = new LabelTongQuan("Doanh thu (đ)","doanhthu.svg",tongHD_TongDT[1],baseTheme.tongTien);
+        panelLabel.add(labelTongQuanTDT,"pushx, growx,sg 1");
 
         panel.add(panelLabel,"pushx,growx");
 
@@ -229,8 +286,6 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
 
         return dataset;
     }
-
-
     
     private JPanel getListHoaDon() {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10,wrap 1"));
@@ -275,7 +330,7 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         panelTable.repaint();
     }
 
-    public void loadTable(int row){
+    public void loadTableWidthDate(int row){
         System.out.println("con cho biet o ne");
         int ma = getIdByRowIndex(row);
         ArrayList<String[]> dataUpdate = new ArrayList<>();
@@ -288,6 +343,26 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         else {
             System.out.println("Sách" + ma);
             for (HoaDonDTO x : doanhThuBUS.getInvoices(ma+"", startDate, endDate, "book")) {
+                dataUpdate.add(new String[] {x.getMaHD()+"",FormatterUtil.formatNumberVN(x.getTongTien())+""});
+            };
+        }
+
+        tableHoaDon.updateTable(dataUpdate);
+    }
+
+    public void loadTable(int row){
+        System.out.println("con cho biet o ne");
+        int ma = getIdByRowIndex(row);
+        ArrayList<String[]> dataUpdate = new ArrayList<>();
+        if (((String)comboBox.getSelectedItem()).equals("Khách hàng")) {
+            System.out.println("Khách hàng" + ma);
+            for (HoaDonDTO x : doanhThuBUS.getInvoices(ma+"", "customer")) {
+                dataUpdate.add(new String[] {x.getMaHD()+"",FormatterUtil.formatNumberVN(x.getTongTien())+""});
+            };
+        }
+        else {
+            System.out.println("Sách" + ma);
+            for (HoaDonDTO x : doanhThuBUS.getInvoices(ma+"", "book")) {
                 dataUpdate.add(new String[] {x.getMaHD()+"",FormatterUtil.formatNumberVN(x.getTongTien())+""});
             };
         }
@@ -338,6 +413,7 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
             case "Sách":
                 updatePanelTable(tableSach);
                 break;
+
             default:
                 System.out.println("action");
                 break;
@@ -356,6 +432,85 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         else{
             System.out.println("Unknow Action");
         }
+    }
+
+    public void Loc(){
+        flag = false;
+        String ngayBatDauS = inputStartDate.getDateString();
+        String ngayKetThucS = inputEndDate.getDateString();
+
+        if(Validation(ngayBatDauS, ngayKetThucS)){
+            if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS)){ //Cho bộ lọc
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                    startDate = sdf.parse(ngayBatDauS);
+                    endDate = sdf.parse(ngayKetThucS);
+                    System.out.println(startDate + " " + endDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                loadDataWithDate();
+                flag = true;
+    
+                ArrayList<String[]> dataSach = new ArrayList<>();
+                for (ThongKeDoanhThuDTO x : listSach) {
+                    dataSach.add(new String[]{x.getId()+"",x.getName(),x.getSoluong()+"",FormatterUtil.formatNumberVN(x.getDoanhthu())+""});
+                }
+        
+                ArrayList<String[]> dataKhachHang = new ArrayList<>();
+        
+                for (ThongKeDoanhThuDTO x : listKH) {
+                    dataKhachHang.add(new String[]{x.getId()+"",x.getName(),x.getSoluong()+"",FormatterUtil.formatNumberVN(x.getDoanhthu())+""});
+                }
+    
+                tableKhachHang.updateTable(dataKhachHang);
+                tableSach.updateTable(dataSach);
+
+                labelTongQuanTHD.setCount(tongHD_TongDT[0]);
+                labelTongQuanTDT.setCount(tongHD_TongDT[1]);
+            }
+            else{   //Cập nhật lại tất cả
+                loadData();
+                flag = false;
+                ArrayList<String[]> dataSach = new ArrayList<>();
+                for (ThongKeDoanhThuDTO x : listSach) {
+                    dataSach.add(new String[]{x.getId()+"",x.getName(),x.getSoluong()+"",FormatterUtil.formatNumberVN(x.getDoanhthu())+""});
+                }
+        
+                ArrayList<String[]> dataKhachHang = new ArrayList<>();
+        
+                for (ThongKeDoanhThuDTO x : listKH) {
+                    dataKhachHang.add(new String[]{x.getId()+"",x.getName(),x.getSoluong()+"",FormatterUtil.formatNumberVN(x.getDoanhthu())+""});
+                }
+    
+                tableKhachHang.updateTable(dataKhachHang);
+                tableSach.updateTable(dataSach);
+            }
+        }
+    }
+
+    public boolean Validation(String ngayBatDauS, String ngayKetThucS){
+        if(!Validate.isEmpty(ngayBatDauS) && !Validate.isDate(ngayBatDauS)){
+            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải đúng định dạng");
+            return(false);
+        }
+        else if(!Validate.isEmpty(ngayKetThucS) && !Validate.isDate(ngayKetThucS)){
+            JOptionPane.showMessageDialog(mainFrame, "Ngày kết thúc phải đúng định dạng");
+            return(false);
+        }
+        else if(Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS)){
+            JOptionPane.showMessageDialog(mainFrame, "Vui lòng nhập ngày bắt đầu");
+            return(false);
+        }
+        else if(!Validate.isEmpty(ngayBatDauS) && Validate.isEmpty(ngayKetThucS)){
+            JOptionPane.showMessageDialog(mainFrame, "Vui lòng nhập ngày kết thúc");
+            return(false);
+        }
+        else if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS) && !Validate.isStartDateAndEndDate(ngayBatDauS, ngayKetThucS)){
+            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải trước ngày kết thúc");
+            return(false);
+        }
+        return(true);
     }
     
 }

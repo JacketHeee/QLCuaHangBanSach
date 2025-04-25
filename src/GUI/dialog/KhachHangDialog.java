@@ -109,9 +109,11 @@ public class KhachHangDialog extends JDialog implements ActionListener{
     }
 
     public void setOldData(){
-        String ten = khachHangPanel.getTable().getCellData(rowSelected, 1);
-        String soDT = khachHangPanel.getTable().getCellData(rowSelected, 2);
-        String gioiTinh = khachHangPanel.getTable().getCellData(rowSelected, 3);
+        int ma = khachHangPanel.getTable().getCellData(rowSelected, 0);
+        
+        // String ten = khachHangPanel.getTable().getCellData(rowSelected, 1);
+        // String soDT = khachHangPanel.getTable().getCellData(rowSelected, 2);
+        // String gioiTinh = khachHangPanel.getTable().getCellData(rowSelected, 3);
 
         inputForm.getListItem().get(0).setText(ten);
         inputForm.getListItem().get(1).setText(soDT);
