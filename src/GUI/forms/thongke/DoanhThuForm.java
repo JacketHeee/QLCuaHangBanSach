@@ -4,16 +4,20 @@ import javax.swing.*;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.HoaDonBUS;
 import BUS.ThongKeBUS.ThongKeDoanhThuBUS;
 import DTO.HoaDonDTO;
 import DTO.SachDTO;
 import DTO.ThongKe.ThongKeDoanhThuDTO;
+import GUI.MainFrame;
 import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomTable;
 import GUI.component.LabelInfor;
 import GUI.component.LabelTongQuan;
+import GUI.component.TableActionListener;
 import GUI.component.TableNoTouch;
 import GUI.component.chart.HorizontalBarChartV2;
+import GUI.dialog.AddHoaDonDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.chart.data.pie.DefaultPieDataset;
 import raven.chart.pie.PieChart;
@@ -30,7 +34,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Date;
 
-public class DoanhThuForm extends JPanel implements ActionListener {
+public class DoanhThuForm extends JPanel implements ActionListener, TableActionListener{
     JComboBox<String> comboBox;
     String[] choose = {"Sách","Khách hàng"};
     private ThongKeDoanhThuBUS doanhThuBUS;
@@ -53,8 +57,13 @@ public class DoanhThuForm extends JPanel implements ActionListener {
     private List<ThongKeDoanhThuDTO> listTop5Sach;
     private List<ThongKeDoanhThuDTO> lisTop5Kh;
 
-    public DoanhThuForm() {
+    private MainFrame mainFrame;
+    private HoaDonBUS hoaDonBUS;
+
+    public DoanhThuForm(MainFrame mainFrame) {
         doanhThuBUS = new ThongKeDoanhThuBUS();
+        hoaDonBUS = HoaDonBUS.getInstance();
+        this.mainFrame = mainFrame;
         loadData();
         init();
     }
@@ -232,6 +241,7 @@ public class DoanhThuForm extends JPanel implements ActionListener {
         tableHoaDon.setMaxTextWidth(25);
         
         panel.add(tableHoaDon,"push,grow");
+        tableHoaDon.setActionListener(this);
         return panel;
     }
 
@@ -329,9 +339,23 @@ public class DoanhThuForm extends JPanel implements ActionListener {
                 updatePanelTable(tableSach);
                 break;
             default:
+                System.out.println("action");
                 break;
         }
         
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        if(actionId.equals("detail")){
+            int maHD = Integer.parseInt(tableHoaDon.getCellData(row, 0));
+            HoaDonDTO hoaDon = hoaDonBUS.getInstanceByID(maHD);
+            AddHoaDonDialog addHoaDonDialog = new AddHoaDonDialog(mainFrame, hoaDon);
+            addHoaDonDialog.setVisible(true);
+        }
+        else{
+            System.out.println("Unknow Action");
+        }
     }
     
 }

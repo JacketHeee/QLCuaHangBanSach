@@ -35,6 +35,7 @@ import java.math.BigDecimal;
 import java.awt.BorderLayout;
 import java.awt.Color; 
 import resources.base.baseTheme;
+import GUI.MainFrame;
 import GUI.component.CustomBoldJLabel;
 import GUI.component.LabelInfor;
 
@@ -42,8 +43,10 @@ public class TongQuan extends JPanel{
     JPanel headPanel;
     private LineChartV2 lineChart;
     private TongQuanThongKeBUS tongQuanThongKeBUS;
-    public TongQuan() {
+    private MainFrame mainFrame;
+    public TongQuan(MainFrame mainFrame) {
         tongQuanThongKeBUS = new TongQuanThongKeBUS();
+        this.mainFrame = mainFrame;
         loadData();
         init();
     }

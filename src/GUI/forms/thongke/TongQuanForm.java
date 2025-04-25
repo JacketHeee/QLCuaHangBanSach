@@ -3,6 +3,7 @@ package GUI.forms.thongke;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import GUI.MainFrame;
 import GUI.component.CustomButtonTab;
 import GUI.component.CustomScrollPane;
 import net.miginfocom.swing.MigLayout;
@@ -21,9 +22,11 @@ public class TongQuanForm extends JPanel implements ActionListener{
 
     private JPanel mainPanel;
     private JPanel headJPanel;
+    private MainFrame mainFrame;
 
 
-    public TongQuanForm() {
+    public TongQuanForm(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
         init();
     }
 
@@ -42,7 +45,7 @@ public class TongQuanForm extends JPanel implements ActionListener{
         mainPanel = new JPanel(new MigLayout("insets 0"));
         add(mainPanel,"push,grow");
 
-        setPanel(new TongQuan());
+        setPanel(new TongQuan(mainFrame));
     }
 
     private void initButtontab() {
@@ -95,19 +98,19 @@ public class TongQuanForm extends JPanel implements ActionListener{
             case "tongquan":
                 but = (CustomButtonTab) e.getSource();
                 but.setSelected(true);
-                setPanel(new TongQuan());
+                setPanel(new TongQuan(mainFrame));
                 break;
             case "doanhthu":
                 but = (CustomButtonTab) e.getSource();
                 but.setSelected(true);
                 System.out.println("con bo biet bay");
-                setPanel(new DoanhThuForm());
+                setPanel(new DoanhThuForm(mainFrame));
                 System.out.println("con bo biet bay");
                 break;
             case "nhaphang":
                 but = (CustomButtonTab) e.getSource();
                 but.setSelected(true);
-                setPanel(new NhapHang());
+                setPanel(new NhapHang(mainFrame));
                 break;        
             default:
                 break;

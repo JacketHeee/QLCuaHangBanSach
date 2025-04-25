@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.PhieuNhapBUS;
 import BUS.ThongKeBUS.ThongKeDoanhThuBUS;
 import BUS.ThongKeBUS.ThongKeNhapHangBUS;
 import DTO.HoaDonDTO;
@@ -11,12 +12,16 @@ import DTO.PhieuNhapDTO;
 import DTO.SachDTO;
 import DTO.ThongKe.ThongKeNhapHangDTO;
 import DTO.ThongKe.ThongKeNhapHangDTO;
+import GUI.MainFrame;
 import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomTable;
 import GUI.component.LabelInfor;
 import GUI.component.LabelTongQuan;
+import GUI.component.TableActionListener;
 import GUI.component.TableNoTouch;
 import GUI.component.chart.HorizontalBarChartV2;
+import GUI.dialog.AddHoaDonDialog;
+import GUI.dialog.AddPhieuNhapDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.chart.data.pie.DefaultPieDataset;
 import raven.chart.pie.PieChart;
@@ -33,7 +38,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Date;
 
-public class NhapHang extends JPanel implements ActionListener {
+public class NhapHang extends JPanel implements ActionListener, TableActionListener {
     JComboBox<String> comboBox;
     String[] choose = {"Sách","Nhà cung cấp"};
     private ThongKeNhapHangBUS doanhThuBUS;
@@ -56,8 +61,13 @@ public class NhapHang extends JPanel implements ActionListener {
     private List<ThongKeNhapHangDTO> listTop5Sach;
     private List<ThongKeNhapHangDTO> lisTop5Kh;
 
-    public NhapHang() {
+    private MainFrame mainFrame;
+    private PhieuNhapBUS phieuNhapBUS;
+
+    public NhapHang(MainFrame mainFrame) {
         doanhThuBUS = new ThongKeNhapHangBUS();
+        this.mainFrame = mainFrame;
+        this.phieuNhapBUS = PhieuNhapBUS.getInstance();
         loadData();
         init();
     }
@@ -286,6 +296,7 @@ public class NhapHang extends JPanel implements ActionListener {
         }
 
         tableHoaDon.updateTable(dataUpdate);
+        tableHoaDon.setActionListener(this);
     }
 
     public int getIdByRowIndex(int row){
@@ -335,6 +346,19 @@ public class NhapHang extends JPanel implements ActionListener {
                 break;
         }
         
+    }
+
+    @Override
+    public void onActionPerformed(String actionId, int row) {
+        if(actionId.equals("detail")){
+            int maNhap = Integer.parseInt(tableHoaDon.getCellData(row, 0));
+            PhieuNhapDTO phieuNhap = phieuNhapBUS.getInstanceByID(maNhap);
+            AddPhieuNhapDialog addPhieuNhapDialog = new AddPhieuNhapDialog(mainFrame, phieuNhap);
+            addPhieuNhapDialog.setVisible(true);
+        }
+        else{
+            System.out.println("Unknow Action");
+        }
     }
     
 }
