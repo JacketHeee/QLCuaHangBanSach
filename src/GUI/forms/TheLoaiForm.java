@@ -14,9 +14,9 @@ import BUS.TheLoaiBUS;
 import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
 import DTO.KhuyenMaiDTO;
+import DTO.NhaXBDTO;
 import DTO.TaiKhoanDTO;
 import DTO.TheLoaiDTO;
-import DTO.ViTriVungDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +27,20 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.TheLoaiDialog;
+import excel.NhaXBExcelImport;
+import excel.TheLoaiExcelExport;
+import excel.TheLoaiExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
-import search.SachSearch;
+
 import search.TheLoaiSearch;
+import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 
 public class TheLoaiForm extends JPanel implements TableActionListener, ActionListener{
 
@@ -58,6 +58,9 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     private String[][] attributes = {
         {"textbox","Tên thể loại"}
     };
+    private SearchBarPanel<TheLoaiDTO> searchBarPanel;
+    private List<TheLoaiDTO> filteredList = new ArrayList<>();
+
 
     private String[] filter = {"Tất cả", "Mã thể loại", "Tên thể loại"};
 
@@ -97,10 +100,13 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TheLoaiDTO> searchBarPanel = new SearchBarPanel<>(filter, new TheLoaiSearch(listKH), this::updateTable, resetTable);
+    
+        searchBarPanel = new SearchBarPanel<>(filter, new TheLoaiSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
+    
         return panel;
     }
+    
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -194,12 +200,34 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
                 TheLoaiDialog theLoaiDialog = new TheLoaiDialog(this, "Thể loại", "Thêm Thể Loại", "add", attributes);
                 theLoaiDialog.setVisible(true);
                 break;
-            case "importExcel":
-                
+           case "importExcel":
+                List<TheLoaiDTO> importedData = ExcelImporter.importFromExcel(new TheLoaiExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (TheLoaiDTO tl : importedData) {
+                       if (theLoaiBUS.insert(tl) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(theLoaiBUS.getAll());
+              }
                 break;
             case "exportExcel":
-                
-                break;
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+               List<TheLoaiDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                   ? filteredList
+                   : theLoaiBUS.getAll();
+
+               TheLoaiExcelExport exporter = new TheLoaiExcelExport(dataToExport, filterCol, keyword);
+               ExcelExporter.exportToExcel(exporter, TheLoaiDTO.class);
+               break;
+
             default:
         }
     }
@@ -263,12 +291,10 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     public void setTable(CustomTable table) {
         this.table = table;
     }
-
-    
     
     private void updateTable(ArrayList<TheLoaiDTO> ketqua) {
-
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
+    
 }

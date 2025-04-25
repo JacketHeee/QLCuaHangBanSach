@@ -1,55 +1,34 @@
 package utils;
 
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import BUS.SachBUS;
+import interfaces.ExcelImportable;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.io.File;
-
-import DTO.SachDTO;
+import java.util.List;
 
 public class ExcelImporter {
-    public static ArrayList<SachDTO> excelToSachs(InputStream is) {
-        try {
-            Workbook workbook = new XSSFWorkbook(is);
-            Sheet sheet = workbook.getSheetAt(0);
-            ArrayList<SachDTO> list = new ArrayList<>();
+    public static <T> List<T> importFromExcel(ExcelImportable<T> importer) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File("excel")); // Gợi ý thư mục
+        fileChooser.setDialogTitle("Chọn tệp Excel để nhập");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Excel files (*.xlsx)", "xlsx"));
 
-            for (Row row : sheet) {
-                if (row.getRowNum() == 0) continue; // bỏ dòng tiêu đề
-
-                SachDTO sach = new SachDTO();
-                sach.setTenSach(row.getCell(0).getStringCellValue());
-                sach.setGiaBan(BigDecimal.valueOf(row.getCell(1).getNumericCellValue()));
-                sach.setNamXB((int) row.getCell(2).getNumericCellValue());
-                sach.setMaVung((int) row.getCell(3).getNumericCellValue());
-                sach.setMaNXB((int) row.getCell(4).getNumericCellValue());
-
-                list.add(sach);
-            }
-
-            workbook.close();
-            return list;
-        } catch (IOException e) {
-            throw new RuntimeException("Lỗi khi đọc Excel: " + e.getMessage());
+        int userSelection = fileChooser.showOpenDialog(null);
+        if (userSelection != JFileChooser.APPROVE_OPTION) {
+            return null;
         }
-    }
 
-    public static ArrayList<SachDTO> importExcelSach(String filePath) {
+        File fileToImport = fileChooser.getSelectedFile();
+
         try {
-            FileInputStream fis = new FileInputStream(filePath);
-            ArrayList<SachDTO> list = excelToSachs(fis);
-            fis.close();
-            return list;
-        } catch (IOException e) {
-            throw new RuntimeException("Lỗi đọc file: " + e.getMessage());
+            return importer.readFromExcel(fileToImport);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi đọc file Excel:\n" + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
+
+        return null;
     }
-    
 }

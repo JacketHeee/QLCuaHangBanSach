@@ -9,10 +9,12 @@ import com.formdev.flatlaf.FlatClientProperties;
 import BUS.ChiTietQuyenBUS;
 import BUS.SachBUS;
 import BUS.ViTriVungBUS;
+import DAO.SachDAO;
 import DTO.ChiTietQuyenDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
+import DTO.TheLoaiDTO;
 
 import java.util.ArrayList;
 
@@ -22,20 +24,32 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.SachDialog;
+import excel.SachExcelExport;
+import excel.SachExcelImport;
+import excel.TheLoaiExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.SachSearch;
 import utils.FormatterUtil;
+import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.Cursor;
+// import java.awt.List;
+import java.util.List;
+
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SachForm extends JPanel implements ActionListener,TableActionListener{
-
+    
+    private List<SachDTO> filteredList = new ArrayList<>();
     private String title;
     private int id = 1;
     private SachBUS sachBUS;
@@ -60,6 +74,9 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     };
 
     private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Năm xuất bản"};
+    private javax.swing.JTextField txtSearch;
+    private javax.swing.JComboBox<String> cbFilter;
+    private SearchBarPanel<SachDTO> searchBarPanel;
 
 
     public SachForm(String title, MainFrame mainFrame) {
@@ -98,7 +115,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<SachDTO> searchBarPanel = new SearchBarPanel<>(filter, new SachSearch(listKH), this::updateTable, resetTable);
+        searchBarPanel = new SearchBarPanel<>(filter, new SachSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -184,8 +201,6 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     }
     /////////////////////////////////////////////////////////////////
 
-
-
     CustomTable table;
     private JPanel getMainContent() {
         JPanel panel = new JPanel(new MigLayout("insets 0"));
@@ -197,17 +212,41 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        System.out.println("==> Button clicked: " + e.getActionCommand()); // Log sự kiện để check
         switch (e.getActionCommand()) {
             case "add":
                 SachDialog sachDialog = new SachDialog(this, "Sách", "Thêm Sách", "add", attributes);
                 sachDialog.setVisible(true);
                 break;
-            case "importExcel":
                 
+           case "importExcel":
+                List<SachDTO> importedData = ExcelImporter.importFromExcel(new SachExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (SachDTO sach : importedData) {
+                       if (sachBUS.insert(sach) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(sachBUS.getAll());
+              }
                 break;
+
             case "exportExcel":
-                
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+                 
+                List<SachDTO> dataToExport = (filteredList != null && !filteredList.isEmpty()) ? filteredList : sachBUS.getAll(); // Nếu filteredList rỗng, dùng toàn bộ danh sách từ DB
+                SachExcelExport exporter = new SachExcelExport(dataToExport, filterCol, keyword);
+
+                ExcelExporter.exportToExcel(exporter, SachDTO.class);
                 break;
+            
+
             default:
                 break;
         }
@@ -276,14 +315,10 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
         this.table = table;
     }
 
-    
-
-
     private void updateTable(ArrayList<SachDTO> ketqua) {
-
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
-    }
+    }    
     
 }
 

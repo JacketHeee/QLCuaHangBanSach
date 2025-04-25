@@ -2,23 +2,16 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.TacGiaBUS;
-import DTO.SachDTO;
 import DTO.TacGiaDTO;
 import DTO.TaiKhoanDTO;
-import DTO.ViTriVungDTO;
+import DTO.TacGiaDTO;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
-import DTO.TacGiaDTO;
-import DTO.TaiKhoanDTO;
+import DTO.NhaXBDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,22 +22,25 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.TacGiaDialog;
+import excel.NhaXBExcelImport;
+import excel.TacGiaExcelExport;
+import excel.TacGiaExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
-import search.SachSearch;
 import search.TacGiaSearch;
+import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 
 public class TacGiaForm extends JPanel implements TableActionListener, ActionListener {
+
+    private SearchBarPanel<TacGiaDTO> searchBarPanel;
+    private List<TacGiaDTO> filteredList = new ArrayList<>();
 
     private String title;
     private int id = 3;
@@ -54,7 +50,7 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     private ArrayList<TacGiaDTO> listKH;
     private ArrayList<String[]> dataToShow;
     
-    private TaiKhoanDTO taiKhoan;
+    private TaiKhoanDTO taiKhoan; 
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
     private String[][] attributes = {
@@ -69,8 +65,10 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
 
-        tacGiaBUS = TacGiaBUS.getInstance();
+        this.tacGiaBUS = TacGiaBUS.getInstance();
         this.listAction = getListAction();
+        this.listKH = tacGiaBUS.getAll(); 
+
         init();
     }
     
@@ -98,7 +96,8 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TacGiaDTO> searchBarPanel = new SearchBarPanel<>(filter, new TacGiaSearch(listKH), this::updateTable, resetTable);
+    
+        searchBarPanel = new SearchBarPanel<>(filter, new TacGiaSearch(listKH), this::updateTable, resetTable);
         panel.add(searchBarPanel);
         return panel;
     }
@@ -188,12 +187,35 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
                 TacGiaDialog tacGiaDialog = new TacGiaDialog(this, "Tác giả", "Thêm Tác Giả", "add", attributes);
                 tacGiaDialog.setVisible(true);
                 break;
-            case "importExcel":
-                
+           case "importExcel":
+                List<TacGiaDTO> importedData = ExcelImporter.importFromExcel(new TacGiaExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (TacGiaDTO tg : importedData) {
+                       if (tacGiaBUS.insert(tg) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(tacGiaBUS.getAll());
+              }
                 break;
+
             case "exportExcel":
-                
-                break;
+               String keyword = searchBarPanel.getSearchField().getText().trim();
+               String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+               List<TacGiaDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                   ? filteredList
+                   : tacGiaBUS.getAll();
+
+               TacGiaExcelExport exporter = new TacGiaExcelExport(dataToExport, filterCol, keyword);
+               ExcelExporter.exportToExcel(exporter, TacGiaDTO.class);
+               break;
+
             default:
         }
     }
@@ -261,8 +283,8 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
 
     
     private void updateTable(ArrayList<TacGiaDTO> ketqua) {
-
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
+    
 }

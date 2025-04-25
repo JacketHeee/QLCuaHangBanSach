@@ -1,59 +1,130 @@
 package utils;
 
-import DTO.SachDTO;
+import interfaces.ExcelExportable;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.lang.reflect.Field;
+
 
 public class ExcelExporter {
 
-    public static void exportSachListToExcel(List<SachDTO> sachList, String filePath) {
-        try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Danh sách sách");
+    public static <T> void exportToExcel(ExcelExportable<T> exporter, Class<T> clazz) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn vị trí lưu file Excel");
 
-            // Tạo header
-            String[] headers = {"Mã sách", "Tên sách", "Số lượng", "Giá bán", "Năm XB", "Mã vùng", "Mã NXB"};
-            Row headerRow = sheet.createRow(0);
-            for (int i = 0; i < headers.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(headers[i]);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files","xlsx");
+        fileChooser.setFileFilter(filter);
 
-                // Optional: in đậm header
-                CellStyle style = workbook.createCellStyle();
-                Font font = workbook.createFont();
-                font.setBold(true);
-                style.setFont(font);
-                cell.setCellStyle(style);
-            }
+        int userSelection = fileChooser.showSaveDialog(null);
 
-            // Ghi dữ liệu
-            int rowIndex = 1;
-            for (SachDTO sach : sachList) {
-                Row row = sheet.createRow(rowIndex++);
-                row.createCell(0).setCellValue(sach.getMaSach());
-                row.createCell(1).setCellValue(sach.getTenSach());
-                row.createCell(2).setCellValue(sach.getSoLuong());
-                row.createCell(3).setCellValue(sach.getGiaBan().doubleValue());
-                row.createCell(4).setCellValue(sach.getNamXB());
-                row.createCell(5).setCellValue(sach.getMaVung());
-                row.createCell(6).setCellValue(sach.getMaNXB());
-            }
-
-            // Tự động co độ rộng cột
-            for (int i = 0; i < headers.length; i++) {
-                sheet.autoSizeColumn(i);
-            }
-
-            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                workbook.write(fos);
-            }
-
-            System.out.println("✅ Đã xuất Excel thành công: " + filePath);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("❌ Xuất Excel thất bại!");
+        if (userSelection != JFileChooser.APPROVE_OPTION){
+            System.out.println("Đã hủy lưu file!");
+            return;
         }
+
+        //Lấy file
+        File fileToSave = fileChooser.getSelectedFile();
+
+        //Thêm đuôi .xlsx nếu ch có
+        if (!fileToSave.getName().toLowerCase().endsWith(".xlsx")){
+            fileToSave = new File(fileToSave.getAbsolutePath()+".xlsx");
+        }
+
+        //KT trùng tên
+        if (fileToSave.exists()){
+            int overwrite = JOptionPane.showConfirmDialog(null, "File đã tồn tại. Ghi đè?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+         if (overwrite != JOptionPane.YES_OPTION) {
+        return;
+    }
+}
+        
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Sheet1");
+    
+        int rowIndex = 0;
+        List<String> headers = exporter.getColumnHeaders();
+
+        // Tiêu đề
+        Row titleRow = sheet.createRow(rowIndex++);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue(exporter.getTitle());
+
+        // Style cho tiêu đề
+        CellStyle titleStyle = workbook.createCellStyle();
+        Font titleFont = workbook.createFont();
+        titleFont.setBold(true);
+        titleFont.setFontHeightInPoints((short) 14);
+        titleStyle.setFont(titleFont);
+        titleStyle.setAlignment(HorizontalAlignment.CENTER);
+        titleCell.setCellStyle(titleStyle);
+
+        
+        // Merge động dòng tiêu đề theo số lượng cột
+        if (!headers.isEmpty()) {
+            sheet.addMergedRegion(new CellRangeAddress(0,0,0,5));
+          }
+
+        // Style cho Header
+        Row headerRow = sheet.createRow(rowIndex++);
+
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerStyle.setFont(headerFont);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        for (int i = 0; i < headers.size(); i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers.get(i));
+            cell.setCellStyle(headerStyle);
+        }
+
+
+        // Dữ liệu dòng
+        for (T item : exporter.getData()) {
+            Row dataRow = sheet.createRow(rowIndex++);
+            List<String> values = extractValues(item);
+            for (int i = 0; i < values.size(); i++) {
+                dataRow.createCell(i).setCellValue(values.get(i));
+            }
+        }
+
+        //Chỉnh độ rộng cột
+        for (int i = 0; i < headers.size(); i++){
+            sheet.autoSizeColumn(i);
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(fileToSave)){
+            workbook.write(fos);
+            workbook.close();
+            JOptionPane.showMessageDialog(null, "Xuất Excel thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Xuất Excel thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Dùng reflection để bóc dữ liệu từ DTO
+    private static <T> List<String> extractValues(T obj) {
+        List<String> values = new java.util.ArrayList<>();
+        for (Field field : obj.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                Object val = field.get(obj);
+                values.add(val != null ? val.toString() : "");
+            } catch (IllegalAccessException e) {
+                values.add("");
+            }
+        }
+        return values;
     }
 }

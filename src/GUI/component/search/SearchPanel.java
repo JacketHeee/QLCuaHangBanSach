@@ -42,12 +42,13 @@ public class SearchPanel<T> extends JPanel {
         inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tìm kiếm");
         inputSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
         add(inputSearch);
-        butSearch = new JButton(new FlatSVGIcon(SachForm.class.getResource("/resources/img/icon/search.svg")).derive(20,20));
+
+        butSearch = new JButton(new FlatSVGIcon(SearchPanel.class.getResource("/resources/img/icon/search.svg")).derive(20,20));
         butSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         butSearch.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0");
         
-        putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
+        this.putClientProperty(FlatClientProperties.STYLE, "background: #ffffff; arc:5");
 
         // butSearch.addActionListener(e -> {
         //     String keyword = inputSearch.getText();
@@ -75,17 +76,10 @@ public class SearchPanel<T> extends JPanel {
             }
         });
 
-        inputSearch.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                doSearch.run();
-            }
-        });
-
         add(butSearch);
     }
 
-    public void setPalaceHolder(String text) {
+    public void setPlaceHolder(String text) {
         inputSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, text);
         inputSearch.repaint();
         inputSearch.revalidate();
@@ -96,4 +90,9 @@ public class SearchPanel<T> extends JPanel {
         repaint();
         revalidate();
     }
+
+    public JTextField getSearchField() {
+        return inputSearch;
+    }
+    
 }

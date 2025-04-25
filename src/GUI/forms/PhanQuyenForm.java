@@ -8,9 +8,11 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhomQuyenBUS;
 import DTO.ChiTietQuyenDTO;
+import DTO.KhachHangDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
+import java.util.List;
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
@@ -18,15 +20,22 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.AddNhomQuyen;
+import excel.NhomQuyenExcelExport;
+import excel.NhomQuyenExcelImport;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.PhanQuyenSearch;
+import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PhanQuyenForm extends JPanel implements ActionListener,TableActionListener {
+
+    private SearchBarPanel<NhomQuyenDTO> searchBarPanel;
+    private List<NhomQuyenDTO> filteredList = new ArrayList<>();
 
     private MainFrame mainFrame;
     private String title;
@@ -44,7 +53,6 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private ArrayList<NhomQuyenDTO> listKH; 
 
     private String[] header = {"Mã quyền","Tên nhóm quyền"};
-
     private String[] filter = {"Tất cả","Mã quyền","Tên nhóm quyền"};
 
 
@@ -84,12 +92,14 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<NhomQuyenDTO> searchBarPanel = new SearchBarPanel<>(filter, new PhanQuyenSearch(listKH), this::updateTable, resetTable);
+        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)), "pushx");
+    
+        // GÁN ĐÚNG cho biến thành viên
+        this.searchBarPanel = new SearchBarPanel<>(filter, new PhanQuyenSearch(listKH), this::updateTable, resetTable);
+    
         panel.add(searchBarPanel);
         return panel;
     }
-
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -197,7 +207,34 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 new AddNhomQuyen(mainFrame,this, "Thêm nhóm quyền", "add");
                 mainFrame.glassPane.setVisible(false);
                 break;
-        
+            case "importExcel":
+                List<NhomQuyenDTO> importedData = ExcelImporter.importFromExcel(new NhomQuyenExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (NhomQuyenDTO nq : importedData) {
+                       if (nhomQuyenBUS.insert(nq) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Đã import thành công " + count + " dòng!");
+                   updateTable(nhomQuyenBUS.getAll());
+              }
+                break;
+               
+            case "exportExcel":
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+                List<NhomQuyenDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                    ? filteredList
+                    : nhomQuyenBUS.getAll();
+
+                NhomQuyenExcelExport exporter = new NhomQuyenExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, NhomQuyenDTO.class);
+                break;
             default:
                 break;
         }
@@ -288,7 +325,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
 
     private void updateTable(ArrayList<NhomQuyenDTO> ketqua) {
 
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
 }

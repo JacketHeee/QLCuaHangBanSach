@@ -12,6 +12,7 @@ import interfaces.Searchable;
 import net.miginfocom.swing.MigLayout;
 
 public class SearchBarPanel<T> extends JPanel {
+    private JTextField txtSearch;
     private JComboBox<String> comboBox;
     private SearchPanel<T> searchPanel;
     private JButton butRefresh;
@@ -25,6 +26,9 @@ public class SearchBarPanel<T> extends JPanel {
     ) {
         setLayout(new MigLayout("insets 0"));
         this.listCBX = listCBX;
+
+        txtSearch = new JTextField(20);  // Thay đổi kích thước tùy ý
+        add(txtSearch, "growx");
 
         // Combo box
         comboBox = new JComboBox<>(listCBX);
@@ -55,6 +59,27 @@ public class SearchBarPanel<T> extends JPanel {
         comboBox.setEnabled(enabled);
     }
 
+    public String getSearchText() {
+        return txtSearch.getText();
+    }
+
+    public JComboBox<String> getComboBox() {
+        return comboBox;
+    }    
+
+    public JTextField getSearchField() {
+        return searchPanel.getSearchField();
+    }
+    
+    public String getFilter() {
+        return getComboBox().getSelectedItem().toString();
+    }
+
+    public String getKeyword() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getKeyword'");
+    }
+    
     // public void setSearchFieldText(String text) {
     //     searchPanel.setSearchText(text);
     // }

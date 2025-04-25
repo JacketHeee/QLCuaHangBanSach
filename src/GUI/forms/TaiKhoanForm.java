@@ -2,22 +2,17 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.NhanVienBUS;
 import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
-import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
+import DTO.KhachHangDTO;
 import DTO.TaiKhoanDTO;
-import DTO.ViTriVungDTO;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,22 +23,26 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
-import GUI.dialog.KhachHangDialog;
 import GUI.dialog.TaiKhoanDialog;
+import excel.KhachHangExcelImport;
+import excel.TaiKhoanExcelExport;
+import excel.TaiKhoanExcelImport;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
-import search.SachSearch;
 import search.TaiKhoanSearch;
+import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
-import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
+
 
 public class TaiKhoanForm extends JPanel implements TableActionListener, ActionListener {
+
+    private SearchBarPanel<TaiKhoanDTO> searchBarPanel;
+    private List<TaiKhoanDTO> filteredList = new ArrayList<>();
 
     private String title;
     private int id = 12;
@@ -104,8 +103,11 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
     
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<TaiKhoanDTO> searchBarPanel = new SearchBarPanel<>(filter, new TaiKhoanSearch(listKH), this::updateTable, resetTable);
+        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)), "pushx");
+    
+        // GÁN ĐÚNG cho biến thành viên
+        this.searchBarPanel = new SearchBarPanel<>(filter, new TaiKhoanSearch(listKH), this::updateTable, resetTable);
+    
         panel.add(searchBarPanel);
         return panel;
     }
@@ -207,10 +209,32 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
                 }
                 break;
             case "importExcel":
-                
+                List<TaiKhoanDTO> importedData = ExcelImporter.importFromExcel(new TaiKhoanExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (TaiKhoanDTO tk : importedData) {
+                       if (taiKhoanBUS.insert(tk) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(taiKhoanBUS.getAll());
+              }
                 break;
+           
             case "exportExcel":
-                
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+                List<TaiKhoanDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                    ? filteredList
+                    : taiKhoanBUS.getAll();
+
+                TaiKhoanExcelExport exporter = new TaiKhoanExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, TaiKhoanDTO.class);
                 break;
             default:
         }
@@ -248,7 +272,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
 
     private void updateTable(ArrayList<TaiKhoanDTO> ketqua) {
 
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
 

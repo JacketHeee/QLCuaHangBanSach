@@ -2,43 +2,42 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.PhuongThucTTBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
 import DTO.PhuongThucTTDTO;
-import DTO.SachDTO;
-import DTO.ViTriVungDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.PhuongThucTTDialog;
+import excel.PhuongThucThanhToanExcelExport;
+import excel.PhuongThucThanhToanExcelImport;
+import excel.TaiKhoanExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.PTTTSearch;
-import search.SachSearch;
+import utils.ExcelExporter;
+import utils.ExcelImporter;
 import utils.UIUtils;
 
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-
 public class PhuongThucThanhToanForm extends JPanel implements TableActionListener, ActionListener {
 
+    private SearchBarPanel<PhuongThucTTDTO> searchBarPanel;
+    private List<PhuongThucTTDTO> filteredList = new ArrayList<>();
     private String title;
     private int id = 10;
     private String[] header = {"Mã phương thức", "Tên phương thức thanh toán"};
@@ -89,11 +88,15 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     
     private JPanel getHeader() {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)),"pushx");
-        SearchBarPanel<PhuongThucTTDTO> searchBarPanel = new SearchBarPanel<>(filter, new PTTTSearch(listKH), this::updateTable, resetTable);
+        panel.add(new JLabel(String.format("<html><b><font size='+2'>%s</b></html>", title)), "pushx");
+    
+        // GÁN ĐÚNG cho biến thành viên
+        this.searchBarPanel = new SearchBarPanel<>(filter, new PTTTSearch(listKH), this::updateTable, resetTable);
+    
         panel.add(searchBarPanel);
         return panel;
     }
+
 
     ///////////////////////////////////////////////////////////////
     String[][] topActions = {
@@ -184,10 +187,31 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
                 phuongThucTTDialog.setVisible(true);
                 break;
             case "importExcel":
-                
+                List<PhuongThucTTDTO> importedData = ExcelImporter.importFromExcel(new PhuongThucThanhToanExcelImport());
+
+                if (importedData != null && !importedData.isEmpty()) {
+                   int count = 0;
+                   for (PhuongThucTTDTO tk : importedData) {
+                       if (phuongThucTTBUS.insert(tk) != 0) {
+                           count++;
+                       }
+                   }
+                   Notifications.getInstance().setJFrame(mainFrame);
+                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                       "Import thành công!");
+                   updateTable(phuongThucTTBUS.getAll());
+              }
                 break;
             case "exportExcel":
-                
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+
+                List<PhuongThucTTDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                    ? filteredList
+                    : phuongThucTTBUS.getAll();
+
+                PhuongThucThanhToanExcelExport exporter = new PhuongThucThanhToanExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, PhuongThucTTDTO.class);
                 break;
             default:
         }
@@ -254,7 +278,7 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     
     private void updateTable(ArrayList<PhuongThucTTDTO> ketqua) {
 
-        // System.out.println("con bo biet bay");
+        this.filteredList = ketqua;
         table.updateTable(DataToShow(ketqua));
     }
 }
