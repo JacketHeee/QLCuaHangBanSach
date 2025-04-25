@@ -4,6 +4,9 @@ import java.awt.Dimension;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+
+import DTO.PhieuNhapDTO;
+
 import java.awt.Toolkit;
 
 import GUI.MainFrame;
@@ -16,6 +19,17 @@ public class AddPhieuNhapDialog extends JDialog{
     public AddPhieuNhapDialog(MainFrame mainFrame) {
         super(mainFrame,"",true);
         this.taoPhieuNhapForm = new TaoPhieuNhapForm(mainFrame);
+        add(new CustomScrollPane(taoPhieuNhapForm));
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = 1200;
+        int height = screenSize.height;
+        setSize(width,height);
+        setLocationRelativeTo(mainFrame);
+    }
+
+    public AddPhieuNhapDialog(MainFrame mainFrame, PhieuNhapDTO phieuNhap) {
+        super(mainFrame,"",true);
+        this.taoPhieuNhapForm = new TaoPhieuNhapForm(mainFrame, phieuNhap, "detail");
         add(new CustomScrollPane(taoPhieuNhapForm));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = 1200;

@@ -32,5 +32,9 @@ public class CT_PhieuNhapBUS {
 		}
 		return(0);
 	}
+
+	public ArrayList<CT_PhieuNhapDTO> getListCTPNByMaPN(int maNhap){
+		return(cT_PhieuNhapDAO.getListCTPNByMaPN(maNhap));
+	}
 	
 }

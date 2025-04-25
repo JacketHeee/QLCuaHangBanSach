@@ -1,9 +1,11 @@
 package BUS;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import DAO.PhieuNhapDAO;
 import DTO.PhieuNhapDTO;
+import DTO.SachDTO;
 
 public class PhieuNhapBUS {
 	private static PhieuNhapBUS instance;
@@ -66,5 +68,13 @@ public class PhieuNhapBUS {
 	public int getNextID(){
 		return(phieuNhapDAO.getNextID());
 	}
+
+	public PhieuNhapDTO getInstanceByID(int maNhap){
+		return(phieuNhapDAO.getInstanceByID(maNhap));
+	}
+
+    public BigDecimal tinhTongGia(BigDecimal giaNhap, int soLuong){
+        return(giaNhap.multiply(BigDecimal.valueOf(soLuong)));
+    }
 	
 }

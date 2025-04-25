@@ -72,4 +72,28 @@ public class CT_PhieuNhapDAO implements DAOInterface<CT_PhieuNhapDTO> {
         return result;
     }
 
+    public ArrayList<CT_PhieuNhapDTO> getListCTPNByMaPN(int maNhap){
+        ArrayList<CT_PhieuNhapDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM CT_PHIEUNHAP WHERE maNhap = ?";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maNhap);
+        try {
+            while (rs.next()) {
+                int maSach = rs.getInt("maSach");
+                int soLuongNhap = rs.getInt("soLuongNhap");
+                BigDecimal giaNhap = rs.getBigDecimal("giaNhap");
+                
+                CT_PhieuNhapDTO ctpn = new CT_PhieuNhapDTO(maSach, maNhap, soLuongNhap, giaNhap);
+                result.add(ctpn);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
 }

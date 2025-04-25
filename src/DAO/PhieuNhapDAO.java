@@ -101,4 +101,28 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         return(nextID);
     }
 
+
+    public PhieuNhapDTO getInstanceByID(int maNhap){
+        PhieuNhapDTO result = new PhieuNhapDTO();
+        String sql = "SELECT * FROM PHIEUNHAP WHERE maNhap = ? AND trangThai = 1";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maNhap);
+        try {
+            while (rs.next()) {
+                LocalDateTime ngayNhap = rs.getTimestamp("ngayNhap").toLocalDateTime();
+                BigDecimal tongTien = rs.getBigDecimal("tongTien");
+                int maNCC = rs.getInt("maNCC");
+                int maTK = rs.getInt("maTK");
+                PhieuNhapDTO phieuNhap = new PhieuNhapDTO(maNhap, ngayNhap, tongTien, maNCC, maTK);
+                result = phieuNhap;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
 }

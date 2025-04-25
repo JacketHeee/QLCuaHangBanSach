@@ -309,6 +309,11 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                 }
                 break;
             case "detail":
+                int maNhap = Integer.parseInt(this.table.getCellData(row, 0));
+                PhieuNhapDTO phieuNhap = phieuNhapBUS.getInstanceByID(maNhap);
+                AddPhieuNhapDialog addPhieuNhapDialog = new AddPhieuNhapDialog(mainFrame, phieuNhap);
+                addPhieuNhapDialog.setVisible(true);
+                mainFrame.glassPane.setVisible(false);
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);

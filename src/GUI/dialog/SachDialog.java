@@ -478,6 +478,7 @@ public class SachDialog extends JDialog implements ActionListener{
         String namXB = inputForm.getListItem().get(1).getText();
         String theLoai = inputForm.getListItem().get(4).getTextKNNN();
         String tacGia = inputForm.getListItem().get(5).getTextKNNN();
+        String path = inputForm.getListItem().get(7).getPath();
         if(Validate.isEmpty(ten)){
             JOptionPane.showMessageDialog(mainFrame, "Tên sách không được để trống!");
             return(false);
@@ -496,6 +497,10 @@ public class SachDialog extends JDialog implements ActionListener{
         }
         if(Validate.isEmpty(tacGia)){
             JOptionPane.showMessageDialog(mainFrame, "Tác giả không được để trống!");
+            return(false);
+        }
+        if(Validate.isEmpty(path)){
+            JOptionPane.showMessageDialog(mainFrame, "Vui lòng thêm ảnh!");
             return(false);
         }
         return(true);

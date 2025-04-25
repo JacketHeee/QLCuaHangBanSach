@@ -28,6 +28,7 @@ import DTO.CT_HoaDonDTO;
 import DTO.CT_PhieuNhapDTO;
 import DTO.ChiTietQuyenDTO;
 import DTO.HoaDonDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.NhaCungCapDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SachDTO;
@@ -49,6 +50,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -84,7 +86,14 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private JLabel lblTongTienPN;
     private String maPhieuNhap;
 
+    private String type;
+
     private GetDataCallBack getDataCallBack;
+
+    private PhieuNhapDTO phieuNhap;
+    private JLabel lblNV;
+    private JLabel lblPN;
+    private JLabel lblNgayNhap;
 
     public TaoPhieuNhapForm(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -98,6 +107,28 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         this.phieuNhapBUS = PhieuNhapBUS.getInstance();
         this.ct_PhieuNhapBUS = CT_PhieuNhapBUS.getInstance();
         this.sachBUS = SachBUS.getInstance();
+        this.type = "thêm";
+        setTenNhanVien();
+        setListNCC();
+        setMaPhieuNhap();
+        getMaNhap();
+        init();
+    }
+
+    public TaoPhieuNhapForm(MainFrame mainFrame, PhieuNhapDTO phieuNhap, String type) {
+        this.mainFrame = mainFrame;
+        this.taiKhoan = mainFrame.getTaiKhoan();
+        this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
+        this.listAction = getListAction();
+        this.textFieldLoiNhuan = new CustomTextFieldSL();
+        this.lblTongTienPN = new JLabel();
+        this.nhanVienBUS = NhanVienBUS.getInstance();
+        this.nhaCungCapBUS = NhaCungCapBUS.getInstance();
+        this.phieuNhapBUS = PhieuNhapBUS.getInstance();
+        this.ct_PhieuNhapBUS = CT_PhieuNhapBUS.getInstance();
+        this.sachBUS = SachBUS.getInstance();
+        this.type = type;
+        this.phieuNhap = phieuNhap;
         setTenNhanVien();
         setListNCC();
         setMaPhieuNhap();
@@ -108,14 +139,27 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private void init() {
         setLayout(new MigLayout("insets 0,wrap 1, gap 10"));
 
-        add(new JLabel("<html><b><font size='+2'>TẠO PHIẾU NHẬP MỚI</font></b><html>"),"gaptop 20, al center,pushx");
+        if(this.type.equals("detail")){
+            add(new JLabel("<html><b><font size='+2'>CHI TIẾT PHIẾU NHẬP</font></b><html>"),"gaptop 20, al center,pushx");
+        }
+        else{
+            add(new JLabel("<html><b><font size='+2'>TẠO PHIẾU NHẬP MỚI</font></b><html>"),"gaptop 20, al center,pushx");
+        }
         add(getThongtin(),"pushx, growx");
         chiTietPhieuNhap = getChiTietPhieuNhap();
         add(chiTietPhieuNhap,"pushx, growx");
-        add(panelThongTinNhapHang(), "pushx, align right");
+        if(!type.equals("detail")){
+            add(panelThongTinNhapHang(), "pushx, align right");
+        }
         add(getTongTien(),"pushx, growx");
-        add(getPanelAction(),"pushx, growx");
-        addBtnListener();
+        if(!type.equals("detail")){
+            add(getPanelAction(),"pushx, growx");
+            addBtnListener();
+        }
+        //detail
+        if(type.equals("detail")){
+            setDetail();
+        }
     }
 
     public ArrayList<String> getListAction(){
@@ -132,15 +176,18 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         JPanel panel = getPanel("Thông tin chung");
         panel.setLayout(new MigLayout("","[][]","[][]"));
         
-        panel.add(new JLabel("<html><font size='+1'><b>Nhân viên: </b>"+tenNhanVien+"</font></html>"),"pushx,growx");
+        lblNV = new JLabel("<html><font size='+1'><b>Nhân viên: </b>"+tenNhanVien+"</font></html>");
+        panel.add(lblNV, "pushx,growx");
 
-        panel.add(new JLabel("<html><font size='+1'><b>Mã phiếu nhập: </b> "+ maPhieuNhap +"</font></html>"),"pushx,growx,wrap");
+        lblPN = new JLabel("<html><font size='+1'><b>Mã phiếu nhập: </b> "+ maPhieuNhap +"</font></html>");
+        panel.add(lblPN, "pushx,growx,wrap");
         panel.add(getPanelNhaCungCap(),"pushx,growx");
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String day = sdf.format(new Date());
 
-        panel.add(new JLabel("<html><font size='+1'><b>Ngày nhập: </b>"+ day +"</font></html>"),"pushx,growx");
+        lblNgayNhap = new JLabel("<html><font size='+1'><b>Ngày nhập: </b>"+ day +"</font></html>");
+        panel.add(lblNgayNhap, "pushx,growx");
         return panel; 
     }
 
@@ -206,7 +253,10 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
-        panel.add(panelActionOnTable(),"pushx,growx");
+
+        if(!type.equals("detail")){
+            panel.add(panelActionOnTable(),"pushx,growx");
+        }
         return panel;
     }
 
@@ -241,7 +291,6 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         JPanel panel = new JPanel(new MigLayout("al right"));
 
         String template = "<html><font size='+1'><b>Tổng tiền: </b> %sđ</font><html>";
-
         lblTongTienPN.setText(String.format(template, "0"));
         panel.add(lblTongTienPN);
 
@@ -284,7 +333,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
                 chiTietPhieuNhap.revalidate();
                 repaint();
                 revalidate();
-                updateStatusTextFieldLoiNhuan();
+                // updateStatusTextFieldLoiNhuan();
                 updateStatusbtnThem(false); //Sau khi nhấn nút thêm thì tạm khóa nút thêm
                 break;
             case "btnLuu":
@@ -476,7 +525,6 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
             BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(getTextFieldGiaNhap(i, rowLabels).getText()));
             BigDecimal tienSach = getGiaBanSach(giaNhap);
             sach.setGiaBan(tienSach);
-            
             sachBUS.update(sach);
         }
     }
@@ -489,6 +537,72 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
 
     ////////////////////////////////////////////////////////////////////////////thêm phiếu nhập
+    
+    public void setDetail(){//bỏ phần trăm lợi nhuận đi
+        //Nhân viên, mã phiếu nhập, nhà cung cấp, ngày nhập
+        String tenNV = nhanVienBUS.getTenNVByMaTK(phieuNhap.getMaTK());
+        int maPN = phieuNhap.getMaNhap();
+        String tenNCC = nhaCungCapBUS.getTenByMaNhaCungCap(phieuNhap.getMaNCC());
+        LocalDateTime ngayNhap = phieuNhap.getNgayNhap();
+        BigDecimal tongTien = phieuNhap.getTongTien();
+
+        String ngayNhapS = getStringNgay(ngayNhap);
+
+        lblNV.setText("<html><font size='+1'><b>Nhân viên: </b>"+tenNV+"</font></html>");
+        lblPN.setText("<html><font size='+1'><b>Mã phiếu nhập: </b> "+ maPN +"</font></html>");
+        lblNgayNhap.setText("<html><font size='+1'><b>Ngày nhập: </b>"+ ngayNhapS +"</font></html>");
+        setSelectionNCC(tenNCC);
+
+        String template = "<html><font size='+1'><b>Tổng tiền: </b> %sđ</font><html>";
+        lblTongTienPN.setText(String.format(template, tongTien + ""));
+
+        loadTableDetail();   
+        setStatusDetail();
+    }
+
+    public void setSelectionNCC(String text){
+        for(int i = 0; i < comboboxNCC.getItemCount(); i++){
+            if(comboboxNCC.getItemAt(i).equals(text)){
+                comboboxNCC.setSelectedIndex(i);
+                return;
+            }
+        }
+        System.out.println("Lỗi không thấy giá trị combobox");
+    }
+    
+    public String getStringNgay(LocalDateTime date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String day = date.format(formatter);
+        return(day);
+    }
+
+    public void loadTableDetail(){
+        int maNhap = phieuNhap.getMaNhap();
+        ArrayList<CT_PhieuNhapDTO> listCTPN = ct_PhieuNhapBUS.getListCTPNByMaPN(maNhap);
+        for(int i = 0; i < listCTPN.size(); i++){
+            int maSach = listCTPN.get(i).getmaSach();
+            String tenSach = sachBUS.getTenByMa(maSach);
+            int soLuong = listCTPN.get(i).getSoLuongNhap();
+            BigDecimal giaNhap = listCTPN.get(i).getGiaNhap();
+            String[] data = new String[] {maSach + "", tenSach, soLuong + "", giaNhap + "", phieuNhapBUS.tinhTongGia(giaNhap, soLuong) + ""};
+            this.table.addDataRow(data); 
+        }
+        updateTongTienPhieuNhap();
+    }
+
+    public void setStatusDetail(){
+        this.comboboxNCC.setEnabled(false);
+        Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
+        int row = 0;
+        for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
+            getTextFieldSL(row, rowLabels).setEditable(false);
+            getTextFieldMaSach(row, rowLabels).setEditable(false);
+            getTextFieldGiaNhap(row, rowLabels).setEditable(false);
+            row++;
+        }
+    }
+
+
     public void setTenNhanVien(){
         this.tenNhanVien = nhanVienBUS.getTenNVByMaTK(this.taiKhoan.getMaTK());
     }
