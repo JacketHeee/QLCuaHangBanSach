@@ -1,12 +1,15 @@
 package DAO;
 
+import DTO.CT_HoaDonDTO;
+import DTO.HoaDonDTO;
+import config.JDBCUtil;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import DTO.HoaDonDTO;
-import config.JDBCUtil;
+import java.util.List;
+import utils.PDFUtils;
 
 public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
     private static HoaDonDAO instance;
@@ -140,5 +143,8 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
         }
         jdbcUtil.Close();
         return result;
+    }
+    public void xuatHoaDonPDF(HoaDonDTO hoaDon, List<CT_HoaDonDTO> listChiTiet) {
+        PDFUtils.taoHoaDonPDF(hoaDon, listChiTiet);
     }
 }

@@ -165,7 +165,11 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         this(mainFrame);
         this.addHoaDonDialog = addHoaDonDialog;
     }
-
+    //PDF
+    // public TaoHoaDonForm(MainFrame mainFrame, HoaDonDTO hoaDon, String type, AddHoaDonDialog addHoaDonDialog) {
+    //     this(mainFrame, hoaDon, type);
+    //     this.addHoaDonDialog = addHoaDonDialog;
+    // }
     
     private void init() {
         setLayout(new MigLayout("insets 0,wrap 1, gap 10"));
@@ -181,11 +185,14 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         add(panelKhuyenMai(),"pushx, growx");
         add(panelPTTT(),"pushx, growx");
         add(panelThongTinThanhToan(),"pushx, growx");
-        if(!type.equals("detail")){
-            add(getPanelAction(),"pushx, growx");
+        if (type.equals("detail")) {
+            add(getPanelActionDetail(), "pushx, growx");
+            addBtnListenerDetail();
+        } else {
+            add(getPanelAction(), "pushx, growx");
             addBtnListener();
         }
-        
+
         setStatusCombobox();
         setStatusTextField();
         //detail
@@ -377,7 +384,18 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         panel.add(buttonCancel,"sg 1");
         return panel;
     }
-
+    //PDF
+    private JPanel getPanelActionDetail() {
+        JPanel panel = new JPanel(new MigLayout("gap 10, al right"));
+        buttonSave = new CustomButton("Xuất PDF");
+        buttonSave.setBackground(Color.decode("#4CAF50"));
+        buttonCancel = new CustomButton("Hủy");
+    
+        panel.add(buttonSave, "sg 1");
+        panel.add(buttonCancel, "sg 1");
+        return panel;
+    }
+    
     private JPanel getPanel(String title) {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(title));
@@ -396,6 +414,12 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         setTextFieldKDListener();
     }
 
+    public void addBtnListenerDetail() {
+        buttonSave.setActionCommand("btnExportPDF");
+        buttonSave.addActionListener(this);
+        buttonCancel.setActionCommand("btnCancelDetail");
+        buttonCancel.addActionListener(this);
+    }    
     /////////////////////////////////////////////////////////////////////////// Xử Lý Table
 
     @Override
@@ -417,6 +441,12 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                 updateTongTienHoaDon();
                 updateTTTT();
                 updateTienKhachDua();
+                break;
+            case "btnExportPDF":
+                exportPDF();
+                break;
+            case "btnCancelDetail":
+                closeDetail();
                 break;
             default:
                 break;
@@ -694,7 +724,17 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
         getDataCallBack.setData(hoaDon);
     }
-
+    private void exportPDF() {
+        HoaDonBUS hoaDonBUS = HoaDonBUS.getInstance();
+        hoaDonBUS.xuatHoaDonPDF(hoaDon);
+    }
+    
+    private void closeDetail() {
+    if (addHoaDonDialog != null) {
+        addHoaDonDialog.setVisible(false);
+        addHoaDonDialog.dispose();
+        }
+    }   
     public void insertSach(){
         //maSach, maHD, soLuong, giaBan
         Map<Integer, List<Component>> rowLabels = table.getRowLabels();
