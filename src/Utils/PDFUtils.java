@@ -16,7 +16,6 @@ public class PDFUtils {
 
     public static void taoHoaDonPDF(HoaDonDTO hoaDon, List<CT_HoaDonDTO> chiTietList) {
         try {
-            // Mở hộp thoại chọn nơi lưu
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Chọn nơi lưu hóa đơn");
             fileChooser.setSelectedFile(new java.io.File("HD" + hoaDon.getMaHD() + ".pdf"));
@@ -34,29 +33,27 @@ public class PDFUtils {
             }
 
             // Bắt đầu tạo PDF
-            Document document = new Document();
+            Rectangle a6Size = new Rectangle(14.5f * 28.35f, 10.5f * 28.35f);
+            Document document = new Document(a6Size, 10, 10, 10, 10);      
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
 
-            // Font tiếng Việt
             BaseFont baseFont = BaseFont.createFont("c:/windows/fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            Font titleFont = new Font(baseFont, 20, Font.BOLD);
-            Font normalFont = new Font(baseFont, 12, Font.NORMAL);
-            Font boldFont = new Font(baseFont, 12, Font.BOLD);
+            Font titleFont = new Font(baseFont, 8, Font.BOLD);
+            Font normalFont = new Font(baseFont, 6, Font.NORMAL);
+            Font boldFont = new Font(baseFont, 7, Font.BOLD);
 
             // Title
-            Paragraph title = new Paragraph("HOA DON", titleFont);
+            Paragraph title = new Paragraph("HÓA ĐƠN BÁN LẺ", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
-            // Dấu gạch ngang ngăn cách
             Paragraph separator = new Paragraph("--------------------------------------------------", normalFont);
             separator.setAlignment(Element.ALIGN_CENTER);
             document.add(separator);
-            document.add(new Paragraph("\n"));
-
-            String tenNhanVien = TaiKhoanDAO.getInstance().getUsernameByMaTK(hoaDon.getMaTK());
 
             // Thông tin hóa đơn
+            String tenNhanVien = TaiKhoanDAO.getInstance().getUsernameByMaTK(hoaDon.getMaTK());
+
             PdfPTable infoTable = new PdfPTable(2);
             infoTable.setWidthPercentage(100);
             infoTable.setSpacingBefore(10f);
@@ -89,9 +86,6 @@ public class PDFUtils {
             }
 
             document.add(table);
-
-            document.add(new Paragraph("\n"));
-
             // Tổng tiền
             Paragraph tong = new Paragraph("Tong: " + formatMoney(hoaDon.getTongTien()), boldFont);
             tong.setAlignment(Element.ALIGN_RIGHT);
