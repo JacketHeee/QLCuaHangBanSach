@@ -181,6 +181,7 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 PhuongThucTTDialog phuongThucTTDialog = new PhuongThucTTDialog(this, "Phương thức thanh toán", "Thêm Phương Thức TT", "add", attributes);
@@ -215,8 +216,10 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
                 break;
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 PhuongThucTTDialog phuongThucTTDialog = new PhuongThucTTDialog(this, "Phương thức thanh toán", "Sửa Phương Thức TT", "update", attributes, row);
@@ -242,6 +245,7 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {

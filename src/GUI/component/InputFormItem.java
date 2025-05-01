@@ -355,4 +355,66 @@ public class InputFormItem extends JPanel{
         this.setBackground(Color.decode(color));
     }
 
+    public JLabel getLabel() {
+        return label;
+    }
+
+    public void setLabel(JLabel label) {
+        this.label = label;
+    }
+
+    public JDateChooser getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(JDateChooser inputDate) {
+        this.inputDate = inputDate;
+    }
+
+    public JDateChooser getInputDateTime() {
+        return inputDateTime;
+    }
+
+    public void setInputDateTime(JDateChooser inputDateTime) {
+        this.inputDateTime = inputDateTime;
+    }
+
+    public JSpinner getTimeSpinner() {
+        return timeSpinner;
+    }
+
+    public void setTimeSpinner(JSpinner timeSpinner) {
+        this.timeSpinner = timeSpinner;
+    }
+
+    public void setTextDC(JTextField textDC) {
+        this.textDC = textDC;
+    }
+
+    public CustomButton getBtnDC() {
+        return btnDC;
+    }
+
+    public void setBtnDC(CustomButton btnDC) {
+        this.btnDC = btnDC;
+    }
+
+    public void setTextKNNN(JTextField textKNNN) {
+        this.textKNNN = textKNNN;
+    }
+
+    public void setTextSL(CustomTextFieldSL textSL) {
+        this.textSL = textSL;
+    }
+
+    public PanelPicture getPanelPicture() {
+        return panelPicture;
+    }
+
+    public void setPanelPicture(PanelPicture panelPicture) {
+        this.panelPicture = panelPicture;
+    }
+
+    
+
 }

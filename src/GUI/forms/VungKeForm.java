@@ -202,12 +202,12 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
         // table.addDataRow(new String[] {"1","A1"});
         // table.addDataRow(new String[] {"1","A1"});
         // CustomTable table = new CustomTable(data,actions, "Mã vùng kệ","Tên vùng kệ");
-        panel.add(getSoDo(),"al center");
+        panel.add(getSoDo(),"al center top");
 
         
         panel.add(panelSanPhamTuongUng(),"span 1 2, pushy,growy,wrap");
         table.setMaxTextWidth(75);
-        panel.add(table,"push, grow");
+        panel.add(table,"push, grow,hmin 250");
         return panel;
     }
 
@@ -263,6 +263,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 ViTriVungDialog viTriVungDialog = new ViTriVungDialog(this, "Vị trí vùng", "Thêm Vùng", "add", attributes);
@@ -276,10 +277,12 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
                 break;
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 ViTriVungDialog viTriVungDialog = new ViTriVungDialog(this, "Vị trí vùng", "Sửa Vùng", "update", attributes, row);
@@ -314,6 +317,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {

@@ -10,6 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -110,7 +111,7 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnThem);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){// tài khoản thì không có sửa
@@ -125,7 +126,7 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnSua);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
 
             //set dữ liệu cũ
@@ -230,23 +231,30 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
     }
 
     public boolean validation(){
-        String tenTK = inputForm.getListItem().get(0).getText();
-        String password = inputForm.getListItem().get(1).getText();
+        // String tenTK = inputForm.getListItem().get(0).getText();
+        JTextField password = inputForm.getListItem().get(1).getTextField(); //Mật khẩu phải ở dạng JPasswordField
 
-        if(Validate.isEmpty(tenTK)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên tài khoản không được để trống!");
+        JTextField input = inputForm.getListItem().get(0).getTextField();
+
+
+        if(Validate.isEmpty(input.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên tài khoản không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            input.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.lengthGreaterThan(tenTK, 5)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên tài khoản phải có độ dài trên 5 ký tự!");
+        if(!Validate.lengthGreaterThan(input.getText(), 5)){
+            JOptionPane.showMessageDialog(mainFrame, "Tên tài khoản phải có độ dài trên 5 ký tự!","", JOptionPane.WARNING_MESSAGE);
+            input.requestFocusInWindow();
             return(false);
         }
-        if(Validate.isEmpty(password)){
-            JOptionPane.showMessageDialog(mainFrame, "Mật khẩu không được để trống!");
+        if(Validate.isEmpty(password.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Mật khẩu không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            password.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.lengthGreaterThan(password, 5)){   // test sau
-            JOptionPane.showMessageDialog(mainFrame, "Mật khẩu phải có độ dài trên 5 ký tự!");
+        if(!Validate.lengthGreaterThan(password.getText(), 5)){   // test sau
+            JOptionPane.showMessageDialog(mainFrame, "Mật khẩu phải có độ dài trên 5 ký tự!","",JOptionPane.WARNING_MESSAGE);
+            password.requestFocusInWindow();
             return(false);
         }
         return(true);

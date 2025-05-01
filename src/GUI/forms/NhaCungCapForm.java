@@ -199,6 +199,7 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 NhaCungCapDialog nhaCungCapDialog = new NhaCungCapDialog(this, "Nhà cung cấp", "Thêm Nhà Cung Cấp", "add", attributes);
@@ -235,10 +236,12 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
             default:
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 NhaCungCapDialog nhaCungCapDialog = new NhaCungCapDialog(this, "Nhà cung cấp", "Sửa Nhà Cung Cấp", "update", attributes, row);
@@ -264,6 +267,7 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {

@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -86,7 +87,7 @@ public class NhanVienDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnThem);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){
@@ -101,7 +102,7 @@ public class NhanVienDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnSua);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
 
             //set dữ liệu cũ
@@ -190,31 +191,43 @@ public class NhanVienDialog extends JDialog implements ActionListener{
     }
 
     public boolean validation(){
-        String tenNV = inputForm.getListItem().get(0).getText();
+        JTextField tenNV = inputForm.getListItem().get(0).getTextField();
         String ngaySinh = inputForm.getListItem().get(1).getDateString();
-        String soDT = inputForm.getListItem().get(3).getText();
-        if(Validate.isEmpty(tenNV)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên nhân viên không được để trống!");
+        JTextField soDT = inputForm.getListItem().get(3).getTextField();
+
+        // JTextField input = inputForm.getListItem().get(0).getTextField();
+        // if(Validate.isEmpty(input.getText())){
+        //     JOptionPane.showMessageDialog(mainFrame, "Tên vùng không được để trống!","Thiếu thông tin",JOptionPane.WARNING_MESSAGE);
+        //     input.requestFocusInWindow();
+        //     return(false);
+        // }
+
+        if(Validate.isEmpty(tenNV.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên nhân viên không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            tenNV.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.lengthGreaterThan(tenNV, 5)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên nhân viên phải có độ dài trên 5 ký tự!");
+        if(!Validate.lengthGreaterThan(tenNV.getText(), 5)){
+            JOptionPane.showMessageDialog(mainFrame, "Tên nhân viên phải có độ dài trên 5 ký tự!","",JOptionPane.WARNING_MESSAGE);
+            tenNV.requestFocusInWindow();
             return(false);
         }
         if(Validate.isEmpty(ngaySinh)){
-            JOptionPane.showMessageDialog(mainFrame, "Ngày sinh không được để trống!");
+            JOptionPane.showMessageDialog(mainFrame, "Ngày sinh không được để trống!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
         if(!Validate.isDate(ngaySinh)){
-            JOptionPane.showMessageDialog(mainFrame, "Ngày sinh phải nhập đúng định dạng!");
+            JOptionPane.showMessageDialog(mainFrame, "Ngày sinh phải nhập đúng định dạng!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
-        if(Validate.isEmpty(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại nhân viên không được để trống!");
+        if(Validate.isEmpty(soDT.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại nhân viên không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            soDT.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.isPhoneNumber(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại nhân viên phải nhập đúng định dạng!");
+        if(!Validate.isPhoneNumber(soDT.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại nhân viên phải nhập đúng định dạng!","",JOptionPane.WARNING_MESSAGE);
+            soDT.requestFocusInWindow();
             return(false);
         }
         return(true);

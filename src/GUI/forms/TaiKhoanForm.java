@@ -197,6 +197,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 ArrayList<String> listNV = nhanVienBUS.getAllTenNVNotHaveAccount();
@@ -238,10 +239,12 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
                 break;
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 TaiKhoanDialog taiKhoanDialog = new TaiKhoanDialog(this, "Tài khoản", "Sửa tài khoản", "update", attributes, row);
@@ -267,6 +270,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
 

@@ -196,6 +196,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 KhuyenMaiDialog khuyenMaiDialog = new KhuyenMaiDialog(this, "Khuyến mãi", "Thêm Khuyến Mãi", "add", attributes);
@@ -230,10 +231,12 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 break;
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
             KhuyenMaiDialog khuyenMaiDialog = new KhuyenMaiDialog(this, "Khuyến mãi", "Sửa Khuyến Mãi", "update", attributes, row);
@@ -259,6 +262,7 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {

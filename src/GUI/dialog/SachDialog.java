@@ -12,6 +12,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -145,7 +146,7 @@ public class SachDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnThem);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){
@@ -160,7 +161,7 @@ public class SachDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnSua);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
 
             //set dữ liệu cũ
@@ -474,35 +475,47 @@ public class SachDialog extends JDialog implements ActionListener{
 
 
     public boolean validation(){
-        String ten = inputForm.getListItem().get(0).getText();
-        String namXB = inputForm.getListItem().get(1).getText();
+        JTextField ten = inputForm.getListItem().get(0).getTextField();
+        JTextField namXB = inputForm.getListItem().get(1).getTextField();
         String theLoai = inputForm.getListItem().get(4).getTextKNNN();
         String tacGia = inputForm.getListItem().get(5).getTextKNNN();
         String path = inputForm.getListItem().get(7).getPath();
-        if(Validate.isEmpty(ten)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên sách không được để trống!");
+
+        // JTextField input = inputForm.getListItem().get(0).getTextField();
+        // if(Validate.isEmpty(input.getText())){
+        //     JOptionPane.showMessageDialog(mainFrame, "Tên vùng không được để trống!","Thiếu thông tin",JOptionPane.WARNING_MESSAGE);
+        //     input.requestFocusInWindow();
+        //     return(false);
+        // }
+
+        if(Validate.isEmpty(ten.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên sách không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            ten.requestFocusInWindow();
             return(false);
         }
-        if(Validate.isEmpty(namXB)){
-            JOptionPane.showMessageDialog(mainFrame, "Năm xuất bản không được để trống!");
+        if(Validate.isEmpty(namXB.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Năm xuất bản không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            namXB.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.isYear(namXB)){
-            JOptionPane.showMessageDialog(mainFrame, "Năm xuất bản phải nhập đúng định dạng!");
+        if(!Validate.isYear(namXB.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Năm xuất bản phải nhập đúng định dạng!","",JOptionPane.WARNING_MESSAGE);
+            namXB.requestFocusInWindow();
             return(false);
         }
         if(Validate.isEmpty(theLoai)){
-            JOptionPane.showMessageDialog(mainFrame, "Thể loại không được để trống!");
+            JOptionPane.showMessageDialog(mainFrame, "Thể loại không được để trống!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
         if(Validate.isEmpty(tacGia)){
-            JOptionPane.showMessageDialog(mainFrame, "Tác giả không được để trống!");
+            JOptionPane.showMessageDialog(mainFrame, "Tác giả không được để trống!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
         if(Validate.isEmpty(path)){
-            JOptionPane.showMessageDialog(mainFrame, "Vui lòng thêm ảnh!");
+            JOptionPane.showMessageDialog(mainFrame, "Vui lòng thêm ảnh!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
+        
         return(true);
     }
 }

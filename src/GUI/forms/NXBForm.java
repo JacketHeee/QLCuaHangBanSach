@@ -185,6 +185,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 NhaXBDialog nhaXBDialog = new NhaXBDialog(this, "Nhà xuất bản", "Thêm Nhà Xuất Bản", "add", attributes);
@@ -219,10 +220,12 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
                 break;   
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 NhaXBDialog nhaXBDialog = new NhaXBDialog(this, "Nhà xuất bản", "Sửa Nhà Xuất Bản", "update", attributes, row);
@@ -247,6 +250,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {

@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -84,7 +85,7 @@ public class KhachHangDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnThem);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){
@@ -99,7 +100,7 @@ public class KhachHangDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnSua);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
 
             //set dữ liệu cũ
@@ -184,22 +185,27 @@ public class KhachHangDialog extends JDialog implements ActionListener{
     }
 
     public boolean validation(){
-        String ten = inputForm.getListItem().get(0).getText();
-        String soDT = inputForm.getListItem().get(1).getText();
-        if(Validate.isEmpty(ten)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên khách hàng không được để trống!");
+        JTextField ten = inputForm.getListItem().get(0).getTextField();
+        JTextField soDT = inputForm.getListItem().get(1).getTextField();
+
+        if(Validate.isEmpty(ten.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên khách hàng không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            ten.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.lengthGreaterThan(ten, 5)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên khách hàng phải có độ dài trên 5 ký tự!");
+        if(!Validate.lengthGreaterThan(ten.getText(), 5)){
+            JOptionPane.showMessageDialog(mainFrame, "Tên khách hàng phải có độ dài trên 5 ký tự!","",JOptionPane.WARNING_MESSAGE);
+            ten.requestFocusInWindow();
             return(false);
         }
-        if(Validate.isEmpty(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại khách hàng không được để trống!");
+        if(Validate.isEmpty(soDT.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại khách hàng không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            soDT.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.isPhoneNumber(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại khách hàng phải nhập đúng định dạng!");
+        if(!Validate.isPhoneNumber(soDT.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại khách hàng phải nhập đúng định dạng!","",JOptionPane.WARNING_MESSAGE);
+            soDT.requestFocusInWindow();
             return(false);
         }
         return(true);

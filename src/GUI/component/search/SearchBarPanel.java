@@ -27,8 +27,8 @@ public class SearchBarPanel<T> extends JPanel {
         setLayout(new MigLayout("insets 0"));
         this.listCBX = listCBX;
 
-        txtSearch = new JTextField(20);  // Thay đổi kích thước tùy ý
-        add(txtSearch, "growx");
+        // txtSearch = new JTextField(20);  // Thay đổi kích thước tùy ý
+        // add(txtSearch, "growx");
 
         // Combo box
         comboBox = new JComboBox<>(listCBX);
@@ -45,6 +45,7 @@ public class SearchBarPanel<T> extends JPanel {
         butRefresh.putClientProperty(FlatClientProperties.STYLE, "borderWidth: 0; focusWidth:0; innerFocusWidth: 0;");
         butRefresh.addActionListener(e -> {
             if (onRefreshClicked != null) {
+                searchPanel.setEmptyInput();
                 onRefreshClicked.run();
             }
         });

@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -50,7 +51,7 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
     }
 
     public void init(){
-        this.setLayout(new MigLayout("wrap 1, insets 30 0 20 0", "[grow]"));
+        this.setLayout(new MigLayout("wrap 1, insets 30 0 20 0, debug", "[grow]"));
         this.getContentPane().setBackground(Color.decode("#FFFFFF"));
 
         JPanel panel = new JPanel();
@@ -83,7 +84,7 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnThem);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){// phương thức thanh toán thì không có sửa
@@ -98,7 +99,7 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnSua);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
 
             //set dữ liệu cũ
@@ -163,9 +164,16 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
     }
 
     public boolean validation(){
-        String ten = inputForm.getListItem().get(0).getText();
-        if(Validate.isEmpty(ten)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên phương thức thanh toán không được để trống!");
+        // String ten = inputForm.getListItem().get(0).getText();
+        // if(Validate.isEmpty(ten)){
+        //     JOptionPane.showMessageDialog(mainFrame, "Tên phương thức thanh toán không được để trống!");
+        //     return(false);
+        // }
+        
+        JTextField input = inputForm.getListItem().get(0).getTextField();
+        if(Validate.isEmpty(input.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên phương thức thanh toán không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            input.requestFocusInWindow();
             return(false);
         }
         return(true);

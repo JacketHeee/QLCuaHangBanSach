@@ -184,6 +184,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 KhachHangDialog khachHangDialog = new KhachHangDialog(this, "Khách hàng", "Thêm Khách Hàng", "add", attributes);
@@ -219,10 +220,12 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
                 break;
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 KhachHangDialog khachHangDialog = new KhachHangDialog(this, "Khách hàng", "Sửa Khách Hàng", "update", attributes, row);
@@ -247,6 +250,8 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+
+        mainFrame.glassPane.setVisible(false);
     }
 
 

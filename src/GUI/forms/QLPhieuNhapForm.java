@@ -261,9 +261,9 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
-                mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
                 AddPhieuNhapDialog addPhieuNhapDialog = new AddPhieuNhapDialog(mainFrame);
                 addPhieuNhapDialog.getTaoPhieuNhapForm().setCallBack(new TaoPhieuNhapForm.GetDataCallBack() {
@@ -280,7 +280,6 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                     }  
                 });
                 addPhieuNhapDialog.setVisible(true);
-                mainFrame.glassPane.setVisible(false);
                 break;
             case "importExcel":
                 
@@ -290,10 +289,12 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                 break;
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 JOptionPane.showMessageDialog(this, "Con bo biet bay");
@@ -319,6 +320,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public void setListenerBtnXacNhan(){

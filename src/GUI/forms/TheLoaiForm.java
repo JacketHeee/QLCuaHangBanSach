@@ -117,7 +117,6 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
 
     String[][] bottomActions = {
         {"edit.svg","edit"},
-        {"detail.svg","detail"},    //Có không ???
         {"remove.svg","remove"}
     };
     private CustomTable table;
@@ -173,10 +172,10 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
                 arrActions.add(bottomActions[0]);
             }
             if(i.equals("Xóa")){
-                arrActions.add(bottomActions[2]);
+                arrActions.add(bottomActions[1]);
             }
         }
-        arrActions.add(bottomActions[1]);
+        // arrActions.add(bottomActions[1]);    
         String[][] array = arrActions.toArray(new String[0][]);
         return(array);
     }
@@ -195,6 +194,7 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 TheLoaiDialog theLoaiDialog = new TheLoaiDialog(this, "Thể loại", "Thêm Thể Loại", "add", attributes);
@@ -230,12 +230,14 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
 
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
 
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 TheLoaiDialog theLoaiDialog = new TheLoaiDialog(this, "Thể loại", "Sửa Thể Loại", "update", attributes, row);
@@ -261,6 +263,7 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {

@@ -268,9 +268,9 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
-                mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
                 AddHoaDonDialog addHoaDonDialog = new AddHoaDonDialog(mainFrame);
                 addHoaDonDialog.getTaoHoaDonForm().setCallBack(new TaoHoaDonForm.GetDataCallBack() {
@@ -288,7 +288,6 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                     }  
                 });
                 addHoaDonDialog.setVisible(true);
-                mainFrame.glassPane.setVisible(false);
                 break;
 
             case "importExcel":
@@ -299,9 +298,11 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                 break;
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 JOptionPane.showMessageDialog(this, "Con bo biet bay");
@@ -327,6 +328,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public void setListenerBtnXacNhan(){

@@ -191,6 +191,7 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
             NhanVienDialog nhanVienDialog = new NhanVienDialog(this, "Nhân viên", "Thêm Nhân Viên", "add", attributes);
@@ -225,8 +226,10 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
                 break;
             default:
         }
+        mainFrame.glassPane.setVisible(false);
     }
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 NhanVienDialog nhanVienDialog = new NhanVienDialog(this, "Nhân viên", "Sửa Nhân Viên", "update", attributes, row);
@@ -252,6 +255,8 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+
+        mainFrame.glassPane.setVisible(false);
     }
 
     private void updateTable(ArrayList<NhanVienDTO> ketqua) {

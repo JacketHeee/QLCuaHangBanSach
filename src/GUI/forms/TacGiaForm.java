@@ -182,57 +182,61 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 TacGiaDialog tacGiaDialog = new TacGiaDialog(this, "Tác giả", "Thêm Tác Giả", "add", attributes);
                 tacGiaDialog.setVisible(true);
                 break;
-           case "importExcel":
+                case "importExcel":
                 List<TacGiaDTO> importedData = ExcelImporter.importFromExcel(new TacGiaExcelImport());
-
+                
                 if (importedData != null && !importedData.isEmpty()) {
-                   int count = 0;
-                   for (TacGiaDTO tg : importedData) {
-                       if (tacGiaBUS.insert(tg) != 0) {
-                           count++;
-                       }
-                   }
-                   Notifications.getInstance().setJFrame(mainFrame);
-                   Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
-                       "Import thành công!");
-                   updateTable(tacGiaBUS.getAll());
-              }
+                    int count = 0;
+                    for (TacGiaDTO tg : importedData) {
+                        if (tacGiaBUS.insert(tg) != 0) {
+                            count++;
+                        }
+                    }
+                    Notifications.getInstance().setJFrame(mainFrame);
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,
+                    "Import thành công!");
+                    updateTable(tacGiaBUS.getAll());
+                }
                 break;
-
-            case "exportExcel":
-               String keyword = searchBarPanel.getSearchField().getText().trim();
-               String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
-
-               List<TacGiaDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
-                   ? filteredList
-                   : tacGiaBUS.getAll();
-
-               TacGiaExcelExport exporter = new TacGiaExcelExport(dataToExport, filterCol, keyword);
-               ExcelExporter.exportToExcel(exporter, TacGiaDTO.class);
-               break;
-
-            default:
-        }
+                
+                case "exportExcel":
+                String keyword = searchBarPanel.getSearchField().getText().trim();
+                String filterCol = searchBarPanel.getComboBox().getSelectedItem().toString();
+                
+                List<TacGiaDTO> dataToExport = (filteredList != null && !filteredList.isEmpty())
+                ? filteredList
+                : tacGiaBUS.getAll();
+                
+                TacGiaExcelExport exporter = new TacGiaExcelExport(dataToExport, filterCol, keyword);
+                ExcelExporter.exportToExcel(exporter, TacGiaDTO.class);
+                break;
+                
+                default:
+            }
+            mainFrame.glassPane.setVisible(false);
     }
 
 
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 TacGiaDialog tacGiaDialog = new TacGiaDialog(this, "Tác giả", "Sửa Tác Giả", "update", attributes, row);
                 tacGiaDialog.setVisible(true);
                 break;
-            case "remove":
+                case "remove":
+                
                 // Logic xóa cho form này
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
-
+                
                 int ma = Integer.parseInt(table.getCellData(row, 0));
                 if (choose == 0) {
                     if(tacGiaBUS.delete(ma) != 0){
@@ -245,10 +249,11 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
                     }
                 }
                 break;
-            default:
+                default:
                 System.out.println("Unknown action: " + actionId);
                 break;
-        }
+            }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {

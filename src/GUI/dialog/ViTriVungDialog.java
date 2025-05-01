@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -83,7 +84,7 @@ public class ViTriVungDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnThem);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){// vùng thì không có sửa
@@ -98,7 +99,7 @@ public class ViTriVungDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnSua);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
 
             //set dữ liệu cũ
@@ -164,9 +165,11 @@ public class ViTriVungDialog extends JDialog implements ActionListener{
     }
 
     public boolean validation(){
-        String ten = inputForm.getListItem().get(0).getText();
-        if(Validate.isEmpty(ten)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên vùng không được để trống!");
+        // String ten = inputForm.getListItem().get(0).getText();
+        JTextField input = inputForm.getListItem().get(0).getTextField();
+        if(Validate.isEmpty(input.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên vùng không được để trống!","Thiếu thông tin",JOptionPane.WARNING_MESSAGE);
+            input.requestFocusInWindow();
             return(false);
         }
         return(true);

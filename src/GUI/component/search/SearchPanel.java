@@ -94,5 +94,11 @@ public class SearchPanel<T> extends JPanel {
     public JTextField getSearchField() {
         return inputSearch;
     }
+
+    public void setEmptyInput() {
+        inputSearch.setText("");
+        inputSearch.repaint();
+        this.revalidate();
+    }
     
 }

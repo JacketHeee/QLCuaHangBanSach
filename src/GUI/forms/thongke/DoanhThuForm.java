@@ -81,6 +81,7 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         this.mainFrame = mainFrame;
         loadData();
         init();
+        System.out.println(startDate + " " + endDate);
     }
 
     private void init() {
@@ -109,12 +110,26 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
     }
 
     private void loadData(){
-        listSach = doanhThuBUS.getRevenueStats("book");
-        listKH = doanhThuBUS.getRevenueStats("customer");
-        tongHD_TongDT = doanhThuBUS.getTotalRevenue();
+        // Ngày hiện tại
+        endDate = new Date();
 
-        listTop5Sach = doanhThuBUS.getTop5Books();
-        lisTop5Kh = doanhThuBUS.getTop5Kh();
+        // Ngày đầu tháng
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        startDate = cal.getTime();
+        listSach = doanhThuBUS.getRevenueStats(startDate,endDate,"book");
+        listKH = doanhThuBUS.getRevenueStats(startDate,endDate,"customer");
+        tongHD_TongDT = doanhThuBUS.getTotalRevenue(startDate,endDate);
+
+        listTop5Sach = doanhThuBUS.getTop5Books(startDate, endDate);
+        lisTop5Kh = doanhThuBUS.getTop5Kh(startDate, endDate);
+
+        // listSach = doanhThuBUS.getRevenueStats("book");
+        // listKH = doanhThuBUS.getRevenueStats("customer");
+        // tongHD_TongDT = doanhThuBUS.getTotalRevenue();
+
+        // listTop5Sach = doanhThuBUS.getTop5Books();
+        // lisTop5Kh = doanhThuBUS.getTop5Kh();
     }
 
     private JPanel getHeader() {
@@ -127,7 +142,13 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         panel.add(new JLabel(),"pushx"); 
 
         inputStartDate = new InputFormItem("inputDate", "Từ ngày");
+        
         inputEndDate = new InputFormItem("inputDate", "Đến");
+        
+                SwingUtilities.invokeLater(() -> inputStartDate.getInputDate().setDate(startDate));
+                SwingUtilities.invokeLater(() -> inputEndDate.getInputDate().setDate(endDate));
+        
+
         inputStartDate.setBackground(baseTheme.selectedButton);
         inputEndDate.setBackground(baseTheme.selectedButton);
         inputEndDate.setLayoutConstraint();
@@ -229,6 +250,8 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
     private JPanel getPanelTongQuan() {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10,wrap 1"));
         panel.setPreferredSize(new Dimension(300,500));
+        // panel.setMinimumSize(new Dimension(300,500));
+
         panel.add(getTongQuan(),"pushx,growx");
         panel.add(getListHoaDon(),"push,grow");
         return panel;
@@ -423,6 +446,7 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         if(actionId.equals("detail")){
             int maHD = Integer.parseInt(tableHoaDon.getCellData(row, 0));
             HoaDonDTO hoaDon = hoaDonBUS.getInstanceByID(maHD);
@@ -432,6 +456,7 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         else{
             System.out.println("Unknow Action");
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public void Loc(){
@@ -468,6 +493,15 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
 
                 labelTongQuanTHD.setCount(tongHD_TongDT[0]);
                 labelTongQuanTDT.setCount(tongHD_TongDT[1]);
+
+                if (((String)comboBox.getSelectedItem()).equals("Khách hàng")) {
+                    // headerPieChart.setText("<html><font><b>Top 5 khách hàng mua nhiều nhất</b></font></html>");
+                    pieChartt.setDataset(createPieData(lisTop5Kh));
+                }
+                else {
+                    // headerPieChart.setText("<html><font><b>Top 5 sách bán chạy nhất</b></font></html>");
+                    pieChartt.setDataset(createPieData(listTop5Sach));
+                }
             }
             else{   //Cập nhật lại tất cả
                 loadData();
@@ -476,7 +510,7 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
                 for (ThongKeDoanhThuDTO x : listSach) {
                     dataSach.add(new String[]{x.getId()+"",x.getName(),x.getSoluong()+"",FormatterUtil.formatNumberVN(x.getDoanhthu())+""});
                 }
-        
+                
                 ArrayList<String[]> dataKhachHang = new ArrayList<>();
         
                 for (ThongKeDoanhThuDTO x : listKH) {

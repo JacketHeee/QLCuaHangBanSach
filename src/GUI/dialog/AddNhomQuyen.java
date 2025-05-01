@@ -531,15 +531,7 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
         return(result);
     }
 
-    public boolean Validation(){
-        String tenNQ = fieldNameRole.getText();
-        if(Validate.isEmpty(tenNQ)){
-            JOptionPane.showMessageDialog(parent, "Tên nhóm quyền không được để trống!");
-            return(false);
-        }
-        return(true);
-    }
-
+    
     @Override
     public void itemStateChanged(ItemEvent e) {
         CheckBoxCustom checkBox = (CheckBoxCustom)e.getSource();
@@ -550,7 +542,7 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
             setUnEnable(checkBox.getChucNang());
         }
     }
-
+    
     public void setDefaultCheckBox(){
         for(int i = 0; i < listCheckBox.size(); i++){
             for(int j = 1; j < listCheckBox.get(i).size(); j++){
@@ -558,13 +550,13 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
             }
         }
     }
-
+    
     public void setListenerCheckBox(){
         for(int i = 0; i < listCheckBox.size(); i++){
             listCheckBox.get(i).get(0).addItemListener(this);
         }
     }
-
+    
     public void setEnabled(String chucNang){
         for(int i = 0; i < listCheckBox.size(); i++){
             String tenCN = listCheckBox.get(i).get(0).getChucNang();
@@ -576,7 +568,7 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
             }
         }
     }
-
+    
     public void setUnEnable(String chucNang){
         for(int i = 0; i < listCheckBox.size(); i++){
             String tenCN = listCheckBox.get(i).get(0).getChucNang();
@@ -589,12 +581,30 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
             }
         }
     }
-
+    
     public void setCheckBoxForDetail(){
         for(int i = 0; i < listCheckBox.size(); i++){
             for(int j = 0; j < listCheckBox.get(i).size(); j++){
                 listCheckBox.get(i).get(j).setEnabled(false);
             }
         }
+    }
+
+    public boolean Validation(){
+
+
+        // JTextField input = inputForm.getListItem().get(0).getTextField();
+        // if(Validate.isEmpty(input.getText())){
+        //     JOptionPane.showMessageDialog(mainFrame, "Tên vùng không được để trống!","Thiếu thông tin",JOptionPane.WARNING_MESSAGE);
+        //     input.requestFocusInWindow();
+        //     return(false);
+        // }
+
+        if(Validate.isEmpty(fieldNameRole.getText())){
+            JOptionPane.showMessageDialog(parent, "Tên nhóm quyền không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            fieldNameRole.requestFocusInWindow();
+            return(false);
+        }
+        return(true);
     }
 }

@@ -103,13 +103,28 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
         // // endDate: 01/01/2027 (vì 24 tháng sau tháng 4/2025 là tháng 4/2027)
         // cal.set(2027, Calendar.APRIL, 1);
         // endDate = cal.getTime();
-            
-        listSach = doanhThuBUS.getImportStats("book");
-        listKH = doanhThuBUS.getImportStats("ncc");
-        tongHD_TongDT = doanhThuBUS.getTotalImport();
 
-        listTop5Sach = doanhThuBUS.getTop5Books();
-        lisTop5Kh = doanhThuBUS.getTop5NCC();
+        // Ngày hiện tại
+        endDate = new Date();
+
+        // Ngày đầu tháng
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        startDate = cal.getTime();
+
+        listSach = doanhThuBUS.getImportStats(startDate,endDate,"book");
+        listKH = doanhThuBUS.getImportStats(startDate,endDate,"ncc");
+        tongHD_TongDT = doanhThuBUS.getTotalImport(startDate,endDate);
+
+        listTop5Sach = doanhThuBUS.getTop5Books(startDate, endDate);
+        lisTop5Kh = doanhThuBUS.getTop5NCC(startDate, endDate);
+            
+        // listSach = doanhThuBUS.getImportStats("book");
+        // listKH = doanhThuBUS.getImportStats("ncc");
+        // tongHD_TongDT = doanhThuBUS.getTotalImport();
+
+        // listTop5Sach = doanhThuBUS.getTop5Books();
+        // lisTop5Kh = doanhThuBUS.getTop5NCC();
     }
 
     private void loadDataWithDate() {    
@@ -135,6 +150,10 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
         
         inputStartDate = new InputFormItem("inputDate", "Từ ngày");
         inputEndDate = new InputFormItem("inputDate", "Đến");
+        
+        SwingUtilities.invokeLater(() -> inputStartDate.getInputDate().setDate(startDate));
+        SwingUtilities.invokeLater(() -> inputEndDate.getInputDate().setDate(endDate));
+
         inputStartDate.setBackground(baseTheme.selectedButton);
         inputEndDate.setBackground(baseTheme.selectedButton);
         inputEndDate.setLayoutConstraint();
@@ -229,6 +248,7 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
     private JPanel getPanelTongQuan() {
         JPanel panel = new JPanel(new MigLayout("insets 0, gap 10,wrap 1"));
         panel.setPreferredSize(new Dimension(300,500));
+        // panel.setMinimumSize(new Dimension(300,500));
         panel.add(getTongQuan(),"pushx,growx");
         panel.add(getListHoaDon(),"push,grow");
         return panel;
@@ -424,6 +444,7 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         if(actionId.equals("detail")){
             int maNhap = Integer.parseInt(tableHoaDon.getCellData(row, 0));
             PhieuNhapDTO phieuNhap = phieuNhapBUS.getInstanceByID(maNhap);
@@ -433,6 +454,7 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
         else{
             System.out.println("Unknow Action");
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public void Loc(){
@@ -468,6 +490,16 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
 
                 labelTongQuanTHD.setCount(tongHD_TongDT[0]);
                 labelTongQuanTDT.setCount(tongHD_TongDT[1]);
+
+                
+                if (((String)comboBox.getSelectedItem()).equals("Khách hàng")) {
+                    // headerPieChart.setText("<html><font><b>Top 5 khách hàng mua nhiều nhất</b></font></html>");
+                    pieChartt.setDataset(createPieData(lisTop5Kh));
+                }
+                else {
+                    // headerPieChart.setText("<html><font><b>Top 5 sách bán chạy nhất</b></font></html>");
+                    pieChartt.setDataset(createPieData(listTop5Sach));
+                }
             }
             else{   //Cập nhật lại tất cả
                 loadData();

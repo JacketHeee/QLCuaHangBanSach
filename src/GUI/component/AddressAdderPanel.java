@@ -8,6 +8,7 @@ import DTO.ModelTinhThanh.Ward;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
@@ -56,7 +57,7 @@ public class AddressAdderPanel extends JPanel {
     private void initializeUI() {
         setLayout(new MigLayout("wrap 2, fill, insets 20", "[right][grow]", "[]10[]10[]10[]10[]10[][grow]"));
         setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(255, 87, 34)), 
+                BorderFactory.createLineBorder(Color.decode(baseTheme.mainColor)), 
                 "Thêm Địa Chỉ Mới",
                 0, 0, new Font(FlatRobotoFont.FAMILY, Font.BOLD, 16), Color.decode(baseTheme.mainColor)));
                 // 0, 0, new Font(FlatRobotoFont.FAMILY, Font.BOLD, 16), new Color(255, 87, 34)));
@@ -70,7 +71,8 @@ public class AddressAdderPanel extends JPanel {
         provinceComboBox = new JComboBox<>();
         provinceComboBox.setFont(new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 14));
         provinceComboBox.setBackground(Color.WHITE);
-        provinceComboBox.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        // provinceComboBox.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        provinceComboBox.setBorder(BorderFactory.createLineBorder(Color.decode(baseTheme.mainColor)));
         if (adminData != null && adminData.getData() != null) {
             for (Province province : adminData.getData()) {
                 provinceComboBox.addItem(province);
@@ -86,7 +88,8 @@ public class AddressAdderPanel extends JPanel {
         districtComboBox = new JComboBox<>();
         districtComboBox.setFont(new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 14));
         districtComboBox.setBackground(Color.WHITE);
-        districtComboBox.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        districtComboBox.setBorder(BorderFactory.createLineBorder(Color.decode(baseTheme.mainColor)));
+        // districtComboBox.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
         districtComboBox.setEnabled(false);
         add(districtComboBox, "growx, sg input");
 
@@ -98,7 +101,8 @@ public class AddressAdderPanel extends JPanel {
         wardComboBox = new JComboBox<>();
         wardComboBox.setFont(new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 14));
         wardComboBox.setBackground(Color.WHITE);
-        wardComboBox.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        // wardComboBox.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        wardComboBox.setBorder(BorderFactory.createLineBorder(Color.decode(baseTheme.mainColor)));
         wardComboBox.setEnabled(false);
         add(wardComboBox, "growx, sg input");
 
@@ -110,7 +114,8 @@ public class AddressAdderPanel extends JPanel {
         streetTextField = new JTextField(12);
         streetTextField.setFont(new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 14));
         streetTextField.setBackground(Color.WHITE);
-        streetTextField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        streetTextField.setBorder(BorderFactory.createLineBorder(Color.decode(baseTheme.mainColor)));
+        // streetTextField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
         streetTextField.setEnabled(false);
         streetTextField.setText("Ví dụ: 123 Đường Láng");
         streetTextField.setForeground(Color.GRAY);
@@ -134,7 +139,8 @@ public class AddressAdderPanel extends JPanel {
         add(streetTextField, "growx, sg input");
 
         JSeparator separator = new JSeparator();
-        separator.setForeground(new Color(255, 87, 34));
+        separator.setForeground(Color.decode(baseTheme.mainColor));
+        // separator.setForeground(new Color(255, 87, 34));
         add(separator, "span 2, growx, gapbottom 10");
 
         JLabel resultLabel = new JLabel("Địa chỉ:");
@@ -153,24 +159,29 @@ public class AddressAdderPanel extends JPanel {
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         add(new JScrollPane(resultArea), "span 2, growx, hmin 80");
 
-        JPanel buttonPanel = new JPanel(new MigLayout("fill", "[center][center]", ""));
+        JPanel buttonPanel = new JPanel(new MigLayout("fill, gap 10", "[center][center]", ""));
+        buttonPanel.setBackground(Color.decode(baseTheme.backgroundColor));
         addButton = new JButton("Thêm");
         addButton.setFont(new Font(FlatRobotoFont.FAMILY, Font.BOLD, 15));
-        addButton.setBackground(new Color(255, 87, 34));
+        addButton.setBackground(Color.decode(baseTheme.mainColor));
+        // addButton.setBackground(new Color(255, 87, 34));
         addButton.setForeground(Color.WHITE);
         addButton.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
         addButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        addButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                addButton.setBackground(new Color(255, 107, 54));
-            }
+        // addButton.addMouseListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseEntered(MouseEvent e) {
+        //         addButton.setBackground(new Color(255, 107, 54));
+        //     }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                addButton.setBackground(new Color(255, 87, 34));
-            }
-        });
+        //     @Override
+        //     public void mouseExited(MouseEvent e) {
+        //         addButton.setBackground(new Color(255, 87, 34));
+        //     }
+        // });
+
+        addButton.putClientProperty("arc",5);
+
 
         clearButton = new JButton("Xóa");
         clearButton.setFont(new Font(FlatRobotoFont.FAMILY, Font.BOLD, 15));
@@ -190,8 +201,10 @@ public class AddressAdderPanel extends JPanel {
             }
         });
 
-        buttonPanel.add(addButton);
-        buttonPanel.add(clearButton);
+        clearButton.putClientProperty("arc",5);
+
+        buttonPanel.add(addButton, "sg 1");
+        buttonPanel.add(clearButton,"sg 1");
         add(buttonPanel, "span 2, center, gaptop 10");
     }
 

@@ -10,6 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -103,7 +104,7 @@ public class NhaXBDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnThem);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){// nhà xuất bản thì không có sửa
@@ -118,7 +119,7 @@ public class NhaXBDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnSua);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
 
             //set dữ liệu cũ
@@ -197,37 +198,50 @@ public class NhaXBDialog extends JDialog implements ActionListener{
     }
 
     public boolean validation(){
-        String ten = inputForm.getListItem().get(0).getText();
+        JTextField ten = inputForm.getListItem().get(0).getTextField();
         String diaChi = inputForm.getListItem().get(1).getTextDC();
-        String soDT = inputForm.getListItem().get(2).getText();
-        String email = inputForm.getListItem().get(3).getText();
+        JTextField soDT = inputForm.getListItem().get(2).getTextField();
+        JTextField email = inputForm.getListItem().get(3).getTextField();
 
-        if(Validate.isEmpty(ten)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên nhà xuất bản không được để trống!");
+        JTextField input = inputForm.getListItem().get(0).getTextField();
+        if(Validate.isEmpty(input.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên vùng không được để trống!","Thiếu thông tin",JOptionPane.WARNING_MESSAGE);
+            input.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.lengthGreaterThan(ten, 5)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên nhà xuất bản phải có độ dài trên 5 ký tự!");
+
+        if(Validate.isEmpty(ten.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên nhà xuất bản không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            ten.requestFocusInWindow();
+            return(false);
+        }
+        if(!Validate.lengthGreaterThan(ten.getText(), 5)){
+            JOptionPane.showMessageDialog(mainFrame, "Tên nhà xuất bản phải có độ dài trên 5 ký tự!","",JOptionPane.WARNING_MESSAGE);
+            ten.requestFocusInWindow();
             return(false);
         }
         if(Validate.isEmpty(diaChi)){
-            JOptionPane.showMessageDialog(mainFrame, "Địa chỉ không được để trống!");
+            JOptionPane.showMessageDialog(mainFrame, "Địa chỉ không được để trống!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
-        if(Validate.isEmpty(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại nhà xuất bản không được để trống!");
+        if(Validate.isEmpty(soDT.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại nhà xuất bản không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            soDT.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.isPhoneNumber(soDT)){
-            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại nhà xuất bản phải nhập đúng định dạng!");
+        if(!Validate.isPhoneNumber(soDT.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Số điện thoại nhà xuất bản phải nhập đúng định dạng!","",JOptionPane.WARNING_MESSAGE);
+            soDT.requestFocusInWindow();
             return(false);
         }
-        if(Validate.isEmpty(email)){
-            JOptionPane.showMessageDialog(mainFrame, "Email nhà xuất bản không được để trống!");
+        if(Validate.isEmpty(email.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Email nhà xuất bản không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            email.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.isEmail(email)){
-            JOptionPane.showMessageDialog(mainFrame, "Email nhà xuất bản phải nhập đúng định dạng!");
+        if(!Validate.isEmail(email.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Email hợp lệ có dạng: ten@domain.com, chỉ chứa chữ, số, dấu chấm hoặc gạch dưới!","",JOptionPane.WARNING_MESSAGE);
+            email.requestFocusInWindow();
             return(false);
         }
         return(true);

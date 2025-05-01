@@ -213,6 +213,7 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("==> Button clicked: " + e.getActionCommand()); // Log sự kiện để check
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
                 SachDialog sachDialog = new SachDialog(this, "Sách", "Thêm Sách", "add", attributes);
@@ -250,11 +251,12 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
             default:
                 break;
         }
-        
+        mainFrame.glassPane.setVisible(false);
     }
 
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
                 SachDialog sachDialog = new SachDialog(this, "Sách", "Sửa Sách", "update", attributes, row);
@@ -278,12 +280,13 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
                 break;
             case "detail":
                 SachDialog sachDialogd = new SachDialog(this, "Sách", "Chi Tiết Sách", "detail", attributes, row);
-                sachDialogd.setVisible(true);
+                sachDialogd.setVisible(true);            
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {

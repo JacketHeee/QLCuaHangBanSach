@@ -15,6 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -92,7 +93,7 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnThem);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
         }
         else if(type.equals("update")){
@@ -107,7 +108,7 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
             panel.setBackground(Color.decode("#FFFFFF"));
             panel.add(btnHuy);
             panel.add(btnSua);
-            this.add(new JPanel(), "push y");
+            this.add(new JLabel(), "push y");
             this.add(panel, "right, gap right 10");
 
             //set dữ liệu cũ
@@ -211,51 +212,54 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
 
 
     public boolean validation(){
-        String ten = inputForm.getListItem().get(0).getText();
-        String dieuKienGiam = inputForm.getListItem().get(1).getText();
-        String giaTriGiam = inputForm.getListItem().get(2).getText();
+        JTextField ten = inputForm.getListItem().get(0).getTextField();
+        JTextField dieuKienGiam = inputForm.getListItem().get(1).getTextField();
+        JTextField giaTriGiam = inputForm.getListItem().get(2).getTextField();
         String ngayBatDau = inputForm.getListItem().get(3).getDateTimeString();
         String ngayKetThuc = inputForm.getListItem().get(4).getDateTimeString();
         String thoiGianBatDau = inputForm.getListItem().get(3).getDateTimeTimeString(); //Validate thời gian
         String thoiGianKetThuc = inputForm.getListItem().get(4).getDateTimeTimeString();
 
-        if(Validate.isEmpty(ten)){
-            JOptionPane.showMessageDialog(mainFrame, "Tên khuyến mãi không được để trống!");
+        if(Validate.isEmpty(ten.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Tên khuyến mãi không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            ten.requestFocusInWindow();
             return(false);
         }
-        if(Validate.isEmpty(dieuKienGiam)){
-            JOptionPane.showMessageDialog(mainFrame, "Điều kiện giảm không được để trống!");
+        if(Validate.isEmpty(dieuKienGiam.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Điều kiện giảm không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            dieuKienGiam.requestFocusInWindow();
             return(false);
         }
-        if(Validate.isEmpty(giaTriGiam)){
-            JOptionPane.showMessageDialog(mainFrame, "Giá trị giảm không được để trống!");
+        if(Validate.isEmpty(giaTriGiam.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Giá trị giảm không được để trống!","",JOptionPane.WARNING_MESSAGE);
+            giaTriGiam.requestFocusInWindow();
             return(false);
         }
         if(Validate.isEmpty(ngayBatDau)){
-            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu không được để trống!");
+            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu không được để trống!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
         if(!Validate.isDate(ngayBatDau)){
-            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải nhập đúng định dạng!");
+            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải nhập đúng định dạng!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
         if(Validate.isEmpty(ngayKetThuc)){
-            JOptionPane.showMessageDialog(mainFrame, "Ngày kết thúc không được để trống!");
+            JOptionPane.showMessageDialog(mainFrame, "Ngày kết thúc không được để trống!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
         if(!Validate.isDate(ngayKetThuc)){
-            JOptionPane.showMessageDialog(mainFrame, "Ngày kết thúc phải nhập đúng định dạng!");
+            JOptionPane.showMessageDialog(mainFrame, "Ngày kết thúc phải nhập đúng định dạng!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
         if(ngayBatDau.equals(ngayKetThuc)){
             if(!Validate.isStartTimeAndEndTime(thoiGianBatDau, thoiGianKetThuc)){
-                JOptionPane.showMessageDialog(mainFrame, "Thời gian bắt đầu phải trước thời gian kết thúc");
+                JOptionPane.showMessageDialog(mainFrame, "Thời gian bắt đầu phải trước thời gian kết thúc","",JOptionPane.WARNING_MESSAGE);
                 return(false);
             }
             return(true);
         }
         if(!Validate.isStartDateAndEndDate(ngayBatDau, ngayKetThuc)){
-            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải trước ngày kết thúc!");
+            JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải trước ngày kết thúc!","",JOptionPane.WARNING_MESSAGE);
             return(false);
         }
         return(true);

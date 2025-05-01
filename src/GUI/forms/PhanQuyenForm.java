@@ -199,13 +199,11 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
       
     @Override
     public void actionPerformed(ActionEvent e) {
-        
+        mainFrame.glassPane.setVisible(true);
         switch (e.getActionCommand()) {
             case "add":
-                mainFrame.glassPane.setVisible(true);
                 ButtonAction but = (ButtonAction) e.getSource();
                 new AddNhomQuyen(mainFrame,this, "Thêm nhóm quyền", "add");
-                mainFrame.glassPane.setVisible(false);
                 break;
             case "importExcel":
                 List<NhomQuyenDTO> importedData = ExcelImporter.importFromExcel(new NhomQuyenExcelImport());
@@ -238,6 +236,8 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
             default:
                 break;
         }
+
+        mainFrame.glassPane.setVisible(false);
     }
 
     public ChiTietQuyenBUS getChiTietQuyenBUS() {
@@ -275,11 +275,10 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     
     @Override
     public void onActionPerformed(String actionId, int row) {
+        mainFrame.glassPane.setVisible(true);
         switch (actionId) {
             case "edit":
-                mainFrame.glassPane.setVisible(true);
                 new AddNhomQuyen(mainFrame,this, "Sửa nhóm quyền", "update", row);
-                mainFrame.glassPane.setVisible(false);
                 break;
             case "remove":
                 // Logic xóa cho form này
@@ -306,6 +305,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
                 System.out.println("Unknown action: " + actionId);
                 break;
         }
+        mainFrame.glassPane.setVisible(false);
     }
 
     public Runnable resetTable = () -> {
