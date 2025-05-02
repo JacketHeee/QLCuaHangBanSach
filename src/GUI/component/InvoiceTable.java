@@ -156,7 +156,8 @@ public class InvoiceTable extends CustomTable{
     // Ghi đè addDataRow để đảm bảo các thành phần được thêm đúng cách
     @Override
     public void addDataRow(String[] data) {
-        int row = rowLabels.size();
+        // int row = rowLabels.size() + 1; //Vừa thêm + 1 để debug
+        int row = rowLabels.size();// Chứng tỏ nếu đi từ 1 thì xảy ra lỗi
     
         ArrayList<Component> labels = new ArrayList<>();
 
@@ -181,6 +182,7 @@ public class InvoiceTable extends CustomTable{
         dataPanel.add(panel, "gapbottom 2,grow,wrap");
 
         rowLabels.put(row, labels);
+        this.data.add(rowData); //mới thêm vào cần lưu ý, để đồng bộ với data của customTable
         // Cập nhật rowHeights nếu cần
         if (row >= rowHeights.length) {
             int[] newRowHeights = new int[row + 1];
@@ -198,18 +200,79 @@ public class InvoiceTable extends CustomTable{
         revalidate();
     }
 
+    // @Override
+    // public void addDataRow(String[] data) {
+    //     int row = rowLabels.size() + 1; // Đồng bộ với CustomTable (chỉ số từ 1)
+
+    //     String[] rowData = (data == null) ? new String[headers.length] : data;
+    //     if (data == null) {
+    //         for (int i = 0; i < rowData.length; i++) {
+    //             rowData[i] = "";
+    //         }
+    //     }
+
+    //     ArrayList<Component> labels = new ArrayList<>();
+    //     for (int i = 0; i < headers.length; i++) {
+    //         JPanel panel = createDataInput(rowData[i], row, i, rowData);
+    //         labels.add(panel);
+    //         dataPanel.add(panel, "gapbottom 2,grow,cell " + i + " " + (row - 1));
+    //     }
+
+    //     if (actions != null) {
+    //         JPanel panel = createActionPanel(row);
+    //         labels.add(panel);
+    //         dataPanel.add(panel, "gapbottom 2,grow,cell " + headers.length + " " + (row - 1));
+    //     }
+
+    //     rowLabels.put(row, labels);
+    //     this.data.add(rowData); // Đồng bộ với data của CustomTable
+
+    //     if (row >= rowHeights.length) {
+    //         int[] newRowHeights = new int[row + 1];
+    //         System.arraycopy(rowHeights, 0, newRowHeights, 0, rowHeights.length);
+    //         for (int i = rowHeights.length; i < newRowHeights.length; i++) {
+    //             newRowHeights[i] = 30;
+    //         }
+    //         rowHeights = newRowHeights;
+    //     }
+    //     updateRowConstraints();
+    //     dataPanel.setPreferredSize(null);
+    //     dataPanel.revalidate();
+    //     dataPanel.repaint();
+    //     revalidate();
+    //     repaint();
+    // }
+
     @Override
     public void setSelectedRow(int row) {
         super.setSelectedRow(row);
     }
-    @Override
-    public String getCellData(int row, int column){// chưa xây dựng
-        if(column == 0){
+    // @Override
+    // public String getCellData(int row, int column){// chưa xây dựng
+    //     if(column == 0){
 
+    //     }
+
+    //     String result = ((JLabel)rowLabels.get(row).get(column)).getText();
+    //     return(result);
+    // }
+
+    public String getCellData(int row, int column) {
+        Component comp = rowLabels.get(row).get(column);
+        if (comp instanceof JPanel) {
+            Component innerComp = ((JPanel) comp).getComponent(0);
+            if (innerComp instanceof JTextField) {
+                String text = ((JTextField) innerComp).getText();
+                return text.isEmpty() ? "0" : text; // Tránh chuỗi rỗng
+            } else if (innerComp instanceof CustomTextFieldSL) {
+                String text = ((CustomTextFieldSL) innerComp).getText();
+                return text.isEmpty() ? "1" : text; // Giá trị mặc định cho số lượng
+            } else if (innerComp instanceof JLabel) {
+                String text = ((JLabel) innerComp).getText();
+                return text.isEmpty() ? "0" : text; // Tránh chuỗi rỗng
+            }
         }
-
-        String result = ((JLabel)rowLabels.get(row).get(column)).getText();
-        return(result);
+        return "0"; // Giá trị mặc định nếu không xác định được
     }
 
     @Override
@@ -252,6 +315,51 @@ public class InvoiceTable extends CustomTable{
         dataPanel.revalidate();
         dataPanel.repaint();
     }
+
+    // @Override
+    // public void updateRowData(int row, String[] newData) {
+    //     if (!rowLabels.containsKey(row)) {
+    //         return;
+    //     }
+    //     if (newData == null || newData.length == 0) {
+    //         return;
+    //     }
+
+    //     List<Component> rowComponents = rowLabels.get(row);
+    //     for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+    //         Component comp = rowComponents.get(i);
+    //         if (comp instanceof JPanel) {
+    //             JPanel panel = (JPanel) comp;
+    //             Component innerComp = panel.getComponent(0);
+    //             String value = newData[i] != null ? newData[i] : "";
+                
+    //             if (innerComp instanceof JTextField) {
+    //                 ((JTextField) innerComp).setText(value);
+    //             } else if (innerComp instanceof CustomTextFieldSL) {
+    //                 try {
+    //                     ((CustomTextFieldSL) innerComp).setText(value.isEmpty() ? "1" : value);
+    //                 } catch (IllegalArgumentException e) {
+    //                     ((CustomTextFieldSL) innerComp).setText("1");
+    //                 }
+    //             } else if (innerComp instanceof JLabel) {
+    //                 ((JLabel) innerComp).setText(value);
+    //             }
+    //         }
+    //     }
+
+    //     if (row - 1 < data.size()) {
+    //         data.set(row - 1, newData);
+    //     } else {
+    //         // Đảm bảo data đủ kích thước
+    //         while (data.size() < row - 1) {
+    //             data.add(new String[headers.length]);
+    //         }
+    //         data.add(newData);
+    //     }
+
+    //     dataPanel.revalidate();
+    //     dataPanel.repaint();
+    // }
 
     public CustomTextFieldSL getTextFieldSL(int row){
         CustomTextFieldSL textField = null;

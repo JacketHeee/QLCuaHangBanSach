@@ -108,9 +108,9 @@ public class TacGiaDialog extends JDialog implements ActionListener{
     }
 
     public void setOldData(){
-        String ten = tacGiaPanel.getTable().getCellData(rowSelected, 1);
+        String ten = tacGiaPanel.getTable().getCellData(rowSelected, 0 );
 
-        inputForm.getListItem().get(0).setText(ten);
+        inputForm.getListItem().get(0).setText(tacGiaBUS.getTacGiaById(Integer.parseInt(ten)).getTenTacGia());
     }
 
     @Override

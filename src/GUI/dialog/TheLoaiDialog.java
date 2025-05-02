@@ -108,9 +108,11 @@ public class TheLoaiDialog extends JDialog implements ActionListener{
     }
 
     public void setOldData(){
-        String tenTheLoai = theLoaiPanel.getTable().getCellData(rowSelected, 1);
+        String ma = theLoaiPanel.getTable().getCellData(rowSelected, 0);
+        
 
-        inputForm.getListItem().get(0).setText(tenTheLoai);
+
+        inputForm.getListItem().get(0).setText(theLoaiBUS.getTheLoaiById(Integer.parseInt(ma)).getTenTheLoai());
     }
 
     @Override

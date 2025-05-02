@@ -126,15 +126,14 @@ public class NhaCungCapDialog extends JDialog implements ActionListener{
     }
 
     public void setOldData(){
-        String ten = nhaCungCapPanel.getTable().getCellData(rowSelected, 1);
-        String diaChi = nhaCungCapPanel.getTable().getCellData(rowSelected, 2);
-        String soDT = nhaCungCapPanel.getTable().getCellData(rowSelected, 3);
-        String email = nhaCungCapPanel.getTable().getCellData(rowSelected, 4);
 
-        inputForm.getListItem().get(0).setText(ten);
-        inputForm.getListItem().get(1).setTextDC(diaChi);
-        inputForm.getListItem().get(2).setText(soDT);
-        inputForm.getListItem().get(3).setText(email);
+        int ma = Integer.parseInt(nhaCungCapPanel.getTable().getCellData(rowSelected, 0));
+        NhaCungCapDTO ncc = nhaCungCapBUS.getNCCById(ma);
+
+        inputForm.getListItem().get(0).setText(ncc.getTenNCC());
+        inputForm.getListItem().get(1).setTextDC(ncc.getDiaChi());
+        inputForm.getListItem().get(2).setText(ncc.getSoDT());
+        inputForm.getListItem().get(3).setText(ncc.getEmail());
     }
 
     @Override

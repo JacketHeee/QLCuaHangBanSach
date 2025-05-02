@@ -96,4 +96,24 @@ public class ViTriVungDAO implements DAOInterface<ViTriVungDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public ViTriVungDTO getViTriVungById(int maVung) {
+        String sql = "SELECT * FROM VITRIVUNG WHERE maVung = " + maVung;
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        ViTriVungDTO result = null;
+        try {
+            while (rs.next()) {
+                int id = rs.getInt("maVung");
+                String tenVung = rs.getString("tenVung");
+                ViTriVungDTO vung = new ViTriVungDTO(id, tenVung);
+                result = vung;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
 }

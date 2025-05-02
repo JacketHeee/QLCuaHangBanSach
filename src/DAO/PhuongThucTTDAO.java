@@ -81,4 +81,26 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public PhuongThucTTDTO getPTTTById(int maPTTT) {
+        PhuongThucTTDTO result = null;
+        String sql = "SELECT * FROM PHUONGTHUC_TT WHERE maPT = " + maPTTT;
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                int id = rs.getInt("maPT");
+                String tenPTTT = rs.getString("tenPTTT");
+                PhuongThucTTDTO phuongThucTT = new PhuongThucTTDTO(id, tenPTTT);
+                result = phuongThucTT;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
 }

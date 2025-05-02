@@ -94,8 +94,10 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private JLabel lblNV;
     private JLabel lblPN;
     private JLabel lblNgayNhap;
+    private Runnable runnable;
 
-    public TaoPhieuNhapForm(MainFrame mainFrame) {
+    public TaoPhieuNhapForm(MainFrame mainFrame,Runnable runnable) {
+        this.runnable = runnable;
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
@@ -338,6 +340,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
                 break;
             case "btnLuu":
                 themPhieuNhap();
+                runnable.run();
                 break;
             default:
                 break;

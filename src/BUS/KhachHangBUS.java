@@ -81,5 +81,9 @@ public class KhachHangBUS {
 	public String getTenByMaKhachHang(int ma){
 		return(khachHangDAO.getTenByMaKhachHang(ma));
 	}
+
+	public KhachHangDTO getKhachHangById(int ma) {
+		return khachHangDAO.getKhachHangById(ma);
+	}
 	
 }

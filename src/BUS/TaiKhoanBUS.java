@@ -105,4 +105,8 @@ public class TaiKhoanBUS {
 		}	
 		return(false);
 	}
+
+	public TaiKhoanDTO getTaiKhoanById(int ma) {
+		return taiKhoanDAO.getTaiKhoanById(ma);
+	}
 }

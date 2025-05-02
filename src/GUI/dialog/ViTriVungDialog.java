@@ -107,10 +107,11 @@ public class ViTriVungDialog extends JDialog implements ActionListener{
         }
     }
 
-    public void setOldData(){
-        String ten = viTriVungPanel.getTable().getCellData(rowSelected, 1);
+    public void setOldData() {
+        String ma = viTriVungPanel.getTable().getCellData(rowSelected, 0);
+        ViTriVungDTO vitri = viTriVungBUS.getViTriVungById(Integer.parseInt(ma));
 
-        inputForm.getListItem().get(0).setText(ten);
+        inputForm.getListItem().get(0).setText(vitri.getTenVung());
     }
 
     @Override

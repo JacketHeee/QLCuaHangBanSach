@@ -108,9 +108,10 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
     }
 
     public void setOldData(){
-        String tenPTTT = phuongThucTTPanel.getTable().getCellData(rowSelected, 1);
+        String ma = phuongThucTTPanel.getTable().getCellData(rowSelected, 0);
+        
 
-        inputForm.getListItem().get(0).setText(tenPTTT);
+        inputForm.getListItem().get(0).setText(phuongThucTTBUS.getPTTTById(Integer.parseInt(ma)).getTenPTTT());
     }
 
     @Override

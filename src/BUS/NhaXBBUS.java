@@ -94,4 +94,8 @@ public class NhaXBBUS {
 		return(nhaXBDAO.getTenNXBByMaSach(ma));
 	}
 
+	public NhaXBDTO getNXBById(int ma) {
+		return nhaXBDAO.getNXBById(ma);
+	}
+
 }

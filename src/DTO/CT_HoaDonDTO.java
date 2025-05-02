@@ -1,5 +1,6 @@
 package DTO;
 
+import DAO.SachDAO;
 import java.math.BigDecimal;
 
 public class CT_HoaDonDTO {
@@ -56,5 +57,10 @@ public class CT_HoaDonDTO {
         this.maSach = maSach;
     }
 
+    // Phương thức để lấy tên sách từ mã sách
+    public String getTenSach() {
+        SachDAO sachDAO = SachDAO.getInstance();
+        return sachDAO.getTenByMa(this.maSach); 
+    }
 }
 

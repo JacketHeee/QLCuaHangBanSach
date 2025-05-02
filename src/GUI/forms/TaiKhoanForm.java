@@ -46,7 +46,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
 
     private String title;
     private int id = 12;
-    private String[] header = {"Mã tài khoản","Username","Password","Quyền"};
+    private String[] header = {"Mã tài khoản","Username","Nhân viên","Quyền"};
     private TaiKhoanBUS taiKhoanBUS;
     private MainFrame mainFrame;
     private ArrayList<TaiKhoanDTO> listKH;

@@ -74,6 +74,29 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
         return result;
     }
 
+    public TheLoaiDTO getTheLoaiById(int maTheLoai) {
+        TheLoaiDTO result = null;
+        String sql = "SELECT * FROM THELOAI WHERE maTheLoai = " + maTheLoai;
+        
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                int id = rs.getInt("maTheloai");
+                String tenTheLoai = rs.getString("tenTheloai");
+                TheLoaiDTO theLoai = new TheLoaiDTO(id, tenTheLoai);
+                result = theLoai;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
     public ArrayList<String> getAllTenTheLoai(){
         ArrayList<String> result = new ArrayList<>();
         String sql = "SELECT tenTheLoai FROM THELOAI WHERE trangThai = 1";

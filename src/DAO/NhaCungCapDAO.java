@@ -92,4 +92,29 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
         jdbcUtil.Close();
         return result;
     }
+
+    public NhaCungCapDTO getNhaCungCapById(int maNhaCC) {
+        NhaCungCapDTO result = null;
+        String sql = "SELECT * FROM NHACUNGCAP WHERE maNCC = " + maNhaCC;
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                int maNCC = rs.getInt("maNCC");
+                String tenNCC = rs.getString("tenNCC");
+                String diaChi = rs.getString("diaChi");
+                String soDT = rs.getString("soDT");
+                String email = rs.getString("email");
+                NhaCungCapDTO ncc = new NhaCungCapDTO(maNCC, tenNCC, diaChi, soDT, email);
+                result = ncc;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
 }

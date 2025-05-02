@@ -120,13 +120,6 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
         int ma = Integer.parseInt(khuyenMaiPanel.getTable().getCellData(rowSelected, 0));
         KhuyenMaiDTO khuyenMai = khuyenMaiBUS.getInstanceByMa(ma);
 
-
-        // String ten = khuyenMaiPanel.getTable().getCellData(rowSelected, 1);
-        // String dKGiam = khuyenMaiPanel.getTable().getCellData(rowSelected, 2);
-        // String giaTriGiam = khuyenMaiPanel.getTable().getCellData(rowSelected, 3);
-        // String ngayBatDau = khuyenMaiPanel.getTable().getCellData(rowSelected, 4);
-        // String ngayKetThuc = khuyenMaiPanel.getTable().getCellData(rowSelected, 5);
-
         inputForm.getListItem().get(0).setText(khuyenMai.getTenKM());
         inputForm.getListItem().get(1).setText(khuyenMai.getDieuKienGiam());
         inputForm.getListItem().get(2).setText(khuyenMai.getGiaTriGiam() + "");

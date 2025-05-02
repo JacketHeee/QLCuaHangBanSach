@@ -150,10 +150,10 @@ public class AddNhomQuyen extends JDialog implements ActionListener, ItemListene
         panel.add(new JLabel("<html><b>Tên nhóm quyền: </b></html>"));
         fieldNameRole = new JTextField();
         if(type.equals("update")){
-            fieldNameRole.setText(phanQuyenForm.getTable().getCellData(rowSelected, 1));
+            fieldNameRole.setText(nhomQuyenBUS.getTenByMaNhomQuyen(Integer.parseInt(phanQuyenForm.getTable().getCellData(rowSelected, 0))));
         }
         else if(type.equals("detail")){
-            fieldNameRole.setText(phanQuyenForm.getTable().getCellData(rowSelected, 1));
+            fieldNameRole.setText(nhomQuyenBUS.getTenByMaNhomQuyen(Integer.parseInt(phanQuyenForm.getTable().getCellData(rowSelected, 0))));
             fieldNameRole.setEditable(false);
         }
         panel.add(fieldNameRole,"pushx, grow");        

@@ -136,16 +136,18 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
 
     public void setOldData(){
         int maTK = Integer.parseInt(taiKhoanPanel.getTable().getCellData(rowSelected, 0));
-        String userName = taiKhoanPanel.getTable().getCellData(rowSelected, 1);
-        String password = taiKhoanPanel.getTable().getCellData(rowSelected, 2);
-        String tenRole = taiKhoanPanel.getTable().getCellData(rowSelected, 3);
+        // String userName = taiKhoanPanel.getTable().getCellData(rowSelected, 1);
+        // String password = taiKhoanPanel.getTable().getCellData(rowSelected, 2);
+        // String tenRole = taiKhoanPanel.getTable().getCellData(rowSelected, 3);
+
+        TaiKhoanDTO tk = taiKhoanBUS.getTaiKhoanById(maTK);
 
         String tenNV = nhanVienBUS.getTenNVByMaTK(maTK);
 
-        inputForm.getListItem().get(0).setText(userName);
-        inputForm.getListItem().get(1).setText(password);
+        inputForm.getListItem().get(0).setText(tk.getUsername());
+        inputForm.getListItem().get(1).setText(tk.getPassword());
         inputForm.getListItem().get(2).setSelection(tenNV);
-        inputForm.getListItem().get(3).setSelection(tenRole);
+        inputForm.getListItem().get(3).setSelection(nhomQuyenBUS.getTenByMaNhomQuyen(tk.getMaRole()));
     }
 
     @Override

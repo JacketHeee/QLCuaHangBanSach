@@ -111,15 +111,16 @@ public class NhanVienDialog extends JDialog implements ActionListener{
     }
 
     public void setOldData(){
-        String ten = nhanVienPanel.getTable().getCellData(rowSelected, 1);
-        String ngSinh = nhanVienPanel.getTable().getCellData(rowSelected, 2);
-        String gioiTinh = nhanVienPanel.getTable().getCellData(rowSelected, 3);
-        String soDT = nhanVienPanel.getTable().getCellData(rowSelected, 4);
+        String ma = nhanVienPanel.getTable().getCellData(rowSelected, 0);
 
-        inputForm.getListItem().get(0).setText(ten);
-        inputForm.getListItem().get(1).setDateByString(ngSinh);
-        inputForm.getListItem().get(2).setSelection(gioiTinh);
-        inputForm.getListItem().get(3).setText(soDT);
+        NhanVienDTO nv = nhanVienBUS.getInstanceByMa(Integer.parseInt(ma));
+
+
+
+        inputForm.getListItem().get(0).setText(nv.getHoTen());
+        inputForm.getListItem().get(1).setDateByString(nv.getNgaySinhAsString());
+        inputForm.getListItem().get(2).setSelection(nv.getGioiTinh());
+        inputForm.getListItem().get(3).setText(nv.getSoDT());
     }
 
     @Override

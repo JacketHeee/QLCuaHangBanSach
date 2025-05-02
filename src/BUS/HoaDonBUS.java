@@ -1,11 +1,13 @@
 package BUS;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import DAO.HoaDonDAO;
+import DTO.CT_HoaDonDTO;
 import DTO.HoaDonDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HoaDonBUS {
     private static HoaDonBUS instance;
@@ -112,5 +114,13 @@ public class HoaDonBUS {
     public HoaDonDTO getInstanceByID(int id){
         return(hoaDonDAO.getInstanceByID(id));
     }
-    
+
+    // Hàm xuất hóa đơn ra PDF
+    public void xuatHoaDonPDF(HoaDonDTO hoaDon) {
+        List<CT_HoaDonDTO> listChiTiet = getChiTietHoaDon(hoaDon.getMaHD());
+        hoaDonDAO.xuatHoaDonPDF(hoaDon, listChiTiet);
+    }
+    private List<CT_HoaDonDTO> getChiTietHoaDon(int maHD) {
+        return CT_HoaDonBUS.getInstance().getListCTHDByMaHD(maHD);
+    }
 }

@@ -128,15 +128,14 @@ public class NhaXBDialog extends JDialog implements ActionListener{
     }
 
     public void setOldData(){
-        String ten = nhaXBPanel.getTable().getCellData(rowSelected, 1);
-        String diaChi = nhaXBPanel.getTable().getCellData(rowSelected, 2);
-        String soDT = nhaXBPanel.getTable().getCellData(rowSelected, 3);
-        String email = nhaXBPanel.getTable().getCellData(rowSelected, 4);
+        String ma = nhaXBPanel.getTable().getCellData(rowSelected, 0);
 
-        inputForm.getListItem().get(0).setText(ten);
-        inputForm.getListItem().get(1).setTextDC(diaChi);
-        inputForm.getListItem().get(2).setText(soDT);
-        inputForm.getListItem().get(3).setText(email);
+        NhaXBDTO nxb = nhaXBBUS.getNXBById(Integer.parseInt(ma));
+
+        inputForm.getListItem().get(0).setText(nxb.getTenNXB());
+        inputForm.getListItem().get(1).setTextDC(nxb.getDiaChi());
+        inputForm.getListItem().get(2).setText(nxb.getSoDT());
+        inputForm.getListItem().get(3).setText(nxb.getEmail());
     }
 
     @Override

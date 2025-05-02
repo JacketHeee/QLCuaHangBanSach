@@ -62,7 +62,6 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		rowUpdated = jdbcUtil.executeUpdate(
 			query,
 			t.getTenSach(),
-			t.getGiaBan(),
 			t.getNamXB(),
 			t.getMaVung(),
 			t.getMaNXB(),

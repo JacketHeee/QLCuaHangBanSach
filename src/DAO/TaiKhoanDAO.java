@@ -1,11 +1,10 @@
 package DAO;
 
+import DTO.TaiKhoanDTO;
+import config.JDBCUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import DTO.TaiKhoanDTO;
-import config.JDBCUtil;
 public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
     private static TaiKhoanDAO instance;
     private TaiKhoanDAO() {}
@@ -91,6 +90,33 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
         return result;
     }
 
+    public TaiKhoanDTO getTaiKhoanById(int ma) {
+        TaiKhoanDTO result = null;
+
+        String sql = "SELECT * FROM TAIKHOAN WHERE maTK = " + ma;
+        
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                int maTK = rs.getInt("maTK");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                int maRole = rs.getInt("maRole");
+                
+                TaiKhoanDTO tk = new TaiKhoanDTO(maTK, username, password, maRole);
+                result = tk;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }
+
     public TaiKhoanDTO SelectTaiKhoanByUserName(String userName){
         TaiKhoanDTO result = null;
         String sql = "SELECT * FROM taiKhoan WHERE username = ?";
@@ -114,5 +140,26 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
         }
         jdbcUtil.Close();
         return(result);
-    }   
+    }
+    
+    public String getUsernameByMaTK(int maTK) {
+        String username = null;
+        String sql = "SELECT username FROM TAIKHOAN WHERE maTK = ? AND trangThai = 1";
+    
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maTK);
+    
+        try {
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        jdbcUtil.Close();
+        return username;
+    }
+    
 }

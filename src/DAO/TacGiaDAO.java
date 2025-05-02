@@ -84,6 +84,28 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
         return result;
     }
 
+    public TacGiaDTO getTacGiaById(int maTacGia) {
+        TacGiaDTO result = null;
+        String sql = "SELECT * FROM TACGIA WHERE maTacGia = " + maTacGia;
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                int id = rs.getInt("maTacGia");
+                String tenTacGia = rs.getString("tenTacGia");
+                TacGiaDTO tacGia = new TacGiaDTO(id, tenTacGia);
+                result= tacGia;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        jdbcUtil.Close();
+        return result;
+    }   
+
     public ArrayList<String> getAllTenTacGia(){
         ArrayList<String> result = new ArrayList<>();
         String sql = "SELECT tenTacGia FROM TACGIA WHERE TRANGTHAI = 1";

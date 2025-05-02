@@ -87,5 +87,9 @@ public class NhaCungCapBUS {
 		}
 		return(null);
 	}
+
+	public NhaCungCapDTO getNCCById(int ma) {
+		return nhaCungCapDAO.getNhaCungCapById(ma);
+	}
 	
 }

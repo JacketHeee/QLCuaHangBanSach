@@ -2,6 +2,8 @@ package BUS;
 
 import java.util.ArrayList;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import DAO.TacGiaDAO;
 import DTO.TacGiaDTO;
 
@@ -70,6 +72,10 @@ public class TacGiaBUS {
 
 	public String getTenByMa(int ma){
 		return(tacGiaDAO.getTenByMa(ma));
+	}
+
+	public TacGiaDTO getTacGiaById(int ma) {
+		return tacGiaDAO.getTacGiaById(ma);
 	}
 
 }

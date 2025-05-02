@@ -72,4 +72,8 @@ public class TheLoaiBUS {
 		return(theLoaiDAO.getTenByMa(ma));
 	}
 
+	public TheLoaiDTO getTheLoaiById(int maTheLoai) {
+		return theLoaiDAO.getTheLoaiById(maTheLoai);
+	}
+
 }

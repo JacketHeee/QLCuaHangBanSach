@@ -83,4 +83,9 @@ public class PhuongThucTTBUS {
 		}
 		return(null);
 	}
+
+	public PhuongThucTTDTO getPTTTById(int ma) {
+		return phuongThucTTDAO.getPTTTById(ma);
+	}
 }
+

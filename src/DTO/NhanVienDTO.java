@@ -1,6 +1,7 @@
 package DTO;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 public class NhanVienDTO {
     private int maNV; // Đã thay đổi kiểu từ String thành int
@@ -66,6 +67,12 @@ public class NhanVienDTO {
 
     public Date getNgaySinh() {
         return ngaySinh;
+    }
+
+     // Trả về ngày sinh dưới dạng chuỗi "dd/MM/yyyy"
+    public String getNgaySinhAsString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return ngaySinh != null ? sdf.format(ngaySinh) : "";
     }
 
     public void setNgaySinh(Date ngaySinh) {

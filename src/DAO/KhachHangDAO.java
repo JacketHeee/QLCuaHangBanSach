@@ -94,6 +94,32 @@ public class KhachHangDAO implements DAOInterface<KhachHangDTO>{
 		return result;
 	}
 
+	public KhachHangDTO getKhachHangById(int maKhachHang) {
+		KhachHangDTO result = null;
+		String sql = "SELECT * FROM KhachHang WHERE maKH = " + maKhachHang;
+		
+		
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		ResultSet rs = jdbcUtil.executeQuery(sql);
+		try {
+			while(rs.next()) {
+				int id = rs.getInt("maKH");
+				String tenKH = rs.getString("tenKH");
+				String soDT = rs.getString("soDT");
+				String gioiTinh = rs.getString("gioiTinh");
+				KhachHangDTO KhachHang = new KhachHangDTO(id, tenKH, soDT, gioiTinh);
+				result = KhachHang;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		jdbcUtil.Close();
+		return result;
+	}
+
 	public String getTenByMaKhachHang(int ma){
 		String result = new String();
 		String sql = "SELECT tenKH FROM KhachHang WHERE maKH = ?";

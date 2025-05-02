@@ -37,6 +37,7 @@ import GUI.forms.SachForm;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import resources.base.baseTheme;
+import utils.FormatterUtil;
 import utils.Validate;
 
 public class SachDialog extends JDialog implements ActionListener{
@@ -186,8 +187,10 @@ public class SachDialog extends JDialog implements ActionListener{
 
     public void setOldData(){
         int ma = Integer.parseInt(sachPanel.getTable().getCellData(rowSelected, 0));
-        String ten = sachPanel.getTable().getCellData(rowSelected, 1);
-        String namXB = sachPanel.getTable().getCellData(rowSelected, 4);
+        // String ten = sachPanel.getTable().getCellData(rowSelected, 1);
+        // String namXB = sachPanel.getTable().getCellData(rowSelected, 4);
+        
+        SachDTO sach = sachBUS.getInstanceByID(ma);
 
         String tenVung = viTriVungBUS.getTenVungByMaSach(ma);
         String tenNXB = nhaXBBUS.getTenNXBByMaSach(ma);
@@ -211,8 +214,8 @@ public class SachDialog extends JDialog implements ActionListener{
 
         String path = sachBUS.getPathByMa(ma);
 
-        inputForm.getListItem().get(0).setText(ten);
-        inputForm.getListItem().get(1).setText(namXB);
+        inputForm.getListItem().get(0).setText(sach.getTenSach());
+        inputForm.getListItem().get(1).setText(sach.getNamXB()+"");
         inputForm.getListItem().get(2).setSelection(tenVung);
         inputForm.getListItem().get(3).setSelection(tenNXB);
         inputForm.getListItem().get(4).setTextKNNN(newListTL);
@@ -318,12 +321,13 @@ public class SachDialog extends JDialog implements ActionListener{
         int maNXB = nhaXBBUS.getMaNXBByTen(tenNhaXB);
 
         String path = inputForm.getListItem().get(7).getPath();
-
+        
         SachDTO sach = new SachDTO(ma, ten, namXB, maVung, maNXB, path);
+        BigDecimal giaban = sachBUS.getInstanceByID(ma).getGiaBan();
         if(sachBUS.update(sach) != 0){
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
-            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", sach.getGiaBan() + "", sach.getNamXB() + ""};
+            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", FormatterUtil.formatNumberVN(giaban) + "", sach.getNamXB() + ""};
             sachPanel.getTable().setRowData(rowSelected, row);
             this.dispose();
         }

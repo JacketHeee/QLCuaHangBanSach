@@ -9,6 +9,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +44,12 @@ public class CustomTable extends JPanel implements ActionListener {
     private TableActionListener actionListener;
 
     protected int maxTextWidth = 110;
+
+
+    // Các thuộc tính hiện có...
+    private JTextField currentEditingField = null;
+    private int currentEditingRow = -1;
+    private int currentEditingCol = -1;
     
 
     public JPanel getDataPanel() {
@@ -162,7 +174,153 @@ public class CustomTable extends JPanel implements ActionListener {
         label.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
+
+        // Thêm MouseListener cho nhấp đúp
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    // Tìm chỉ số hàng hiện tại
+                    int currentRow = -1;
+                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                        if (entry.getValue().contains(label)) {
+                            currentRow = entry.getKey();
+                            break;
+                        }
+                    }
+                    if (currentRow == -1) return; // Hàng không tồn tại
+
+                    // Tìm chỉ số cột
+                    int colIndex = -1;
+                    List<Component> rowComponents = rowLabels.get(currentRow);
+                    if (rowComponents != null) {
+                        for (int i = 0; i < rowComponents.size(); i++) {
+                            if (rowComponents.get(i) == label) {
+                                colIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (colIndex < headers.length) {
+                        startEditing(currentRow, colIndex, label);
+                    }
+                }
+            }
+            // @Override
+            // public void mouseClicked(MouseEvent e) {
+            //     if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+            //         // Chỉ cho phép chỉnh sửa nếu không phải cột hành động
+            //         int colIndex = -1;
+            //         for (int i = 0; i < rowLabels.get(row).size(); i++) {
+            //             if (rowLabels.get(row).get(i) == label) {
+            //                 colIndex = i;
+            //                 break;
+            //             }
+            //         }
+            //         if (colIndex < headers.length) { // Không phải cột hành động
+            //             startEditing(row, colIndex, label);
+            //         }
+            //     }
+            // }
+        });
         return label;
+    }
+
+    private void startEditing(int row, int col, JLabel label) {
+        // Nếu đang chỉnh sửa ô khác, lưu ô đó trước
+        if (currentEditingField != null) {
+            saveEditing();
+        }
+    
+        // Lấy dữ liệu gốc từ mảng data
+        String originalText = (row - 1 < data.size() && col < data.get(row - 1).length) 
+            ? data.get(row - 1)[col] : label.getText();
+    
+        // Tạo JTextField chỉ đọc
+        JTextField textField = new JTextField(originalText);
+        textField.setPreferredSize(new Dimension(150, 30));
+        textField.setHorizontalAlignment(SwingConstants.CENTER);
+        textField.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
+        textField.setEditable(false); // Vô hiệu hóa chỉnh sửa
+    
+        // Thay thế JLabel bằng JTextField
+        dataPanel.remove(label);
+        dataPanel.add(textField, "grow,cell " + col + " " + (row - 1));
+        rowLabels.get(row).set(col, textField);
+    
+        // Lưu trạng thái chỉnh sửa
+        currentEditingField = textField;
+        currentEditingRow = row;
+        currentEditingCol = col;
+    
+        // Thêm FocusListener và KeyListener để trở lại JLabel
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                saveEditing();
+            }
+        });
+    
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    saveEditing();
+                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    cancelEditing(row, col, originalText);
+                }
+            }
+        });
+    
+        // Cập nhật giao diện và đặt tiêu điểm
+        dataPanel.revalidate();
+        dataPanel.repaint();
+        textField.requestFocusInWindow();
+    }
+    
+    private void saveEditing() {
+        if (currentEditingField == null) return;
+    
+        int row = currentEditingRow;
+        int col = currentEditingCol;
+    
+        // Lấy văn bản gốc từ mảng data vì JTextField không thể chỉnh sửa
+        String originalText = (row - 1 < data.size() && col < data.get(row - 1).length) 
+            ? data.get(row - 1)[col] : "";
+    
+        // Chuyển lại thành JLabel
+        JLabel label = createDataLabel(originalText, row);
+        dataPanel.remove(currentEditingField);
+        dataPanel.add(label, "grow,cell " + col + " " + (row - 1));
+        rowLabels.get(row).set(col, label);
+    
+        // Xóa trạng thái chỉnh sửa
+        currentEditingField = null;
+        currentEditingRow = -1;
+        currentEditingCol = -1;
+    
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+
+    private void cancelEditing(int row, int col, String originalText) {
+        if (currentEditingField == null) return;
+
+        // Chuyển lại thành JLabel với văn bản gốc
+        JLabel label = createDataLabel(originalText, row);
+        dataPanel.remove(currentEditingField);
+        dataPanel.add(label, "grow,cell " + col + " " + (row - 1));
+        rowLabels.get(row).set(col, label);
+
+        // Xóa trạng thái chỉnh sửa
+        currentEditingField = null;
+        currentEditingRow = -1;
+        currentEditingCol = -1;
+
+        // Cập nhật giao diện
+        dataPanel.revalidate();
+        dataPanel.repaint();
     }
 
 
@@ -181,75 +339,67 @@ public class CustomTable extends JPanel implements ActionListener {
         return label;
     }
 
-
     public void removeRow(int row) {
         if (!rowLabels.containsKey(row)) return;
-    
-        // Xóa các thành phần của hàng khỏi dataPanel
-        // for (Component comp : rowLabels.get(row)) {
-        //     dataPanel.remove(comp);
-        // }
-        rowLabels.remove(row);
-    
-        // Cập nhật lại toàn bộ các hàng trong dataPanel
-        dataPanel.removeAll(); // Xóa toàn bộ để thêm lại từ đầu
-        Map<Integer, List<Component>> updatedRowLabels = new HashMap<>();
-        int newRowIndex = 1;
-    
-        // Tạo lại rowLabels với các chỉ số mới
-        for (int key : rowLabels.keySet()) 
-        if (key != row)
-            {
-            updatedRowLabels.put(newRowIndex, rowLabels.get(key));
-            newRowIndex++;
+
+        // Lưu trạng thái chỉnh sửa nếu hàng bị xóa đang được chỉnh sửa
+        if (currentEditingRow == row) {
+            saveEditing();
         }
-    
-        rowLabels.clear();
-        rowLabels.putAll(updatedRowLabels);
-    
-        // Thêm lại tất cả các thành phần vào dataPanel với constraint mới
-        for (int r : rowLabels.keySet()) {
-            List<Component> components = rowLabels.get(r);
-            for (int col = 0; col < components.size(); col++) {
-                Component comp = components.get(col);
-                // Nếu là JPanel chứa các nút hành động, cập nhật giá trị row cho các nút
-                if (comp instanceof JPanel && col == headers.length) {
-                    JPanel actionPanel = (JPanel) comp;
-                    for (Component button : actionPanel.getComponents()) {
-                        if (button instanceof CustumActionButtonTable) {
-                            ((CustumActionButtonTable) button).setRow(r); // Cập nhật row cho nút
-                        }
-                    }
+
+        // Xóa hàng khỏi data
+        if (row - 1 < data.size()) {
+            data.remove(row - 1);
+        }
+
+        // Cập nhật rowHeights
+        if (row < rowHeights.length) {
+            int[] newRowHeights = new int[rowHeights.length - 1];
+            for (int i = 0, j = 0; i < rowHeights.length; i++) {
+                if (i != row) {
+                    newRowHeights[j++] = rowHeights[i];
                 }
-                dataPanel.add(comp, "grow,cell " + col + " " + (r - 1));
             }
+            rowHeights = newRowHeights;
         }
-        // for (int r : rowLabels.keySet()) {
-        //     List<Component> components = rowLabels.get(r);
-        //     for (int col = 0; col < components.size(); col++) {
-        //         dataPanel.add(components.get(col), "grow,cell " + col + " " + (r - 1));
-        //     }
-        // }
-    
-        // Điều chỉnh selectedRow nếu cần
-        // if (selectedRow == row) {
-        //     selectedRow = -1; // Không có hàng nào được chọn nếu hàng bị xóa là hàng được chọn
-        // } else if (selectedRow > row) {
-        //     selectedRow--; // Giảm chỉ số của selectedRow nếu hàng bị xóa nằm trước nó
-        // }
-    
-        // Cập nhật màu và kích thước
+
+        // Lưu dữ liệu và xóa rowLabels, dataPanel
+        ArrayList<String[]> tempData = new ArrayList<>(data);
+        dataPanel.removeAll();
+        rowLabels.clear();
+
+        // Tái tạo các hàng từ tempData
+        for (String[] rowData : tempData) {
+            addDataRow(rowData);
+        }
+
+        // Cập nhật selectedRow
+        if (selectedRow == row) {
+            selectedRow = -1;
+        } else if (selectedRow > row) {
+            selectedRow--;
+        }
+
+        // Cập nhật màu, constraints và giao diện
         updateRowColors();
         updateRowConstraints();
-        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
-        repaint();
         revalidate();
+        repaint();
     }
 
+    // Phương thức sửa đổi để lưu ô đang chỉnh sửa khi chọn hàng khác
     public void setSelectedRow(int row) {
         if (!rowLabels.containsKey(row)) return;
+
+        // Lưu ô đang chỉnh sửa trước khi thay đổi hàng được chọn
+        if (currentEditingField != null) {
+            saveEditing();
+        }
+
+        // Hủy màu nền của hàng được chọn trước đó
         if (selectedRow != -1 && rowLabels.containsKey(selectedRow)) {
             Color previousColor = (selectedRow % 2 == 0) ? evenRowColor : oddRowColor;
             for (Component lbl : rowLabels.get(selectedRow)) {
@@ -257,15 +407,14 @@ public class CustomTable extends JPanel implements ActionListener {
             }
         }
 
-        JLabel label = (JLabel)(rowLabels.get(row).get(0));
-
+        // Cập nhật hàng được chọn mới
         selectedRow = row;
-        for (Component lbl : rowLabels.get(selectedRow)) {
+        for (Component lbl : rowLabels.get(row)) {
             lbl.setBackground(selectedColor);
         }
 
-        dataPanel.repaint();
         dataPanel.revalidate();
+        dataPanel.repaint();
     }
     
     public void updateRowColors() {
@@ -649,5 +798,4 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.revalidate();
         dataPanel.repaint();
     }
-    
 }

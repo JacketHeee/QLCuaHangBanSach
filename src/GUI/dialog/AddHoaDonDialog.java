@@ -20,7 +20,7 @@ public class AddHoaDonDialog extends JDialog{
     public AddHoaDonDialog(MainFrame mainFrame) {
         super(mainFrame,"",true);
         this.mainFrame = mainFrame;
-        this.taoHoaDonForm = new TaoHoaDonForm(mainFrame,this);
+        this.taoHoaDonForm = new TaoHoaDonForm(mainFrame,() -> setVisible(false));
         add(new CustomScrollPane(taoHoaDonForm));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = 1200;
@@ -31,7 +31,7 @@ public class AddHoaDonDialog extends JDialog{
     //cho chi tiết
     public AddHoaDonDialog(MainFrame mainFrame, HoaDonDTO hoaDon) {
         super(mainFrame,"",true);
-        this.taoHoaDonForm = new TaoHoaDonForm(mainFrame, hoaDon, "detail");
+        this.taoHoaDonForm = new TaoHoaDonForm(mainFrame, hoaDon, "detail",() -> setVisible(false));
         add(new CustomScrollPane(taoHoaDonForm));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = 1200;
