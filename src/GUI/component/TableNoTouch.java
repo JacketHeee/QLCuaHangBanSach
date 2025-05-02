@@ -22,7 +22,7 @@ public class TableNoTouch extends CustomTable {
     
     public void addDataRow(String[] data) {
         int row = rowLabels.size() + 1;
-        ArrayList<Component> labels = new ArrayList<>();
+        ArrayList<JComponent> labels = new ArrayList<>();
 
         // / Xử lý trường hợp data là null
         String[] rowData = (data == null) ? new String[headers.length] : data;
@@ -40,7 +40,7 @@ public class TableNoTouch extends CustomTable {
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     // Tìm chỉ số hàng hiện tại của JLabel trong rowLabels
                     int currentRow = -1;
-                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                    for (Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()) {
                         if (entry.getValue().contains(label)) {
                             currentRow = entry.getKey();
                             break;

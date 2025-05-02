@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -394,12 +395,12 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
         // int ma = Integer.parseInt(label.getText());
         // return(ma);
         try {
-            List<Component> rowComponents = table.getRowLabels().get(row);
+            List<JComponent> rowComponents = table.getRowLabels().get(row);
             if (rowComponents == null || rowComponents.isEmpty()) {
                 System.out.println("Hàng " + row + " không tồn tại trong rowLabels");
                 return -1; // Hoặc giá trị mặc định khác
             }
-            Component component = rowComponents.get(0);
+            JComponent component = rowComponents.get(0);
             if (!(component instanceof JLabel)) {
                 System.out.println("Thành phần tại hàng " + row + ", cột 0 không phải JLabel");
                 return -1;

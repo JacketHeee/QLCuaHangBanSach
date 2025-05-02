@@ -40,7 +40,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
 
     private String title;
     private int id = 7;
-    private String[] header = {"Mã nhập","Ngày nhập", "Nhà cung cấp", "Tổng tiền"};
+    private String[] header = {"Mã nhập","Ngày nhập", "Nhà cung cấp", "Tổng tiền","Nhân viên"};
     PhieuNhapBUS phieuNhapBUS;
     private MainFrame mainFrame;
     private ArrayList<PhieuNhapDTO> listKH;

@@ -9,6 +9,8 @@ import utils.UIUtils;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+
 import GUI.component.CustomTextFieldSL;
 import javax.swing.BorderFactory;
 
@@ -361,7 +363,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
     //update cột thành tiền(đ) của một chi tiết sản phẩm
     public void updateTongGiaNhap(int row){
-        Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
+        Map<Integer, List<JComponent>> rowLabels = this.table.getRowLabels();
         JLabel labelTT = getLabelTongTien(row, rowLabels);
         CustomTextFieldSL textFieldGN = getTextFieldGiaNhap(row, rowLabels);
         CustomTextFieldSL textFieldSL = getTextFieldSL(row, rowLabels); 
@@ -375,10 +377,10 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     }
 
     public void updateTongTienPhieuNhap(){ //Mỗi lần thêm phải tính lại hết
-        Map<Integer, List<Component>> rowLabels = table.getRowLabels();
+        Map<Integer, List<JComponent>> rowLabels = table.getRowLabels();
         int index = 1;
         BigDecimal result = new BigDecimal(0);
-        for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
+        for(Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()){
             JLabel lblTongTienSach = getLabelTongTien(index, rowLabels);
             BigDecimal tongTienSach = BigDecimal.valueOf(Double.parseDouble(lblTongTienSach.getText()));
             result = result.add(tongTienSach);
@@ -396,33 +398,33 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         this.lblTongTienPN.setText(String.format(template, i));
     }
 
-    public JLabel getLabelTongTien(int row, Map<Integer, List<Component>> rowLabels){
+    public JLabel getLabelTongTien(int row, Map<Integer, List<JComponent>> rowLabels){
         JLabel label = null;
-        Component cpn = rowLabels.get(row).get(4);
+        JComponent cpn = rowLabels.get(row).get(4);
         JPanel panel = (JPanel)cpn;
         label = (JLabel)panel.getComponent(0);
         return(label);
     }
 
-    public CustomTextFieldSL getTextFieldGiaNhap(int row, Map<Integer, List<Component>> rowLabels){
+    public CustomTextFieldSL getTextFieldGiaNhap(int row, Map<Integer, List<JComponent>> rowLabels){
         CustomTextFieldSL textField = null;
-        Component cpn = rowLabels.get(row).get(3);
+        JComponent cpn = rowLabels.get(row).get(3);
         JPanel panel = (JPanel)cpn;
         textField = (CustomTextFieldSL)panel.getComponent(0);
         return(textField);
     }
 
-    public CustomTextFieldSL getTextFieldSL(int row, Map<Integer, List<Component>> rowLabels){
+    public CustomTextFieldSL getTextFieldSL(int row, Map<Integer, List<JComponent>> rowLabels){
         CustomTextFieldSL textField = null;
-        Component cpn = rowLabels.get(row).get(2);
+        JComponent cpn = rowLabels.get(row).get(2);
         JPanel panel = (JPanel)cpn;
         textField = (CustomTextFieldSL)panel.getComponent(0);
         return(textField);
     }
     
-    public TextFieldListSach getTextFieldMaSach(int row, Map<Integer, List<Component>> rowLabels){
+    public TextFieldListSach getTextFieldMaSach(int row, Map<Integer, List<JComponent>> rowLabels){
         TextFieldListSach textField = null;
-        Component cpn = rowLabels.get(row).get(0);
+        JComponent cpn = rowLabels.get(row).get(0);
         JPanel panel = (JPanel)cpn;
         textField = (TextFieldListSach)panel.getComponent(0);
         return(textField);
@@ -497,9 +499,9 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
     public void insertSach(){
                 //maSach, maNhap, soLuong, giaNhap
-        Map<Integer, List<Component>> rowLabels = table.getRowLabels();
+        Map<Integer, List<JComponent>> rowLabels = table.getRowLabels();
         int maNhap = Integer.parseInt(this.maNhap);
-        for(Map.Entry<Integer, List<Component>> i : table.getRowLabels().entrySet()){
+        for(Map.Entry<Integer, List<JComponent>> i : table.getRowLabels().entrySet()){
             int row = i.getKey();
             int maSach = Integer.parseInt(getTextFieldMaSach(row, rowLabels).getText());
             int soLuong = Integer.parseInt(getTextFieldSL(row, rowLabels).getText());
@@ -510,7 +512,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     }
 
     public void setGiaBanSach(){
-        Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
+        Map<Integer, List<JComponent>> rowLabels = this.table.getRowLabels();
         for(int i = 0; i < rowLabels.size(); i++){
             int maSach = Integer.parseInt(getTextFieldMaSach(i, rowLabels).getText());
             SachDTO sach = sachBUS.getInstanceByID(maSach);
@@ -584,9 +586,9 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
     public void setStatusDetail(){
         this.comboboxNCC.setEnabled(false);
-        Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
+        Map<Integer, List<JComponent>> rowLabels = this.table.getRowLabels();
         int row = 1;
-        for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
+        for(Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()){
             getTextFieldSL(row, rowLabels).setEditable(false);
             getTextFieldMaSach(row, rowLabels).setEditable(false);
             getTextFieldGiaNhap(row, rowLabels).setEditable(false);

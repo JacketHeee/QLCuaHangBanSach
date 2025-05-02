@@ -168,10 +168,10 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
 
         ArrayList<String[]> data = new ArrayList<>();
         KhachHangBUS kh = new KhachHangBUS();
-        TaiKhoanBUS tk = new TaiKhoanBUS();
+        NhanVienBUS tk = new NhanVienBUS();
 
         for(HoaDonDTO i : inputData){
-            data.add(new String[]{i.getMaHD() + "", FormatterUtil.formatDateTime(i.getNgayBan()),kh.getTenByMaKhachHang(i.getMaKH()) , FormatterUtil.formatNumberVN(i.getTongTien()),tk.getTenByMaTaiKhoan(i.getMaTK())});
+            data.add(new String[]{i.getMaHD() + "", FormatterUtil.formatDateTime(i.getNgayBan()),kh.getTenByMaKhachHang(i.getMaKH()) , FormatterUtil.formatNumberVN(i.getTongTien()),tk.getTenNVByMaTK(i.getMaTK())});
         }
         return(data);
     }

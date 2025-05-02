@@ -27,7 +27,7 @@ public class CustomTable extends JPanel implements ActionListener {
     protected final Color evenRowColor = new Color(240, 240, 240);
     protected final Color oddRowColor = Color.WHITE;
     protected final Color hoverColor = new Color(220, 220, 255);
-    protected final Map<Integer, List<Component>> rowLabels = new HashMap<>();
+    protected final Map<Integer, List<JComponent>> rowLabels = new HashMap<>();
     protected int[] columnWidths;
     protected int[] rowHeights;
     protected MigLayout migLayout;
@@ -182,7 +182,7 @@ public class CustomTable extends JPanel implements ActionListener {
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     // Tìm chỉ số hàng hiện tại
                     int currentRow = -1;
-                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                    for (Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()) {
                         if (entry.getValue().contains(label)) {
                             currentRow = entry.getKey();
                             break;
@@ -192,7 +192,7 @@ public class CustomTable extends JPanel implements ActionListener {
 
                     // Tìm chỉ số cột
                     int colIndex = -1;
-                    List<Component> rowComponents = rowLabels.get(currentRow);
+                    List<JComponent> rowComponents = rowLabels.get(currentRow);
                     if (rowComponents != null) {
                         for (int i = 0; i < rowComponents.size(); i++) {
                             if (rowComponents.get(i) == label) {
@@ -386,14 +386,14 @@ public class CustomTable extends JPanel implements ActionListener {
         // Hủy màu nền của hàng được chọn trước đó
         if (selectedRow != -1 && rowLabels.containsKey(selectedRow)) {
             Color previousColor = (selectedRow % 2 == 0) ? evenRowColor : oddRowColor;
-            for (Component lbl : rowLabels.get(selectedRow)) {
+            for (JComponent lbl : rowLabels.get(selectedRow)) {
                 lbl.setBackground(previousColor);
             }
         }
 
         // Cập nhật hàng được chọn mới
         selectedRow = row;
-        for (Component lbl : rowLabels.get(row)) {
+        for (JComponent lbl : rowLabels.get(row)) {
             lbl.setBackground(selectedColor);
         }
 
@@ -403,9 +403,9 @@ public class CustomTable extends JPanel implements ActionListener {
     
     public void updateRowColors() {
         int rowIndex = 1;
-        for (List<Component> rowComponents : rowLabels.values()) {
+        for (List<JComponent> rowComponents : rowLabels.values()) {
             Color backgroundColor = (rowIndex % 2 == 0) ? evenRowColor : oddRowColor;
-            for (Component comp : rowComponents) {
+            for (JComponent comp : rowComponents) {
                 comp.setBackground(backgroundColor);
             }
             rowIndex++;
@@ -415,11 +415,11 @@ public class CustomTable extends JPanel implements ActionListener {
     public void editRow(int row) {
         if (!rowLabels.containsKey(row)) return;
         
-        List<Component> rowComponents = rowLabels.get(row);
-        List<Component> newComponents = new ArrayList<>();
+        List<JComponent> rowComponents = rowLabels.get(row);
+        List<JComponent> newComponents = new ArrayList<>();
         
         for (int i = 0; i < headers.length; i++) {
-            Component oldComp = rowComponents.get(i);
+            JComponent oldComp = rowComponents.get(i);
             if (oldComp instanceof JLabel) {
                 JLabel label = (JLabel) oldComp;
                 JTextField textField = new JTextField(label.getText());
@@ -579,7 +579,7 @@ public class CustomTable extends JPanel implements ActionListener {
             }
         }
 
-        ArrayList<Component> labels = new ArrayList<>();
+        ArrayList<JComponent> labels = new ArrayList<>();
 
         for (int i = 0; i < Math.min(rowData.length, headers.length); i++) {
             JLabel label = createDataLabel(rowData[i], row);
@@ -593,7 +593,7 @@ public class CustomTable extends JPanel implements ActionListener {
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     // Tìm chỉ số hàng hiện tại của JLabel trong rowLabels
                     int currentRow = -1;
-                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                    for (Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()) {
                         if (entry.getValue().contains(label)) {
                             currentRow = entry.getKey();
                             break;
@@ -658,10 +658,10 @@ public class CustomTable extends JPanel implements ActionListener {
             return; // Dữ liệu mới không hợp lệ
         }
 
-        List<Component> rowComponents = rowLabels.get(row);
+        List<JComponent> rowComponents = rowLabels.get(row);
         for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
             newData[i] = TextUtils.orverFlowText(newData[i], maxTextWidth, headers.length);
-            Component comp = rowComponents.get(i);
+            JComponent comp = rowComponents.get(i);
             if (comp instanceof JLabel) {
                 ((JLabel) comp).setText(newData[i] != null ? newData[i] : "");
             }
@@ -686,10 +686,10 @@ public class CustomTable extends JPanel implements ActionListener {
             return; // Dữ liệu mới không hợp lệ
         }
 
-        List<Component> rowComponents = rowLabels.get(row);
+        List<JComponent> rowComponents = rowLabels.get(row);
         for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
             TextUtils.orverFlowText(newData[i], maxTextWidth, headers.length);
-            Component comp = rowComponents.get(i);
+            JComponent comp = rowComponents.get(i);
             if (comp instanceof JLabel) {
                 ((JLabel) comp).setText(newData[i] != null ? newData[i] : "");
             }
@@ -711,16 +711,16 @@ public class CustomTable extends JPanel implements ActionListener {
             throw new IllegalArgumentException("Column index out of bounds");
         }
 
-        for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+        for (Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()) {
             int row = entry.getKey();
-            List<Component> components = entry.getValue();
-            Component oldComponent = components.get(columnIndex);
+            List<JComponent> components = entry.getValue();
+            JComponent oldComponent = components.get(columnIndex);
 
             // Xóa component cũ khỏi dataPanel
             dataPanel.remove(oldComponent);
 
             // Tạo component mới dựa trên componentType
-            Component newComponent;
+            JComponent newComponent;
             if ("JTextField".equalsIgnoreCase(componentType)) {
                 String text = (oldComponent instanceof JLabel) ? ((JLabel) oldComponent).getText() : "";
                 JTextField textField = new JTextField(text);
@@ -749,7 +749,7 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.revalidate();
         dataPanel.repaint();
     }
-    public Map<Integer, List<Component>> getRowLabels() {
+    public Map<Integer, List<JComponent>> getRowLabels() {
         return rowLabels;
     }
 
@@ -768,9 +768,9 @@ public class CustomTable extends JPanel implements ActionListener {
 
         // Cập nhật lại văn bản cho tất cả các ô trong bảng
         for (int row = 1; row <= rowLabels.size(); row++) {
-            List<Component> components = rowLabels.get(row);
+            List<JComponent> components = rowLabels.get(row);
             for (int col = 0; col < Math.min(components.size(), headers.length); col++) {
-                Component comp = components.get(col);
+                JComponent comp = components.get(col);
                 if (comp instanceof JLabel && col < headers.length) {
                     String originalText = col < data.get(row - 1).length ? data.get(row - 1)[col] : "";
                     ((JLabel) comp).setText(TextUtils.orverFlowText(originalText, maxTextWidth, headers.length));

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -31,6 +32,7 @@ public class InvoiceTable extends CustomTable{
     private TinhTongGia tinhTongGia;
     private TinhTongGiaChungTu tinhTongGiaChungTu;
     private String[] headerType;
+    
 
     public InvoiceTable(ArrayList<String[]> data, String[][] actions, DataForTable dataForTableFN, TinhTongGia tinhTongGia, TinhTongGiaChungTu tinhTongGiaChungTu, String[] headers, String[] headerType) { // do có super làm hơi xấu
         super(data, actions, headers);
@@ -127,7 +129,7 @@ public class InvoiceTable extends CustomTable{
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     // Tìm chỉ số hàng hiện tại
                     int currentRow = -1;
-                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                    for (Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()) {
                         if (entry.getValue().contains(label)) {
                             currentRow = entry.getKey();
                             break;
@@ -137,7 +139,7 @@ public class InvoiceTable extends CustomTable{
 
                     // Tìm chỉ số cột
                     int colIndex = -1;
-                    List<Component> rowComponents = rowLabels.get(currentRow);
+                    List<JComponent> rowComponents = rowLabels.get(currentRow);
                     if (rowComponents != null) {
                         for (int i = 0; i < rowComponents.size(); i++) {
                             if (rowComponents.get(i) == label) {
@@ -167,7 +169,7 @@ public class InvoiceTable extends CustomTable{
 
     // Phương thức hỗ trợ để đếm số component trong hàng hiện tại
     private int getComponentCountInRow(int row) {
-        List<Component> components = rowLabels.get(row);
+        List<JComponent> components = rowLabels.get(row);
         return components != null ? components.size() : 0;
     }
 
@@ -190,52 +192,114 @@ public class InvoiceTable extends CustomTable{
 
 
     // Ghi đè addDataRow để đảm bảo các thành phần được thêm đúng cách
+    // @Override
+    // public void addDataRow(String[] data) {
+    //     // int row = rowLabels.size() + 1; //Vừa thêm + 1 để debug
+    //     int row = rowLabels.size() + 1;// Chứng tỏ nếu đi từ 1 thì xảy ra lỗi
+    
+    //     // / Xử lý trường hợp data là null
+    //     String[] rowData = (data == null) ? new String[headers.length] : data;
+        
+    //     if (data == null) {
+    //         for (int i = 0; i < rowData.length; i++) {
+    //             rowData[i] = ""; // Điền giá trị rỗng cho dòng trống
+    //         }
+    //     }
+        
+    //     ArrayList<JComponent> labels = new ArrayList<>();
+
+    //     //Chỗ này chèn vào Panel
+    //     for (int i = 0; i <headers.length ; i++) {
+    //         JPanel label = createDataInput(rowData[i], row,i, data);
+    //         labels.add(label);
+    //         dataPanel.add(label, "gapbottom 2,grow,cell " + i + " " + (row));
+
+    //         label.addMouseListener(new java.awt.event.MouseAdapter() {
+    //             // public void mouseClicked(java.awt.event.MouseEvent evt) {
+    //             //     setSelectedRow(row);
+    //             // }
+
+    //             public void mouseClicked(java.awt.event.MouseEvent evt) {
+    //                 // Tìm chỉ số hàng hiện tại của JLabel trong rowLabels
+    //                 int currentRow = -1;
+    //                 for (Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()) {
+    //                     if (entry.getValue().contains(label)) {
+    //                         currentRow = entry.getKey();
+    //                         break;
+    //                     }
+    //                 }
+    //                 if (currentRow != -1) {
+    //                     setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
+    //                     if(onSelectRowListener != null){
+    //                         onSelectRowListener.OnSelectRow(currentRow); // đổi row->currentRow
+    //                     }
+    //                 }
+    //             }
+    //         });
+    //     }
+
+
+    //     if (actions != null) {
+    //         JPanel panel = createActionPanel(row);
+    //         labels.add(panel);
+    //         dataPanel.add(panel, "gapbottom 2,grow,wrap");
+    //     }
+
+    //     rowLabels.put(row, labels);
+
+    //     // Cập nhật rowHeights nếu cần
+    //     if (row >= rowHeights.length) {
+    //         int[] newRowHeights = new int[row + 1];
+    //         System.arraycopy(rowHeights, 0, newRowHeights, 0, rowHeights.length);
+    //         for (int i = rowHeights.length; i < newRowHeights.length; i++) {
+    //             newRowHeights[i] = 30;
+    //         }
+    //         rowHeights = newRowHeights;
+    //     }
+
+    //     updateRowConstraints();
+    //     // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+    //     dataPanel.setPreferredSize(null);
+    //     dataPanel.revalidate();
+    //     dataPanel.repaint();
+    //     repaint();
+    //     revalidate();
+    // }
+
     @Override
     public void addDataRow(String[] data) {
-        // int row = rowLabels.size() + 1; //Vừa thêm + 1 để debug
-        int row = rowLabels.size() + 1;// Chứng tỏ nếu đi từ 1 thì xảy ra lỗi
-    
-        // / Xử lý trường hợp data là null
+        int row = rowLabels.size() + 1;
         String[] rowData = (data == null) ? new String[headers.length] : data;
-        
         if (data == null) {
             for (int i = 0; i < rowData.length; i++) {
-                rowData[i] = ""; // Điền giá trị rỗng cho dòng trống
+                rowData[i] = "";
             }
         }
-        
-        ArrayList<Component> labels = new ArrayList<>();
 
-        //Chỗ này chèn vào Panel
-        for (int i = 0; i <headers.length ; i++) {
-            JPanel label = createDataInput(rowData[i], row,i, data);
+        ArrayList<JComponent> labels = new ArrayList<>();
+        for (int i = 0; i < headers.length; i++) {
+            JPanel label = createDataInput(rowData[i], row, i, data);
             labels.add(label);
-            dataPanel.add(label, "gapbottom 2,grow,cell " + i + " " + (row));
+            dataPanel.add(label, "gapbottom 2,grow,cell " + i + " " + row);
 
             label.addMouseListener(new java.awt.event.MouseAdapter() {
-                // public void mouseClicked(java.awt.event.MouseEvent evt) {
-                //     setSelectedRow(row);
-                // }
-
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    // Tìm chỉ số hàng hiện tại của JLabel trong rowLabels
                     int currentRow = -1;
-                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                    for (Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()) {
                         if (entry.getValue().contains(label)) {
                             currentRow = entry.getKey();
                             break;
                         }
                     }
                     if (currentRow != -1) {
-                        setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
-                        if(onSelectRowListener != null){
-                            onSelectRowListener.OnSelectRow(currentRow); // đổi row->currentRow
+                        setSelectedRow(currentRow);
+                        if (onSelectRowListener != null) {
+                            onSelectRowListener.OnSelectRow(currentRow);
                         }
                     }
                 }
             });
         }
-
 
         if (actions != null) {
             JPanel panel = createActionPanel(row);
@@ -245,7 +309,6 @@ public class InvoiceTable extends CustomTable{
 
         rowLabels.put(row, labels);
 
-        // Cập nhật rowHeights nếu cần
         if (row >= rowHeights.length) {
             int[] newRowHeights = new int[row + 1];
             System.arraycopy(rowHeights, 0, newRowHeights, 0, rowHeights.length);
@@ -256,7 +319,6 @@ public class InvoiceTable extends CustomTable{
         }
 
         updateRowConstraints();
-        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
         dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
@@ -321,39 +383,98 @@ public class InvoiceTable extends CustomTable{
     //     return(result);
     // }
 
+    // public String getCellData(int row, int column) {
+    //     JComponent comp = rowLabels.get(row).get(column);
+    //     if (comp instanceof JPanel) {
+    //         JComponent innerComp = ((JPanel) comp).getComponent(0);
+    //         if (innerComp instanceof JTextField) {
+    //             String text = ((JTextField) innerComp).getText();
+    //             return text.isEmpty() ? "0" : text; // Tránh chuỗi rỗng
+    //         } else if (innerComp instanceof CustomTextFieldSL) {
+    //             String text = ((CustomTextFieldSL) innerComp).getText();
+    //             return text.isEmpty() ? "1" : text; // Giá trị mặc định cho số lượng
+    //         } else if (innerComp instanceof JLabel) {
+    //             String text = ((JLabel) innerComp).getText();
+    //             return text.isEmpty() ? "0" : text; // Tránh chuỗi rỗng
+    //         }
+    //     }
+    //     return "0"; // Giá trị mặc định nếu không xác định được
+    // }
     public String getCellData(int row, int column) {
-        Component comp = rowLabels.get(row).get(column);
+        List<JComponent> rowComponents = rowLabels.get(row);
+        if (rowComponents == null || column >= rowComponents.size()) {
+            return "0";
+        }
+        JComponent comp = rowComponents.get(column);
         if (comp instanceof JPanel) {
-            Component innerComp = ((JPanel) comp).getComponent(0);
+            JComponent innerComp = (JComponent) ((JPanel) comp).getComponent(0);
             if (innerComp instanceof JTextField) {
                 String text = ((JTextField) innerComp).getText();
-                return text.isEmpty() ? "0" : text; // Tránh chuỗi rỗng
+                return text.isEmpty() ? "0" : text;
             } else if (innerComp instanceof CustomTextFieldSL) {
                 String text = ((CustomTextFieldSL) innerComp).getText();
-                return text.isEmpty() ? "1" : text; // Giá trị mặc định cho số lượng
+                return text.isEmpty() ? "1" : text;
             } else if (innerComp instanceof JLabel) {
                 String text = ((JLabel) innerComp).getText();
-                return text.isEmpty() ? "0" : text; // Tránh chuỗi rỗng
+                return text.isEmpty() ? "0" : text;
             }
         }
-        return "0"; // Giá trị mặc định nếu không xác định được
+        return "0";
     }
+
+    // @Override
+    // public void updateRowData(int row, String[] newData) {
+    //     if (!rowLabels.containsKey(row)) {
+    //         return; // Hàng không tồn tại
+    //     }
+    //     if (newData == null || newData.length == 0) {
+    //         return; // Dữ liệu mới không hợp lệ
+    //     }
+
+    //     List<JComponent> rowComponents = rowLabels.get(row);
+    //     for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
+    //         JComponent comp = rowComponents.get(i);
+    //         if (comp instanceof JPanel) {
+    //             JPanel panel = (JPanel) comp;
+    //             JComponent innerComp = panel.getComponent(0); // Lấy thành phần bên trong panel
+    //             String value = newData[i] != null ? newData[i] : "";
+                
+    //             if (innerComp instanceof JTextField) {
+    //                 ((JTextField) innerComp).setText(value);
+    //             } else if (innerComp instanceof CustomTextFieldSL) {
+    //                 try {
+    //                     ((CustomTextFieldSL) innerComp).setText(value);
+    //                 } catch (IllegalArgumentException e) {
+    //                     ((CustomTextFieldSL) innerComp).setText("0"); // Giá trị mặc định nếu không hợp lệ
+    //                 }
+    //             } else if (innerComp instanceof JLabel) {
+    //                 ((JLabel) innerComp).setText(value);
+    //             }
+    //         }
+    //     }
+
+    //     // Cập nhật dữ liệu trong mảng data
+    //     if (row < data.size()) {
+    //         data.set(row, newData);
+    //     }
+
+    //     // Cập nhật giao diện
+    //     dataPanel.revalidate();
+    //     dataPanel.repaint();
+    // }
 
     @Override
     public void updateRowData(int row, String[] newData) {
-        if (!rowLabels.containsKey(row)) {
-            return; // Hàng không tồn tại
-        }
-        if (newData == null || newData.length == 0) {
-            return; // Dữ liệu mới không hợp lệ
+        if (!rowLabels.containsKey(row) || newData == null || newData.length == 0) {
+            return;
         }
 
-        List<Component> rowComponents = rowLabels.get(row);
+        List<JComponent> rowComponents = rowLabels.get(row);
         for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
-            Component comp = rowComponents.get(i);
+            JComponent comp = rowComponents.get(i);
             if (comp instanceof JPanel) {
                 JPanel panel = (JPanel) comp;
-                Component innerComp = panel.getComponent(0); // Lấy thành phần bên trong panel
+                JComponent innerComp = (JComponent) panel.getComponent(0);
                 String value = newData[i] != null ? newData[i] : "";
                 
                 if (innerComp instanceof JTextField) {
@@ -362,7 +483,7 @@ public class InvoiceTable extends CustomTable{
                     try {
                         ((CustomTextFieldSL) innerComp).setText(value);
                     } catch (IllegalArgumentException e) {
-                        ((CustomTextFieldSL) innerComp).setText("0"); // Giá trị mặc định nếu không hợp lệ
+                        ((CustomTextFieldSL) innerComp).setText("0");
                     }
                 } else if (innerComp instanceof JLabel) {
                     ((JLabel) innerComp).setText(value);
@@ -370,66 +491,19 @@ public class InvoiceTable extends CustomTable{
             }
         }
 
-        // Cập nhật dữ liệu trong mảng data
         if (row < data.size()) {
             data.set(row, newData);
         }
 
-        // Cập nhật giao diện
         dataPanel.revalidate();
         dataPanel.repaint();
     }
-
-    // @Override
-    // public void updateRowData(int row, String[] newData) {
-    //     if (!rowLabels.containsKey(row)) {
-    //         return;
-    //     }
-    //     if (newData == null || newData.length == 0) {
-    //         return;
-    //     }
-
-    //     List<Component> rowComponents = rowLabels.get(row);
-    //     for (int i = 0; i < Math.min(newData.length, headers.length); i++) {
-    //         Component comp = rowComponents.get(i);
-    //         if (comp instanceof JPanel) {
-    //             JPanel panel = (JPanel) comp;
-    //             Component innerComp = panel.getComponent(0);
-    //             String value = newData[i] != null ? newData[i] : "";
-                
-    //             if (innerComp instanceof JTextField) {
-    //                 ((JTextField) innerComp).setText(value);
-    //             } else if (innerComp instanceof CustomTextFieldSL) {
-    //                 try {
-    //                     ((CustomTextFieldSL) innerComp).setText(value.isEmpty() ? "1" : value);
-    //                 } catch (IllegalArgumentException e) {
-    //                     ((CustomTextFieldSL) innerComp).setText("1");
-    //                 }
-    //             } else if (innerComp instanceof JLabel) {
-    //                 ((JLabel) innerComp).setText(value);
-    //             }
-    //         }
-    //     }
-
-    //     if (row - 1 < data.size()) {
-    //         data.set(row - 1, newData);
-    //     } else {
-    //         // Đảm bảo data đủ kích thước
-    //         while (data.size() < row - 1) {
-    //             data.add(new String[headers.length]);
-    //         }
-    //         data.add(newData);
-    //     }
-
-    //     dataPanel.revalidate();
-    //     dataPanel.repaint();
-    // }
 
     public CustomTextFieldSL getTextFieldSL(int row){
         CustomTextFieldSL textField = null;
         for(int i = 0; i < headers.length; i++){
             if(headers[i].equals("Số lượng")){
-                Component cpn = rowLabels.get(row).get(i);
+                JComponent cpn = rowLabels.get(row).get(i);
                 JPanel panel = (JPanel)cpn;
                 textField = (CustomTextFieldSL)panel.getComponent(0);
                 break;
