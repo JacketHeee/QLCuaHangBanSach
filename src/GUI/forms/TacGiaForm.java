@@ -9,20 +9,16 @@ import BUS.ChiTietQuyenBUS;
 import BUS.TacGiaBUS;
 import DTO.TacGiaDTO;
 import DTO.TaiKhoanDTO;
-import DTO.TacGiaDTO;
 import DTO.ChiTietQuyenDTO;
-import DTO.NhaXBDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
-import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.TacGiaDialog;
-import excel.NhaXBExcelImport;
 import excel.TacGiaExcelExport;
 import excel.TacGiaExcelImport;
 import GUI.component.search.SearchBarPanel;

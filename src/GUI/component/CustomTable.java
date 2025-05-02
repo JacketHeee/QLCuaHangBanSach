@@ -41,15 +41,15 @@ public class CustomTable extends JPanel implements ActionListener {
     //Callback sự kiện chọn hàng
     protected OnSelectRowListener onSelectRowListener;
     //set
-    private TableActionListener actionListener;
+    protected TableActionListener actionListener;
 
     protected int maxTextWidth = 110;
 
 
     // Các thuộc tính hiện có...
-    private JTextField currentEditingField = null;
-    private int currentEditingRow = -1;
-    private int currentEditingCol = -1;
+    protected JTextField currentEditingField = null;
+    protected int currentEditingRow = -1;
+    protected int currentEditingCol = -1;
     
 
     public JPanel getDataPanel() {
@@ -206,27 +206,11 @@ public class CustomTable extends JPanel implements ActionListener {
                     }
                 }
             }
-            // @Override
-            // public void mouseClicked(MouseEvent e) {
-            //     if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-            //         // Chỉ cho phép chỉnh sửa nếu không phải cột hành động
-            //         int colIndex = -1;
-            //         for (int i = 0; i < rowLabels.get(row).size(); i++) {
-            //             if (rowLabels.get(row).get(i) == label) {
-            //                 colIndex = i;
-            //                 break;
-            //             }
-            //         }
-            //         if (colIndex < headers.length) { // Không phải cột hành động
-            //             startEditing(row, colIndex, label);
-            //         }
-            //     }
-            // }
         });
         return label;
     }
 
-    private void startEditing(int row, int col, JLabel label) {
+    protected void startEditing(int row, int col, JLabel label) {
         // Nếu đang chỉnh sửa ô khác, lưu ô đó trước
         if (currentEditingField != null) {
             saveEditing();
@@ -585,7 +569,6 @@ public class CustomTable extends JPanel implements ActionListener {
     
     public void addDataRow(String[] data) {
         int row = rowLabels.size() + 1;
-        final Color defaultColor = (row % 2 == 0 ? evenRowColor : oddRowColor);
         
         // / Xử lý trường hợp data là null
         String[] rowData = (data == null) ? new String[headers.length] : data;

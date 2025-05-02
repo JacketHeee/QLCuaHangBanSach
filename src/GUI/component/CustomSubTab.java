@@ -1,11 +1,12 @@
 package GUI.component;
 
-import javax.swing.JButton;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.BorderFactory;
 import java.awt.Color;
 import java.awt.Cursor;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 import resources.base.baseTheme;
 

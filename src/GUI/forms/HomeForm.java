@@ -1,16 +1,15 @@
 package GUI.forms;
 
-import javax.swing.*;
+import java.awt.Color;
 
-import com.formdev.flatlaf.extras.FlatSVGIcon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import GUI.component.ImageLabel;
 import GUI.component.LayeredLabelHome;
 import GUI.component.TransparentBackgroundPanel;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
-
-import java.awt.*;
 
 public class HomeForm extends JPanel{
 

@@ -1,14 +1,11 @@
 package GUI.dialog;
 
 import java.awt.Dimension;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-
-import DTO.PhieuNhapDTO;
-
 import java.awt.Toolkit;
 
+import javax.swing.JDialog;
+
+import DTO.PhieuNhapDTO;
 import GUI.MainFrame;
 import GUI.component.CustomScrollPane;
 import GUI.forms.TaoPhieuNhapForm;

@@ -1,15 +1,13 @@
 package GUI.component.search;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
-
 
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import BUS.SachBUS;
 import DTO.SachDTO;

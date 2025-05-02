@@ -9,12 +9,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -24,7 +20,6 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.toedter.calendar.JDateChooser;
 
 import net.miginfocom.swing.MigLayout;
-import resources.base.baseTheme;
 
 public class InputFormItem extends JPanel{
     private JLabel label;

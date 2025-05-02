@@ -1,38 +1,8 @@
 package GUI.forms.thongke;
 
-import javax.swing.*;
-
-import com.formdev.flatlaf.FlatClientProperties;
-
-import BUS.PhieuNhapBUS;
-import BUS.ThongKeBUS.ThongKeDoanhThuBUS;
-import BUS.ThongKeBUS.ThongKeNhapHangBUS;
-import DTO.HoaDonDTO;
-import DTO.PhieuNhapDTO;
-import DTO.SachDTO;
-import DTO.ThongKe.ThongKeDoanhThuDTO;
-import DTO.ThongKe.ThongKeNhapHangDTO;
-import DTO.ThongKe.ThongKeNhapHangDTO;
-import GUI.MainFrame;
-import GUI.component.CustomBoldJLabel;
-import GUI.component.CustomButton;
-import GUI.component.CustomTable;
-import GUI.component.InputFormItem;
-import GUI.component.LabelInfor;
-import GUI.component.LabelTongQuan;
-import GUI.component.TableActionListener;
-import GUI.component.TableNoTouch;
-import GUI.component.chart.HorizontalBarChartV2;
-import GUI.dialog.AddHoaDonDialog;
-import GUI.dialog.AddPhieuNhapDialog;
-import net.miginfocom.swing.MigLayout;
-import raven.chart.data.pie.DefaultPieDataset;
-import raven.chart.pie.PieChart;
-import resources.base.baseTheme;
-import utils.FormatterUtil;
-import utils.Validate;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -41,8 +11,34 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-import java.util.Date;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import com.formdev.flatlaf.FlatClientProperties;
+
+import BUS.PhieuNhapBUS;
+import BUS.ThongKeBUS.ThongKeNhapHangBUS;
+import DTO.PhieuNhapDTO;
+import DTO.ThongKe.ThongKeNhapHangDTO;
+import GUI.MainFrame;
+import GUI.component.CustomBoldJLabel;
+import GUI.component.CustomButton;
+import GUI.component.CustomTable;
+import GUI.component.InputFormItem;
+import GUI.component.LabelTongQuan;
+import GUI.component.TableActionListener;
+import GUI.component.TableNoTouch;
+import GUI.dialog.AddPhieuNhapDialog;
+import net.miginfocom.swing.MigLayout;
+import raven.chart.data.pie.DefaultPieDataset;
+import raven.chart.pie.PieChart;
+import resources.base.baseTheme;
+import utils.FormatterUtil;
+import utils.Validate;
 
 public class NhapHang extends JPanel implements ActionListener, TableActionListener {
     JComboBox<String> comboBox;

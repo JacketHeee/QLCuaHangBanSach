@@ -10,7 +10,6 @@ import BUS.NhanVienBUS;
 import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhachHangDTO;
 import DTO.TaiKhoanDTO;
 
 
@@ -24,7 +23,6 @@ import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
 import GUI.dialog.TaiKhoanDialog;
-import excel.KhachHangExcelImport;
 import excel.TaiKhoanExcelExport;
 import excel.TaiKhoanExcelImport;
 import net.miginfocom.swing.MigLayout;

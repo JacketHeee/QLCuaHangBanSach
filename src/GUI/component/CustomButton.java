@@ -1,12 +1,11 @@
 package GUI.component;
 
-import javax.swing.JButton;
-import javax.swing.border.EmptyBorder;
-
-import com.formdev.flatlaf.FlatClientProperties;
-
 import java.awt.Color;
 import java.awt.Cursor;
+
+import javax.swing.JButton;
+
+import com.formdev.flatlaf.FlatClientProperties;
 
 public class CustomButton extends JButton{
     

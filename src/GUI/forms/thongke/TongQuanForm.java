@@ -1,18 +1,14 @@
 package GUI.forms.thongke;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import GUI.MainFrame;
 import GUI.component.CustomButtonTab;
-import GUI.component.CustomScrollPane;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.MatteBorder;
-import java.awt.Color;
 import java.awt.Component;
 
 public class TongQuanForm extends JPanel implements ActionListener{

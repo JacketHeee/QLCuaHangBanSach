@@ -7,7 +7,6 @@ import com.formdev.flatlaf.FlatClientProperties;
 import BUS.ChiTietQuyenBUS;
 import BUS.NhaXBBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.NhaCungCapDTO;
 import DTO.NhaXBDTO;
 import DTO.TaiKhoanDTO;
 
@@ -20,7 +19,6 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.NhaXBDialog;
-import excel.NhaCungCapExcelImport;
 import excel.NhaXBExcelExport;
 import excel.NhaXBExcelImport;
 import GUI.component.search.SearchBarPanel;

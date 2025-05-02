@@ -8,13 +8,9 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.SachBUS;
-import BUS.ViTriVungBUS;
-import DAO.SachDAO;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
 import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
-import DTO.TheLoaiDTO;
 
 import java.util.ArrayList;
 
@@ -26,7 +22,6 @@ import GUI.component.TableActionListener;
 import GUI.dialog.SachDialog;
 import excel.SachExcelExport;
 import excel.SachExcelImport;
-import excel.TheLoaiExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -36,13 +31,7 @@ import utils.ExcelExporter;
 import utils.ExcelImporter;
 import utils.UIUtils;
 
-import java.awt.Cursor;
-// import java.awt.List;
 import java.util.List;
-
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -74,8 +63,8 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     };
 
     private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Năm xuất bản"};
-    private javax.swing.JTextField txtSearch;
-    private javax.swing.JComboBox<String> cbFilter;
+    // private javax.swing.JTextField txtSearch;
+    // private javax.swing.JComboBox<String> cbFilter;
     private SearchBarPanel<SachDTO> searchBarPanel;
 
 

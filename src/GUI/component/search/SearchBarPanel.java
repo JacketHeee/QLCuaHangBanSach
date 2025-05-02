@@ -1,9 +1,13 @@
 package GUI.component.search;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Cursor;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;

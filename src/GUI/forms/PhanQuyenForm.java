@@ -8,7 +8,6 @@ import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
 import BUS.NhomQuyenBUS;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhachHangDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;

@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -14,7 +18,6 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import GUI.Login;
 import GUI.MainFrame;
-import GUI.component.MenuTaskBar;
 import GUI.forms.HomeForm;
 import GUI.forms.KhachHangForm;
 import GUI.forms.KhuyenMaiForm;
@@ -27,19 +30,12 @@ import GUI.forms.QLHoaDonForm;
 import GUI.forms.QLPhieuNhapForm;
 import GUI.forms.SachForm;
 import GUI.forms.TacGiaForm;
+import GUI.forms.TaiKhoanForm;
 import GUI.forms.TheLoaiForm;
 import GUI.forms.VungKeForm;
 import GUI.forms.thongke.TongQuanForm;
-import GUI.forms.TaiKhoanForm;
-import GUI.forms.TaoHoaDonForm;
-import GUI.forms.TaoPhieuNhapForm;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 
 public class MenuTaskBar extends JPanel implements MouseListener {

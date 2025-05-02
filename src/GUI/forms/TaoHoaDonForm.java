@@ -4,25 +4,21 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
-import utils.FormatterUtil;
 import utils.UIUtils;
 import utils.Validate;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import GUI.component.CustomTextFieldSL;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
-import javax.swing.border.Border;
 
 
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.CT_HoaDonBUS;
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.HoaDonBUS;
 import BUS.KhachHangBUS;
 import BUS.KhuyenMaiBUS;
@@ -32,7 +28,6 @@ import BUS.SachBUS;
 import DTO.CT_HoaDonDTO;
 import DTO.ChiTietQuyenDTO;
 import DTO.HoaDonDTO;
-import DTO.KhachHangDTO;
 import DTO.KhuyenMaiDTO;
 import DTO.NhanVienDTO;
 import DTO.SachDTO;
@@ -48,7 +43,6 @@ import GUI.dialog.AddHoaDonDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
@@ -583,7 +577,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     //Hàm này được gọi mỗi khi thêm sách mới; thay đổi cbx khuyến mãi; xóa
     public void updateTongTienHoaDon(){ //Mỗi lần thêm phải tính lại hết
         Map<Integer, List<Component>> rowLabels = table.getRowLabels();
-        int index = 0;
+        int index = 1;
         BigDecimal result = new BigDecimal(0);
         for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
 
@@ -813,7 +807,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
     public void setStatusTextFieldSL(){
         Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
-        int row = 0;
+        int row = 1;
         for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
             getTextFieldSL(row, rowLabels).setEditable(false);
             getTextFieldMaSach(row, rowLabels).setEditable(false);

@@ -2,56 +2,39 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
-import BUS.KhachHangBUS;
 import BUS.NhaCungCapBUS;
 import BUS.NhanVienBUS;
 import BUS.PhieuNhapBUS;
-import DTO.HoaDonDTO;
-import DTO.KhuyenMaiDTO;
 import DTO.PhieuNhapDTO;
-import DTO.SachDTO;
-import DTO.ViTriVungDTO;
 import DTO.ChiTietQuyenDTO;
-import DTO.PhieuNhapDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomBoldJLabel;
 import GUI.component.CustomButton;
-import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.InputForm;
 import GUI.component.TableActionListener;
 import GUI.component.search.SearchBarPanel;
-import GUI.dialog.AddHoaDonDialog;
 import GUI.dialog.AddPhieuNhapDialog;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.QLPhieuNhapSearch;
-import search.SachSearch;
 import utils.FormatterUtil;
 import utils.UIUtils;
 import utils.Validate;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 
 public class QLPhieuNhapForm extends JPanel implements TableActionListener, ActionListener {
 

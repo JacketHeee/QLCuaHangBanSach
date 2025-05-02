@@ -1,5 +1,12 @@
 package GUI.forms.thongke;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.formdev.flatlaf.FlatClientProperties;
@@ -7,37 +14,17 @@ import com.formdev.flatlaf.FlatClientProperties;
 import BUS.ThongKeBUS.TongQuanThongKeBUS;
 import DTO.SachDTO;
 import DTO.TyLeDTO;
-import GUI.component.TableNoTouch;
+import GUI.MainFrame;
+import GUI.component.CustomBoldJLabel;
+import GUI.component.LabelInfor;
 import GUI.component.chart.HorizontalBarChartV2;
 import GUI.component.chart.LineChartV2;
 import GUI.component.chart.CurveChart.CurveChart;
 import GUI.component.chart.CurveChart.ModelChart2;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Random;
-
-import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
-import raven.chart.bar.HorizontalBarChart;
-import raven.chart.data.category.DefaultCategoryDataset;
 import raven.chart.data.pie.DefaultPieDataset;
-import raven.chart.line.LineChart;
 import raven.chart.pie.PieChart;
-
-import java.util.Arrays;
-
-import java.util.ArrayList;
-
-import java.awt.Dimension;
-import java.math.BigDecimal;
-import java.awt.BorderLayout;
-import java.awt.Color; 
 import resources.base.baseTheme;
-import GUI.MainFrame;
-import GUI.component.CustomBoldJLabel;
-import GUI.component.LabelInfor;
 
 public class TongQuan extends JPanel{
     JPanel headPanel;

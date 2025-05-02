@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 
-import DTO.HoaDonDTO;
 import DTO.PhieuNhapDTO;
 import interfaces.Searchable;
 import utils.TextUtils;

@@ -1,5 +1,29 @@
 package GUI.component;
 
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+
 import DTO.ModelTinhThanh.AdministrativeData;
 import DTO.ModelTinhThanh.District;
 import DTO.ModelTinhThanh.JsonParser;
@@ -7,16 +31,6 @@ import DTO.ModelTinhThanh.Province;
 import DTO.ModelTinhThanh.Ward;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
-
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class AddressAdderPanel extends JPanel {
     private JComboBox<Province> provinceComboBox;

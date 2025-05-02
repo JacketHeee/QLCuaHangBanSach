@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,7 +14,6 @@ import javax.swing.JTextField;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.NhaXBBUS;
-import DTO.NhaXBDTO;
 import DTO.NhaXBDTO;
 import GUI.MainFrame;
 import GUI.component.CustomButton;

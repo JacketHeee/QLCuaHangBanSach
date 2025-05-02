@@ -1,13 +1,11 @@
 package GUI.component.chart;
 
-import raven.chart.line.LineChart;
+import java.awt.Component;
 import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 
-import java.awt.Component;
-
-import net.miginfocom.swing.MigLayout;
+import raven.chart.line.LineChart;
 
 public class LineChartV2 extends LineChart {
     

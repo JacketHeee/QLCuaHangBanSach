@@ -1,9 +1,9 @@
 package excel;
 
+import java.util.List;
+
 import DTO.PhuongThucTTDTO;
 import interfaces.ExcelExportable;
-
-import java.util.List;
 
 public class PhuongThucThanhToanExcelExport implements ExcelExportable<PhuongThucTTDTO>{
 

@@ -8,8 +8,8 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
+
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class BlankPlotChart extends JComponent {

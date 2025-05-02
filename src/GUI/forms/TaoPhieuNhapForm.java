@@ -1,7 +1,6 @@
 package GUI.forms;
 
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -9,27 +8,20 @@ import utils.UIUtils;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import GUI.component.CustomTextFieldSL;
 import javax.swing.BorderFactory;
-import javax.swing.border.Border;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.CT_PhieuNhapBUS;
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.NhaCungCapBUS;
 import BUS.NhanVienBUS;
 import BUS.PhieuNhapBUS;
 import BUS.SachBUS;
-import DTO.CT_HoaDonDTO;
 import DTO.CT_PhieuNhapDTO;
 import DTO.ChiTietQuyenDTO;
-import DTO.HoaDonDTO;
-import DTO.KhuyenMaiDTO;
-import DTO.NhaCungCapDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SachDTO;
 import DTO.TaiKhoanDTO;
@@ -37,15 +29,12 @@ import GUI.MainFrame;
 import GUI.component.ButtonAction;
 import GUI.component.CustomButton;
 import GUI.component.CustomTable;
-import GUI.component.CustomTextFieldSL;
 import GUI.component.InvoiceTable;
 import GUI.component.TableActionListener;
 import GUI.component.search.TextFieldListSach;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -387,7 +376,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
     public void updateTongTienPhieuNhap(){ //Mỗi lần thêm phải tính lại hết
         Map<Integer, List<Component>> rowLabels = table.getRowLabels();
-        int index = 0;
+        int index = 1;
         BigDecimal result = new BigDecimal(0);
         for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
             JLabel lblTongTienSach = getLabelTongTien(index, rowLabels);
@@ -596,7 +585,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     public void setStatusDetail(){
         this.comboboxNCC.setEnabled(false);
         Map<Integer, List<Component>> rowLabels = this.table.getRowLabels();
-        int row = 0;
+        int row = 1;
         for(Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()){
             getTextFieldSL(row, rowLabels).setEditable(false);
             getTextFieldMaSach(row, rowLabels).setEditable(false);

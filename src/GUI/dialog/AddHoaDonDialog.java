@@ -1,14 +1,11 @@
 package GUI.dialog;
 
 import java.awt.Dimension;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-
-import DTO.HoaDonDTO;
-
 import java.awt.Toolkit;
 
+import javax.swing.JDialog;
+
+import DTO.HoaDonDTO;
 import GUI.MainFrame;
 import GUI.component.CustomScrollPane;
 import GUI.forms.TaoHoaDonForm;

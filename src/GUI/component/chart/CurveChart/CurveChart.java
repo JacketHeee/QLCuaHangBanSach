@@ -1,8 +1,5 @@
 package GUI.component.chart.CurveChart;
 
-import  GUI.component.chart.CurveChart.BlankChart.BlankPlotChart;
-import  GUI.component.chart.CurveChart.BlankChart.BlankPlotChatRender;
-import  GUI.component.chart.CurveChart.BlankChart.SeriesSize;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,6 +15,10 @@ import java.util.List;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+
+import  GUI.component.chart.CurveChart.BlankChart.BlankPlotChart;
+import  GUI.component.chart.CurveChart.BlankChart.BlankPlotChatRender;
+import  GUI.component.chart.CurveChart.BlankChart.SeriesSize;
 
 public class CurveChart extends javax.swing.JPanel {
 

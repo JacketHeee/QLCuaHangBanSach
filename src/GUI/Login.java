@@ -1,6 +1,5 @@
 package GUI;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,7 +13,6 @@ import javax.swing.JTextField;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.TaiKhoanBUS;
-import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
 import GUI.component.CustomButton;
 import net.miginfocom.swing.MigLayout;

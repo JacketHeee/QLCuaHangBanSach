@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -29,7 +28,6 @@ import DTO.DanhMuc_TGDTO;
 import DTO.KM_SachDTO;
 import DTO.PhanLoaiDTO;
 import DTO.SachDTO;
-import DTO.TacGiaDTO;
 import GUI.MainFrame;
 import GUI.component.CustomButton;
 import GUI.component.InputForm;

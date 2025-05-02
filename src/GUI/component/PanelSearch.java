@@ -1,12 +1,11 @@
 package GUI.component;
 
+import java.awt.Color;
+import java.awt.Cursor;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.color.*;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;

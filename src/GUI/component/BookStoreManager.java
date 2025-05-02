@@ -1,10 +1,22 @@
 package GUI.component;
 
-import com.formdev.flatlaf.FlatLightLaf;
-import net.miginfocom.swing.MigLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
+import net.miginfocom.swing.MigLayout;
 
 public class BookStoreManager extends JFrame {
     private boolean isMaximized = true; // Trạng thái fullscreen

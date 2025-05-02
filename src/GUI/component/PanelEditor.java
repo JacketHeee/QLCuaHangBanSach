@@ -1,8 +1,14 @@
 package GUI.component;
 
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+
+import javax.swing.AbstractCellEditor;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.TableCellEditor;
 
 class PanelEditor extends AbstractCellEditor implements TableCellEditor {
     private JPanel panel;

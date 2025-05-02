@@ -1,5 +1,11 @@
 package GUI.component.search;
 
+import java.awt.Cursor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -9,15 +15,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import interfaces.Searchable;
-import GUI.forms.SachForm;
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.Cursor;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.function.Consumer;
-
-import java.util.ArrayList;
 
 
 

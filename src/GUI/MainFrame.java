@@ -16,7 +16,6 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import BUS.ChiTietQuyenBUS;
 import BUS.NhanVienBUS;
 import BUS.NhomQuyenBUS;
-import DTO.ChiTietQuyenDTO;
 import DTO.NhanVienDTO;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;

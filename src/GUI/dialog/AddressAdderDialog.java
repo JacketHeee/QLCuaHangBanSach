@@ -1,16 +1,30 @@
 package GUI.dialog;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 import GUI.component.AddressAdderPanel;
 import net.miginfocom.swing.MigLayout;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.function.Consumer;
-import java.awt.event.*;
 
 public class AddressAdderDialog extends JDialog {
     private AddressAdderPanel addressPanel;

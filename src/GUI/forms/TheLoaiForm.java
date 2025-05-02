@@ -2,19 +2,12 @@ package GUI.forms;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.ChiTietQuyenBUS;
-import BUS.ChucNangBUS;
 import BUS.TheLoaiBUS;
-import DTO.SachDTO;
 import DTO.ChiTietQuyenDTO;
-import DTO.KhuyenMaiDTO;
-import DTO.NhaXBDTO;
 import DTO.TaiKhoanDTO;
 import DTO.TheLoaiDTO;
 
@@ -27,7 +20,6 @@ import GUI.component.CustomScrollPane;
 import GUI.component.CustomTable;
 import GUI.component.TableActionListener;
 import GUI.dialog.TheLoaiDialog;
-import excel.NhaXBExcelImport;
 import excel.TheLoaiExcelExport;
 import excel.TheLoaiExcelImport;
 import GUI.component.search.SearchBarPanel;

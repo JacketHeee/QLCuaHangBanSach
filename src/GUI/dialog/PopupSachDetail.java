@@ -1,9 +1,8 @@
 package GUI.dialog;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -15,10 +14,6 @@ import BUS.TacGiaBUS;
 import BUS.TheLoaiBUS;
 import DTO.SachDTO;
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class PopupSachDetail extends JPopupMenu{
     private int maSach;

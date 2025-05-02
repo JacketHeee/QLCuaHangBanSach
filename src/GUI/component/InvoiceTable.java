@@ -1,25 +1,28 @@
 package GUI.component;
 
-import net.miginfocom.swing.MigLayout;
-import utils.Validate;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.text.NumberFormatter;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.SachBUS;
 import DTO.SachDTO;
 import GUI.component.search.TextFieldListSach;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
+import net.miginfocom.swing.MigLayout;
 
 public class InvoiceTable extends CustomTable{
 
@@ -117,6 +120,39 @@ public class InvoiceTable extends CustomTable{
             label.setBackground(Color.WHITE);
             label.setHorizontalAlignment(SwingConstants.CENTER);
             label.setVerticalAlignment(SwingConstants.CENTER);
+
+            label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    // Tìm chỉ số hàng hiện tại
+                    int currentRow = -1;
+                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                        if (entry.getValue().contains(label)) {
+                            currentRow = entry.getKey();
+                            break;
+                        }
+                    }
+                    if (currentRow == -1) return; // Hàng không tồn tại
+
+                    // Tìm chỉ số cột
+                    int colIndex = -1;
+                    List<Component> rowComponents = rowLabels.get(currentRow);
+                    if (rowComponents != null) {
+                        for (int i = 0; i < rowComponents.size(); i++) {
+                            if (rowComponents.get(i) == label) {
+                                colIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (colIndex < headers.length) {
+                        startEditing(currentRow, colIndex, label);
+                    }
+                }
+            }
+        });
+
             panel.add(label,"push,grow");
         }
         panel.setOpaque(true);
@@ -138,7 +174,7 @@ public class InvoiceTable extends CustomTable{
     @Override
     public JPanel createActionPanel(int row) {
         JPanel label = new JPanel(new MigLayout("insets 0,al center center, gap 10"));
-        label.setPreferredSize(new Dimension(150, 30));
+        // label.setPreferredSize(new Dimension(150, 30));
         label.setOpaque(true);
         label.setBackground(Color.white);
 
@@ -157,32 +193,58 @@ public class InvoiceTable extends CustomTable{
     @Override
     public void addDataRow(String[] data) {
         // int row = rowLabels.size() + 1; //Vừa thêm + 1 để debug
-        int row = rowLabels.size();// Chứng tỏ nếu đi từ 1 thì xảy ra lỗi
+        int row = rowLabels.size() + 1;// Chứng tỏ nếu đi từ 1 thì xảy ra lỗi
     
-        ArrayList<Component> labels = new ArrayList<>();
-
         // / Xử lý trường hợp data là null
         String[] rowData = (data == null) ? new String[headers.length] : data;
+        
         if (data == null) {
             for (int i = 0; i < rowData.length; i++) {
                 rowData[i] = ""; // Điền giá trị rỗng cho dòng trống
             }
         }
+        
+        ArrayList<Component> labels = new ArrayList<>();
 
         //Chỗ này chèn vào Panel
         for (int i = 0; i <headers.length ; i++) {
             JPanel label = createDataInput(rowData[i], row,i, data);
             labels.add(label);
             dataPanel.add(label, "gapbottom 2,grow,cell " + i + " " + (row));
+
+            label.addMouseListener(new java.awt.event.MouseAdapter() {
+                // public void mouseClicked(java.awt.event.MouseEvent evt) {
+                //     setSelectedRow(row);
+                // }
+
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    // Tìm chỉ số hàng hiện tại của JLabel trong rowLabels
+                    int currentRow = -1;
+                    for (Map.Entry<Integer, List<Component>> entry : rowLabels.entrySet()) {
+                        if (entry.getValue().contains(label)) {
+                            currentRow = entry.getKey();
+                            break;
+                        }
+                    }
+                    if (currentRow != -1) {
+                        setSelectedRow(currentRow); // Chọn hàng dựa trên chỉ số hiện tại
+                        if(onSelectRowListener != null){
+                            onSelectRowListener.OnSelectRow(currentRow); // đổi row->currentRow
+                        }
+                    }
+                }
+            });
         }
 
 
-        JPanel panel = createActionPanel(row);
-        labels.add(panel);
-        dataPanel.add(panel, "gapbottom 2,grow,wrap");
+        if (actions != null) {
+            JPanel panel = createActionPanel(row);
+            labels.add(panel);
+            dataPanel.add(panel, "gapbottom 2,grow,wrap");
+        }
 
         rowLabels.put(row, labels);
-        this.data.add(rowData); //mới thêm vào cần lưu ý, để đồng bộ với data của customTable
+
         // Cập nhật rowHeights nếu cần
         if (row >= rowHeights.length) {
             int[] newRowHeights = new int[row + 1];
@@ -192,8 +254,10 @@ public class InvoiceTable extends CustomTable{
             }
             rowHeights = newRowHeights;
         }
+
         updateRowConstraints();
-        dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+        dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
         repaint();

@@ -1,16 +1,26 @@
 package GUI.component;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
-import DTO.KM_SachDTO;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
-
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class CustomTitleBar extends JPanel {
     private Point initialClick; // Để kéo cửa sổ

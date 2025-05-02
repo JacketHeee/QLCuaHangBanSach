@@ -2,8 +2,6 @@ package BUS;
 
 import java.util.ArrayList;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-
 import DAO.TacGiaDAO;
 import DTO.TacGiaDTO;
 

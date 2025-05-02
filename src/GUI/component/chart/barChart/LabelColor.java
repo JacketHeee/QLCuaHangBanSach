@@ -1,12 +1,10 @@
 package GUI.component.chart.barChart;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
 import javax.swing.JLabel;
-import javax.swing.JFrame;
 
 public class LabelColor extends JLabel {
 

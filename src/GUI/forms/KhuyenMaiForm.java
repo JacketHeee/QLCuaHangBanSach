@@ -10,7 +10,6 @@ import BUS.KhuyenMaiBUS;
 import DTO.ChiTietQuyenDTO;
 
 import DTO.KhuyenMaiDTO;
-import DTO.PhuongThucTTDTO;
 import DTO.TaiKhoanDTO;
 
 import java.util.ArrayList;
@@ -24,12 +23,10 @@ import GUI.component.TableActionListener;
 import GUI.dialog.KhuyenMaiDialog;
 import excel.KhuyenMaiExcelExport;
 import excel.KhuyenMaiExcelImport;
-import excel.PhuongThucThanhToanExcelImport;
 import GUI.component.search.SearchBarPanel;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
 import search.KhuyenMaiSearch;
-import utils.DateCalculator;
 import utils.FormatterUtil;
 import utils.ExcelExporter;
 import utils.ExcelImporter;

@@ -4,21 +4,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
-import javax.swing.JLabel;
-
 import GUI.component.chart.barChart.blankChart.BlankPlotChart;
 import GUI.component.chart.barChart.blankChart.BlankPlotChatRender;
 import GUI.component.chart.barChart.blankChart.SeriesSize;
-
 import net.miginfocom.swing.MigLayout;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BarChart extends JPanel {
     private List<ModelLegend> legends = new ArrayList<>();

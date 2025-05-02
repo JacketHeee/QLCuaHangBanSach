@@ -1,9 +1,9 @@
 package excel;
 
+import java.util.List;
+
 import DTO.TheLoaiDTO;
 import interfaces.ExcelExportable;
-
-import java.util.List;
 
 public class TheLoaiExcelExport implements ExcelExportable<TheLoaiDTO> {
 
