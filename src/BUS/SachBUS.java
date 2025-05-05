@@ -1,5 +1,6 @@
 package BUS;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 
@@ -46,6 +47,9 @@ public class SachBUS {
 			listSach.get(index).setNamXB(sachDTO.getNamXB());
 			listSach.get(index).setMaVung(sachDTO.getMaVung());
 			listSach.get(index).setMaNXB(sachDTO.getMaNXB());
+			if (sachDTO.getGiaBan().compareTo(BigDecimal.valueOf(-1)) != 0) {
+				listSach.get(index).setGiaBan(sachDTO.getGiaBan());
+			}
 			return(1);
 		}
 		return(0);
@@ -78,5 +82,14 @@ public class SachBUS {
 	
 	public String getPathByMa(int ma){
 		return(sachDAO.getPathByMa(ma));
+	}
+
+	public String[] getAllTenSach() {
+		ArrayList<String> listTen = new ArrayList<>();
+		for (SachDTO x : listSach) {
+			listTen.add(x.getTenSach());
+		}
+
+		return listTen.toArray(new String[0]);
 	}
 }

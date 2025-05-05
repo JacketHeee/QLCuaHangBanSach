@@ -84,7 +84,7 @@ public class TacGiaDAO implements DAOInterface<TacGiaDTO> {
 
     public TacGiaDTO getTacGiaById(int maTacGia) {
         TacGiaDTO result = null;
-        String sql = "SELECT * FROM TACGIA WHERE maTacGia = " + maTacGia;
+        String sql = "SELECT * FROM TACGIA WHERE TRANGTHAI = 1 and maTacGia = " + maTacGia;
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

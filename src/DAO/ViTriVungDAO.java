@@ -98,7 +98,7 @@ public class ViTriVungDAO implements DAOInterface<ViTriVungDTO> {
     }
 
     public ViTriVungDTO getViTriVungById(int maVung) {
-        String sql = "SELECT * FROM VITRIVUNG WHERE maVung = " + maVung;
+        String sql = "SELECT * FROM VITRIVUNG WHERE TRANGTHAI = 1 and maVung = " + maVung;
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         ResultSet rs = jdbcUtil.executeQuery(sql);

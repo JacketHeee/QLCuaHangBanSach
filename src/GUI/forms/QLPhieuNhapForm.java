@@ -56,7 +56,7 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
         {"combobox", "Mã nhà cung cáp"},    
         {"textbox", "Mã tài khoản"},    //tự get
     };
-    private String[] filter = {"Tất cả","Mã nhập","Ngày nhập","Mã nhà cung cấp","Mã tài khoản"};
+    private String[] filter = {"Mã phiếu nhập","Mã nhà cung cấp","Mã tài khoản"};
 
     private InputForm inputFormSearch;
 

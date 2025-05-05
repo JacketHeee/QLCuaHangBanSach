@@ -242,7 +242,9 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
             }
             , headers
             ,headerType
+            ,90
         );
+        table.addDataRow(null);
 
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
@@ -346,12 +348,13 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         switch (actionId) {
             case "remove":
                 // Logic xóa cho form này
+                // JOptionPane.showMessageDialog(null, "xoa " + row);
                 int choose = UIUtils.messageRemove("Bạn thực sự muốn xóa?");
 
                 if (choose == 0) {
                     table.removeRow(row);
                     Notifications.getInstance().setJFrame(mainFrame);
-                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa row " + row + " thành công!");
                 }
                 break;
             default:
@@ -376,21 +379,44 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         labelTT.setText(tongGia + "");
     }
 
-    public void updateTongTienPhieuNhap(){ //Mỗi lần thêm phải tính lại hết
+    // public void updateTongTienPhieuNhap(){ //Mỗi lần thêm phải tính lại hết
+    //     Map<Integer, List<JComponent>> rowLabels = table.getRowLabels();
+    //     int index = 1;
+    //     BigDecimal result = new BigDecimal(0);
+    //     for(Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()){
+    //         JLabel lblTongTienSach = getLabelTongTien(index, rowLabels);
+    //         BigDecimal tongTienSach = BigDecimal.valueOf(Double.parseDouble(lblTongTienSach.getText()));
+    //         result = result.add(tongTienSach);
+    //         index++;
+    //     }
+    //     //set Tổng tiền pn để tính toán
+    //     this.tongTienPhieuNhap = result;
+    //     //Set tổng tiền ở trên
+    //     setTextLblTongTienPN(this.tongTienPhieuNhap + "");
+
+    // }
+
+    public void updateTongTienPhieuNhap() {
         Map<Integer, List<JComponent>> rowLabels = table.getRowLabels();
         int index = 1;
-        BigDecimal result = new BigDecimal(0);
-        for(Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()){
+        BigDecimal result = BigDecimal.ZERO; // Sử dụng BigDecimal.ZERO để khởi tạo
+        for (Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()) {
             JLabel lblTongTienSach = getLabelTongTien(index, rowLabels);
-            BigDecimal tongTienSach = BigDecimal.valueOf(Double.parseDouble(lblTongTienSach.getText()));
+            String tongTienText = lblTongTienSach.getText();
+            BigDecimal tongTienSach;
+            try {
+                tongTienSach = tongTienText.isEmpty() ? BigDecimal.ZERO : BigDecimal.valueOf(Double.parseDouble(tongTienText));
+            } catch (NumberFormatException e) {
+                tongTienSach = BigDecimal.ZERO; // Giá trị mặc định nếu không phân tích được
+                System.err.println("Lỗi phân tích tổng tiền sách tại hàng " + index + ": " + tongTienText);
+            }
             result = result.add(tongTienSach);
             index++;
         }
-        //set Tổng tiền pn để tính toán
+        // Set Tổng tiền phiếu nhập để tính toán
         this.tongTienPhieuNhap = result;
-        //Set tổng tiền ở trên
-        setTextLblTongTienPN(this.tongTienPhieuNhap + "");
-
+        // Set tổng tiền trên giao diện
+        setTextLblTongTienPN(this.tongTienPhieuNhap.toString());
     }
 
     public void setTextLblTongTienPN(String i){
@@ -513,8 +539,9 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
     public void setGiaBanSach(){
         Map<Integer, List<JComponent>> rowLabels = this.table.getRowLabels();
-        for(int i = 0; i < rowLabels.size(); i++){
+        for(int i = 1; i <= rowLabels.size(); i++){
             int maSach = Integer.parseInt(getTextFieldMaSach(i, rowLabels).getText());
+            System.out.println(maSach);
             SachDTO sach = sachBUS.getInstanceByID(maSach);
             BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(getTextFieldGiaNhap(i, rowLabels).getText()));
             BigDecimal tienSach = getGiaBanSach(giaNhap);

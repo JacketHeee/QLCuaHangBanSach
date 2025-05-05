@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.ChiTietQuyenBUS;
+import BUS.KM_SachBUS;
 import BUS.KhuyenMaiBUS;
 import DTO.ChiTietQuyenDTO;
 
@@ -49,17 +50,21 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
     private ArrayList<KhuyenMaiDTO> listKH;
     private ArrayList<String[]> dataToShow;
     private TaiKhoanDTO taiKhoan;
-    private String[] filter = {"Tất cả","Mã khuyến mãi","Tên khuyến mãi","Điều kiện giảm","Giá trị giảm", "Ngày bắt đầu", "Ngày kết thúc"};
+    private String[] filter = {"Mã khuyến mãi","Tên khuyến mãi","Điều kiện giảm","Giá trị giảm"};
 
     private ArrayList<String> listAction;
     private ChiTietQuyenBUS chiTietQuyenBUS;
 
     private String[][] attributes = {
+        {"combobox","Loại khuyến mãi"},
         {"textbox","Tên khuyến mãi"},
-        {"textbox","Điều kiện giảm"},
-        {"textbox", "Giá trị giảm"},
         {"inputDateTime", "Ngày bắt đầu"},//làm dateTime
         {"inputDateTime", "Ngày kết thúc"},//làm dateTime
+        {"combobox","Loại giảm giá"},
+        {"combobox", "Giá trị giảm"},
+        {"combobox","Theo"},
+        {"combobox","Những sách theo Thể loại"},
+        {"combobox","Giá trị đơn hàng tối thiểu"}
     };
 
 
@@ -247,6 +252,8 @@ public class KhuyenMaiForm extends JPanel implements TableActionListener, Action
                 if (choose == 0) {
                     if(khuyenMaiBUS.delete(ma) != 0){
                         table.removeRow(row);
+                        KM_SachBUS km_SachBUS = KM_SachBUS.getInstance();
+                        km_SachBUS.delete(ma);
                         Notifications.getInstance().setJFrame(mainFrame);
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
                     }

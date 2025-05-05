@@ -52,7 +52,7 @@ public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO> {
 
     public ArrayList<DanhMuc_TGDTO> getAll() {
         ArrayList<DanhMuc_TGDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM DANHMUC_TG";
+        String sql = "SELECT * FROM DANHMUC_TG WHERE TRANGTHAI = 1";
         
         
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -76,7 +76,7 @@ public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO> {
 
     public ArrayList<Integer> getAllMaTacGiaByMaSach(int maSach){
         ArrayList<Integer> result = new ArrayList<>();
-        String sql = "SELECT maTacGia FROM DANHMUC_TG WHERE maSach = ?";
+        String sql = "SELECT maTacGia FROM DANHMUC_TG WHERE maSach = ? and TRANGTHAI = 1";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

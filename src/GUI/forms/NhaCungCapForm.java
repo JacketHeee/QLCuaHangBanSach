@@ -54,7 +54,7 @@ public class NhaCungCapForm extends JPanel implements TableActionListener, Actio
         {"textbox", "Số điện thoại"},
         {"textbox", "Email"},
     };
-    private String[] filter = {"Tất cả", "Mã nhà cung cấp","Tên nhà cung cấp","Địa chỉ","Số điện thoại","Email"};
+    private String[] filter = {"Tên nhà cung cấp","Mã nhà cung cấp","Địa chỉ","Số điện thoại","Email"};
 
 
     public NhaCungCapForm(String title, MainFrame mainFrame) {

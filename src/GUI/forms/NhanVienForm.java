@@ -55,7 +55,7 @@ public class NhanVienForm extends JPanel implements TableActionListener, ActionL
         {"combobox", "Giới tính"},
         {"textbox", "Số điện thoại"}
     };
-    private String[] filter = {"Tất cả", "Mã nhân viên","Họ tên","Ngày sinh","Giới tính","Số điện thoại","Mã tài khoản"};
+    private String[] filter = {"Họ tên","Mã nhân viên","Giới tính","Số điện thoại","Mã tài khoản"};
 
 
     public NhanVienForm(String title, MainFrame mainFrame) {

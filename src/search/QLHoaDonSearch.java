@@ -26,31 +26,34 @@ public class QLHoaDonSearch implements Searchable<HoaDonDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
+        // if(selectedItem.equals("Tất cả")){
+        //     ArrayList<HoaDonDTO> list = new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaHD() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getNgayBan() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getMaPT() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getMaKM() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getMaKH() + "").toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        //     setDanhSachHienTai(list);
+        //     return(list);
+        // }
+        // else 
+        if(selectedItem.equals("Mã hóa đơn")){ //Mã hóa đơn
             ArrayList<HoaDonDTO> list = new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaHD() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getNgayBan() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getMaPT() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getMaKM() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getMaKH() + "").toLowerCase().contains(keywordFormatted)
             )
             .toList()
             );
             setDanhSachHienTai(list);
             return(list);
         }
-        else {  //Mã hóa đơn
-            ArrayList<HoaDonDTO> list = new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaHD() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-            setDanhSachHienTai(list);
-            return(list);
-        }
+
+        return null;
 
     }
 

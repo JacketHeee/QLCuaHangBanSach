@@ -50,7 +50,7 @@ public class PhuongThucThanhToanForm extends JPanel implements TableActionListen
     private String[][] attributes = {
         {"textbox","Tên phương thức thanh toán"}
     };
-    private String[] filter = {"Tất cả","Mã phương thức", "Tên phương thức thanh toán"};
+    private String[] filter = {"Tên phương thức thanh toán","Mã phương thức"};
 
 
     public PhuongThucThanhToanForm(String title, MainFrame mainFrame) {

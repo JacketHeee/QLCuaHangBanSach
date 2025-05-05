@@ -26,19 +26,21 @@ public class QLPhieuNhapSearch implements Searchable<PhieuNhapDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            ArrayList<PhieuNhapDTO> list = new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaNhap() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getNgayNhap() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getMaNCC() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-            return(list);
-        }
-        else{   //Mã nhập
+        // if(selectedItem.equals("Tất cả")){
+        //     ArrayList<PhieuNhapDTO> list = new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaNhap() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getNgayNhap() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getMaNCC() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        //     return(list);
+        // }
+        // else
+        
+        if (selectedItem.equals("Mã phiếu nhập")) {   //Mã nhập
             ArrayList<PhieuNhapDTO> list = new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaNhap() + "").toLowerCase().contains(keywordFormatted)
@@ -48,6 +50,7 @@ public class QLPhieuNhapSearch implements Searchable<PhieuNhapDTO>{
             return(list);
         }
 
+        return null;
     }
 
     public void setDanhSachHienTai(ArrayList<PhieuNhapDTO> listPN){

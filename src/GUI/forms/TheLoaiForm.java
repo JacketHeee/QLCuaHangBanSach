@@ -54,7 +54,7 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
     private List<TheLoaiDTO> filteredList = new ArrayList<>();
 
 
-    private String[] filter = {"Tất cả", "Mã thể loại", "Tên thể loại"};
+    private String[] filter = {"Tên thể loại","Mã thể loại"};
 
     public TheLoaiForm(String title, MainFrame mainFrame) {
         this.title = title;
@@ -63,7 +63,6 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
         theLoaiBUS = TheLoaiBUS.getInstance();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
         this.listAction = getListAction();
-
         init();
     }
     

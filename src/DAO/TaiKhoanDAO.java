@@ -93,7 +93,7 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
     public TaiKhoanDTO getTaiKhoanById(int ma) {
         TaiKhoanDTO result = null;
 
-        String sql = "SELECT * FROM TAIKHOAN WHERE maTK = " + ma;
+        String sql = "SELECT * FROM TAIKHOAN WHERE TRANGTHAI = 1 maTK = " + ma;
         
         
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -119,7 +119,7 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
 
     public TaiKhoanDTO SelectTaiKhoanByUserName(String userName){
         TaiKhoanDTO result = null;
-        String sql = "SELECT * FROM taiKhoan WHERE username = ?";
+        String sql = "SELECT * FROM taiKhoan WHERE TRANGTHAI = 1 and username = ?";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

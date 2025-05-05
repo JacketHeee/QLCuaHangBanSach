@@ -2,9 +2,6 @@
 
 package GUI.component;
 
-import net.miginfocom.swing.MigLayout;
-import utils.TextUtils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +16,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import net.miginfocom.swing.MigLayout;
+import utils.TextUtils;
 
 public class CustomTable extends JPanel implements ActionListener {
     protected final String[] headers;
@@ -40,6 +47,7 @@ public class CustomTable extends JPanel implements ActionListener {
     protected CustomScrollPane scrollPane;
     //Callback sự kiện chọn hàng
     protected OnSelectRowListener onSelectRowListener;
+
     //set
     protected TableActionListener actionListener;
 
@@ -57,12 +65,24 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
     public CustomTable(ArrayList<String[]> data, String[][] actions, String... headers) {
+
         // setBackground(Color.white);
         this.data = ((data == null)? new ArrayList<>(): data);
         this.actions = actions;
         this.headers = headers;
         this.columnWidths = new int[headers.length];
-        this.rowHeights = new int[this.data.size() + 1]; // +1 cho header
+        this.rowHeights = new int[this.data.size()]; // +1 cho header
+        this.init();
+    }
+
+    public CustomTable(ArrayList<String[]> data, String[][] actions,int maxText, String... headers) {
+        this.maxTextWidth = maxText;
+        // setBackground(Color.white);
+        this.data = ((data == null)? new ArrayList<>(): data);
+        this.actions = actions;
+        this.headers = headers;
+        this.columnWidths = new int[headers.length];
+        this.rowHeights = new int[this.data.size()]; // +1 cho header
         this.init();
     }
     //Cho form cần sự kiện chọn vào hàng
@@ -73,36 +93,43 @@ public class CustomTable extends JPanel implements ActionListener {
         this.headers = headers;
         this.onSelectRowListener = onSelectRowListener;
         this.columnWidths = new int[headers.length];
-        this.rowHeights = new int[this.data.size() + 1]; // +1 cho header
+        this.rowHeights = new int[this.data.size()]; // +1 cho header
         this.init();
     }
 
     public void init(){
+        // Khởi tạo Columns width
         for (int i = 0; i < headers.length; i++) {
             columnWidths[i] = 150;
         }
+
+        // Khởi tạo Rows Height
         for (int i = 0; i < rowHeights.length; i++) {
             rowHeights[i] = 30;
         }
 
-        setLayout(new BorderLayout());
+        setLayout(new MigLayout("insets 0, wrap 1,gap 0"));
+        // setLayout(new BorderLayout());
 
         // Tạo headerPanel
         headerPanel = new JPanel(new MigLayout("insets 0, fillx, gap 0"));
         for (int i = 0; i < headers.length; i++) {
+            // Sử dụng Columns Width cho headerPanel
+            // vì đã có grow và cell rồi nên các ô tự động lấp đầy không gian, không cần setPrefferedSize
             headerPanel.add(createHeaderLabel(headers[i]), "grow,cell " + i + " 0");
         }
         
         addColHanhDong();
 
         // Tạo dataPanel với constraints ngay từ đầu
-        dataPanel = new JPanel();
-        migLayout = new MigLayout("insets 0 0 20 0, fillx, gap 0", getColumnConstraints(), getRowConstraints());
+        dataPanel = new JPanel();                              // Sử dụng Comlumns Width cho Rows Data
+        migLayout = new MigLayout("insets 0 0 0 0, fillx, gap 0", getColumnConstraints());
         dataPanel.setLayout(migLayout);
         // dataPanel.setOpaque(true);
         // dataPanel.setBackground(Color.white);
 
         // Thêm dữ liệu ban đầu
+        // data.remove(data.size()-1);
         for (String[] x : this.data) {
             addDataRow(x);
         }
@@ -113,13 +140,19 @@ public class CustomTable extends JPanel implements ActionListener {
         // Tạo JScrollPane
         
         
+        // Thêm vào Cu 
         // Thêm vào CustomTable
-        add(headerPanel, BorderLayout.NORTH);   
+        add(headerPanel, "pushx, growx");   
         addScollPane();
+        
 
         // Đặt kích thước mặc định cho CustomTable
         // setMinimumSize(new Dimension(400, 100));
         // setPreferredSize(null);
+    }
+
+    public void setNoneSelectedRow() {
+        this.selectedRow = -1;
     }
 
     public void setDataPanelPre() {
@@ -146,11 +179,17 @@ public class CustomTable extends JPanel implements ActionListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(null);
-        add(scrollPane, BorderLayout.CENTER);
+        add(scrollPane, "pushx, grow");
+        // scrollPane = new CustomScrollPane(dataPanel);
+        // scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        // scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        // scrollPane.setBorder(null);
+        // add(scrollPane, BorderLayout.CENTER);
     }
 
-    private JLabel createHeaderLabel(String text) {
+    protected JLabel createHeaderLabel(String text) {
         JLabel label = new JLabel(text);
+        label.setBorder(new EmptyBorder(10, 5, 10, 5));
         label.setPreferredSize(new Dimension(150, 30));
         label.setOpaque(true);
         label.setBackground(headerBackground);
@@ -222,6 +261,8 @@ public class CustomTable extends JPanel implements ActionListener {
     
         // Tạo JTextField chỉ đọc
         JTextField textField = new JTextField(originalText);
+
+        // textFile được đặt kích thước giống như JLabel để đảm bảo kích thước nhất quán
         textField.setPreferredSize(new Dimension(150, 30));
         textField.setHorizontalAlignment(SwingConstants.CENTER);
         textField.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
@@ -262,7 +303,7 @@ public class CustomTable extends JPanel implements ActionListener {
         textField.requestFocusInWindow();
     }
     
-    private void saveEditing() {
+    protected void saveEditing() {
         if (currentEditingField == null) return;
     
         int row = currentEditingRow;
@@ -288,7 +329,7 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.repaint();
     }
 
-    private void cancelEditing(int row, int col, String originalText) {
+    protected void cancelEditing(int row, int col, String originalText) {
         if (currentEditingField == null) return;
 
         // Chuyển lại thành JLabel với văn bản gốc
@@ -366,7 +407,7 @@ public class CustomTable extends JPanel implements ActionListener {
 
         // Cập nhật màu, constraints và giao diện
         updateRowColors();
-        updateRowConstraints();
+        // updateRowConstraints();
         dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
@@ -437,16 +478,36 @@ public class CustomTable extends JPanel implements ActionListener {
         dataPanel.repaint();
     }
 
+    // public void setColumnWidth(int columnIndex, int width) {
+    //     if (columnIndex < 0 || columnIndex >= headers.length) {
+    //         throw new IllegalArgumentException("Column index out of bounds");
+    //     }
+    //     columnWidths[columnIndex] = width;
+    //     updateColumnConstraints();
+    //     // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+    //     dataPanel.setPreferredSize(null);
+    //     dataPanel.revalidate();
+    //     dataPanel.repaint();
+    // }
+
     public void setColumnWidth(int columnIndex, int width) {
         if (columnIndex < 0 || columnIndex >= headers.length) {
             throw new IllegalArgumentException("Column index out of bounds");
         }
         columnWidths[columnIndex] = width;
         updateColumnConstraints();
-        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
+
+        // Cập nhật preferredSize cho JLabel trong header
+        Component headerLabel = headerPanel.getComponent(columnIndex);
+        if (headerLabel instanceof JLabel) {
+            ((JLabel) headerLabel).setPreferredSize(new Dimension(width, rowHeights[0]));
+        }
+
         dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
+        headerPanel.revalidate();
+        headerPanel.repaint();
     }
 
     public void setRowHeight(int rowIndex, int height) {
@@ -462,7 +523,7 @@ public class CustomTable extends JPanel implements ActionListener {
             rowHeights = newRowHeights;
         }
         rowHeights[rowIndex] = height;
-        updateRowConstraints();
+        // updateRowConstraints();
         // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
         dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
@@ -477,8 +538,11 @@ public class CustomTable extends JPanel implements ActionListener {
         migLayout.setRowConstraints(getRowConstraints());
     }
 
-    private String getColumnConstraints() {
+    // Trả về chuỗi Định dạng các cột dựa trên Col Wid được khởi tạo
+    // Nếu columnsWidth=[150,150,150] => colWidth = [150][150][150]
+    protected String getColumnConstraints() {
         StringBuilder columnConstraints = new StringBuilder();
+        // width ở đây được hiểu là kích thước tối thiểu
         for (int width : columnWidths) {
             columnConstraints.append("[").append(width).append("]");
         }
@@ -547,7 +611,7 @@ public class CustomTable extends JPanel implements ActionListener {
         }
         
         // Cập nhật constraints và kích thước
-        updateRowConstraints();
+        // updateRowConstraints();
         // dataPanel.setPreferredSize(new Dimension((headers.length + (actions != null ? 1 : 0)) * 150, rowLabels.size() * 30));
         // dataPanel.setPreferredSize(new Dimension((headers.length + (actions != null ? 1 : 0)) * 150, rowLabels.size() * 30));
         dataPanel.setPreferredSize(null);
@@ -568,6 +632,9 @@ public class CustomTable extends JPanel implements ActionListener {
 
     
     public void addDataRow(String[] data) {
+        if (rowLabels.size() + 1 > this.data.size()) 
+            this.data.add(data);
+
         int row = rowLabels.size() + 1;
         
         // / Xử lý trường hợp data là null
@@ -617,17 +684,6 @@ public class CustomTable extends JPanel implements ActionListener {
 
         rowLabels.put(row, labels);
 
-        // Cập nhật rowHeights nếu cần
-        if (row >= rowHeights.length) {
-            int[] newRowHeights = new int[row + 1];
-            System.arraycopy(rowHeights, 0, newRowHeights, 0, rowHeights.length);
-            for (int i = rowHeights.length; i < newRowHeights.length; i++) {
-                newRowHeights[i] = 30;
-            }
-            rowHeights = newRowHeights;
-        }
-        updateRowConstraints();
-        // dataPanel.setPreferredSize(new Dimension(headers.length * 150, rowLabels.size() * 30));
         dataPanel.setPreferredSize(null);
         dataPanel.revalidate();
         dataPanel.repaint();
@@ -696,7 +752,7 @@ public class CustomTable extends JPanel implements ActionListener {
         }
 
         // Cập nhật dữ liệu trong mảng data
-        if (row - 1 < data.size()) {
+        if (row - 1 <= data.size()) {
             data.set(row - 1, newData);
         }
 

@@ -24,18 +24,19 @@ public class KhachHangSearch implements Searchable<KhachHangDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
         // Xét bộ lọc ở đây
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaKH() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenKH()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getSoDT()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getGioiTinh()).toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã khách hàng")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaKH() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenKH()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getSoDT()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getGioiTinh()).toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã khách hàng")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaKH() + "").toLowerCase().contains(keywordFormatted)

@@ -30,6 +30,16 @@ public class KM_SachBUS {
 		}
 		return(0);
 	}
+
+	public int delete(int maKM){
+		if(kM_SachDAO.delete(maKM) != 0){
+			for (Integer x : getIndexByMaKM(maKM)) {
+				listKM_Sach.remove(x);
+			}
+			return(1);
+		}
+		return(0);
+	}
 	
 	public ArrayList<KM_SachDTO> getAll(){
 		return(this.listKM_Sach);
@@ -46,6 +56,17 @@ public class KM_SachBUS {
 			}
 		}
 		return(-1);
+	}
+
+	public ArrayList<Integer> getIndexByMaKM(int maKM) {
+		ArrayList<Integer> list = new ArrayList<>();
+		for(int i = 0; i < listKM_Sach.size(); i++){
+			if(maKM == listKM_Sach.get(i).getMaKM()){
+				list.add(i);
+			}
+		}
+		return list;
+
 	}
 
 	public int insert(KM_SachDTO km_Sach){

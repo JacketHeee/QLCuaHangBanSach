@@ -32,7 +32,12 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
 
     @Override
     public int delete(int id) {
-        return 0;
+        String query = "UPDATE KM_SACH SET TRANGTHAI = 0 WHERE maKM = ?";
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        jdbcUtil.executeUpdate(query, id);
+        jdbcUtil.Close();
+        return 1;
     }
 
     public int delete(int maSach, int maKM){
@@ -52,7 +57,7 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
 
     public ArrayList<KM_SachDTO> getAll() {
         ArrayList<KM_SachDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM KM_SACH";
+        String sql = "SELECT * FROM KM_SACH WHERE TRANGTHAI = 1";
         
         
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -76,7 +81,7 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
 
     public ArrayList<Integer> getAllMaKMByMaSach(int maSach){
         ArrayList<Integer> result = new ArrayList<>();
-        String sql = "SELECT maKM FROM KM_SACH WHERE maSach = ?";
+        String sql = "SELECT maKM FROM KM_SACH WHERE maSach = ? AND TRANGTHAI = 1 ";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

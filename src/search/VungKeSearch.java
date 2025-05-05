@@ -24,16 +24,17 @@ public class VungKeSearch implements Searchable<ViTriVungDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaVung() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenVung()).toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã vùng")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaVung() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenVung()).toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã vùng")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaVung() + "").toLowerCase().contains(keywordFormatted)

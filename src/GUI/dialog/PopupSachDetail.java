@@ -14,6 +14,7 @@ import BUS.TacGiaBUS;
 import BUS.TheLoaiBUS;
 import DTO.SachDTO;
 import net.miginfocom.swing.MigLayout;
+import utils.FormatterUtil;
 
 public class PopupSachDetail extends JPopupMenu{
     private int maSach;
@@ -61,7 +62,7 @@ public class PopupSachDetail extends JPopupMenu{
             sach.getMaSach() + ""
             , sach.getTenSach()
             , sach.getSoLuong() + ""
-            , sach.getGiaBan() + ""
+            , FormatterUtil.formatNumberVN(sach.getGiaBan()) + ""
             , sach.getNamXB() + ""
             , sach.getMaNXB() + ""
             , removeLastComma(strTL)

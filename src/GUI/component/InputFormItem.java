@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
@@ -20,6 +21,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.toedter.calendar.JDateChooser;
 
 import net.miginfocom.swing.MigLayout;
+import utils.ImageUtil;
 
 public class InputFormItem extends JPanel{
     private JLabel label;
@@ -33,6 +35,7 @@ public class InputFormItem extends JPanel{
     private JTextField textKNNN;
     private CustomButton btnKNNN;
     private CustomTextFieldSL textSL;
+    private JTextArea textArea;
     //Cho ảnh
     private PanelPicture panelPicture;
 
@@ -47,6 +50,10 @@ public class InputFormItem extends JPanel{
             case "textbox":
                 this.textField = new JTextField();
                 setTextBox();
+                break;
+            case "textArea":
+                this.textArea = new JTextArea(3,20);
+                setTextAreaBox();
                 break;
             case "combobox":
                 this.combobox = new JComboBox<>();
@@ -97,6 +104,11 @@ public class InputFormItem extends JPanel{
     public void setTextBox(){
         this.add(label, "grow");
         this.add(textField, "grow");
+    }
+
+    public void setTextAreaBox(){
+        this.add(label, "grow");
+        this.add(textArea, "grow");
     }
 
     public void setCombobox(){
@@ -297,6 +309,10 @@ public class InputFormItem extends JPanel{
         return(this.panelPicture.getPath());
     }
 
+    public ImageUtil getImageUtil() {
+        return this.panelPicture.getImageUtil();
+    }
+
     public void setAnh(String path){
         this.panelPicture.setAnh(path);
     }
@@ -410,6 +426,14 @@ public class InputFormItem extends JPanel{
         this.panelPicture = panelPicture;
     }
 
-    
+    public JTextArea getTextArea() {
+        return textArea;
+    }
 
+    public void setTextArea(JTextArea textArea) {
+        this.textArea = textArea;
+    }
+
+    
+    
 }

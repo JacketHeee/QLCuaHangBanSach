@@ -56,7 +56,7 @@ public class NXBForm extends JPanel implements TableActionListener, ActionListen
         {"textbox", "Email"},
     };
 
-    private String[] filter = {"Tất cả","Mã nhà xuất bản","Tên nhà xuất bản","Địa chỉ","Số điện thoại","Email"};
+    private String[] filter = {"Tên nhà xuất bản","Mã nhà xuất bản","Địa chỉ","Số điện thoại","Email"};
 
     public NXBForm(String title, MainFrame mainFrame) {
         this.title = title;

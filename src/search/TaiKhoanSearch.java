@@ -25,18 +25,19 @@ public class TaiKhoanSearch implements Searchable<TaiKhoanDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getUsername()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getPassword()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(NhomQuyenBUS.getInstance().getTenByMaNhomQuyen(x.getMaRole())).toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã tài khoản")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getUsername()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getPassword()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(NhomQuyenBUS.getInstance().getTenByMaNhomQuyen(x.getMaRole())).toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã tài khoản")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)

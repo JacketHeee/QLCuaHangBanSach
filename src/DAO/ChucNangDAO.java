@@ -79,7 +79,7 @@ public class ChucNangDAO implements DAOInterface<ChucNangDTO> {
 
     public String getNameByMaCN(int maCN){
         String result = null;
-        String sql = "SELECT tenChucNang FROM CHUCNANG WHERE maChucNang = ?";
+        String sql = "SELECT tenChucNang FROM CHUCNANG WHERE maChucNang = ? and TRANGTHAI = 1";
 
         
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -99,7 +99,7 @@ public class ChucNangDAO implements DAOInterface<ChucNangDTO> {
 
     public int getMaChucNangByTen(String tenCN){
         int result = -1;
-        String sql = "SELECT maChucNang FROM CHUCNANG WHERE tenChucNang = ?";
+        String sql = "SELECT maChucNang FROM CHUCNANG WHERE tenChucNang = ? and TRANGTHAI = 1";
 
         
         JDBCUtil jdbcUtil = new JDBCUtil();

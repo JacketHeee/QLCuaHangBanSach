@@ -24,20 +24,21 @@ public class KhuyenMaiSearch implements Searchable<KhuyenMaiDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaKM() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenKM()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getDieuKienGiam()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getGiaTriGiam() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getNgayBatDau() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getNgayKetThuc() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã khuyến mãi")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaKM() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenKM()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getDieuKienGiam()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getGiaTriGiam() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getNgayBatDau() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getNgayKetThuc() + "").toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã khuyến mãi")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaKM() + "").toLowerCase().contains(keywordFormatted)

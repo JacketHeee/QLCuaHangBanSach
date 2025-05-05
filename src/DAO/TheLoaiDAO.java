@@ -76,7 +76,7 @@ public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
 
     public TheLoaiDTO getTheLoaiById(int maTheLoai) {
         TheLoaiDTO result = null;
-        String sql = "SELECT * FROM THELOAI WHERE maTheLoai = " + maTheLoai;
+        String sql = "SELECT * FROM THELOAI WHERE TRANGTHAI = 1 and maTheLoai = " + maTheLoai;
         
         
         JDBCUtil jdbcUtil = new JDBCUtil();

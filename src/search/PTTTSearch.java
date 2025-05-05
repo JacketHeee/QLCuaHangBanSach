@@ -24,15 +24,15 @@ public class PTTTSearch implements Searchable<PhuongThucTTDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaPT() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenPTTT()).toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaPT() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenPTTT()).toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
         if(selectedItem.equals("Mã phương thức")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 

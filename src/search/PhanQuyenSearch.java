@@ -25,16 +25,17 @@ public class PhanQuyenSearch implements Searchable<NhomQuyenDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaRole() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenRole()).toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã quyền")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaRole() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenRole()).toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã quyền")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaRole() + "").toLowerCase().contains(keywordFormatted)

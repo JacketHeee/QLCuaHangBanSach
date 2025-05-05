@@ -53,16 +53,17 @@ public class SachForm extends JPanel implements ActionListener,TableActionListen
     private String[][] attributes = {
         {"textbox","Tên sách"},
         {"textbox", "Năm xuất bản"},
+        {"textbox", "Giá bán (đ)"},
         {"combobox", "Vùng"}, //FK
         {"combobox", "Nhà xuất bản"}, //FK
         //Khóa ngoại nhiều-nhiều
         {"inputKNNN", "Thể loại"},
         {"inputKNNN", "Tác giả"},
-        {"inputKNNN", "Khuyến mãi"},
+        {"textArea", "Khuyến mãi hiện có"},
         {"inputAnh", "Ảnh"}
     };
 
-    private String[] filter = {"Tất cả","Mã sách","Tên sách","Số lượng tồn","Năm xuất bản"};
+    private String[] filter = {"Tên sách","Mã sách","Số lượng tồn","Năm xuất bản"};
     // private javax.swing.JTextField txtSearch;
     // private javax.swing.JComboBox<String> cbFilter;
     private SearchBarPanel<SachDTO> searchBarPanel;

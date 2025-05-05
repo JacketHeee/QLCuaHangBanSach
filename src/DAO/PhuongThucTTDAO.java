@@ -84,7 +84,7 @@ public class PhuongThucTTDAO implements DAOInterface<PhuongThucTTDTO> {
 
     public PhuongThucTTDTO getPTTTById(int maPTTT) {
         PhuongThucTTDTO result = null;
-        String sql = "SELECT * FROM PHUONGTHUC_TT WHERE maPT = " + maPTTT;
+        String sql = "SELECT * FROM PHUONGTHUC_TT WHERE TRANGTHAI = 1 and maPT = " + maPTTT;
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

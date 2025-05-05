@@ -52,7 +52,7 @@ public class PhanQuyenForm extends JPanel implements ActionListener,TableActionL
     private ArrayList<NhomQuyenDTO> listKH; 
 
     private String[] header = {"Mã quyền","Tên nhóm quyền"};
-    private String[] filter = {"Tất cả","Mã quyền","Tên nhóm quyền"};
+    private String[] filter = {"Tên nhóm quyền","Mã quyền"};
 
 
     public PhanQuyenForm(MainFrame mainframe, String title) {

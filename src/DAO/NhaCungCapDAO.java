@@ -95,7 +95,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
 
     public NhaCungCapDTO getNhaCungCapById(int maNhaCC) {
         NhaCungCapDTO result = null;
-        String sql = "SELECT * FROM NHACUNGCAP WHERE maNCC = " + maNhaCC;
+        String sql = "SELECT * FROM NHACUNGCAP WHERE TRANGTHAI = 1 and maNCC = " + maNhaCC;
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

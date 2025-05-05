@@ -24,19 +24,20 @@ public class NhanVienSearch implements Searchable<NhanVienDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaNV() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getHoTen()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getNgaySinh() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getSoDT()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã nhân viên")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaNV() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getHoTen()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getNgaySinh() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getSoDT()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getMaTK() + "").toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã nhân viên")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaNV() + "").toLowerCase().contains(keywordFormatted)

@@ -24,19 +24,20 @@ public class NXBSearch implements Searchable<NhaXBDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaNXB() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenNXB()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getDiaChi() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getSoDT() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getEmail()).toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã nhà xuất bản")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaNXB() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenNXB()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getDiaChi() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getSoDT() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getEmail()).toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã nhà xuất bản")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaNXB() + "").toLowerCase().contains(keywordFormatted)

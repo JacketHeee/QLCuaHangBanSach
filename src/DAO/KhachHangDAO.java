@@ -96,7 +96,7 @@ public class KhachHangDAO implements DAOInterface<KhachHangDTO>{
 
 	public KhachHangDTO getKhachHangById(int maKhachHang) {
 		KhachHangDTO result = null;
-		String sql = "SELECT * FROM KhachHang WHERE maKH = " + maKhachHang;
+		String sql = "SELECT * FROM KhachHang WHERE TRANGTHAI = 1 and maKH = " + maKhachHang;
 		
 		
 		JDBCUtil jdbcUtil = new JDBCUtil();
@@ -122,7 +122,7 @@ public class KhachHangDAO implements DAOInterface<KhachHangDTO>{
 
 	public String getTenByMaKhachHang(int ma){
 		String result = new String();
-		String sql = "SELECT tenKH FROM KhachHang WHERE maKH = ?";
+		String sql = "SELECT tenKH FROM KhachHang WHERE maKH = ? and TRANGTHAI = 1";
 		
 		
 		JDBCUtil jdbcUtil = new JDBCUtil();

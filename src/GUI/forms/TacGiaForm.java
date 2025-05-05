@@ -53,7 +53,7 @@ public class TacGiaForm extends JPanel implements TableActionListener, ActionLis
         {"textbox","Tên tác giả"}
     };
 
-    private String[] filter = {"Tất cả", "Mã tác giả", "Tên tác giả"};
+    private String[] filter = {"Tên tác giả","Mã tác giả"};
 
     public TacGiaForm(String title, MainFrame mainFrame) {
         this.title = title;

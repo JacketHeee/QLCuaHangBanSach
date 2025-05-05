@@ -51,7 +51,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
     private ArrayList<String> listAction;
     private TaiKhoanDTO taiKhoan;
     private ChiTietQuyenBUS chiTietQuyenBUS;
-    private String[] filter = {"Tất cả","Mã khách hàng","Tên khách hàng","Số điện thoại","Giới tính"};
+    private String[] filter = {"Tên khách hàng","Mã khách hàng","Số điện thoại","Giới tính"};
 
     private String[][] attributes = {
         {"textbox","Tên khách hàng"},

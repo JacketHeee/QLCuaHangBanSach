@@ -48,7 +48,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
     private String[][] attributes = {
         {"textbox","Tên vùng"}
     };
-    private String[] filter = {"Tất cả","Mã vùng", "Tên vùng"};
+    private String[] filter = {"Tên vùng","Mã vùng"};
 
     private SachBUS sachBUS;
 
@@ -363,6 +363,7 @@ public class VungKeForm extends JPanel implements TableActionListener, ActionLis
             String[] info = {listSach.get(i).getMaSach() + "", listSach.get(i).getTenSach()}; //action
             data.add(info);
         }
+        tableSanPham.setNoneSelectedRow();
         tableSanPham.updateTable(data);
     }
 

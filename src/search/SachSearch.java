@@ -24,18 +24,19 @@ public class SachSearch implements Searchable<SachDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaSach() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenSach()).toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getSoLuong() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getNamXB() + "").toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã sách")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaSach() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenSach()).toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getSoLuong() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getNamXB() + "").toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã sách")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaSach() + "").toLowerCase().contains(keywordFormatted)

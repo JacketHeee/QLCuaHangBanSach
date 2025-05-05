@@ -24,16 +24,17 @@ public class TheLoaiSearch implements Searchable<TheLoaiDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaTheLoai() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenTheLoai()).toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã thể loại")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaTheLoai() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenTheLoai()).toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã thể loại")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaTheLoai() + "").toLowerCase().contains(keywordFormatted)

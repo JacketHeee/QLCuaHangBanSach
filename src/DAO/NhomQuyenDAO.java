@@ -85,7 +85,7 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyenDTO> {
 
     public NhomQuyenDTO SelectByID(int maRole){
         NhomQuyenDTO result = null;
-        String sql = "SELECT * FROM NHOMQUYEN WHERE maRole = ?";
+        String sql = "SELECT * FROM NHOMQUYEN WHERE maRole = ? and TRANGTHAI = 1";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

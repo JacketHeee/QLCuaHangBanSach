@@ -93,7 +93,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     public NhanVienDTO SelectNhanVienByMaTK(int maTK){
         NhanVienDTO result = null;
-        String sql = "SELECT * FROM NHANVIEN WHERE maTK = ?";
+        String sql = "SELECT * FROM NHANVIEN WHERE maTK = ? and TRANGTHAI = 1";
 
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -118,7 +118,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     public ArrayList<String> getAllTenNVNotHaveAccount(){
         ArrayList<String> result = new ArrayList<>();
-        String sql = "SELECT hoTen FROM NHANVIEN WHERE maTK IS NULL";
+        String sql = "SELECT hoTen FROM NHANVIEN WHERE maTK IS NULL and TRANGTHAI = 1";
 
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -137,7 +137,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     public ArrayList<String> getAllTenNVHaveAccount(){
         ArrayList<String> result = new ArrayList<>();
-        String sql = "SELECT hoTen FROM NHANVIEN WHERE maTK IS not NULL";
+        String sql = "SELECT hoTen FROM NHANVIEN WHERE maTK IS not NULL and TRANGTHAI = 1";
 
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -156,7 +156,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
     
     public int getMaNVByTenNV(String tenNV){
         int result = -1;
-        String sql = "SELECT maNV FROM nhanVien WHERE hoTen = ?";
+        String sql = "SELECT maNV FROM nhanVien WHERE hoTen = ? and TRANGTHAI = 1";
         try {
             JDBCUtil jdbcUtil = new JDBCUtil();
             jdbcUtil.Open();
@@ -186,7 +186,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     public String getTenNVByMaTK(int maTK){
         String result = new String();
-        String sql = "SELECT hoTen FROM nhanVien WHERE maTK = ?";
+        String sql = "SELECT hoTen FROM nhanVien WHERE maTK = ? and TRANGTHAI = 1";
         try {
             JDBCUtil jdbcUtil = new JDBCUtil();
             jdbcUtil.Open();
@@ -203,7 +203,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     public int getMaNVByMaTK(int maTK){
         int result = -1;
-        String sql = "SELECT maNV FROM nhanVien WHERE maTK = ?";
+        String sql = "SELECT maNV FROM nhanVien WHERE maTK = ? and TRANGTHAI = 1";
         try {
             JDBCUtil jdbcUtil = new JDBCUtil();
             jdbcUtil.Open();
@@ -244,7 +244,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     public ArrayList<String> getAllTenNVJoined(){
         ArrayList<String> result = new ArrayList<>();
-        String sql = "SELECT hoTen FROM NHANVIEN"; 
+        String sql = "SELECT hoTen FROM NHANVIEN WHERE TRANGTHAI = 1"; 
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         ResultSet rs = jdbcUtil.executeQuery(sql);

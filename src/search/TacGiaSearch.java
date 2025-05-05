@@ -24,16 +24,17 @@ public class TacGiaSearch implements Searchable<TacGiaDTO>{
                                    .trim()
                                    .replaceAll("\\s+", " ");
 
-        if(selectedItem.equals("Tất cả")){
-            return new ArrayList<>(danhSach.stream()
-            .filter(x -> 
-                TextUtils.boDau(x.getMaTacGia() + "").toLowerCase().contains(keywordFormatted)
-                || TextUtils.boDau(x.getTenTacGia()).toLowerCase().contains(keywordFormatted)
-            )
-            .toList()
-            );
-        }
-        else if(selectedItem.equals("Mã tác giả")){
+        // if(selectedItem.equals("Tất cả")){
+        //     return new ArrayList<>(danhSach.stream()
+        //     .filter(x -> 
+        //         TextUtils.boDau(x.getMaTacGia() + "").toLowerCase().contains(keywordFormatted)
+        //         || TextUtils.boDau(x.getTenTacGia()).toLowerCase().contains(keywordFormatted)
+        //     )
+        //     .toList()
+        //     );
+        // }
+        // else 
+        if(selectedItem.equals("Mã tác giả")){
             return new ArrayList<>(danhSach.stream()
             .filter(x -> 
                 TextUtils.boDau(x.getMaTacGia() + "").toLowerCase().contains(keywordFormatted)

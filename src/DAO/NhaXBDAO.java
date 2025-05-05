@@ -95,7 +95,7 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
 
     public NhaXBDTO getNXBById(int maNXB) {
         NhaXBDTO result = null;
-        String sql = "SELECT * FROM NHAXB WHERE maNXB = " + maNXB;
+        String sql = "SELECT * FROM NHAXB WHERE TRANGTHAI = 1 and maNXB = " + maNXB;
         
         
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -120,7 +120,7 @@ public class NhaXBDAO implements DAOInterface<NhaXBDTO> {
 
     public String getTenNXBByMaSach(int maSach){
         String result = new String();
-        String sql = "SELECT tenNXB FROM SACH S JOIN NHAXB NXB ON S.maNXB = NXB.maNXB WHERE maSach = ?";
+        String sql = "SELECT tenNXB FROM SACH S JOIN NHAXB NXB ON S.maNXB = NXB.maNXB WHERE maSach = ? and s.TRANGTHAI = 1 and nxb.TRANGTHAI = 1";
 
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

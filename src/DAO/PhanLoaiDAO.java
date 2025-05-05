@@ -52,7 +52,7 @@ public class PhanLoaiDAO implements DAOInterface<PhanLoaiDTO> {
 
     public ArrayList<PhanLoaiDTO> getAll() {
         ArrayList<PhanLoaiDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM PHANLOAI";
+        String sql = "SELECT * FROM PHANLOAI WHERE TRANGTHAI = 1";
         
         
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -76,7 +76,7 @@ public class PhanLoaiDAO implements DAOInterface<PhanLoaiDTO> {
 
     public ArrayList<Integer> getAllMaTheLoaiByMaSach(int maSach){
         ArrayList<Integer> result = new ArrayList<>();
-        String sql = "SELECT maTheLoai FROM PHANLOAI WHERE maSach = ?";
+        String sql = "SELECT maTheLoai FROM PHANLOAI WHERE maSach = ? and TRANGTHAI = 1";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();

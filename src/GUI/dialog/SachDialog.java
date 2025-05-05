@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -31,6 +32,7 @@ import DTO.SachDTO;
 import GUI.MainFrame;
 import GUI.component.CustomButton;
 import GUI.component.InputForm;
+import GUI.component.InputFormItem;
 import GUI.forms.SachForm;
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
@@ -77,16 +79,20 @@ public class SachDialog extends JDialog implements ActionListener{
         this.sachBUS = SachBUS.getInstance();
         this.phanLoaiBUS = PhanLoaiBUS.getInstance();
         this.danhMuc_TGBUS = DanhMuc_TGBUS.getInstance();
+
         this.oldListTL = new ArrayList<>();
         this.oldListTG = new ArrayList<>();
         this.oldListKM = new ArrayList<>();
+
         this.label = new JLabel("<html><strong><font size=+2>" + function + "</font></strong><html>");
+
         this.viTriVungBUS = ViTriVungBUS.getInstance();
         this.nhaXBBUS = NhaXBBUS.getInstance();
         this.theLoaiBUS = TheLoaiBUS.getInstance();
         this.tacGiaBUS = TacGiaBUS.getInstance();
         this.khuyenMaiBUS = KhuyenMaiBUS.getInstance();
         this.kM_SachBUS = KM_SachBUS.getInstance();
+
         if(row.length == 1){
             this.rowSelected = row[0];
         }
@@ -105,14 +111,17 @@ public class SachDialog extends JDialog implements ActionListener{
 
         int originalSize = 250;
         int rowsize = 70;
-        this.setSize(new Dimension(600, originalSize + rowsize * (attributes.length-1))); // trừ 1 tại thêm cái ảnh á :<<
+        this.setMinimumSize(new Dimension(600, originalSize + rowsize * (attributes.length-1))); // trừ 1 tại thêm cái ảnh á :<<
         this.add(panel, "grow");
 
         //Cài đặt lựa chọn cmbobox
         String[] listVung = viTriVungBUS.getAllTenVung().toArray(new String[0]);
         String[] listNXB = nhaXBBUS.getAllTenNXB().toArray(new String[0]);
-        inputForm.getListItem().get(2).setListCombobox(listVung);
-        inputForm.getListItem().get(3).setListCombobox(listNXB);
+
+        inputForm.getListItem().get(3).setListCombobox(listVung);
+        inputForm.getListItem().get(4).setListCombobox(listNXB);
+
+        inputForm.getListItem().get(7).getTextArea().setEditable(false);
 
         //Cài đặt khóa ngoại nhiều nhiều
         setListenerBtnKNNN();
@@ -124,16 +133,18 @@ public class SachDialog extends JDialog implements ActionListener{
     }
 
     public void setListenerBtnKNNN(){
-        inputForm.getListItem().get(4).getBtnKNNN().setActionCommand("theloai");
-        inputForm.getListItem().get(5).getBtnKNNN().setActionCommand("tacgia");
-        inputForm.getListItem().get(6).getBtnKNNN().setActionCommand("khuyenmai");
-        inputForm.getListItem().get(4).getBtnKNNN().addActionListener(this);
+        inputForm.getListItem().get(5).getBtnKNNN().setActionCommand("theloai");
+        inputForm.getListItem().get(6).getBtnKNNN().setActionCommand("tacgia");
+        // inputForm.getListItem().get(7).getBtnKNNN().setActionCommand("khuyenmai");
+
         inputForm.getListItem().get(5).getBtnKNNN().addActionListener(this);
         inputForm.getListItem().get(6).getBtnKNNN().addActionListener(this);
+        // inputForm.getListItem().get(7).getBtnKNNN().addActionListener(this);
     }
 
     public void setButton(){
         if(type.equals("add")){
+            inputForm.getListItem().get(7).setVisible(false);
             CustomButton btnThem = new CustomButton("Thêm");
             btnThem.setActionCommand("add");
             btnThem.addActionListener(this);
@@ -204,22 +215,23 @@ public class SachDialog extends JDialog implements ActionListener{
             listTG += tacGiaBUS.getTenByMa(i) + ", ";
         }
         for(int i : kM_SachBUS.getAllMaKMByMaSach(ma)){
-            listKM += khuyenMaiBUS.getTenByMaKhuyenMai(i) + ", ";
+            listKM += khuyenMaiBUS.getTenByMaKhuyenMai(i) + "; ";
         }
         String newListTL = removeLastCommaForFKNN(listTL);
         String newListTG = removeLastCommaForFKNN(listTG);
-        String newListKM = removeLastCommaForFKNN(listKM);
+        // String newListKM = removeLastCommaForFKNN(listKM);
 
         String path = sachBUS.getPathByMa(ma);
 
         inputForm.getListItem().get(0).setText(sach.getTenSach());
         inputForm.getListItem().get(1).setText(sach.getNamXB()+"");
-        inputForm.getListItem().get(2).setSelection(tenVung);
-        inputForm.getListItem().get(3).setSelection(tenNXB);
-        inputForm.getListItem().get(4).setTextKNNN(newListTL);
-        inputForm.getListItem().get(5).setTextKNNN(newListTG);
-        inputForm.getListItem().get(6).setTextKNNN(newListKM);
-        inputForm.getListItem().get(7).setAnh(path);
+        inputForm.getListItem().get(2).setText(sach.getGiaBan()+"");
+        inputForm.getListItem().get(3).setSelection(tenVung);
+        inputForm.getListItem().get(4).setSelection(tenNXB);
+        inputForm.getListItem().get(5).setTextKNNN(newListTL);
+        inputForm.getListItem().get(6).setTextKNNN(newListTG);
+        inputForm.getListItem().get(7).getTextArea().setText(listKM);
+        inputForm.getListItem().get(8).setAnh(path);
 
         //Lấy gtri 2 list cho update
         getOldList();
@@ -247,9 +259,10 @@ public class SachDialog extends JDialog implements ActionListener{
             KNNNDialog knnnDialog = new KNNNDialog(mainFrame, "Thể loại","thể loại", listFK, data -> {
                     //bỏ dấu , cuối
                     String newData = removeLastCommaForFKNN(data);
-                    this.inputForm.getListItem().get(4).setTextKNNN(newData);
+                    this.inputForm.getListItem().get(5).setTextKNNN(newData);
                 } 
             );
+
             knnnDialog.setVisible(true);
         }
         else if (e.getActionCommand().equals("tacgia")){
@@ -258,7 +271,7 @@ public class SachDialog extends JDialog implements ActionListener{
             KNNNDialog knnnDialog = new KNNNDialog(mainFrame, "Tác giả","tác giả", listFK, data -> {
                     String newData = removeLastCommaForFKNN(data);
 
-                    this.inputForm.getListItem().get(5).setTextKNNN(newData);
+                    this.inputForm.getListItem().get(6).setTextKNNN(newData);
                 } 
             );
             knnnDialog.setVisible(true);
@@ -269,7 +282,7 @@ public class SachDialog extends JDialog implements ActionListener{
             KNNNDialog knnnDialog = new KNNNDialog(mainFrame, "Khuyến mãi","khuyến mãi", listFK, data -> {
                     String newData = removeLastCommaForFKNN(data);
 
-                    this.inputForm.getListItem().get(6).setTextKNNN(newData);
+                    this.inputForm.getListItem().get(7).setTextKNNN(newData);
                 } 
             );
             knnnDialog.setVisible(true);
@@ -279,19 +292,30 @@ public class SachDialog extends JDialog implements ActionListener{
     public void insert(){
         String ten = inputForm.getListItem().get(0).getText();
         int namXB = Integer.parseInt(inputForm.getListItem().get(1).getText());
-        String tenVung = inputForm.getListItem().get(2).getSelection();
-        String tenNhaXB = inputForm.getListItem().get(3).getSelection();
+        BigDecimal giaban = new BigDecimal(inputForm.getListItem().get(2).getText());
+        System.out.println(String.valueOf(giaban));
+        
+        String tenVung = inputForm.getListItem().get(3).getSelection();
+        String tenNhaXB = inputForm.getListItem().get(4).getSelection();
 
         int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
         int maNXB = nhaXBBUS.getMaNXBByTen(tenNhaXB);
 
-        String path = inputForm.getListItem().get(7).getPath();
+        InputFormItem path = inputForm.getListItem().get(8);
 
-        SachDTO sach = new SachDTO(ten, namXB, maVung, maNXB, path);
+        SachDTO sach = new SachDTO(ten,giaban, namXB, maVung, maNXB, path.getPath());
+        System.out.println(sach.getGiaBan());
         if(sachBUS.insert(sach) != 0){
+            try {
+                path.getImageUtil().saveFile();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Lỗi khi lưu: " + ex.getMessage(),
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
-            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", sach.getGiaBan() + "", sach.getNamXB() + ""};
+            System.out.println(sach.getGiaBan());
+            String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", FormatterUtil.formatNumberVN(sach.getGiaBan()) + "", sach.getNamXB() + ""};
             sachPanel.getTable().addDataRow(row);
             this.dispose();
         }
@@ -299,30 +323,40 @@ public class SachDialog extends JDialog implements ActionListener{
             JOptionPane.showMessageDialog(mainFrame, "Thêm sách thất bại!");
             this.dispose();
         }
+        
         //Insert khóa ngoại
-        String listTL = this.inputForm.getListItem().get(4).getTextKNNN();
-        String listTG = this.inputForm.getListItem().get(5).getTextKNNN();
-        String listKM = this.inputForm.getListItem().get(6).getTextKNNN();
+        String listTL = this.inputForm.getListItem().get(5).getTextKNNN();
+        String listTG = this.inputForm.getListItem().get(6).getTextKNNN();
+        // String listKM = this.inputForm.getListItem().get(7).getTextKNNN();
+        // Cập nhật các khóa ngoại tương ứng
         InsertListPhanLoai(sach.getMaSach(), listTL);
         InsertListDanhMucTG(sach.getMaSach(), listTG);
-        InsertListKM_Sach(sach.getMaSach(), listKM);
+        // InsertListKM_Sach(sach.getMaSach(), listKM);
     }
 
     public void update(){
         int ma = Integer.parseInt(sachPanel.getTable().getCellData(rowSelected, 0));
         String ten = inputForm.getListItem().get(0).getText();
         int namXB = Integer.parseInt(inputForm.getListItem().get(1).getText());
-        String tenVung = inputForm.getListItem().get(2).getSelection();
-        String tenNhaXB = inputForm.getListItem().get(3).getSelection();
+        BigDecimal giaban = new BigDecimal(inputForm.getListItem().get(2).getText());
+
+        String tenVung = inputForm.getListItem().get(3).getSelection();
+        String tenNhaXB = inputForm.getListItem().get(4).getSelection();
 
         int maVung = viTriVungBUS.getMaViTriVungByTen(tenVung);
         int maNXB = nhaXBBUS.getMaNXBByTen(tenNhaXB);
 
-        String path = inputForm.getListItem().get(7).getPath();
+        InputFormItem path = inputForm.getListItem().get(8);
         
-        SachDTO sach = new SachDTO(ma, ten, namXB, maVung, maNXB, path);
-        BigDecimal giaban = sachBUS.getInstanceByID(ma).getGiaBan();
+        SachDTO sach = new SachDTO(ma, ten, giaban, namXB, maVung, maNXB, path.getPath());
+        // BigDecimal giaban = sachBUS.getInstanceByID(ma).getGiaBan();
         if(sachBUS.update(sach) != 0){
+            try {
+                path.getImageUtil().saveFile();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Lỗi khi lưu: " + ex.getMessage(),
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
             String[] row = {sach.getMaSach()+"", sach.getTenSach(), sach.getSoLuong() + "", FormatterUtil.formatNumberVN(giaban) + "", sach.getNamXB() + ""};
@@ -344,12 +378,13 @@ public class SachDialog extends JDialog implements ActionListener{
     public void setInputForDetail(){
         inputForm.getListItem().get(0).getTextField().setEditable(false);
         inputForm.getListItem().get(1).getTextField().setEditable(false);
-        inputForm.getListItem().get(2).getCombobox().setEnabled(false);
+        inputForm.getListItem().get(2).getTextField().setEditable(false);
         inputForm.getListItem().get(3).getCombobox().setEnabled(false);
-        inputForm.getListItem().get(4).setEditKNNN(false);
+        inputForm.getListItem().get(4).getCombobox().setEnabled(false);
         inputForm.getListItem().get(5).setEditKNNN(false);
         inputForm.getListItem().get(6).setEditKNNN(false);
-        inputForm.getListItem().get(7).setEdit(false);
+        // inputForm.getListItem().get(7).setEditKNNN(false);
+        inputForm.getListItem().get(8).setEdit(false);
     }
 
     public String removeLastCommaForFKNN(String text) {
@@ -395,7 +430,7 @@ public class SachDialog extends JDialog implements ActionListener{
     public void UpdateListPhanloai(){
         //oldListTL
         int maSach = Integer.parseInt(sachPanel.getTable().getCellData(rowSelected, 0));
-        String[] temp = inputForm.getListItem().get(4).getTextKNNN().split(", ");
+        String[] temp = inputForm.getListItem().get(5).getTextKNNN().split(", ");
         ArrayList<Integer> newListTL = new ArrayList<>();
         for(int i = 0; i < temp.length; i++){
             newListTL.add(theLoaiBUS.getMaByTen(temp[i]));
@@ -418,7 +453,7 @@ public class SachDialog extends JDialog implements ActionListener{
     public void UpdateListDanhMuc_TG(){
         //oldListTL
         int maSach = Integer.parseInt(sachPanel.getTable().getCellData(rowSelected, 0));
-        String[] temp = inputForm.getListItem().get(5).getTextKNNN().split(", ");
+        String[] temp = inputForm.getListItem().get(6).getTextKNNN().split(", ");
         ArrayList<Integer> newListTG = new ArrayList<>();
         for(int i = 0; i < temp.length; i++){
             newListTG.add(tacGiaBUS.getMaByTen(temp[i]));
@@ -441,7 +476,7 @@ public class SachDialog extends JDialog implements ActionListener{
     public void UpdateListKM_SACH(){
         //oldListKM
         int maSach = Integer.parseInt(sachPanel.getTable().getCellData(rowSelected, 0));
-        String[] temp = inputForm.getListItem().get(6).getTextKNNN().split(", ");
+        String[] temp = inputForm.getListItem().get(7).getTextKNNN().split(", ");
         ArrayList<Integer> newListKM = new ArrayList<>();
         for(int i = 0; i < temp.length; i++){
             newListKM.add(khuyenMaiBUS.getMaKhuyenMaiByTen(temp[i]));
@@ -479,9 +514,9 @@ public class SachDialog extends JDialog implements ActionListener{
     public boolean validation(){
         JTextField ten = inputForm.getListItem().get(0).getTextField();
         JTextField namXB = inputForm.getListItem().get(1).getTextField();
-        String theLoai = inputForm.getListItem().get(4).getTextKNNN();
-        String tacGia = inputForm.getListItem().get(5).getTextKNNN();
-        String path = inputForm.getListItem().get(7).getPath();
+        String theLoai = inputForm.getListItem().get(5).getTextKNNN();
+        String tacGia = inputForm.getListItem().get(6).getTextKNNN();
+        String path = inputForm.getListItem().get(8).getPath();
 
         // JTextField input = inputForm.getListItem().get(0).getTextField();
         // if(Validate.isEmpty(input.getText())){

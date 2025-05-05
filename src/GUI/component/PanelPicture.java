@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +14,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -20,12 +22,14 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.ui.FlatLineBorder;
 
 import net.miginfocom.swing.MigLayout;
+import utils.ImageUtil;
 
 public class PanelPicture extends JPanel{
     private JFileChooser fileChooser;
     private JLabel labelAnh;
     private CustomButton btnThem;
     private String pathAnh;
+    private ImageUtil imageUtil = new ImageUtil();
 
     public PanelPicture(){
         this.fileChooser = new JFileChooser();
@@ -55,50 +59,71 @@ public class PanelPicture extends JPanel{
         this.btnThem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int result = fileChooser.showOpenDialog(null);
-                if(result == JFileChooser.APPROVE_OPTION){
-                    File selectedFile = fileChooser.getSelectedFile();
-                    String path = selectedFile.getAbsolutePath();
+                // int result = fileChooser.showOpenDialog(null);
+                // if(result == JFileChooser.APPROVE_OPTION){
+                //     File selectedFile = fileChooser.getSelectedFile();
+                //     String path = selectedFile.getAbsolutePath();
 
-                    if(!path.toLowerCase().endsWith(".svg")){
-                        ImageIcon originalIcon = new ImageIcon(selectedFile.getAbsolutePath());
-                        Image image = originalIcon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
-                        ImageIcon icon = new ImageIcon(image);
-                        labelAnh.setIcon(icon);
+                //     if(!path.toLowerCase().endsWith(".svg")){
+                //         ImageIcon originalIcon = new ImageIcon(selectedFile.getAbsolutePath());
+                //         Image image = originalIcon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
+                //         ImageIcon icon = new ImageIcon(image);
+                //         labelAnh.setIcon(icon);
+                //     }
+                //     else{
+                //         try {
+                //             URL url = new File(path).toURI().toURL();
+                //             FlatSVGIcon svgIcon = new FlatSVGIcon(url).derive(150, 200);
+                //             labelAnh.setIcon(svgIcon);
+                //         } catch (MalformedURLException e1) {
+                //             e1.printStackTrace();
+                //         }
+                //     }
+                //     pathAnh = path;
+                //     btnThem.setText("Đổi ảnh");
+                // }
+                if (imageUtil.chooseFile()) {
+                    String fileName = imageUtil.getSelectedFileName();
+                    // JOptionPane.showMessageDialog(null, "Đã chọn file: " + fileName,
+                    //         "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Hiển thị ảnh xem trước
+                    BufferedImage preview = imageUtil.getPreviewImage(150,200);
+                    if (preview != null) {
+                        labelAnh.setIcon(new ImageIcon(preview));
+                        labelAnh.setText("");
                     }
-                    else{
-                        try {
-                            URL url = new File(path).toURI().toURL();
-                            FlatSVGIcon svgIcon = new FlatSVGIcon(url).derive(150, 200);
-                            labelAnh.setIcon(svgIcon);
-                        } catch (MalformedURLException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                    pathAnh = path;
+                    pathAnh = fileName;
                     btnThem.setText("Đổi ảnh");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Không chọn được file!",
+                            "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 }
             }  
         });
     }
 
     public void setAnh(String path){  
-        if(!path.toLowerCase().endsWith(".svg")){
-            ImageIcon originalIcon = new ImageIcon(path);
-            Image image = originalIcon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(image);
-            labelAnh.setIcon(icon);
-        }
-        else{
-            labelAnh.setForeground(java.awt.Color.black);
-            try {
-                URL url = new File(path).toURI().toURL();
-                FlatSVGIcon svgIcon = new FlatSVGIcon(url).derive(150, 200);
-                labelAnh.setIcon(svgIcon);
-            } catch (MalformedURLException e1) {
-                e1.printStackTrace();
-            }
-        }
+        // if(!path.toLowerCase().endsWith(".svg")){
+        //     ImageIcon originalIcon = new ImageIcon(path);
+        //     Image image = originalIcon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
+        //     ImageIcon icon = new ImageIcon(image);
+        //     labelAnh.setIcon(icon);
+        // }
+        // else{
+        //     labelAnh.setForeground(java.awt.Color.black);
+        //     try {
+        //         URL url = new File(path).toURI().toURL();
+        //         FlatSVGIcon svgIcon = new FlatSVGIcon(url).derive(150, 200);
+        //         labelAnh.setIcon(svgIcon);
+        //     } catch (MalformedURLException e1) {
+        //         e1.printStackTrace();
+        //     }
+        // }
+
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/resources/img/img_product/"+path));
+        Image image = originalIcon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
+        labelAnh.setIcon(new ImageIcon(image));
         pathAnh = path;
         btnThem.setText("Đổi ảnh");
     }
@@ -109,6 +134,14 @@ public class PanelPicture extends JPanel{
 
     public void setEdit(boolean i){
         this.btnThem.setEnabled(false);
+    }
+
+    public ImageUtil getImageUtil() {
+        return imageUtil;
+    }
+
+    public void setImageUtil(ImageUtil imageUtil) {
+        this.imageUtil = imageUtil;
     }
 
     // public static void main(String[] args) {
@@ -125,5 +158,7 @@ public class PanelPicture extends JPanel{
 
     // }
 
+
+    
     
 }

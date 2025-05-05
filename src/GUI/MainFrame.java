@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 
 import BUS.ChiTietQuyenBUS;
 import BUS.NhanVienBUS;
@@ -161,6 +162,7 @@ public class MainFrame extends JFrame  implements ActionListener{
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN,13));
 		
 		FlatIntelliJLaf.setup();
+		// FlatMacDarkLaf.setup();
 		TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(1,"admin","123456",1);
 		MainFrame mainFrame = new MainFrame(taiKhoanDTO);
 		mainFrame.setVisible(true);

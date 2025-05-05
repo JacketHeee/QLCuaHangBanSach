@@ -22,7 +22,7 @@ public class SachDAO implements DAOInterface<SachDTO>{
 	@Override
 	public int insert(SachDTO t) {
 		int rowInserted = 0;
-		String sql = "INSERT INTO SACH (tenSach, namXB, maVung, maNXB, anh) VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB, anh) VALUES (?,?,?,?,?,?)";
 
 		JDBCUtil jdbcUtil = new JDBCUtil();
 		jdbcUtil.Open();
@@ -30,12 +30,13 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		rowInserted = jdbcUtil.executeUpdate(
 			sql,
 			t.getTenSach(),
+			t.getGiaBan(),
 			t.getNamXB(), 
 			t.getMaVung(),
 			t.getMaNXB(),
 			t.getAnh()
 		);
-		t.setGiaBan(new BigDecimal(0));
+		// t.setGiaBan(new BigDecimal(0));
 		jdbcUtil.Close();
 		t.setMaSach(nextID);
 		return rowInserted;

@@ -288,10 +288,12 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                 }
             }
             ,headers
-            ,headerType
+            ,headerType,
+            90
         );
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
+        table.addDataRow(null);
         if(!type.equals("detail")){
             panel.add(panelActionOnTable(),"pushx,growx,wrap");
         }
