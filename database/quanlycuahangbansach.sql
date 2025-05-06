@@ -1,471 +1,1135 @@
-CREATE DATABASE quanlycuahangbansach;
-USE quanlycuahangbansach;
-
-CREATE TABLE SACH(
-	maSach INT AUTO_INCREMENT PRIMARY KEY,
-	tenSach VARCHAR(255) NOT NULL,
-	soLuong INT DEFAULT 0 NOT NULL,
-	giaBan DECIMAL(10, 2) DEFAULT 0 NOT NULL,
-	namXB INT NOT NULL,
-	maVung INT NOT NULL,
-	maNXB INT NOT NULL,
-	anh VARCHAR(255), -- sửa lại not null sau
-	trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE PHANLOAI(
-	maSach INT,
-   maTheLoai INT,
-   trangThai TINYINT DEFAULT 1,
-   PRIMARY KEY (maSach, maTheLoai) 
-);
-
-CREATE TABLE THELOAI(
-  maTheloai INT AUTO_INCREMENT PRIMARY KEY,
-  tenTheloai VARCHAR(255) NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE VITRIVUNG(
-   maVung INT AUTO_INCREMENT PRIMARY KEY,
-	tenVung VARCHAR(255) NOT NULL,
-	trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE TACGIA(
-  maTacGia INT AUTO_INCREMENT PRIMARY KEY,
-  tenTacGia VARCHAR(255) NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE DANHMUC_TG(
-  maTacGia INT,
-  maSach INT,
-  trangThai TINYINT DEFAULT 1,
-  PRIMARY KEY (maTacGia, maSach, trangThai)
-);
-
-CREATE TABLE NHAXB (
-  maNXB INT AUTO_INCREMENT PRIMARY KEY,
-  tenNXB VARCHAR(255) NOT NULL,
-  diaChi VARCHAR(255) NOT NULL,
-  soDT VARCHAR(15) NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE NHACUNGCAP (
-  maNCC INT AUTO_INCREMENT PRIMARY KEY,
-  tenNCC VARCHAR(255) NOT NULL,
-  diaChi VARCHAR(255) NOT NULL,
-  soDT VARCHAR(15) NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE PHIEUNHAP (
-  maNhap INT AUTO_INCREMENT PRIMARY KEY,
-  ngayNhap DATETIME NOT NULL,
-  tongTien decimal(10, 2) NOT NULL,
-  maNCC INT NOT NULL,
-  maTK INT NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE CT_PHIEUNHAP (
-  maSach INT,
-  maNhap INT,
-  soLuongNhap INT NOT NULL,
-  giaNhap decimal(10, 2) NOT NULL,
-  PRIMARY KEY (maSach, maNhap)
-);
-
-CREATE TABLE HOADON (
-  maHD INT AUTO_INCREMENT PRIMARY KEY,
-  ngayBan DATETIME NOT NULL,
-  tongTien decimal(10, 2) NOT NULL,
-  maTK INT NOT NULL,
-  maPT INT NOT NULL,
-  maKM INT DEFAULT NULL,
-  maKH INT DEFAULT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE CT_HOADON (
-  maSach INT,
-  maHD INT,
-  soLuong INT NOT NULL,
-  giaBan decimal(10, 2) NOT NULL,
-  PRIMARY KEY (maSach, maHD)
-);
-
-CREATE TABLE PHUONGTHUC_TT ( 
-  maPT INT AUTO_INCREMENT PRIMARY KEY,
-  tenPTTT VARCHAR(255) NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE KHUYENMAI ( 
-  maKM INT AUTO_INCREMENT PRIMARY KEY,
-  tenKM VARCHAR(255) NOT NULL,
-  dieuKienGiam VARCHAR(255) NOT NULL,
-  giaTriGiam decimal(10, 2) NOT NULL,
-  ngayBatDau DATETIME NOT NULL,
-  ngayKetThuc DATETIME NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE KM_SACH(
-  maKM INT,
-  maSach INT,
-  trangThai TINYINT DEFAULT 1, 
-  PRIMARY KEY (maKM, maSach, trangThai)
-);
-
-CREATE TABLE NHANVIEN ( 
-  maNV INT AUTO_INCREMENT PRIMARY KEY,
-  hoTen VARCHAR(255) NOT NULL,
-  ngaySinh DATE NOT NULL,
-  gioiTinh VARCHAR(10) NOT NULL,
-  soDT VARCHAR(15) NOT NULL,
-  maTK INT DEFAULT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE TAIKHOAN ( 
-  maTK INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  maRole INT NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE NHOMQUYEN ( 
-  maRole INT AUTO_INCREMENT PRIMARY KEY,
-  tenrole VARCHAR(255) NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE CHITIETQUYEN(
-  maRole INT,
-  maChucNang INT,
-  hanhDong VARCHAR(255) NOT NULL,
-  trangThai TINYINT DEFAULT 1,
-  PRIMARY KEY (maRole, maChucNang, hanhDong, trangThai)
-);
-
-CREATE TABLE CHUCNANG ( 
-  maChucNang INT AUTO_INCREMENT PRIMARY KEY,
-  tenChucNang VARCHAR(255) NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
-CREATE TABLE KHACHHANG ( 
-  maKH INT AUTO_INCREMENT PRIMARY KEY,
-  tenKH VARCHAR(255) NOT NULL,
-  soDT VARCHAR(10) NOT NULL,
-  gioiTinh VARCHAR(4) NOT NULL,
-  trangThai TINYINT DEFAULT 1
-);
-
--- Dữ liệu cho bảng VITRIVUNG
--- Cài đặt cứng
-INSERT INTO VITRIVUNG (tenVung) VALUES
-('Vùng A'), ('Vùng B'), ('Vùng C'), ('Vùng D'),('Vùng E'),('Vùng F'), ('Vùng G'), ('Vùng H');
-
--- Dữ liệu cho bảng THELOAI
-INSERT INTO THELOAI (tenTheloai) VALUES
-('Tiểu thuyết'), ('Khoa học'), ('Lịch sử'), ('Truyện tranh'), ('Kinh tế');
-
--- Dữ liệu cho bảng TACGIA
-INSERT INTO TACGIA (tenTacGia) VALUES
-('Nguyễn Nhật Ánh'), ('J.K. Rowling'), ('George Orwell'), ('Haruki Murakami'), ('Dale Carnegie');
-
--- Dữ liệu cho bảng NHAXB
-INSERT INTO NHAXB (tenNXB, diaChi, soDT, email) VALUES
-('NXB Trẻ', 'HCM, VN', '0901234567', 'nxbt@gmail.com'),
-('NXB Kim Đồng', 'Hà Nội, VN', '0912345678', 'nxbkd@gmail.com'),
-('NXB Văn Học', 'HCM, VN', '0923456789', 'nxbvh@gmail.com'),
-('NXB Alpha Books', 'Hà Nội, VN', '0934567890', 'nxbab@gmail.com'),
-('NXB Thế Giới', 'Đà Nẵng, VN', '0945678901', 'nxbtg@gmail.com');
-
--- Dữ liệu cho bảng SACH
-INSERT INTO SACH (tenSach, giaBan, namXB, maVung, maNXB, anh) VALUES
-('Lập Trình Java Cơ Bản', 120000, 2020, 1, 3, 'src/img_product/sach1.jpg'),
-('Cấu Trúc Dữ Liệu & Giải Thuật', 135000, 2021, 4, 2, 'src/img_product/sach1.jpg'),
-('Thiết Kế Cơ Sở Dữ Liệu MySQL', 150000, 2019, 2, 1, 'src/img_product/sach1.jpg'),
-('Python Cho Người Mới Bắt Đầu', 98000, 2023, 5, 4, 'src/img_product/sach1.jpg'),
-('Thuật Toán Nâng Cao', 200000, 2022, 8, 5, '../img_product/sach1.jpg'),
-('Học C++ Từ Cơ Bản Đến Nâng Cao', 170000, 2018, 3, 2, 'src/img_product/sach1.jpg'),
-('Lập Trình Web Với JavaScript', 160000, 2021, 6, 3, 'src/img_product/sach1.jpg'),
-('Phân Tích Dữ Liệu Với Excel', 90000, 2020, 7, 1, 'src/img_product/sach1.jpg'),
-('Kỹ Thuật Phần Mềm', 145000, 2017, 2, 4, 'src/img_product/sach1.jpg'),
-('Lập Trình Android Căn Bản', 155000, 2022, 1, 5, 'src/img_product/sach2.svg');
-
-
-
--- Dữ liệu cho bảng PHANLOAI
-INSERT INTO PHANLOAI (maSach, maTheLoai) VALUES
-(1, 5), (2, 4), (3, 3), (4, 2), (5, 1);
-
--- Dữ liệu cho bảng DANHMUC_TG
-INSERT INTO DANHMUC_TG (maTacGia, maSach) VALUES
-(5, 1), (2, 2), (3, 3), (4, 4), (1, 5);
-
--- Dữ liệu cho bảng NHACUNGCAP
-INSERT INTO NHACUNGCAP (tenNCC, diaChi, soDT, email) VALUES
-('Công ty Sách A', 'HCM, VN', '0971234567', 'nccA@gmail.com'),
-('Công ty Sách B', 'Hà Nội, VN', '0982345678', 'nccB@gmail.com'),
-('Công ty Sách C', 'Đà Nẵng, VN', '0993456789', 'nccC@gmail.com'),
-('Công ty Sách D', 'Cần Thơ, VN', '0964567890', 'nccD@gmail.com'),
-('Công ty Sách E', 'Huế, VN', '0955678901', 'nccE@gmail.com');
-
--- Dữ liệu cho bảng TAIKHOAN
-INSERT INTO TAIKHOAN (username, password, maRole) VALUES
-('admin', '123456', 1),
-('nguyenan', '123456', 2),
-('ngocchau', '123456', 2),
-('huyentrang', '123456', 3),
-('quocphung', '123456', 3);
-
--- Dữ liệu cho bảng NHOMQUYEN
-INSERT INTO NHOMQUYEN (tenrole) VALUES
-('Admin'), ('Nhân viên'), ('Khách hàng');
-
--- Dữ liệu cho bảng NHANVIEN
-INSERT INTO NHANVIEN (hoTen, ngaySinh, gioiTinh, soDT, maTK) VALUES
-('Nguyễn Hùng Strong', '1990-01-01', 'Nam', '0911000001', 1),
-('Nguyễn Ngọc Thiên Ân', '1990-01-01', 'Nam', '0911000001', 2),
-('Danh Thị Ngọc Châu', '1995-02-02', 'Nữ', '0911000002', 3),
-('Huyền Trang', '1990-01-01', 'Nam', '0911000001', 4),
-('Tống Phùng', '1995-02-02', 'Nữ', '0911000002', 5);
-
--- Dữ liệu cho bảng KHACHHANG
-INSERT INTO KHACHHANG (tenKH, soDT, gioiTinh, trangThai) VALUES
-('Anonymous', 'x', 'x', '0');
-INSERT INTO KHACHHANG (tenKH, soDT, gioiTinh) VALUES
-('Phạm Văn C', '0988111222', 'Nam'),
-('Lê Thị D', '0977111222', 'Nữ'),
-('Hoàng Văn E', '0966111222', 'Nam');
-
--- Dữ liệu cho bảng PHIEUNHAP
-INSERT INTO PHIEUNHAP (ngayNhap, tongTien, maNCC, maTK) VALUES
-('2023-03-10T00:00:00', 500000, 1, 2),
-('2023-03-10T00:00:00', 500000, 1, 2),
-('2023-03-10T00:00:00', 700000, 1, 2),
-('2024-02-10T00:00:00', 800000, 1, 2),
-('2024-02-10T00:00:00', 200000, 1, 2),
-('2024-02-10T00:00:00', 500000, 1, 2),
-('2024-04-10T00:00:00', 900000, 1, 2),
-('2025-04-10T00:00:00', 100000, 1, 2),
-('2025-04-10T00:00:00', 200000, 1, 2),
-('2025-05-10T00:00:00', 300000, 1, 2),
-('2025-05-10T00:00:00', 400000, 1, 2),
-('2024-05-10T00:00:00', 900000, 1, 2),
-('2024-06-10T00:00:00', 200000, 1, 2),
-('2024-06-10T00:00:00', 500000, 1, 2),
-('2024-06-15T00:00:00', 600000, 2, 3);
-
-
--- Dữ liệu cho bảng CT_PHIEUNHAP
-INSERT INTO CT_PHIEUNHAP (maSach, maNhap, soLuongNhap, giaNhap) VALUES
-(1, 1, 10, 100000),
-(2, 1, 15, 200000),
-(3, 1, 15, 200000),
-(4, 1, 15, 200000),
-(5, 1, 15, 200000),
-(6, 1, 15, 200000),
-(7, 1, 15, 200000),
-(8, 1, 15, 200000),
-(9, 1, 15, 200000);
-
--- Dữ liệu cho bảng HOADON
-INSERT INTO HOADON (ngayBan, tongTien, maTK, maPT, maKM, maKH) VALUES
-('2023-03-20T00:00:00', 250000, 2, 1, 1, 1),
-('2023-04-21T00:00:00', 300000, 3, 2, 1, 2),
-('2023-04-21T00:00:00', 300000, 3, 2, 1, 2),
-('2023-04-21T00:00:00', 300000, 3, 2, 1, 2),
-('2022-06-21T00:00:00', 300000, 3, 2, 1, 2),
-('2022-06-21T00:00:00', 300000, 3, 2, 1, 2),
-('2022-06-21T00:00:00', 300000, 3, 2, 1, 2),
-('2022-07-21T00:00:00', 300000, 3, 2, 1, 2),
-('2025-07-21T00:00:00', 300000, 3, 2, 1, 2),
-('2025-03-21T00:00:00', 300000, 3, 2, 1, 2),
-('2025-09-21T00:00:00', 300000, 3, 2, 1, 2),
-('2025-09-21T00:00:00', 300000, 3, 2, 1, 2),
-('2024-09-21T00:00:00', 300000, 3, 2, 1, 2),
-('2024-03-21T00:00:00', 300000, 3, 2, 1, 2),
-('2024-09-21T00:00:00', 300000, 3, 2, 1, 2);
--- Dữ liệu cho bảng CT_HOADON
-INSERT INTO CT_HOADON (maSach, maHD, soLuong, giaBan) VALUES
-(1, 1, 1, 120000),
-(2, 1, 2, 120000),
-(3, 1, 3, 120000),
-(4, 1, 4, 120000),
-(5, 1, 5, 120000),
-(6, 1, 6, 120000),
-(7, 2, 7, 250000);
-
--- Dữ liệu cho bảng PHUONGTHUC_TT
-INSERT INTO PHUONGTHUC_TT (tenPTTT) VALUES
-('Tiền mặt'), ('Chuyển khoản'), ('Thẻ tín dụng');
-
--- Dữ liệu cho bảng KHUYENMAI
-INSERT INTO khuyenmai (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc, TrangThai) VALUES
-('Anonymous','x',0,'2024-03-01T00:00:00', '2024-03-31T00:00:00', 0);
-INSERT INTO KHUYENMAI (tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc) VALUES
-('Giảm 10%', 'Hóa đơn > 500k', 50000, '2024-03-01T00:00:00', '2024-03-31T00:00:00'),
-('Giảm 5%', 'Hóa đơn > 300k', 25000, '2024-03-01T00:00:00', '2024-03-31T00:00:00');
-
--- Dữ liệu cho bảng KM_SACH
-INSERT INTO KM_SACH (maKM, maSach) VALUES
-(1, '1'), (1, '2'), (2, '3');
-
--- Dữ liệu cho bảng CHUCNANG
--- Fix cứng
-INSERT INTO CHUCNANG (tenChucNang) VALUES 
-('book'), -- 1
-('category'), -- 2
-('author'), -- 3
-('nxb'), -- 4
-('vungtl'), -- 5
-('ncc'), -- 6
-('qlInput'), -- 7
-('qlBill'), -- 8
-('promotion'), -- 9
-('pttt'), -- 10
-('nv'), -- 11
-('taikhoan'), -- 12
-('khachhang'), -- 13
-('phanquyen'), -- 14
-('report'); -- 15
-
--- Dữ liệu cho bảng CHITIETQUYEN
-INSERT INTO CHITIETQUYEN (maRole, maChucNang, hanhDong) VALUES
-(1, 1, 'Xem'),
-(1, 1, 'Thêm'),
-(1, 1, 'Sửa'),
-(1, 1, 'Xóa'),
-
-(1, 2, 'Xem'),
-(1, 2, 'Thêm'),
-(1, 2, 'Sửa'),
-(1, 2, 'Xóa'),
-
-(1, 3, 'Xem'),
-(1, 3, 'Thêm'),
-(1, 3, 'Sửa'),
-(1, 3, 'Xóa'),
-
-(1, 4, 'Xem'),
-(1, 4, 'Thêm'),
-(1, 4, 'Sửa'),
-(1, 4, 'Xóa'),
-
-(1, 5, 'Xem'),
-(1, 5, 'Thêm'),
-(1, 5, 'Sửa'),
-(1, 5, 'Xóa'),
-
-(1, 6, 'Xem'),
-(1, 6, 'Thêm'),
-(1, 6, 'Sửa'),
-(1, 6, 'Xóa'),
-
-
-(1, 7, 'Xem'),
-(1, 7, 'Thêm'),
-
-(1, 8, 'Xem'),
-(1, 8, 'Thêm'),
-
-(1, 9, 'Xem'),
-(1, 9, 'Thêm'),
-(1, 9, 'Sửa'),
-(1, 9, 'Xóa'),
-
-(1, 10, 'Xem'),
-(1, 10, 'Thêm'),
-(1, 10, 'Sửa'),
-(1, 10, 'Xóa'),
-
-(1, 11, 'Xem'),
-(1, 11, 'Thêm'),
-(1, 11, 'Sửa'),
-(1, 11, 'Xóa'),
-
-(1, 12, 'Xem'),
-(1, 12, 'Thêm'),
-(1, 12, 'Sửa'),
-(1, 12, 'Xóa'),
-
-(1, 13, 'Xem'),
-(1, 13, 'Thêm'),
-(1, 13, 'Sửa'),
-(1, 13, 'Xóa'),
-
-(1, 14, 'Xem'),
-(1, 14, 'Thêm'),
-(1, 14, 'Sửa'),
-(1, 14, 'Xóa'),
-
-(1, 15, 'Xem');
-
-
-ALTER TABLE SACH
-ADD CONSTRAINT SACH_VITRIVUNG FOREIGN KEY (maVung) REFERENCES VITRIVUNG(maVung);
- 
-ALTER TABLE PHANLOAI
-ADD CONSTRAINT SACH_PHANLOAI FOREIGN KEY (maSach) REFERENCES SACH(maSach), 
-ADD CONSTRAINT THELOAI_PHANLOAI FOREIGN KEY (maTheLoai) REFERENCES THELOAI(maTheloai);
-
-ALTER TABLE DANHMUC_TG
-ADD CONSTRAINT DANHMUC_TG_SACH FOREIGN KEY (maSach) REFERENCES SACH(maSach),
-ADD CONSTRAINT DANHMUC_TG_TACGIA FOREIGN KEY (maTacGia) REFERENCES TACGIA(maTacGia);
-
-ALTER TABLE SACH
-ADD CONSTRAINT SACH_NHAXB FOREIGN KEY (maNXB) REFERENCES NHAXB(maNXB);
-
-ALTER TABLE CT_PHIEUNHAP
-ADD CONSTRAINT SACH_CT_PHIEUNHAP FOREIGN KEY (maSach) REFERENCES SACH(maSach),
-ADD CONSTRAINT PHIEUNHAP_CT_PHIEUNHAP FOREIGN KEY (maNhap) REFERENCES PHIEUNHAP(maNhap);
-
-ALTER TABLE CT_HOADON
-ADD CONSTRAINT PHIENBANSACH_CT_HOADON FOREIGN KEY (maSach) REFERENCES SACH(maSach),
-ADD CONSTRAINT HOADON_CT_HOADON FOREIGN KEY (maHD) REFERENCES HOADON(maHD);
-
-ALTER TABLE PHIEUNHAP
-ADD CONSTRAINT PHIEUNHAP_NHACUNGCAP FOREIGN KEY (maNCC) REFERENCES NHACUNGCAP(maNCC),
-ADD CONSTRAINT PHIEUNHAP_NHANVIEN FOREIGN KEY (maTK) REFERENCES TAIKHOAN(maTK);
-
-ALTER TABLE HOADON
-ADD CONSTRAINT HOADON_NHANVIEN FOREIGN KEY (maTK) REFERENCES TAIKHOAN(maTK),
-ADD CONSTRAINT HOADON_PHUONGTHUC_TT FOREIGN KEY (maPT) REFERENCES PHUONGTHUC_TT(maPT);
-
-ALTER TABLE TAIKHOAN
-ADD CONSTRAINT TAIKHOAN_NHOMQUYEN FOREIGN KEY (maRole) REFERENCES NHOMQUYEN(maRole);
-
-ALTER TABLE CHITIETQUYEN
-ADD CONSTRAINT NHOMQUYEN_CHITIETQUYEN FOREIGN KEY (maRole) REFERENCES NHOMQUYEN(maRole),
-ADD CONSTRAINT CHUCNANG_CHITIETQUYEN FOREIGN KEY (maChucNang) REFERENCES CHUCNANG(maChucNang);
-
-ALTER TABLE HOADON
-ADD CONSTRAINT HOADON_KHUYENMAI FOREIGN KEY (maKM) REFERENCES KHUYENMAI(maKM),
-ADD CONSTRAINT KH_HD FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH);
-
-ALTER TABLE NHANVIEN
-ADD CONSTRAINT NHANVIEN FOREIGN KEY (maTK) REFERENCES TAIKHOAN(maTK);
-
-ALTER TABLE KM_SACH
-ADD CONSTRAINT km1 FOREIGN KEY (maKM) REFERENCES KHUYENMAI(maKM),
-ADD CONSTRAINT km2 FOREIGN KEY (maSach) REFERENCES SACH(maSach);
-
-
-
-
-
-
-
-
-
-
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th5 07, 2025 lúc 12:21 AM
+-- Phiên bản máy phục vụ: 10.4.32-MariaDB
+-- Phiên bản PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Cơ sở dữ liệu: `quanlycuahangbansach`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `chitietquyen`
+--
+
+CREATE TABLE `chitietquyen` (
+  `maRole` int(11) NOT NULL,
+  `maChucNang` int(11) NOT NULL,
+  `hanhDong` varchar(255) NOT NULL,
+  `trangThai` tinyint(4) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `chitietquyen`
+--
+
+INSERT INTO `chitietquyen` (`maRole`, `maChucNang`, `hanhDong`, `trangThai`) VALUES
+(1, 1, 'Sửa', 1),
+(1, 1, 'Thêm', 1),
+(1, 1, 'Xem', 1),
+(1, 1, 'Xóa', 1),
+(1, 2, 'Sửa', 1),
+(1, 2, 'Thêm', 1),
+(1, 2, 'Xem', 1),
+(1, 2, 'Xóa', 1),
+(1, 3, 'Sửa', 1),
+(1, 3, 'Thêm', 1),
+(1, 3, 'Xem', 1),
+(1, 3, 'Xóa', 1),
+(1, 4, 'Sửa', 1),
+(1, 4, 'Thêm', 1),
+(1, 4, 'Xem', 1),
+(1, 4, 'Xóa', 1),
+(1, 5, 'Sửa', 1),
+(1, 5, 'Thêm', 1),
+(1, 5, 'Xem', 1),
+(1, 5, 'Xóa', 1),
+(1, 6, 'Sửa', 1),
+(1, 6, 'Thêm', 1),
+(1, 6, 'Xem', 1),
+(1, 6, 'Xóa', 1),
+(1, 7, 'Thêm', 1),
+(1, 7, 'Xem', 1),
+(1, 8, 'Thêm', 1),
+(1, 8, 'Xem', 1),
+(1, 9, 'Sửa', 1),
+(1, 9, 'Thêm', 1),
+(1, 9, 'Xem', 1),
+(1, 9, 'Xóa', 1),
+(1, 10, 'Sửa', 1),
+(1, 10, 'Thêm', 1),
+(1, 10, 'Xem', 1),
+(1, 10, 'Xóa', 1),
+(1, 11, 'Sửa', 1),
+(1, 11, 'Thêm', 1),
+(1, 11, 'Xem', 1),
+(1, 11, 'Xóa', 1),
+(1, 12, 'Sửa', 1),
+(1, 12, 'Thêm', 1),
+(1, 12, 'Xem', 1),
+(1, 12, 'Xóa', 1),
+(1, 13, 'Sửa', 1),
+(1, 13, 'Thêm', 1),
+(1, 13, 'Xem', 1),
+(1, 13, 'Xóa', 1),
+(1, 14, 'Sửa', 1),
+(1, 14, 'Thêm', 1),
+(1, 14, 'Xem', 1),
+(1, 14, 'Xóa', 1),
+(1, 15, 'Xem', 1),
+(4, 1, 'Xem', 1),
+(4, 2, 'Xem', 1),
+(4, 3, 'Xem', 1),
+(4, 4, 'Xem', 1),
+(4, 5, 'Xem', 1),
+(4, 6, 'Xem', 1),
+(4, 8, 'Thêm', 1),
+(4, 8, 'Xem', 1),
+(4, 13, 'Sửa', 1),
+(4, 13, 'Thêm', 1),
+(4, 13, 'Xem', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `chucnang`
+--
+
+CREATE TABLE `chucnang` (
+  `maChucNang` int(11) NOT NULL,
+  `tenChucNang` varchar(255) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `chucnang`
+--
+
+INSERT INTO `chucnang` (`maChucNang`, `tenChucNang`, `trangThai`) VALUES
+(1, 'book', 1),
+(2, 'category', 1),
+(3, 'author', 1),
+(4, 'nxb', 1),
+(5, 'vungtl', 1),
+(6, 'ncc', 1),
+(7, 'qlInput', 1),
+(8, 'qlBill', 1),
+(9, 'promotion', 1),
+(10, 'pttt', 1),
+(11, 'nv', 1),
+(12, 'taikhoan', 1),
+(13, 'khachhang', 1),
+(14, 'phanquyen', 1),
+(15, 'report', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `ct_hoadon`
+--
+
+CREATE TABLE `ct_hoadon` (
+  `maSach` int(11) NOT NULL,
+  `maHD` int(11) NOT NULL,
+  `soLuong` int(11) NOT NULL,
+  `giaBan` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `ct_hoadon`
+--
+
+INSERT INTO `ct_hoadon` (`maSach`, `maHD`, `soLuong`, `giaBan`) VALUES
+(1, 1, 1, 65347.00),
+(1, 2, 8, 65347.00),
+(1, 3, 1, 65347.00),
+(2, 1, 1, 85545.00),
+(2, 2, 10, 85545.00),
+(3, 2, 13, 105743.00),
+(4, 2, 16, 237624.00),
+(5, 2, 15, 236436.00),
+(6, 2, 10, 236436.00);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `ct_phieunhap`
+--
+
+CREATE TABLE `ct_phieunhap` (
+  `maSach` int(11) NOT NULL,
+  `maNhap` int(11) NOT NULL,
+  `soLuongNhap` int(11) NOT NULL,
+  `giaNhap` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `ct_phieunhap`
+--
+
+INSERT INTO `ct_phieunhap` (`maSach`, `maNhap`, `soLuongNhap`, `giaNhap`) VALUES
+(1, 1, 20, 54455.45),
+(2, 1, 30, 71287.13),
+(3, 1, 15, 88118.81),
+(4, 1, 43, 198019.80),
+(5, 1, 27, 197029.70),
+(6, 1, 20, 197029.70),
+(7, 1, 15, 118811.88),
+(8, 1, 23, 148514.85),
+(9, 1, 12, 177227.72),
+(10, 1, 24, 195049.50),
+(11, 1, 27, 166336.63),
+(12, 1, 19, 177227.72),
+(13, 1, 24, 155445.54),
+(14, 1, 19, 167326.73),
+(15, 1, 21, 396039.60),
+(16, 1, 17, 166336.63),
+(17, 1, 18, 155445.54),
+(18, 1, 18, 188118.81),
+(19, 1, 19, 198019.80),
+(20, 1, 14, 188118.81),
+(21, 1, 19, 121782.18),
+(22, 1, 17, 176237.62),
+(23, 1, 15, 143564.36),
+(24, 1, 10, 166336.63),
+(25, 1, 10, 286138.61),
+(26, 1, 21, 56435.64),
+(27, 1, 18, 1994.06),
+(28, 1, 16, 89108.91),
+(29, 1, 25, 77227.72),
+(30, 1, 20, 177227.72);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `danhmuc_tg`
+--
+
+CREATE TABLE `danhmuc_tg` (
+  `maTacGia` int(11) NOT NULL,
+  `maSach` int(11) NOT NULL,
+  `trangThai` tinyint(4) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `danhmuc_tg`
+--
+
+INSERT INTO `danhmuc_tg` (`maTacGia`, `maSach`, `trangThai`) VALUES
+(1, 2, 1),
+(1, 6, 1),
+(1, 7, 1),
+(1, 12, 1),
+(1, 19, 1),
+(1, 23, 1),
+(1, 24, 1),
+(1, 29, 1),
+(2, 12, 1),
+(2, 18, 1),
+(2, 22, 1),
+(2, 23, 1),
+(4, 15, 1),
+(4, 26, 1),
+(5, 3, 1),
+(5, 9, 1),
+(5, 24, 1),
+(5, 25, 1),
+(6, 6, 1),
+(6, 29, 1),
+(7, 1, 1),
+(7, 7, 1),
+(7, 13, 1),
+(7, 16, 1),
+(7, 22, 1),
+(7, 30, 1),
+(8, 4, 1),
+(8, 14, 1),
+(8, 21, 1),
+(8, 26, 1),
+(8, 30, 1),
+(9, 9, 1),
+(9, 27, 1),
+(10, 20, 1),
+(10, 28, 1),
+(11, 17, 1),
+(11, 20, 1),
+(12, 8, 1),
+(12, 10, 1),
+(13, 5, 1),
+(13, 27, 1),
+(14, 11, 1),
+(14, 15, 1),
+(14, 16, 1),
+(14, 25, 1),
+(15, 8, 1),
+(16, 10, 1),
+(18, 12, 1),
+(20, 11, 1),
+(20, 17, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `hoadon`
+--
+
+CREATE TABLE `hoadon` (
+  `maHD` int(11) NOT NULL,
+  `ngayBan` datetime NOT NULL,
+  `tongTien` decimal(10,2) NOT NULL,
+  `maTK` int(11) NOT NULL,
+  `maPT` int(11) NOT NULL,
+  `maKM` int(11) DEFAULT NULL,
+  `maKH` int(11) DEFAULT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `hoadon`
+--
+
+INSERT INTO `hoadon` (`maHD`, `ngayBan`, `tongTien`, `maTK`, `maPT`, `maKM`, `maKH`, `trangThai`) VALUES
+(1, '2025-05-07 05:09:22', 120713.60, 1, 1, 7, 1, 1),
+(2, '2025-05-07 05:11:41', 6232884.50, 1, 1, 2, 1, 1),
+(3, '2025-05-07 05:18:38', 65347.00, 1, 1, 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `khachhang`
+--
+
+CREATE TABLE `khachhang` (
+  `maKH` int(11) NOT NULL,
+  `tenKH` varchar(255) NOT NULL,
+  `soDT` varchar(10) NOT NULL,
+  `gioiTinh` varchar(4) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `khachhang`
+--
+
+INSERT INTO `khachhang` (`maKH`, `tenKH`, `soDT`, `gioiTinh`, `trangThai`) VALUES
+(1, 'Anonymous', 'x', 'x', 1),
+(2, 'Nguyễn Văn An', '0987654321', 'Nam', 1),
+(3, 'Trần Thị Bích Ngọc', '0901234567', 'Nữ', 1),
+(4, 'Lê Hoàng Long', '0912345678', 'Nam', 1),
+(5, 'Phạm Minh Thư', '0938765432', 'Nữ', 1),
+(6, 'Đỗ Văn Hùng', '0329876543', 'Nam', 1),
+(7, 'Nguyễn Thị Kim Oanh', '0356789123', 'Nữ', 1),
+(8, 'Trần Quốc Bảo', '0365123789', 'Nam', 1),
+(9, 'Lê Thị Hồng Nhung', '0371234987', 'Nữ', 1),
+(10, 'Phan Văn Đức', '0384567891', 'Nam', 1),
+(11, 'Võ Thị Thu Trang', '0391122334', 'Nữ', 1),
+(12, 'Bùi Anh Tuấn', '0709874567', 'Nam', 1),
+(13, 'Nguyễn Hà My', '0769876543', 'Nữ', 1),
+(14, 'Trịnh Công Sơn', '0775566778', 'Nam', 1),
+(15, 'Lưu Thị Thu Hà', '0788899001', 'Nữ', 1),
+(16, 'Hồ Quang Hiếu', '0793344556', 'Nam', 1),
+(17, 'Mai Phương Thảo', '0814455667', 'Nữ', 1),
+(18, 'Nguyễn Đức Huy', '0825566778', 'Nam', 1),
+(19, 'Đặng Thị Hồng Gấm', '0836677889', 'Nữ', 1),
+(20, 'Trần Hữu Tài', '0847788990', 'Nam', 1),
+(21, 'Vũ Thị Mai Lan', '0858899001', 'Nữ', 1),
+(22, 'nguyen hung manh', '0892348923', 'Nam', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `khuyenmai`
+--
+
+CREATE TABLE `khuyenmai` (
+  `maKM` int(11) NOT NULL,
+  `tenKM` varchar(255) NOT NULL,
+  `dieuKienGiam` varchar(255) NOT NULL,
+  `giaTriGiam` decimal(10,2) NOT NULL,
+  `ngayBatDau` datetime NOT NULL,
+  `ngayKetThuc` datetime NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `khuyenmai`
+--
+
+INSERT INTO `khuyenmai` (`maKM`, `tenKM`, `dieuKienGiam`, `giaTriGiam`, `ngayBatDau`, `ngayKetThuc`, `trangThai`) VALUES
+(1, 'anonymous', 'Đơn hàng tối thiểu: 0đ', 5000.00, '2021-05-01 04:59:18', '2031-05-09 04:59:18', 0),
+(2, 'Giảm 50% cho đơn từ: 1.000.000đ', 'Đơn hàng tối thiểu: 1.000.000đ', 0.50, '2025-05-01 05:00:36', '2025-06-05 05:00:36', 1),
+(3, 'Giảm 10% cho đơn từ 0đ', 'Đơn hàng tối thiểu: 0đ', 0.10, '2025-05-01 05:01:36', '2025-07-03 05:01:36', 1),
+(4, 'Giảm 15% cho đơn từ 50.000đ', 'Đơn hàng tối thiểu: 50.000đ', 0.15, '2025-05-01 05:02:10', '2025-07-10 05:02:10', 1),
+(5, 'Giảm 20k sách: Dế Mèn Phiêu Lưu Ký', 'Sách theo Sách: Dế Mèn Phiêu Lưu Ký ', 20000.00, '2025-05-01 05:02:51', '2025-07-10 05:02:51', 1),
+(6, 'Giảm 50k cho Thể loại: Thiếu Nhi', 'Sách theo Thể loại: Thiếu nhi', 50000.00, '2025-05-01 05:04:09', '2025-05-31 05:04:09', 1),
+(7, 'Giảm 20% Sách của tác giả: Tô Hoài', 'Sách theo Tác giả: Tô Hoài', 0.20, '2025-05-01 05:05:00', '2025-07-10 05:05:00', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `km_sach`
+--
+
+CREATE TABLE `km_sach` (
+  `maKM` int(11) NOT NULL,
+  `maSach` int(11) NOT NULL,
+  `trangThai` tinyint(4) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `km_sach`
+--
+
+INSERT INTO `km_sach` (`maKM`, `maSach`, `trangThai`) VALUES
+(5, 1, 1),
+(6, 1, 1),
+(6, 7, 1),
+(6, 10, 1),
+(6, 11, 1),
+(6, 16, 1),
+(6, 19, 1),
+(6, 21, 1),
+(6, 24, 1),
+(6, 27, 1),
+(6, 29, 1),
+(6, 30, 1),
+(7, 1, 1),
+(7, 7, 1),
+(7, 13, 1),
+(7, 16, 1),
+(7, 22, 1),
+(7, 30, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `nhacungcap`
+--
+
+CREATE TABLE `nhacungcap` (
+  `maNCC` int(11) NOT NULL,
+  `tenNCC` varchar(255) NOT NULL,
+  `diaChi` varchar(255) NOT NULL,
+  `soDT` varchar(15) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nhacungcap`
+--
+
+INSERT INTO `nhacungcap` (`maNCC`, `tenNCC`, `diaChi`, `soDT`, `email`, `trangThai`) VALUES
+(1, 'Công ty Sách Phương Nam', '940 Quang Trung, Gò Vấp, TP.HCM', '0238456789', 'phuongnam@sach.vn', 1),
+(2, 'Công ty TNHH Alpha Books', '187 Nguyễn Lương Bằng, Hà Nội', '0243567431', 'contact@alphabooks.vn', 1),
+(3, 'Công ty CP Fahasa', '60-62 Lê Lợi, Quận 1, TP.HCM', '0283822154', 'cskh@fahasa.com', 1),
+(4, 'Công ty Nhã Nam', '107 B3 Tô Hiệu, Cầu Giấy, Hà Nội', '0243795617', 'info@nhanam.vn', 1),
+(5, 'Công ty CP Văn hóa Huy Hoàng', '116 Nguyễn Thị Minh Khai, TP.HCM', '0283920521', 'huyhoang@sach.vn', 1),
+(6, 'Công ty Minh Long Book', '38 Nguyễn Thái Học, Ba Đình, HN', '0243834478', 'minhlong@sach.vn', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `nhanvien`
+--
+
+CREATE TABLE `nhanvien` (
+  `maNV` int(11) NOT NULL,
+  `hoTen` varchar(255) NOT NULL,
+  `ngaySinh` date NOT NULL,
+  `gioiTinh` varchar(10) NOT NULL,
+  `soDT` varchar(15) NOT NULL,
+  `maTK` int(11) DEFAULT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nhanvien`
+--
+
+INSERT INTO `nhanvien` (`maNV`, `hoTen`, `ngaySinh`, `gioiTinh`, `soDT`, `maTK`, `trangThai`) VALUES
+(1, 'Nguyễn Hùng Mạnh', '1990-01-01', 'Nam', '0911000001', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `nhaxb`
+--
+
+CREATE TABLE `nhaxb` (
+  `maNXB` int(11) NOT NULL,
+  `tenNXB` varchar(255) NOT NULL,
+  `diaChi` varchar(255) NOT NULL,
+  `soDT` varchar(15) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nhaxb`
+--
+
+INSERT INTO `nhaxb` (`maNXB`, `tenNXB`, `diaChi`, `soDT`, `email`, `trangThai`) VALUES
+(1, 'NXB Giáo Dục Việt Nam', '81 Trần Hưng Đạo, Hà Nội', '0438226432', 'giaoduc@nxb.vn', 1),
+(2, 'NXB Trẻ', '161B Lý Chính Thắng, TP.HCM', '0838480109', 'info@nxbtre.vn', 1),
+(3, 'NXB Kim Đồng', '55 Quang Trung, Hà Nội', '0439445670', 'contact@kimdong.vn', 1),
+(4, 'NXB Văn Học', '65 Nguyễn Du, Hà Nội', '0439438389', 'vanhoc@nxb.vn', 1),
+(5, 'NXB Hội Nhà Văn', '9 Trần Quốc Toản, Hà Nội', '0437346719', 'hoinhavan@nxb.vn', 1),
+(6, 'NXB Lao Động', '175 Giảng Võ, Hà Nội', '0435122458', 'laodong@nxb.vn', 1),
+(7, 'NXB Phụ Nữ', '39 Hàng Chuối, Hà Nội', '0439718853', 'phunu@nxb.vn', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `nhomquyen`
+--
+
+CREATE TABLE `nhomquyen` (
+  `maRole` int(11) NOT NULL,
+  `tenrole` varchar(255) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nhomquyen`
+--
+
+INSERT INTO `nhomquyen` (`maRole`, `tenrole`, `trangThai`) VALUES
+(1, 'Admin', 1),
+(2, 'Nhân viên', 0),
+(3, 'Khách hàng', 0),
+(4, 'Nhân viên bán hàng', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `phanloai`
+--
+
+CREATE TABLE `phanloai` (
+  `maSach` int(11) NOT NULL,
+  `maTheLoai` int(11) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `phanloai`
+--
+
+INSERT INTO `phanloai` (`maSach`, `maTheLoai`, `trangThai`) VALUES
+(1, 1, 1),
+(2, 4, 1),
+(3, 6, 1),
+(4, 10, 1),
+(5, 12, 1),
+(6, 5, 1),
+(7, 1, 1),
+(7, 2, 1),
+(7, 6, 1),
+(8, 14, 1),
+(8, 19, 1),
+(9, 2, 1),
+(9, 4, 1),
+(10, 1, 1),
+(10, 8, 1),
+(10, 15, 1),
+(11, 1, 1),
+(11, 6, 1),
+(11, 20, 1),
+(12, 4, 1),
+(12, 8, 1),
+(13, 5, 1),
+(14, 9, 1),
+(15, 5, 1),
+(15, 12, 1),
+(16, 1, 1),
+(16, 2, 1),
+(17, 8, 1),
+(17, 16, 1),
+(18, 8, 1),
+(18, 16, 1),
+(19, 1, 1),
+(20, 3, 1),
+(20, 4, 1),
+(21, 1, 1),
+(21, 2, 1),
+(22, 2, 1),
+(22, 6, 1),
+(23, 3, 1),
+(23, 5, 1),
+(24, 1, 1),
+(24, 2, 1),
+(25, 4, 1),
+(25, 15, 1),
+(26, 7, 1),
+(26, 13, 1),
+(27, 1, 1),
+(27, 2, 1),
+(28, 5, 1),
+(29, 1, 1),
+(29, 2, 1),
+(30, 1, 1),
+(30, 5, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `phieunhap`
+--
+
+CREATE TABLE `phieunhap` (
+  `maNhap` int(11) NOT NULL,
+  `ngayNhap` datetime NOT NULL,
+  `tongTien` decimal(10,2) NOT NULL,
+  `maNCC` int(11) NOT NULL,
+  `maTK` int(11) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `phieunhap`
+--
+
+INSERT INTO `phieunhap` (`maNhap`, `ngayNhap`, `tongTien`, `maNCC`, `maTK`, `trangThai`) VALUES
+(1, '2025-05-07 04:49:41', 92933911.65, 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `phuongthuc_tt`
+--
+
+CREATE TABLE `phuongthuc_tt` (
+  `maPT` int(11) NOT NULL,
+  `tenPTTT` varchar(255) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `phuongthuc_tt`
+--
+
+INSERT INTO `phuongthuc_tt` (`maPT`, `tenPTTT`, `trangThai`) VALUES
+(1, 'Tiền mặt', 1),
+(2, 'Chuyển khoản', 1),
+(3, 'Thẻ tín dụng', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `sach`
+--
+
+CREATE TABLE `sach` (
+  `maSach` int(11) NOT NULL,
+  `tenSach` varchar(255) NOT NULL,
+  `soLuong` int(11) NOT NULL DEFAULT 0,
+  `giaBan` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `namXB` int(11) NOT NULL,
+  `maVung` int(11) NOT NULL,
+  `maNXB` int(11) NOT NULL,
+  `anh` varchar(255) DEFAULT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `sach`
+--
+
+INSERT INTO `sach` (`maSach`, `tenSach`, `soLuong`, `giaBan`, `namXB`, `maVung`, `maNXB`, `anh`, `trangThai`) VALUES
+(1, 'Dế Mèn Phiêu Lưu Ký ', 7, 65346.54, 2021, 1, 3, 'DeMenPhieuLuuKy.jpg', 1),
+(2, 'Tôi Thấy Hoa Vàng Trên Cỏ Xanh', 18, 85544.56, 2020, 2, 4, 'ToiThayHoaVangTrenCoXanh.jpg', 1),
+(3, 'Nhà Giả Kim ', 0, 105742.57, 2024, 5, 5, 'NhaGiaKim.jpg', 1),
+(4, 'Tuổi Trẻ Đáng Giá Bao Nhiêu ', 26, 237623.76, 2019, 6, 6, 'TuoiTreDangGiaBaoNhieu.jpg', 1),
+(5, 'Đắc Nhân Tâm ', 11, 236435.64, 2022, 8, 6, 'DacNhanTam.jpg', 1),
+(6, '7 Thói Quen Hiệu Quả', 9, 236435.64, 2019, 6, 5, '7ThoiQuenHieuQua.jpg', 1),
+(7, 'Muôn Kiếp Nhân Sinh ', 14, 142574.26, 2010, 7, 5, 'MuonKiepNhanSinh.jpg', 1),
+(8, 'Hiểu Về Trái Tim ', 22, 178217.82, 2014, 3, 2, 'HieuVeTraiTim.jpg', 1),
+(9, 'Hành Trình Về Phương Đông ', 12, 212673.26, 2010, 5, 6, 'HanhTrinhVePhuongDong.jpg', 1),
+(10, 'Totto-chan: Cô bé bên cửa sổ ', 24, 234059.40, 2015, 4, 7, 'TottoChanBenCuaSo.jpg', 1),
+(11, 'Chiến Binh Cầu Vồng ', 27, 199603.96, 2014, 7, 2, 'ChienBinhCauVong.jpg', 1),
+(12, 'Cà Phê Cùng Tony ', 19, 212673.26, 2014, 7, 7, 'CaPheCungTony.jpg', 1),
+(13, 'Bố Già ', 24, 186534.65, 2015, 4, 4, 'BoGia.jpg', 1),
+(14, 'Không Gia Đình ', 18, 200792.08, 2012, 5, 3, 'KhongGiaDinh.jpg', 1),
+(15, 'Sherlock Holmes Toàn Tập ', 21, 475247.52, 2005, 8, 2, 'SherlockHolmesToanTap.jpg', 1),
+(16, 'Sapiens - Lược Sử Loài Người ', 16, 199603.96, 2005, 6, 5, 'SapiensLuocSuLoaiNguoi.jpg', 1),
+(17, 'Bí Mật Tư Duy Triệu Phú ', 18, 186534.65, 2010, 3, 2, 'BiMatTuDuyTrieuPhu.jpg', 1),
+(18, 'Hoàng Tử Bé ', 18, 225742.57, 2016, 2, 6, 'HoangTuBe.jpg', 1),
+(19, '13 Nguyên Tắc Nghĩ Giàu Làm Giàu ', 18, 237623.76, 2014, 1, 1, '13NguyenTacNghiGiauLamGiau.jpg', 1),
+(20, 'Cánh Đồng Bất Tận ', 14, 225742.57, 2012, 1, 1, 'CanhDongBatTan.jpg', 1),
+(21, 'Dấn Thân ', 19, 146138.62, 2012, 1, 2, 'DanThan.jpg', 1),
+(22, 'Mỗi Ngày Tiết Kiệm 1 Giờ ', 17, 211485.14, 2012, 7, 5, 'MoiNgayTietKiemMotGio.jpg', 1),
+(23, 'Tâm Lý Học Thành Công ', 15, 172277.23, 2019, 4, 3, 'TamLyHocThanhCong.jpg', 1),
+(24, 'Những Lá Thư Chưa Gửi ', 10, 199603.96, 2012, 6, 5, 'NhungLaThuKhongGui.jpg', 1),
+(25, 'Phi Lý Trí', 10, 343366.33, 2011, 2, 6, 'PhiLyTri.jpg', 1),
+(26, 'Không Diệt Không Sinh Đừng Sợ Hãi ', 21, 67722.77, 2012, 7, 6, 'KhongDietKhongSinhDungSoHai.jpg', 1),
+(27, 'Lược Sử Thời Gian ', 18, 2392.87, 2015, 3, 6, 'LuocSuThoiGian.jpg', 1),
+(28, 'Nghệ Thuật Tinh Tế Của Việc Đếch Quan Tâm ', 16, 106930.69, 2016, 2, 4, 'NgheThuatTinhTeCuaViecDechQuanTam.jpg', 1),
+(29, 'Hài Hước Một Chút Thế Giới Sẽ Khác ', 25, 92673.26, 2045, 5, 1, 'HaiHuocMotChutTheGioiSeKhacDi.jpg', 1),
+(30, 'Nhà Lãnh Đạo Không Chức Danh ', 20, 212673.26, 2015, 4, 6, 'NhaLanhDaoKhongChucDanh.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tacgia`
+--
+
+CREATE TABLE `tacgia` (
+  `maTacGia` int(11) NOT NULL,
+  `tenTacGia` varchar(255) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `tacgia`
+--
+
+INSERT INTO `tacgia` (`maTacGia`, `tenTacGia`, `trangThai`) VALUES
+(1, 'Nguyễn Nhật Ánh', 1),
+(2, 'J.K. Rowling', 1),
+(3, 'Dan Brown', 1),
+(4, 'Haruki Murakami', 1),
+(5, 'Paulo Coelho', 1),
+(6, 'Nguyễn Huy Thiệp', 1),
+(7, 'Tô Hoài', 1),
+(8, 'Victor Hugo', 1),
+(9, 'Ernest Hemingway', 1),
+(10, 'Lev Tolstoy', 1),
+(11, 'Kim Dung', 1),
+(12, 'Hồ Biểu Chánh', 1),
+(13, 'George Orwell', 1),
+(14, 'Jane Austen', 1),
+(15, 'Nam Cao', 1),
+(16, 'Lỗ Tấn', 1),
+(17, 'Nguyễn Du', 1),
+(18, 'Nguyễn Minh Châu', 1),
+(19, 'Antoine de Saint-Exupéry', 1),
+(20, 'Franz Kafka', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `taikhoan`
+--
+
+CREATE TABLE `taikhoan` (
+  `maTK` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `maRole` int(11) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `taikhoan`
+--
+
+INSERT INTO `taikhoan` (`maTK`, `username`, `password`, `maRole`, `trangThai`) VALUES
+(1, 'admin', '123456', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `theloai`
+--
+
+CREATE TABLE `theloai` (
+  `maTheloai` int(11) NOT NULL,
+  `tenTheloai` varchar(255) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `theloai`
+--
+
+INSERT INTO `theloai` (`maTheloai`, `tenTheloai`, `trangThai`) VALUES
+(1, 'Thiếu nhi', 1),
+(2, 'Văn học', 1),
+(3, 'Triết học', 1),
+(4, 'Kỹ năng sống', 1),
+(5, 'Phát triển bản thân', 1),
+(6, 'Tâm linh', 1),
+(7, 'Thiền/Chánh niệm', 1),
+(8, 'Tiểu thuyết', 1),
+(9, 'Trinh thám', 1),
+(10, 'Lịch sử', 1),
+(11, 'Kinh doanh', 1),
+(12, 'Khoa học viễn tưởng', 1),
+(13, 'Tâm lý học', 1),
+(14, 'Lãng mạn', 1),
+(15, 'Hài hước', 1),
+(16, 'Hồi ký', 1),
+(17, 'Tự truyện', 1),
+(18, 'Lịch sử - Chính trị', 1),
+(19, 'Nghệ thuật', 1),
+(20, 'Tài chính - Đầu tư', 1),
+(21, 'hihi', 0),
+(22, 'hihi', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `vitrivung`
+--
+
+CREATE TABLE `vitrivung` (
+  `maVung` int(11) NOT NULL,
+  `tenVung` varchar(255) NOT NULL,
+  `trangThai` tinyint(4) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `vitrivung`
+--
+
+INSERT INTO `vitrivung` (`maVung`, `tenVung`, `trangThai`) VALUES
+(1, 'Vùng A', 1),
+(2, 'Vùng B', 1),
+(3, 'Vùng C', 1),
+(4, 'Vùng D', 1),
+(5, 'Vùng E', 1),
+(6, 'Vùng F', 1),
+(7, 'Vùng G', 1),
+(8, 'Vùng H', 1);
+
+--
+-- Chỉ mục cho các bảng đã đổ
+--
+
+--
+-- Chỉ mục cho bảng `chitietquyen`
+--
+ALTER TABLE `chitietquyen`
+  ADD PRIMARY KEY (`maRole`,`maChucNang`,`hanhDong`,`trangThai`),
+  ADD KEY `CHUCNANG_CHITIETQUYEN` (`maChucNang`);
+
+--
+-- Chỉ mục cho bảng `chucnang`
+--
+ALTER TABLE `chucnang`
+  ADD PRIMARY KEY (`maChucNang`);
+
+--
+-- Chỉ mục cho bảng `ct_hoadon`
+--
+ALTER TABLE `ct_hoadon`
+  ADD PRIMARY KEY (`maSach`,`maHD`),
+  ADD KEY `HOADON_CT_HOADON` (`maHD`);
+
+--
+-- Chỉ mục cho bảng `ct_phieunhap`
+--
+ALTER TABLE `ct_phieunhap`
+  ADD PRIMARY KEY (`maSach`,`maNhap`),
+  ADD KEY `PHIEUNHAP_CT_PHIEUNHAP` (`maNhap`);
+
+--
+-- Chỉ mục cho bảng `danhmuc_tg`
+--
+ALTER TABLE `danhmuc_tg`
+  ADD PRIMARY KEY (`maTacGia`,`maSach`,`trangThai`),
+  ADD KEY `DANHMUC_TG_SACH` (`maSach`);
+
+--
+-- Chỉ mục cho bảng `hoadon`
+--
+ALTER TABLE `hoadon`
+  ADD PRIMARY KEY (`maHD`),
+  ADD KEY `HOADON_NHANVIEN` (`maTK`),
+  ADD KEY `HOADON_PHUONGTHUC_TT` (`maPT`),
+  ADD KEY `HOADON_KHUYENMAI` (`maKM`),
+  ADD KEY `KH_HD` (`maKH`);
+
+--
+-- Chỉ mục cho bảng `khachhang`
+--
+ALTER TABLE `khachhang`
+  ADD PRIMARY KEY (`maKH`);
+
+--
+-- Chỉ mục cho bảng `khuyenmai`
+--
+ALTER TABLE `khuyenmai`
+  ADD PRIMARY KEY (`maKM`);
+
+--
+-- Chỉ mục cho bảng `km_sach`
+--
+ALTER TABLE `km_sach`
+  ADD PRIMARY KEY (`maKM`,`maSach`,`trangThai`),
+  ADD KEY `km2` (`maSach`);
+
+--
+-- Chỉ mục cho bảng `nhacungcap`
+--
+ALTER TABLE `nhacungcap`
+  ADD PRIMARY KEY (`maNCC`);
+
+--
+-- Chỉ mục cho bảng `nhanvien`
+--
+ALTER TABLE `nhanvien`
+  ADD PRIMARY KEY (`maNV`),
+  ADD KEY `NHANVIEN` (`maTK`);
+
+--
+-- Chỉ mục cho bảng `nhaxb`
+--
+ALTER TABLE `nhaxb`
+  ADD PRIMARY KEY (`maNXB`);
+
+--
+-- Chỉ mục cho bảng `nhomquyen`
+--
+ALTER TABLE `nhomquyen`
+  ADD PRIMARY KEY (`maRole`);
+
+--
+-- Chỉ mục cho bảng `phanloai`
+--
+ALTER TABLE `phanloai`
+  ADD PRIMARY KEY (`maSach`,`maTheLoai`),
+  ADD KEY `THELOAI_PHANLOAI` (`maTheLoai`);
+
+--
+-- Chỉ mục cho bảng `phieunhap`
+--
+ALTER TABLE `phieunhap`
+  ADD PRIMARY KEY (`maNhap`),
+  ADD KEY `PHIEUNHAP_NHACUNGCAP` (`maNCC`),
+  ADD KEY `PHIEUNHAP_NHANVIEN` (`maTK`);
+
+--
+-- Chỉ mục cho bảng `phuongthuc_tt`
+--
+ALTER TABLE `phuongthuc_tt`
+  ADD PRIMARY KEY (`maPT`);
+
+--
+-- Chỉ mục cho bảng `sach`
+--
+ALTER TABLE `sach`
+  ADD PRIMARY KEY (`maSach`),
+  ADD KEY `SACH_VITRIVUNG` (`maVung`),
+  ADD KEY `SACH_NHAXB` (`maNXB`);
+
+--
+-- Chỉ mục cho bảng `tacgia`
+--
+ALTER TABLE `tacgia`
+  ADD PRIMARY KEY (`maTacGia`);
+
+--
+-- Chỉ mục cho bảng `taikhoan`
+--
+ALTER TABLE `taikhoan`
+  ADD PRIMARY KEY (`maTK`),
+  ADD KEY `TAIKHOAN_NHOMQUYEN` (`maRole`);
+
+--
+-- Chỉ mục cho bảng `theloai`
+--
+ALTER TABLE `theloai`
+  ADD PRIMARY KEY (`maTheloai`);
+
+--
+-- Chỉ mục cho bảng `vitrivung`
+--
+ALTER TABLE `vitrivung`
+  ADD PRIMARY KEY (`maVung`);
+
+--
+-- AUTO_INCREMENT cho các bảng đã đổ
+--
+
+--
+-- AUTO_INCREMENT cho bảng `chucnang`
+--
+ALTER TABLE `chucnang`
+  MODIFY `maChucNang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT cho bảng `hoadon`
+--
+ALTER TABLE `hoadon`
+  MODIFY `maHD` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `khachhang`
+--
+ALTER TABLE `khachhang`
+  MODIFY `maKH` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT cho bảng `khuyenmai`
+--
+ALTER TABLE `khuyenmai`
+  MODIFY `maKM` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT cho bảng `nhacungcap`
+--
+ALTER TABLE `nhacungcap`
+  MODIFY `maNCC` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT cho bảng `nhanvien`
+--
+ALTER TABLE `nhanvien`
+  MODIFY `maNV` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `nhaxb`
+--
+ALTER TABLE `nhaxb`
+  MODIFY `maNXB` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT cho bảng `nhomquyen`
+--
+ALTER TABLE `nhomquyen`
+  MODIFY `maRole` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `phieunhap`
+--
+ALTER TABLE `phieunhap`
+  MODIFY `maNhap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `phuongthuc_tt`
+--
+ALTER TABLE `phuongthuc_tt`
+  MODIFY `maPT` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `sach`
+--
+ALTER TABLE `sach`
+  MODIFY `maSach` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT cho bảng `tacgia`
+--
+ALTER TABLE `tacgia`
+  MODIFY `maTacGia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT cho bảng `taikhoan`
+--
+ALTER TABLE `taikhoan`
+  MODIFY `maTK` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `theloai`
+--
+ALTER TABLE `theloai`
+  MODIFY `maTheloai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT cho bảng `vitrivung`
+--
+ALTER TABLE `vitrivung`
+  MODIFY `maVung` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- Các ràng buộc cho các bảng đã đổ
+--
+
+--
+-- Các ràng buộc cho bảng `chitietquyen`
+--
+ALTER TABLE `chitietquyen`
+  ADD CONSTRAINT `CHUCNANG_CHITIETQUYEN` FOREIGN KEY (`maChucNang`) REFERENCES `chucnang` (`maChucNang`),
+  ADD CONSTRAINT `NHOMQUYEN_CHITIETQUYEN` FOREIGN KEY (`maRole`) REFERENCES `nhomquyen` (`maRole`);
+
+--
+-- Các ràng buộc cho bảng `ct_hoadon`
+--
+ALTER TABLE `ct_hoadon`
+  ADD CONSTRAINT `HOADON_CT_HOADON` FOREIGN KEY (`maHD`) REFERENCES `hoadon` (`maHD`),
+  ADD CONSTRAINT `PHIENBANSACH_CT_HOADON` FOREIGN KEY (`maSach`) REFERENCES `sach` (`maSach`);
+
+--
+-- Các ràng buộc cho bảng `ct_phieunhap`
+--
+ALTER TABLE `ct_phieunhap`
+  ADD CONSTRAINT `PHIEUNHAP_CT_PHIEUNHAP` FOREIGN KEY (`maNhap`) REFERENCES `phieunhap` (`maNhap`),
+  ADD CONSTRAINT `SACH_CT_PHIEUNHAP` FOREIGN KEY (`maSach`) REFERENCES `sach` (`maSach`);
+
+--
+-- Các ràng buộc cho bảng `danhmuc_tg`
+--
+ALTER TABLE `danhmuc_tg`
+  ADD CONSTRAINT `DANHMUC_TG_SACH` FOREIGN KEY (`maSach`) REFERENCES `sach` (`maSach`),
+  ADD CONSTRAINT `DANHMUC_TG_TACGIA` FOREIGN KEY (`maTacGia`) REFERENCES `tacgia` (`maTacGia`);
+
+--
+-- Các ràng buộc cho bảng `hoadon`
+--
+ALTER TABLE `hoadon`
+  ADD CONSTRAINT `HOADON_KHUYENMAI` FOREIGN KEY (`maKM`) REFERENCES `khuyenmai` (`maKM`),
+  ADD CONSTRAINT `HOADON_NHANVIEN` FOREIGN KEY (`maTK`) REFERENCES `taikhoan` (`maTK`),
+  ADD CONSTRAINT `HOADON_PHUONGTHUC_TT` FOREIGN KEY (`maPT`) REFERENCES `phuongthuc_tt` (`maPT`),
+  ADD CONSTRAINT `KH_HD` FOREIGN KEY (`maKH`) REFERENCES `khachhang` (`maKH`);
+
+--
+-- Các ràng buộc cho bảng `km_sach`
+--
+ALTER TABLE `km_sach`
+  ADD CONSTRAINT `km1` FOREIGN KEY (`maKM`) REFERENCES `khuyenmai` (`maKM`),
+  ADD CONSTRAINT `km2` FOREIGN KEY (`maSach`) REFERENCES `sach` (`maSach`);
+
+--
+-- Các ràng buộc cho bảng `nhanvien`
+--
+ALTER TABLE `nhanvien`
+  ADD CONSTRAINT `NHANVIEN` FOREIGN KEY (`maTK`) REFERENCES `taikhoan` (`maTK`);
+
+--
+-- Các ràng buộc cho bảng `phanloai`
+--
+ALTER TABLE `phanloai`
+  ADD CONSTRAINT `SACH_PHANLOAI` FOREIGN KEY (`maSach`) REFERENCES `sach` (`maSach`),
+  ADD CONSTRAINT `THELOAI_PHANLOAI` FOREIGN KEY (`maTheLoai`) REFERENCES `theloai` (`maTheloai`);
+
+--
+-- Các ràng buộc cho bảng `phieunhap`
+--
+ALTER TABLE `phieunhap`
+  ADD CONSTRAINT `PHIEUNHAP_NHACUNGCAP` FOREIGN KEY (`maNCC`) REFERENCES `nhacungcap` (`maNCC`),
+  ADD CONSTRAINT `PHIEUNHAP_NHANVIEN` FOREIGN KEY (`maTK`) REFERENCES `taikhoan` (`maTK`);
+
+--
+-- Các ràng buộc cho bảng `sach`
+--
+ALTER TABLE `sach`
+  ADD CONSTRAINT `SACH_NHAXB` FOREIGN KEY (`maNXB`) REFERENCES `nhaxb` (`maNXB`),
+  ADD CONSTRAINT `SACH_VITRIVUNG` FOREIGN KEY (`maVung`) REFERENCES `vitrivung` (`maVung`);
+
+--
+-- Các ràng buộc cho bảng `taikhoan`
+--
+ALTER TABLE `taikhoan`
+  ADD CONSTRAINT `TAIKHOAN_NHOMQUYEN` FOREIGN KEY (`maRole`) REFERENCES `nhomquyen` (`maRole`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

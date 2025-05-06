@@ -121,6 +121,7 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         // startDate = endDate
         listSach = doanhThuBUS.getRevenueStats(startDate,endDate,"book");
         listKH = doanhThuBUS.getRevenueStats(startDate,endDate,"customer");
+
         System.out.println(listSach.size() + " " + listKH.size());
 
         tongHD_TongDT = doanhThuBUS.getTotalRevenue(startDate,endDate);
