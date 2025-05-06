@@ -90,6 +90,15 @@ public class JDBCUtil {
 		return(nextID);
 	}
 
+	public static void main(String[] args) {
+
+		JDBCUtil hi = new JDBCUtil();
+
+		hi.Open();
+		System.out.println(hi.getAutoIncrement("sach"));
+		hi.Close();
+	}
+
 	public void setParams(Object... params){
 		for(int i = 0; i < params.length; i++){
 			int index = i + 1;

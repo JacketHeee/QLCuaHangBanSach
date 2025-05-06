@@ -146,7 +146,7 @@ public class KhachHangForm extends JPanel implements TableActionListener, Action
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         table = new CustomTable(Data(),getActionBottom(), header);
         table.setActionListener(this);
-        panel.add(new CustomScrollPane(table),"push, grow");
+        panel.add(table,"push, grow");
         return panel;
     }
 

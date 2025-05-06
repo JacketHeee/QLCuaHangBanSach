@@ -93,6 +93,7 @@ public class PanelPicture extends JPanel{
                         labelAnh.setIcon(new ImageIcon(preview));
                         labelAnh.setText("");
                     }
+                    System.out.println(pathAnh + " + " + fileName);
                     pathAnh = fileName;
                     btnThem.setText("Đổi ảnh");
                 } else {
@@ -120,6 +121,10 @@ public class PanelPicture extends JPanel{
         //         e1.printStackTrace();
         //     }
         // }
+
+        File file = new File("src/resources/img/img_product/" + path);
+        System.out.println(file.getAbsolutePath());
+        imageUtil.setSelectedFile(file);
 
         ImageIcon originalIcon = new ImageIcon(getClass().getResource("/resources/img/img_product/"+path));
         Image image = originalIcon.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);

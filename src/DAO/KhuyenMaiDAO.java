@@ -165,5 +165,68 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
         return result;
     }
 
+    public ArrayList<KhuyenMaiDTO> getListKMByIdSachEnable(int maSach) {
+        ArrayList<KhuyenMaiDTO> result = new ArrayList<>();
+        String sql = "SELECT k.*" +
+                     "FROM km_sach ks " +
+                     "JOIN khuyenmai k ON ks.maKM = k.maKM " +
+                     "WHERE ks.maSach = ? " +
+                     "AND ks.trangThai = 1 " +
+                     "AND k.trangThai = 1 " +
+                     "AND k.ngayBatDau <= NOW() " +
+                     "AND k.ngayKetThuc >= NOW()";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maSach);
+        try {
+            while (rs.next()) {
+                int maKM = rs.getInt("maKM");
+                String tenKM = rs.getString("tenKM");
+                String dieuKienGiam = rs.getString("dieuKienGiam");
+                BigDecimal giaTriGiam = rs.getBigDecimal("giaTriGiam");
+                LocalDateTime ngayBatDau = rs.getTimestamp("ngayBatDau").toLocalDateTime();
+                LocalDateTime ngayKetThuc = rs.getTimestamp("ngayKetThuc").toLocalDateTime();
+                
+                KhuyenMaiDTO km = new KhuyenMaiDTO(maKM, tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc);
+                result.add(km);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            jdbcUtil.Close();
+        }
+        return result;
+    }
 
+    public ArrayList<KhuyenMaiDTO> getAllKhuyenMaiEnable() {
+        ArrayList<KhuyenMaiDTO> result = new ArrayList<>();
+        String sql = "SELECT maKM, tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc " +
+                     "FROM KHUYENMAI " +
+                     "WHERE trangThai = 1 " +
+                     "AND ngayBatDau <= NOW() " +
+                     "AND ngayKetThuc >= NOW()";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                int maKM = rs.getInt("maKM");
+                String tenKM = rs.getString("tenKM");
+                String dieuKienGiam = rs.getString("dieuKienGiam");
+                BigDecimal giaTriGiam = rs.getBigDecimal("giaTriGiam");
+                LocalDateTime ngayBatDau = rs.getTimestamp("ngayBatDau").toLocalDateTime();
+                LocalDateTime ngayKetThuc = rs.getTimestamp("ngayKetThuc").toLocalDateTime();
+                
+                KhuyenMaiDTO km = new KhuyenMaiDTO(maKM, tenKM, dieuKienGiam, giaTriGiam, ngayBatDau, ngayKetThuc);
+                result.add(km);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            jdbcUtil.Close();
+        }
+        return result;
+    }
 }

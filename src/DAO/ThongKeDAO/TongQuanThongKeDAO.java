@@ -13,11 +13,11 @@ public class TongQuanThongKeDAO {
     
     // Số đơn hôm nay
     public int getOrdersToday() {
-        String sql = "SELECT COUNT(*) AS soDon FROM HOADON WHERE DATE(ngayBan) = CURDATE()";
+        String sql = "SELECT COUNT(*) AS soDon FROM HOADON WHERE DATE(ngayBan) = CURDATE() and trangthai=1";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         ResultSet rs = jdbcUtil.executeQuery(sql);
-        try {
+        try { 
             if (rs.next()) {
                 return rs.getInt("soDon");
             }
@@ -31,38 +31,58 @@ public class TongQuanThongKeDAO {
     }
 
     // Doanh thu hôm nay
-    public double getRevenueToday() {
-        String sql = "SELECT COALESCE(SUM(tongTien), 0) AS doanhThu FROM HOADON WHERE DATE(ngayBan) = CURDATE()";
+    // Doanh thu hôm nay
+    public BigDecimal getRevenueToday() {
+        String sql = "SELECT COALESCE(SUM(tongTien), 0) AS doanhThu FROM HOADON WHERE DATE(ngayBan) = CURDATE() AND trangThai = 1";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
             if (rs.next()) {
-                return rs.getDouble("doanhThu");
+                return rs.getBigDecimal("doanhThu");
             }
-            return 0;
+            return BigDecimal.ZERO;
         } catch (SQLException e) {
             e.printStackTrace();
-            return 0;
+            return BigDecimal.ZERO;
         } finally {
             jdbcUtil.Close();
         }
     }
 
+    // // Tiền nhập hôm nay
+    // public double getImportCostToday() {
+    //     String sql = "SELECT COALESCE(SUM(tongTien), 0) AS tienNhap FROM PHIEUNHAP WHERE DATE(ngayNhap) = CURDATE() and trangthai=1-";
+    //     JDBCUtil jdbcUtil = new JDBCUtil();
+    //     jdbcUtil.Open();
+    //     ResultSet rs = jdbcUtil.executeQuery(sql);
+    //     try {
+    //         if (rs.next()) {
+    //             return rs.getDouble("tienNhap");
+    //         }
+    //         return 0;
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //         return 0;
+    //     } finally {
+    //         jdbcUtil.Close();
+    //     }
+    // }
+
     // Tiền nhập hôm nay
-    public double getImportCostToday() {
-        String sql = "SELECT COALESCE(SUM(tongTien), 0) AS tienNhap FROM PHIEUNHAP WHERE DATE(ngayNhap) = CURDATE()";
+    public BigDecimal getImportCostToday() {
+        String sql = "SELECT COALESCE(SUM(tongTien), 0) AS tienNhap FROM PHIEUNHAP WHERE DATE(ngayNhap) = CURDATE() AND trangThai = 1";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
             if (rs.next()) {
-                return rs.getDouble("tienNhap");
+                return rs.getBigDecimal("tienNhap");
             }
-            return 0;
+            return BigDecimal.ZERO;
         } catch (SQLException e) {
             e.printStackTrace();
-            return 0;
+            return BigDecimal.ZERO;
         } finally {
             jdbcUtil.Close();
         }
@@ -87,30 +107,6 @@ public class TongQuanThongKeDAO {
             jdbcUtil.Close();
         }
     }
-
-    // Doanh thu 7 ngày
-    // public ArrayList<BigDecimal> getRevenue7Days() {
-    //     String sql = "SELECT DATE(ngayBan) AS ngay, COALESCE(SUM(tongTien), 0) AS doanhThu " +
-    //                  "FROM HOADON " +
-    //                  "WHERE ngayBan >= CURDATE() - INTERVAL 6 DAY " +
-    //                  "GROUP BY DATE(ngayBan) ORDER BY ngayBan";
-
-    //     ArrayList<BigDecimal> result = new ArrayList<>();
-    //     JDBCUtil jdbcUtil = new JDBCUtil();
-    //     jdbcUtil.Open();
-    //     ResultSet rs = jdbcUtil.executeQuery(sql);
-    //     try {
-    //         while (rs.next()) {
-    //             result.add(rs.getBigDecimal("doanhThu"));
-    //         }
-    //         return result;
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //         return result;
-    //     } finally {
-    //         jdbcUtil.Close();
-    //     }
-    // }
 
     public ArrayList<BigDecimal> getRevenue7Days() {
         String sql = "WITH RECURSIVE date_sequence AS (" +
@@ -154,7 +150,7 @@ public class TongQuanThongKeDAO {
         System.out.println(x);
     }
 
-    // Top 7 sách bán chạy
+    // Top 5 sách bán chạy
     public ArrayList<SachDTO> getTopBooks7Days() {
         String sql = "SELECT S.maSach, S.tenSach, COALESCE(SUM(CT.soLuong), 0) AS soLuongBan " +
                      "FROM CT_HOADON CT " +
@@ -162,7 +158,7 @@ public class TongQuanThongKeDAO {
                      "JOIN SACH S ON CT.maSach = S.maSach " +
                      "WHERE HD.ngayBan >= CURDATE() - INTERVAL 6 DAY " +
                      "GROUP BY S.maSach, S.tenSach " +
-                     "ORDER BY soLuongBan DESC LIMIT 7";
+                     "ORDER BY soLuongBan DESC LIMIT 5";
                      ArrayList<SachDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -187,8 +183,8 @@ public class TongQuanThongKeDAO {
     // Phần trăm hóa đơn khuyến mãi
     public TyLeDTO getPromotionUsage() {
         String sql = "SELECT " +
-                     "COALESCE(COUNT(CASE WHEN maKM IS NOT NULL THEN 1 END), 0) AS coKhuyenMai, " +
-                     "COALESCE(COUNT(CASE WHEN maKM IS NULL THEN 1 END), 0) AS khongKhuyenMai " +
+                     "COALESCE(COUNT(CASE WHEN maKM != 1 THEN 1 END), 0) AS coKhuyenMai, " +
+                     "COALESCE(COUNT(CASE WHEN maKM = 1 THEN 1 END), 0) AS khongKhuyenMai " +
                      "FROM HOADON " +
                      "WHERE ngayBan >= CURDATE() - INTERVAL 6 DAY";
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -206,4 +202,5 @@ public class TongQuanThongKeDAO {
             jdbcUtil.Close();
         }
     }
+
 }

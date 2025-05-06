@@ -56,6 +56,14 @@ public class KhuyenMaiBUS {
         return this.listKhuyenMai;
     }
 
+    public ArrayList<KhuyenMaiDTO> getListKMByIdSachEnable(int maSach) {
+        return khuyenMaiDAO.getListKMByIdSachEnable(maSach);
+    }
+
+    public ArrayList<KhuyenMaiDTO> getAllKhuyenMaiEnable() {
+        return khuyenMaiDAO.getAllKhuyenMaiEnable(); 
+    }
+
     public int getIndexByID(int id) {
         for (int i = 0; i < listKhuyenMai.size(); i++) {
             if (id == listKhuyenMai.get(i).getMaKM()) {
@@ -81,5 +89,7 @@ public class KhuyenMaiBUS {
     public KhuyenMaiDTO getInstanceByMa(int ma){
         return(khuyenMaiDAO.getInstanceByMa(ma));
     }
+
+    
 
 }

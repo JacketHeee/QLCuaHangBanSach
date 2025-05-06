@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import utils.FormatterUtil;
 import utils.UIUtils;
 import utils.Validate;
 
@@ -15,7 +16,7 @@ import javax.swing.JComponent;
 import GUI.component.CustomTextFieldSL;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
-
+import javax.swing.DefaultComboBoxModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -63,6 +64,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private int id = 9;
     private String[] listKH; 
     private String[] listKM;
+    private ArrayList<KhuyenMaiDTO> arrayListKM;
     private String[] listPTTT;
     private CustomButton buttonSave;
     private CustomButton buttonCancel;
@@ -78,7 +80,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     private NhanVienBUS nhanVienBUS;
     private HoaDonBUS hoaDonBUS;
     private CT_HoaDonBUS ct_HoaDonBUS;
-    private BigDecimal tongTienHoaDon;
+    private BigDecimal tongTienHoaDon = BigDecimal.ZERO;
     private JLabel lblTongTienHoaDon;
     private JLabel lblTongTienHang;
     private JLabel lblTongThanhToan;
@@ -263,8 +265,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                         list.add(sach.getMaSach() + "");
                         list.add(sach.getTenSach());
                         list.add(soLuong + "");
-                        list.add(sach.getGiaBan() + "");
-                        list.add(tongGia+"");
+                        list.add(FormatterUtil.formatNumber(sach.getGiaBan()) + "");
+                        list.add(FormatterUtil.formatNumber(tongGia)+"");
                     ;
                     result = list.toArray(new String[0]);
                     return(result);
@@ -280,11 +282,14 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                 @Override
                 public void updateTongGiaChungTu(){
                     updateTongTienHoaDon();
+                    updateListKM();
                     updateTTTT();
                     updateStatusCombobox();
-                    updateStatusTextFieldTienTra();
-                    updateStatusbtnThem();
+                    updateTienKhuyenMai();
                     updateTienKhachDua();
+                    updateStatusTextFieldTienTra();
+                    // updateStatusbtnThem();
+                    // updateTienKhachDua();
                 }
             }
             ,headers
@@ -293,7 +298,15 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         );
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
-        table.addDataRow(null);
+        if (!type.equals("detail")) {
+           table.addDataRow(null);
+        }
+        // if (table instanceof InvoiceTable) {
+        //     InvoiceTable c = (InvoiceTable) table;
+        //     c.setUpdateKM(() -> {
+        //         updateListKM();
+        //     });
+        // }
         if(!type.equals("detail")){
             panel.add(panelActionOnTable(),"pushx,growx,wrap");
         }
@@ -301,6 +314,64 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         return panel;
     }
 
+    private void updateListKM() {
+        ArrayList<KhuyenMaiDTO> list = new ArrayList<>();
+        
+        // Lấy danh sách khuyến mãi theo mã sách
+        Map<Integer, List<JComponent>> rowLabels = table.getRowLabels();
+        for(Map.Entry<Integer, List<JComponent>> i : table.getRowLabels().entrySet()){
+            int row = i.getKey();
+            int maSach = Integer.parseInt(getTextFieldMaSach(row, rowLabels).getText());
+
+            ArrayList<KhuyenMaiDTO> hihi =  khuyenMaiBUS.getListKMByIdSachEnable(maSach);
+
+            for (KhuyenMaiDTO x : hihi) {
+                boolean isTonTai = false;
+                for (KhuyenMaiDTO y : list) 
+                    if (x.getMaKM() == y.getMaKM()) {
+                        isTonTai = true; 
+                        break;
+                    }
+                if (!isTonTai)
+                    list.add(x);
+            }
+        }
+
+        // System.out.println("---------------------------------------");
+        // Lấy danh sách khuyến mãi theo hóa đơn
+        for (KhuyenMaiDTO x : khuyenMaiBUS.getAllKhuyenMaiEnable()) {
+            String[] dieukienapdung = x.getDieuKienGiam().replaceAll("(Đơn\\shàng\\stối\\sthiểu:\\s)|(Sách\\stheo\\s)|(:\\s)", "#").split("#");
+
+            if (dieukienapdung.length == 2) { //Khuyến mãi theo hóa đơn
+                BigDecimal giaTriToiThieu = FormatterUtil.getBigDicimalByString(dieukienapdung[1]); 
+                // System.out.println(giaTriToiThieu + " / " + tongTienHoaDon);
+                if (tongTienHoaDon.compareTo(giaTriToiThieu) >=0) {
+                    list.add(x);
+                }
+            }
+            else {
+
+            }
+        }
+        // System.out.println("---------------------------------------");
+        // // debug
+        // for (KhuyenMaiDTO x : list) {
+        //     System.out.println(x.getTenKM());
+        // } 
+        // System.out.println("---------------------------------------");
+        arrayListKM = list;
+
+        listKM = new String[list.size()+1];
+        listKM[0] = "Không dùng";
+
+        int index = 1;
+        for (KhuyenMaiDTO x : list) {
+            listKM[index++] = x.getTenKM();
+        }
+ 
+        comboboxKM.setModel(new DefaultComboBoxModel<>(listKM));
+
+    }
 
     private ButtonAction butAddData;
     private ButtonAction butImportData;
@@ -320,8 +391,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
     private JPanel getTongTien() {
         JPanel panel = new JPanel(new MigLayout("al right"));
-        String template = "<html><font size='+1'><b>Tổng tiền: </b> %sđ</font><html>";
-        lblTongTienHoaDon = new JLabel(String.format(template, tongTienHoaDon));
+        String template = "<html><font size='+1'><b>Tổng tiền: </b> %s</font><html>";
+        lblTongTienHoaDon = new JLabel(String.format(template, FormatterUtil.formatNumber(tongTienHoaDon)));
         panel.add(lblTongTienHoaDon);
         return panel;
     }
@@ -331,7 +402,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         panel.setLayout(new MigLayout("al center center "));
         panel.add(new JLabel("<html><font size='+1'><b>Chọn khuyến mãi</b></font></html>"));
         panel.add(new JLabel(),"pushx");
-        comboboxKM = new JComboBox<>(listKM);
+        comboboxKM = new JComboBox<>();
         panel.add(comboboxKM);
         return panel;
     }
@@ -359,7 +430,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         panel.add(new JLabel("<html><font size='+1'><b>Tổng thanh toán(đ): </b></font></html>"),"sg 1");
 
         String template = "<html><font size='+1'><b>'%s'</b></font></html>";
-        lblTongThanhToan = new JLabel(String.format(template, tongThanhToan + ""));
+        lblTongThanhToan = new JLabel(String.format(template, FormatterUtil.formatNumber(tongThanhToan) + ""));
 
         panel.add(lblTongThanhToan,"sg 2,al right,wrap");
         panel.add(new JLabel("Tiền khách đưa(đ):"),"sg 1");
@@ -437,7 +508,6 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                 break;
             case "btnLuu":
                 TaoHoaDon();
-                runna.run();
                 break;
             case "comboboxKM":
                 updateTienKhuyenMai();
@@ -490,10 +560,13 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
                     Notifications.getInstance().setJFrame(mainFrame);
                     Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa thành công!");
                     updateTongTienHoaDon();
+                    updateListKM();
                     updateTTTT();
+                    updateTienKhuyenMai();
+                    updateTienKhachDua();
                     updateStatusCombobox();
                     updateStatusTextFieldTienTra();
-                    updateStatusbtnThem();
+                    // updateStatusbtnThem();
                 }
 
                 break;
@@ -537,10 +610,10 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         CustomTextFieldSL textFieldSL = getTextFieldSL(row, rowLabels); 
 
         int soLuong = Integer.parseInt(textFieldSL.getText());
-        BigDecimal giaBan = BigDecimal.valueOf(Double.parseDouble(labelGB.getText()));
+        BigDecimal giaBan = FormatterUtil.getBigDicimalByString(labelGB.getText());
         BigDecimal tongGia = hoaDonBUS.tinhTongGia(giaBan, soLuong);
 
-        labelTT.setText(tongGia + "");
+        labelTT.setText(FormatterUtil.formatNumber(tongGia) + "");
     }
 
     ///////////////////////////Các hàm get Component trong Map 
@@ -586,7 +659,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         for(Map.Entry<Integer, List<JComponent>> entry : rowLabels.entrySet()){
 
             JLabel lblTongTienSach = getLabelTongTien(index, rowLabels);
-            BigDecimal tongTienSach = BigDecimal.valueOf(Double.parseDouble(lblTongTienSach.getText()));
+            BigDecimal tongTienSach = FormatterUtil.getBigDicimalByString(lblTongTienSach.getText());
             result = result.add(tongTienSach);
             index++;
         }
@@ -594,12 +667,9 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         //set Tổng tiền hóa đơn để tính toán
         this.tongTienHoaDon = result;
         //Set tổng tiền ở trên
-        setTextLblTongTienHoaDon(this.tongTienHoaDon + "");
+        setTextLblTongTienHoaDon(FormatterUtil.formatNumber(result) + "");
         //Set tổng tiền ở dưới
-        lblTongTienHang.setText(this.tongTienHoaDon + "");
-
-
-    
+        lblTongTienHang.setText(FormatterUtil.formatNumber(result) + "");
 
     }
 
@@ -619,11 +689,11 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     }
     //Update ô tiền khuyến mãi
     public void updateTienKhuyenMai(){
-        lblTienKM.setText(getTienKM() + "");
+        lblTienKM.setText(FormatterUtil.formatNumber(getTienKM()) + "");
     }
     //Mở khóa nút thêm
     public void updateStatusbtnThem(){        
-        setStatusBtnThem(true);
+        // setStatusBtnThem(true);
     }
 
     public void updateTienKhachDua(){
@@ -637,26 +707,33 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     /////////////////////////////////////////////////////////////////// Các setter label, textField, các hàm tính toán
     //setText để giữ nguyên font chữ
     public void setTextLblTongTienHoaDon(String i){
-        String template = "<html><font size='+1'><b>Tổng tiền: </b> %sđ</font><html>"; // đổi để lấy font rõ hơn
+        String template = "<html><font size='+1'><b>Tổng tiền: </b> %s</font><html>"; // đổi để lấy font rõ hơn
         lblTongTienHoaDon.setText(String.format(template, i));
     }
 
     public void setTextTongTienThanhToan(String tongTienHoaDon){
-        //TongTienThanhToan = TongTienHoaDon - KM
-        //TongTienThanhToan = TongTienHoaDon*%KM
+        // TongTienThanhToan = TongTienHoaDon - KM
+        // TongTienThanhToan = TongTienHoaDon*%KM
         String template = "<html><font size='+1'><b>'%s'</b></font></html>";
         BigDecimal giaTienHoaDon = BigDecimal.valueOf(Double.parseDouble(tongTienHoaDon));
         //Tính toán khuyến mãi ở đây
-        String tenKM = (String)comboboxKM.getSelectedItem();
-        BigDecimal khuyenMai = getTienKM();
-        this.tongThanhToan = hoaDonBUS.tinhKhuyenMai(giaTienHoaDon, khuyenMai);
+        // String tenKM = (String)comboboxKM.getSelectedItem();
+        int select = comboboxKM.getSelectedIndex();
+        BigDecimal giatrigiam = (select !=0) ? arrayListKM.get(select-1).getGiaTriGiam() : BigDecimal.ZERO;
 
-        lblTongThanhToan.setText(String.format(template, tongThanhToan));
+        BigDecimal khuyenMai = (giatrigiam.compareTo(BigDecimal.ONE) <0) ? giaTienHoaDon.multiply(giatrigiam): giatrigiam;
+
+        this.tongThanhToan = giaTienHoaDon.subtract(khuyenMai);
+
+        lblTongThanhToan.setText(String.format(template, FormatterUtil.formatNumber(tongThanhToan)));
     }
 
     public BigDecimal getTienKM(){
-        String tenKM = (String)comboboxKM.getSelectedItem();
-        return(hoaDonBUS.getTienKhuyenMai(tenKM));
+        int selectIndex = comboboxKM.getSelectedIndex();
+        BigDecimal giaTriGiam = (selectIndex != 0) ? arrayListKM.get(selectIndex-1).getGiaTriGiam() : BigDecimal.ZERO;
+        if (giaTriGiam.compareTo(BigDecimal.ONE) <0) 
+            return giaTriGiam.multiply(tongTienHoaDon);
+        return giaTriGiam;
     }
 
 
@@ -665,7 +742,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             lblTienThoi.setText("Chưa đủ tiền");
         }
         else{
-            lblTienThoi.setText(getTienThoi() + "");
+            lblTienThoi.setText(FormatterUtil.formatNumber(getTienThoi()) + "");
         }
     }
 
@@ -681,7 +758,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     }
     //Xử lý nút thêm không cho thêm mới khi chưa điền thông tin
     public void setStatusBtnThem(boolean i){
-        this.butAddData.setEnabled(i);
+        // this.butAddData.setEnabled(i);
     }
 
     /////////////////////////////////////////////////////////////////// Các setter label, textField, các hàm tính toán
@@ -693,10 +770,13 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     public void TaoHoaDon(){
         //Thuộc tính: maHD, ngayBan, tongTien, maTK, maPT, maKM, maKH
         //Khóa ngoại NN: Sach
-        if(listSPIsEmpty()){
+        if(listSPIsEmpty()){  // đã check
             JOptionPane.showMessageDialog(mainFrame, "Chưa có sản phẩm nào được thêm!");
             return;
         }
+
+        // if () // Vượt quá số lượng
+
         LocalDateTime ngayBan = LocalDateTime.now();
         BigDecimal tongTien = this.tongThanhToan;
         int maTK = this.taiKhoan.getMaTK();
@@ -704,8 +784,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
         int maKM;
         int maKH;
-        if(!comboboxKM.getSelectedItem().equals("Không có")){
-            maKM = khuyenMaiBUS.getMaKhuyenMaiByTen((String)comboboxKM.getSelectedItem());
+        if(comboboxKM.getSelectedIndex() != 0){
+            maKM = (arrayListKM.get(comboboxKM.getSelectedIndex() - 1).getMaKM());
         }
         else{
             maKM = 1;//không có khuyến mãi
@@ -718,14 +798,22 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             maKH = 1;
         }
 
+        // System.out.println(ngayBan.toString() + " " + tongTien + " " + maTK + " "+ maPT + " "+ maKM + " "+ maKH + "");
+
         HoaDonDTO hoaDon = new HoaDonDTO(ngayBan, tongTien, maTK, maPT, maKM, maKH);
         if(hoaDonBUS.insert(hoaDon) != 0){
-            JOptionPane.showMessageDialog(mainFrame, "Thêm hóa đơn thành công");
+            // JOptionPane.showMessageDialog(mainFrame, "Thêm hóa đơn thành công");
+            insertSach();   //thêm khóa ngoại nhiều nhiều
+            // Cập nhật số lượng sách
+            updateCountOfBook();
+            getDataCallBack.setData(hoaDon);
+            runna.run();
+            UIUtils.showNotifi(mainFrame, "Thêm hóa đơn thành công!", 1);
         }
+    }
 
-        insertSach();   //thêm khóa ngoại nhiều nhiều
-
-        getDataCallBack.setData(hoaDon);
+    private void updateCountOfBook() {
+        System.out.println("Cap nhat so luong sach");
     }
     private void exportPDF() {
         HoaDonBUS hoaDonBUS = HoaDonBUS.getInstance();
@@ -737,10 +825,10 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
     //     addHoaDonDialog.setVisible(false);
     //     addHoaDonDialog.dispose();
     //     }
-    if (runna !=null) {
-        runna.run();
-    }
-    }   
+        if (runna !=null) {
+            runna.run();
+        }
+    } 
     public void insertSach(){
         //maSach, maHD, soLuong, giaBan
         Map<Integer, List<JComponent>> rowLabels = table.getRowLabels();
@@ -749,9 +837,15 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             int row = i.getKey();
             int maSach = Integer.parseInt(getTextFieldMaSach(row, rowLabels).getText());
             int soLuong = Integer.parseInt(getTextFieldSL(row, rowLabels).getText());
-            BigDecimal giaBan = BigDecimal.valueOf(Double.parseDouble(getLabelGiaban(row, rowLabels).getText()));
+            BigDecimal giaBan =FormatterUtil.getBigDicimalByString(getLabelGiaban(row, rowLabels).getText());
             CT_HoaDonDTO ct_HoaDon = new CT_HoaDonDTO(maSach, maHD, soLuong, giaBan);
             ct_HoaDonBUS.insert(ct_HoaDon);
+
+            //Cập nhật số lượng sách mỗi khi bán ra
+            if (sachBUS == null) sachBUS = SachBUS.getInstance();
+            SachDTO sachDTO = sachBUS.getInstanceByID(maSach);
+            sachDTO.subSoLuong(soLuong);
+            sachBUS.updateOnNhap(sachDTO);
         }
     }
 
@@ -775,35 +869,67 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         LocalDateTime ngayBan = hoaDon.getNgayBan();
         BigDecimal tongTien = hoaDon.getTongTien();
         BigDecimal tongTienHang = tongTien;
+
         int maKM = hoaDon.getMaKM();
         KhuyenMaiDTO khuyenMai = khuyenMaiBUS.getInstanceByMa(maKM);
-        String tenKM = khuyenMaiBUS.getTenByMaKhuyenMai(maKM);
-        BigDecimal giaKM = khuyenMai.getGiaTriGiam();
+
+
+
         String tenPTTT = phuongThucTTBUS.getTenByMaPhuongThucTT(hoaDon.getMaPT());
 
-        String ngayBanS = getStringNgay(ngayBan);
+        // String ngayBanS = getStringNgay(ngayBan);
 
-        BigDecimal tongThanhToan = hoaDonBUS.tinhKhuyenMai(tongTien, giaKM);
 
-        this.lblNV.setText("<html><font size='+1'><b>Nhân viên: </b>"+nhanVienDTO.getHoTen()+"</font></html>");
+        this.lblNV.setText("<html><font size='+1'><b>Nhân viên: </b>"+tenNV+"</font></html>");
         this.lblMaHD.setText("<html><font size='+1'><b>Mã hóa đơn: </b> "+ maHD +"</font></html>");
-        this.lblNgay.setText("<html><font size='+1'><b>Ngày bán: </b>"+ngayBanS+"</font></html>");
+        this.lblNgay.setText("<html><font size='+1'><b>Ngày bán: </b>"+FormatterUtil.formatDateTime(ngayBan)+"</font></html>");
 
         setSelectionKH(tenKH);
         comboboxKH.setEnabled(false);
-        setSelectionKM(tenKM);
+
+        // setSelectionKM(tenKM);
         setSelectionPTTT(tenPTTT);
 
+        arrayListKM = new ArrayList<>();
+
+        String tenKM;
+        BigDecimal giaKM;
+        if (maKM != 1) {
+            tenKM = khuyenMaiBUS.getTenByMaKhuyenMai(maKM);
+            giaKM = khuyenMai.getGiaTriGiam();
+            arrayListKM.add(khuyenMai);
+            listKM = new String[arrayListKM.size() + 1]; 
+            listKM[0] = "Không dùng"; 
+            listKM[1] = tenKM;
+        }
+
+        else {
+            tenKM = "Không dùng"; 
+            listKM = new String[] {tenKM};
+            giaKM = BigDecimal.ZERO;
+        }
+
+        // BigDecimal tongThanhToan = hoaDonBUS.tinhKhuyenMai(tongTien, giaKM);
+        
+        comboboxKM.setModel(new DefaultComboBoxModel(new String[]{tenKM}));
+        comboboxKM.setEditable(false);
+
         loadTableDetail();
-
+        
         updateTongTienHoaDon();
-        String template = "<html><font size='+1'><b>Tổng tiền: </b> %sđ</font><html>";
 
-        this.lblTongTienHoaDon.setText(String.format(template, tongTien));
-        this.lblTongTienHang.setText(tongTienHang + "");
+        giaKM = (giaKM.compareTo(BigDecimal.ONE) <0 ) ? giaKM.multiply(tongTienHoaDon) : giaKM;
+        String template = "<html><font size='+1'><b>Tổng tiền: </b> %s</font><html>";
+
+        this.lblTongTienHoaDon.setText(String.format(template, FormatterUtil.formatNumber(tongTienHoaDon)));
+        this.lblTongTienHang.setText(FormatterUtil.formatNumber(tongTienHoaDon) + "");
         this.lblTienKM.setText(giaKM + "");
+
         String template2 = "<html><font size='+1'><b>'%s'</b></font></html>";
-        this.lblTongThanhToan.setText(String.format(template2, tongThanhToan + ""));
+        tongThanhToan = tongTien;
+        this.lblTongThanhToan.setText(String.format(template2, FormatterUtil.formatNumber(tongTien) + ""));
+
+        updateTienKhachDua();
 
         setStatusTextFieldSL();
 
@@ -827,7 +953,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             String tenSach = sachBUS.getTenByMa(maSach);
             int soLuong = listCTHD.get(i).getSoLuong();
             BigDecimal giaBan = listCTHD.get(i).getGiaBan();
-            String[] data = new String[] {maSach + "", tenSach, soLuong + "", giaBan + "", hoaDonBUS.tinhTongGia(giaBan, soLuong) + ""};
+            String[] data = new String[] {maSach + "", tenSach, soLuong + "", FormatterUtil.formatNumber(giaBan) + "", FormatterUtil.formatNumber(hoaDonBUS.tinhTongGia(giaBan, soLuong)) + ""};
             this.table.addDataRow(data); 
         }
         updateTTTT();
@@ -879,14 +1005,14 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
 
     public void getListKH(){
         ArrayList<String> temp = khachHangBUS.getAllTenKhachHang();
-        temp.add(0, "Anonymous");
+        // temp.add(0, "Anonymous");
         this.listKH = temp.toArray(new String[0]);
     }
     
     public void getListKM(){
-        ArrayList<String> temp = khuyenMaiBUS.getAllTenKhuyenMai();
-        temp.add(0, "Không có");
-        this.listKM = temp.toArray(new String[0]);
+        // ArrayList<String> temp = khuyenMaiBUS.getAllTenKhuyenMai();
+        // temp.add(0, "Không có");
+        // this.listKM = temp.toArray(new String[0]);
     }
 
     public void getPTTT(){

@@ -68,9 +68,33 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         return rowUpdated;
     }
 
+    // public ArrayList<PhieuNhapDTO> getAll() {
+    //     ArrayList<PhieuNhapDTO> result = new ArrayList<>();
+    //     String sql = "SELECT * FROM PHIEUNHAP WHERE trangThai = 1";
+        
+    //     JDBCUtil jdbcUtil = new JDBCUtil();
+    //     jdbcUtil.Open();
+    //     ResultSet rs = jdbcUtil.executeQuery(sql);
+    //     try {
+    //         while (rs.next()) {
+    //             int maNhap = rs.getInt("maNhap");
+    //             LocalDateTime ngayNhap = rs.getTimestamp("ngayNhap").toLocalDateTime();
+    //             BigDecimal tongTien = rs.getBigDecimal("tongTien");
+    //             int maNCC = rs.getInt("maNCC");
+    //             int maTK = rs.getInt("maTK");
+    //             PhieuNhapDTO phieuNhap = new PhieuNhapDTO(maNhap, ngayNhap, tongTien, maNCC, maTK);
+    //             result.add(phieuNhap);
+    //         }
+            
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     jdbcUtil.Close();
+    //     return result;
+    // }
     public ArrayList<PhieuNhapDTO> getAll() {
         ArrayList<PhieuNhapDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM PHIEUNHAP WHERE trangThai = 1";
+        String sql = "SELECT * FROM PHIEUNHAP WHERE trangThai = 1 ORDER BY ngayNhap DESC";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -85,11 +109,11 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
                 PhieuNhapDTO phieuNhap = new PhieuNhapDTO(maNhap, ngayNhap, tongTien, maNCC, maTK);
                 result.add(phieuNhap);
             }
-            
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            jdbcUtil.Close();
         }
-        jdbcUtil.Close();
         return result;
     }
 

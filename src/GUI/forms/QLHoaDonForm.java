@@ -263,7 +263,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
                     public void setData(HoaDonDTO hoaDon) {
                         String tenKH = khachHangBUS.getTenByMaKhachHang(hoaDon.getMaKH());
                         String tenNV = nhanVienBUS.getTenNVByMaTK(taiKhoan.getMaTK());
-                        table.addDataRow(new String[]{
+                        table.addRowDataFirst(new String[]{
                             hoaDon.getMaHD() + "", 
                             FormatterUtil.formatDateTime(hoaDon.getNgayBan()),
                             tenKH, 

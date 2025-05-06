@@ -35,9 +35,19 @@ public class DanhMuc_TGDAO implements DAOInterface<DanhMuc_TGDTO> {
         return 0;
     }
 
-    public int delete(int maSach, int maTG){
+    // public int delete(int maSach, int maTG){
+    //     int rowDeleted = 0;
+    //     String query = "UPDATE DANHMUC_TG SET TRANGTHAI = 0 WHERE maSach = ? AND maTacGia = ?";
+    //     JDBCUtil jdbcUtil = new JDBCUtil();
+    //     jdbcUtil.Open();
+    //     rowDeleted = jdbcUtil.executeUpdate(query, maSach, maTG);
+    //     jdbcUtil.Close();
+    //     return rowDeleted;
+    // }
+    
+    public int delete(int maSach, int maTG) {
         int rowDeleted = 0;
-        String query = "UPDATE DANHMUC_TG SET TRANGTHAI = 0 WHERE maSach = ? AND maTacGia = ?";
+        String query = "DELETE FROM DANHMUC_TG WHERE maSach = ? AND maTacGia = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         rowDeleted = jdbcUtil.executeUpdate(query, maSach, maTG);

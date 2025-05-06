@@ -63,10 +63,28 @@ public class SachDAO implements DAOInterface<SachDTO>{
 		rowUpdated = jdbcUtil.executeUpdate(
 			query,
 			t.getTenSach(),
+			t.getGiaBan(),
 			t.getNamXB(),
 			t.getMaVung(),
 			t.getMaNXB(),
 			t.getAnh(),
+			t.getMaSach()
+		);
+
+		jdbcUtil.Close();
+		return rowUpdated;
+	}
+
+	public int updateOnNhap(SachDTO t) {
+		int rowUpdated = 0;
+		String query = "UPDATE SACH SET giaBan = ?, soLuong = ? WHERE maSach = ?";
+
+		JDBCUtil jdbcUtil = new JDBCUtil();
+		jdbcUtil.Open();
+		rowUpdated = jdbcUtil.executeUpdate(
+			query,
+			t.getGiaBan(),
+			t.getSoLuong(),
 			t.getMaSach()
 		);
 

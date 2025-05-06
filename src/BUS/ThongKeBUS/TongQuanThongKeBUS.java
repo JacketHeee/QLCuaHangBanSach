@@ -11,6 +11,7 @@ import java.util.Locale;
 import DAO.ThongKeDAO.TongQuanThongKeDAO;
 import DTO.SachDTO;
 import DTO.TyLeDTO;
+import utils.FormatterUtil;
 
 public class TongQuanThongKeBUS {
     private TongQuanThongKeDAO overviewDAO;
@@ -30,21 +31,21 @@ public class TongQuanThongKeBUS {
 
     public String getRevenueToday() {
         try {
-            double revenue = overviewDAO.getRevenueToday();
-            return NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(revenue);
+            BigDecimal revenue = overviewDAO.getRevenueToday();
+            return FormatterUtil.formatNumber(revenue);
         } catch (Exception e) {
             e.printStackTrace();
-            return "0";
+            return "0đ";
         }
     }
 
     public String getImportCostToday() {
         try {
-            double cost = overviewDAO.getImportCostToday();
-            return NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(cost);
+            BigDecimal cost = overviewDAO.getImportCostToday();
+            return FormatterUtil.formatNumber(cost);
         } catch (Exception e) {
             e.printStackTrace();
-            return "0";
+            return "0đ";
         }
     }
 

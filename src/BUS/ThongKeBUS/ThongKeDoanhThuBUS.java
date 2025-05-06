@@ -51,7 +51,7 @@ public class ThongKeDoanhThuBUS {
     //get so hoa don va tong doanh thu 
     public String[] getTotalRevenue(Date startDate, Date endDate) {
         try {
-            double[] result = doanhThuDAO.getTotalRevenue(startDate, endDate);
+            Object[] result = doanhThuDAO.getTotalRevenue(startDate, endDate);
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             return new String[]{String.valueOf((int) result[0]), currencyFormat.format(result[1])};
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class ThongKeDoanhThuBUS {
 
     public String[] getTotalRevenue() {
         try {
-            double[] result = doanhThuDAO.getTotalRevenue();
+            Object[] result = doanhThuDAO.getTotalRevenue();
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             return new String[]{String.valueOf((int) result[0]), currencyFormat.format(result[1])};
         } catch (Exception e) {

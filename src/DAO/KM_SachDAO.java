@@ -32,23 +32,35 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
 
     @Override
     public int delete(int id) {
+        int rowDeleted = 0;
         String query = "UPDATE KM_SACH SET TRANGTHAI = 0 WHERE maKM = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        jdbcUtil.executeUpdate(query, id);
+        rowDeleted = jdbcUtil.executeUpdate(query, id);
         jdbcUtil.Close();
-        return 1;
+        return rowDeleted;
     }
 
-    public int delete(int maSach, int maKM){
+    // public int delete(int maSach, int maKM){
+    //     int rowDeleted = 0;
+    //     String query = "UPDATE KM_SACH SET TRANGTHAI = 0 WHERE maSach = ? AND maKM = ?";
+    //     JDBCUtil jdbcUtil = new JDBCUtil();
+    //     jdbcUtil.Open();
+    //     rowDeleted = jdbcUtil.executeUpdate(query, maSach, maKM);
+    //     jdbcUtil.Close();
+    //     return rowDeleted;
+    // }
+
+    public int delete(int maSach, int maKM) {
         int rowDeleted = 0;
-        String query = "UPDATE KM_SACH SET TRANGTHAI = 0 WHERE maSach = ? AND maKM = ?";
+        String query = "DELETE FROM KM_SACH WHERE maSach = ? AND maKM = ?";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         rowDeleted = jdbcUtil.executeUpdate(query, maSach, maKM);
         jdbcUtil.Close();
         return rowDeleted;
     }
+    
 
     @Override
     public int update(KM_SachDTO kmSach) {
@@ -81,7 +93,7 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
 
     public ArrayList<Integer> getAllMaKMByMaSach(int maSach){
         ArrayList<Integer> result = new ArrayList<>();
-        String sql = "SELECT maKM FROM KM_SACH WHERE maSach = ? AND TRANGTHAI = 1 ";
+        String sql = "SELECT maKM FROM KM_SACH WHERE maSach = ? AND TRANGTHAI = 1";
         
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -96,6 +108,33 @@ public class KM_SachDAO implements DAOInterface<KM_SachDTO> {
             e.printStackTrace();
         }
         jdbcUtil.Close();
+        return result;
+    }
+
+    public ArrayList<String> getAllTenKMByMaSach(int maSach) {
+        ArrayList<String> result = new ArrayList<>();
+        String sql = "SELECT k.tenKM " +
+                     "FROM km_sach ks " +
+                     "JOIN khuyenmai k ON ks.maKM = k.maKM " +
+                     "WHERE ks.maSach = ? " +
+                     "AND ks.trangThai = 1 " +
+                     "AND k.trangThai = 1 " +
+                    //  "AND k.ngayBatDau <= NOW() " +
+                     "AND k.ngayKetThuc > NOW()";
+        
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maSach);
+        try {
+            while (rs.next()) {
+                String tenKM = rs.getString("tenKM");
+                result.add(tenKM);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            jdbcUtil.Close();
+        }
         return result;
     }
 

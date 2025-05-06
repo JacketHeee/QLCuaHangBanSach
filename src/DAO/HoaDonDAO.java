@@ -85,7 +85,7 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
 
     public ArrayList<HoaDonDTO> getAll() {
         ArrayList<HoaDonDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM HOADON WHERE trangThai = 1";
+        String sql = "SELECT * FROM HOADON WHERE trangThai = 1 ORDER BY ngayBan DESC";
         
         
         JDBCUtil jdbcUtil = new JDBCUtil();

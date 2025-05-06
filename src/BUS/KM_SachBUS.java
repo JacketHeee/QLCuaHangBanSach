@@ -77,4 +77,7 @@ public class KM_SachBUS {
 		return(0);
 	}
 	
+	public ArrayList<String> getAllTenKMByMaSach(int maSach) {
+		return kM_SachDAO.getAllTenKMByMaSach(maSach);
+	}
 }

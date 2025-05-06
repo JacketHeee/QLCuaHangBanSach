@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class FormatterUtil {
-    public static String formatNumberVN(BigDecimal number) {
+    public static String formatNumberKM(BigDecimal number) {
         if (number.compareTo(BigDecimal.ONE) >=0 ) {
             DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("vi", "VN"));
             symbols.setGroupingSeparator('.'); // dùng dấu . cho phần ngàn
@@ -20,6 +20,19 @@ public class FormatterUtil {
             BigDecimal percent = number.multiply(new BigDecimal("100"));
             return percent.stripTrailingZeros().toPlainString() + "%";
         }
+    }
+    public static String formatNumberVN(BigDecimal number) {
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("vi", "VN"));
+            symbols.setGroupingSeparator('.'); // dùng dấu . cho phần ngàn
+            DecimalFormat df = new DecimalFormat("#,##0", symbols);
+            return df.format(number) + "đ";
+    }
+
+    public static String formatNumber(BigDecimal number) {
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("vi", "VN"));
+            symbols.setGroupingSeparator('.'); // dùng dấu . cho phần ngàn
+            DecimalFormat df = new DecimalFormat("#,##0", symbols);
+            return df.format(number) + "đ";
     }
 
     public static String formatDateTime(LocalDateTime currentDateTime){
@@ -39,6 +52,18 @@ public class FormatterUtil {
         
         BigDecimal percentValue = value.multiply(BigDecimal.valueOf(100));
         return percentValue.stripTrailingZeros().toPlainString() + "%";
+    }
+
+    public static BigDecimal getBigDicimalByString(String input) {
+        if (input == null || input.isEmpty()) return BigDecimal.ZERO;
+
+        // Xóa ký tự 'đ' và dấu chấm ngăn cách hàng nghìn
+        String cleaned = input.replaceAll("[^\\d]", ""); // Giữ lại số, bỏ các ký tự khác
+        try {
+            return new BigDecimal(cleaned);
+        } catch (NumberFormatException e) {
+            return BigDecimal.ZERO;
+        }
     }
 
 

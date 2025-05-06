@@ -116,6 +116,16 @@ public class SachDTO {
         return soLuong;
     }
 
+    public void addSoLuong(int soluong) {
+        this.soLuong = this.soLuong + soluong;
+    }
+
+    public void subSoLuong(int soluong) {
+        this.soLuong = this.soLuong - soluong;
+        if (0 > this.soLuong) 
+            this.soLuong = 0;
+    }
+
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
     }
@@ -159,6 +169,7 @@ public class SachDTO {
     public void setAnh(String anh) {
         this.anh = anh;
     }
+
 
     
 }

@@ -103,7 +103,7 @@ public class TongQuan extends JPanel{
         pieChart1.setChartType(PieChart.ChartType.DEFAULT);
         // pieChart1.setBackground(Color.white);
         pieChart1.setOpaque(false);
-        JLabel header1 = new JLabel("<html><font><b>% Hóa đơn sử dụng khuyến mãi hôm nay</b></font></html>",JLabel.CENTER);
+        JLabel header1 = new JLabel("<html><font><b>Tỷ lệ Hóa đơn sử dụng khuyến mãi 7 ngày gần nhất</b></font></html>",JLabel.CENTER);
         header1.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:+1");
         pieChart1.setHeader(header1);

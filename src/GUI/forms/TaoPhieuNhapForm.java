@@ -73,7 +73,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     private SachBUS sachBUS;
 
     private String tenNhanVien;
-    private BigDecimal tongTienPhieuNhap;
+    private BigDecimal tongTienPhieuNhap = BigDecimal.ZERO;
     private JLabel lblTongTienPN;
     private String maPhieuNhap;
 
@@ -237,14 +237,14 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
                     // updateTTTT();
                     // updateStatusCombobox();
                     // updateStatusTextFieldTienTra();
-                    updateStatusbtnThem(true);
+                    // updateStatusbtnThem(true);
                 }
             }
             , headers
             ,headerType
             ,90
         );
-        table.addDataRow(null);
+        if (!type.equals("detail")) table.addDataRow(null);
 
         panel.add(table,"push,grow,wrap");
         table.setActionListener(this);
@@ -255,7 +255,6 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         return panel;
     }
 
-    
     private JPanel panelThongTinNhapHang() {
         JPanel panel = new JPanel(new MigLayout("al right"));
         panel.add(new JLabel("Phần trăm lợi nhuận(%)"),"sg 1");
@@ -329,11 +328,11 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
                 repaint();
                 revalidate();
                 // updateStatusTextFieldLoiNhuan();
-                updateStatusbtnThem(false); //Sau khi nhấn nút thêm thì tạm khóa nút thêm
+                // updateStatusbtnThem(false); //Sau khi nhấn nút thêm thì tạm khóa nút thêm
                 break;
             case "btnLuu":
                 themPhieuNhap();
-                runnable.run();
+               
                 break;
             default:
                 break;
@@ -353,9 +352,11 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
                 if (choose == 0) {
                     table.removeRow(row);
+                    updateTongTienPhieuNhap();
                     Notifications.getInstance().setJFrame(mainFrame);
                     Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Xóa row " + row + " thành công!");
                 }
+                
                 break;
             default:
                 System.out.println("Unknown action: " + actionId);
@@ -493,7 +494,8 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
     //Nếu đã nhấn nút thêm thì khóa textField % lợi nhuận (khác với hóa đơn)
     public boolean listSPIsEmpty(){
-        if(this.table.getRowLabels().isEmpty()){
+        // JOptionPane.showMessageDialog(null, tongTienPhieuNhap+"");
+        if(tongTienPhieuNhap.compareTo(BigDecimal.ZERO) == 0){
             return(true);
         }
         return(false);
@@ -507,6 +509,9 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
             JOptionPane.showMessageDialog(mainFrame, "Chưa có sản phẩm nào được thêm!");
             return;
         }
+
+        // JOptionPane.showMessageDialog(null, "đã có sản phẩm");
+
         LocalDateTime ngayNhap = LocalDateTime.now();
         BigDecimal tongTien = this.tongTienPhieuNhap;
         int maTK = this.taiKhoan.getMaTK();
@@ -514,13 +519,12 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
         PhieuNhapDTO phieuNhap = new PhieuNhapDTO(ngayNhap, tongTien, maNCC, maTK);
         if(phieuNhapBUS.insert(phieuNhap) != 0){
-            JOptionPane.showMessageDialog(mainFrame, "Thêm phiếu nhập thành công");
+            insertSach();   //thêm khóa ngoại nhiều nhiều // đã check...
+            setGiaBanSach();    //cài đặt giá bán cho sách theo lợi nhuận
+            getDataCallBack.setData(phieuNhap);
+            // JOptionPane.showMessageDialog(mainFrame, "Thêm phiếu nhập thành công");
+            runnable.run();
         }
-
-        insertSach();   //thêm khóa ngoại nhiều nhiều
-        setGiaBanSach();    //cài đặt giá bán cho sách theo lợi nhuận
-
-        getDataCallBack.setData(phieuNhap);
     }
 
     public void insertSach(){
@@ -529,6 +533,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         int maNhap = Integer.parseInt(this.maNhap);
         for(Map.Entry<Integer, List<JComponent>> i : table.getRowLabels().entrySet()){
             int row = i.getKey();
+            // System.out.println(row);
             int maSach = Integer.parseInt(getTextFieldMaSach(row, rowLabels).getText());
             int soLuong = Integer.parseInt(getTextFieldSL(row, rowLabels).getText());
             BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(getTextFieldGiaNhap(row, rowLabels).getText()));
@@ -538,15 +543,22 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
     }
 
     public void setGiaBanSach(){
+        double loiNhuan = (Integer.parseInt(textFieldLoiNhuan.getText())+100)*1.0/100;
+
         Map<Integer, List<JComponent>> rowLabels = this.table.getRowLabels();
         for(int i = 1; i <= rowLabels.size(); i++){
             int maSach = Integer.parseInt(getTextFieldMaSach(i, rowLabels).getText());
             System.out.println(maSach);
             SachDTO sach = sachBUS.getInstanceByID(maSach);
-            BigDecimal giaNhap = BigDecimal.valueOf(Double.parseDouble(getTextFieldGiaNhap(i, rowLabels).getText()));
-            BigDecimal tienSach = getGiaBanSach(giaNhap);
-            sach.setGiaBan(tienSach);
-            sachBUS.update(sach);
+            BigDecimal giaban = BigDecimal.valueOf(Double.parseDouble(getTextFieldGiaNhap(i, rowLabels).getText())*loiNhuan);
+
+            // BigDecimal tienSach = getGiaBanSach(giaNhap);
+            sach.setGiaBan(giaban);
+            int soluong = Integer.parseInt(getTextFieldSL(i,rowLabels).getText());
+            sach.addSoLuong(soluong);
+
+            System.out.println(giaban + " + " + soluong);
+            sachBUS.updateOnNhap(sach);
         }
     }
 

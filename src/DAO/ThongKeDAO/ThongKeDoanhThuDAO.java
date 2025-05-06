@@ -1,6 +1,8 @@
 package DAO.ThongKeDAO;
 
 import config.JDBCUtil;
+import DTO.HoaDonDTO;
+import DTO.ThongKe.ThongKeDoanhThuDTO;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -10,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import DTO.HoaDonDTO;
-import DTO.ThongKe.ThongKeDoanhThuDTO;
-
 public class ThongKeDoanhThuDAO {
     // Thống kê theo sách
     public List<ThongKeDoanhThuDTO> getRevenueByBook(Date startDate, Date endDate) {
@@ -20,7 +19,7 @@ public class ThongKeDoanhThuDAO {
                      "FROM CT_HOADON CT " +
                      "JOIN HOADON HD ON CT.maHD = HD.maHD " +
                      "JOIN SACH S ON CT.maSach = S.maSach " +
-                     "WHERE HD.ngayBan BETWEEN ? AND ? " +
+                     "WHERE HD.ngayBan BETWEEN ? AND ? AND HD.trangThai = 1 AND S.trangThai = 1 " +
                      "GROUP BY S.maSach, S.tenSach";
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -50,7 +49,7 @@ public class ThongKeDoanhThuDAO {
         String sql = "SELECT KH.maKH, COALESCE(KH.tenKH, 'Khách lẻ') AS tenKH, COALESCE(COUNT(HD.maHD), 0) AS soHoaDon, COALESCE(SUM(HD.tongTien), 0) AS doanhThu " +
                      "FROM HOADON HD " +
                      "LEFT JOIN KHACHHANG KH ON HD.maKH = KH.maKH " +
-                     "WHERE HD.ngayBan BETWEEN ? AND ? " +
+                     "WHERE HD.ngayBan BETWEEN ? AND ? AND HD.trangThai = 1 AND (KH.trangThai = 1 OR KH.trangThai IS NULL) " +
                      "GROUP BY KH.maKH, KH.tenKH";
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -80,7 +79,8 @@ public class ThongKeDoanhThuDAO {
         String sql = "SELECT HD.* " +
                      "FROM HOADON HD " +
                      "JOIN CT_HOADON CT ON HD.maHD = CT.maHD " +
-                     "WHERE CT.maSach = ? AND HD.ngayBan BETWEEN ? AND ?";
+                     "JOIN SACH S ON CT.maSach = S.maSach " +
+                     "WHERE CT.maSach = ? AND HD.ngayBan BETWEEN ? AND ? AND HD.trangThai = 1 AND S.trangThai = 1";
         List<HoaDonDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -107,14 +107,15 @@ public class ThongKeDoanhThuDAO {
     }
 
     // Chi tiết hóa đơn theo khách hàng
-    public List<HoaDonDTO> getInvoicesByCustomer(String maKH, Date startDate, Date endDate) {
+    public List<HoaDonDTO> getInvoicesByCustomer(String maKHang, Date startDate, Date endDate) {
         String sql = "SELECT HD.* " +
                      "FROM HOADON HD " +
-                     "WHERE HD.maKH = ? AND HD.ngayBan BETWEEN ? AND ?";
+                     "JOIN KHACHHANG KH ON HD.maKH = KH.maKH " +
+                     "WHERE HD.maKH = ? AND HD.ngayBan BETWEEN ? AND ? AND HD.trangThai = 1 AND KH.trangThai = 1";
         List<HoaDonDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, maKH, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+        ResultSet rs = jdbcUtil.executeQuery(sql, maKHang, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
         try {
             while (rs.next()) {
                 int id = rs.getInt("maHD");
@@ -123,8 +124,8 @@ public class ThongKeDoanhThuDAO {
                 int maTK = rs.getInt("maTK");
                 int maPT = rs.getInt("maPT");
                 int maKM = rs.getInt("maKM");
-                int maKHang = rs.getInt("maKH");
-                HoaDonDTO hoaDon = new HoaDonDTO(id, ngayBan, tongTien, maTK, maPT, maKM, maKHang);
+                int maKH = rs.getInt("maKH");
+                HoaDonDTO hoaDon = new HoaDonDTO(id, ngayBan, tongTien, maTK, maPT, maKM, maKH);
                 result.add(hoaDon);
             }
             return result;
@@ -137,20 +138,20 @@ public class ThongKeDoanhThuDAO {
     }
 
     // Tổng hóa đơn và doanh thu
-    public double[] getTotalRevenue(Date startDate, Date endDate) {
+    public Object[] getTotalRevenue(Date startDate, Date endDate) {
         String sql = "SELECT COALESCE(COUNT(*), 0) AS soHoaDon, COALESCE(SUM(tongTien), 0) AS doanhThu " +
-                     "FROM HOADON WHERE ngayBan BETWEEN ? AND ?";
+                     "FROM HOADON WHERE ngayBan BETWEEN ? AND ? AND trangThai = 1";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         ResultSet rs = jdbcUtil.executeQuery(sql, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
         try {
             if (rs.next()) {
-                return new double[]{rs.getInt("soHoaDon"), rs.getBigDecimal("doanhThu").doubleValue()};
+                return new Object[]{rs.getInt("soHoaDon"), rs.getBigDecimal("doanhThu")};
             }
-            return new double[]{0, 0};
+            return new Object[]{0, BigDecimal.ZERO};
         } catch (SQLException e) {
             e.printStackTrace();
-            return new double[]{0, 0};
+            return new Object[]{0, BigDecimal.ZERO};
         } finally {
             jdbcUtil.Close();
         }
@@ -158,11 +159,11 @@ public class ThongKeDoanhThuDAO {
 
     // Top 5 sách bán chạy
     public List<ThongKeDoanhThuDTO> getTop5Books(Date startDate, Date endDate) {
-        String sql = "SELECT S.maSach, S.tenSach, COALESCE(SUM(CT.soLuong), 0) AS soLuongBan " +
+        String sql = "SELECT S.maSach, S.tenSach, COALESCE(SUM(CT.soLuong), 0) AS soLuongBan, COALESCE(SUM(CT.soLuong * CT.giaBan), 0) AS doanhThu " +
                      "FROM CT_HOADON CT " +
                      "JOIN HOADON HD ON CT.maHD = HD.maHD " +
                      "JOIN SACH S ON CT.maSach = S.maSach " +
-                     "WHERE HD.ngayBan BETWEEN ? AND ? " +
+                     "WHERE HD.ngayBan BETWEEN ? AND ? AND HD.trangThai = 1 AND S.trangThai = 1 " +
                      "GROUP BY S.maSach, S.tenSach " +
                      "ORDER BY soLuongBan DESC LIMIT 5";
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
@@ -175,7 +176,7 @@ public class ThongKeDoanhThuDAO {
                     rs.getInt("maSach"),
                     rs.getString("tenSach"),
                     rs.getInt("soLuongBan"),
-                    new BigDecimal(0)
+                    rs.getBigDecimal("doanhThu")
                 );
                 result.add(stats);
             }
@@ -194,7 +195,7 @@ public class ThongKeDoanhThuDAO {
                      "COALESCE(COUNT(HD.maHD), 0) AS soHoaDon, COALESCE(SUM(HD.tongTien), 0) AS doanhThu " +
                      "FROM HOADON HD " +
                      "LEFT JOIN KHACHHANG KH ON HD.maKH = KH.maKH " +
-                     "WHERE HD.ngayBan BETWEEN ? AND ? " +
+                     "WHERE HD.ngayBan BETWEEN ? AND ? AND HD.trangThai = 1 AND (KH.trangThai = 1 OR KH.trangThai IS NULL) " +
                      "GROUP BY KH.maKH, KH.tenKH " +
                      "ORDER BY doanhThu DESC LIMIT 5";
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
@@ -219,12 +220,14 @@ public class ThongKeDoanhThuDAO {
             jdbcUtil.Close();
         }
     }
-    //Lấy tất cả
+
+    // Lấy tất cả (theo sách)
     public List<ThongKeDoanhThuDTO> getRevenueByBook() {
         String sql = "SELECT S.maSach, S.tenSach, COALESCE(SUM(CT.soLuong), 0) AS soLuongBan, COALESCE(SUM(CT.soLuong * CT.giaBan), 0) AS doanhThu " +
                      "FROM CT_HOADON CT " +
                      "JOIN HOADON HD ON CT.maHD = HD.maHD " +
                      "JOIN SACH S ON CT.maSach = S.maSach " +
+                     "WHERE HD.trangThai = 1 AND S.trangThai = 1 " +
                      "GROUP BY S.maSach, S.tenSach";
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -249,10 +252,12 @@ public class ThongKeDoanhThuDAO {
         }
     }
 
+    // Lấy tất cả (theo khách hàng)
     public List<ThongKeDoanhThuDTO> getRevenueByCustomer() {
         String sql = "SELECT KH.maKH, COALESCE(KH.tenKH, 'Khách lẻ') AS tenKH, COALESCE(COUNT(HD.maHD), 0) AS soHoaDon, COALESCE(SUM(HD.tongTien), 0) AS doanhThu " +
                      "FROM HOADON HD " +
                      "LEFT JOIN KHACHHANG KH ON HD.maKH = KH.maKH " +
+                     "WHERE HD.trangThai = 1 AND (KH.trangThai = 1 OR KH.trangThai IS NULL) " +
                      "GROUP BY KH.maKH, KH.tenKH";
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
@@ -277,11 +282,13 @@ public class ThongKeDoanhThuDAO {
         }
     }
 
+    // Chi tiết hóa đơn theo sách (không giới hạn thời gian)
     public List<HoaDonDTO> getInvoicesByBook(String maSach) {
         String sql = "SELECT HD.* " +
                      "FROM HOADON HD " +
                      "JOIN CT_HOADON CT ON HD.maHD = CT.maHD " +
-                     "WHERE CT.maSach = ?";
+                     "JOIN SACH S ON CT.maSach = S.maSach " +
+                     "WHERE CT.maSach = ? AND HD.trangThai = 1 AND S.trangThai = 1";
         List<HoaDonDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
@@ -307,14 +314,16 @@ public class ThongKeDoanhThuDAO {
         }
     }
 
-    public List<HoaDonDTO> getInvoicesByCustomer(String maKH) {
+    // Chi tiết hóa đơn theo khách hàng (không giới hạn thời gian)
+    public List<HoaDonDTO> getInvoicesByCustomer(String maKHang) {
         String sql = "SELECT HD.* " +
                      "FROM HOADON HD " +
-                     "WHERE HD.maKH = ?";
+                     "JOIN KHACHHANG KH ON HD.maKH = KH.maKH " +
+                     "WHERE HD.maKH = ? AND HD.trangThai = 1 AND KH.trangThai = 1";
         List<HoaDonDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, maKH);
+        ResultSet rs = jdbcUtil.executeQuery(sql, maKHang);
         try {
             while (rs.next()) {
                 int id = rs.getInt("maHD");
@@ -323,8 +332,8 @@ public class ThongKeDoanhThuDAO {
                 int maTK = rs.getInt("maTK");
                 int maPT = rs.getInt("maPT");
                 int maKM = rs.getInt("maKM");
-                int maKHang = rs.getInt("maKH");
-                HoaDonDTO hoaDon = new HoaDonDTO(id, ngayBan, tongTien, maTK, maPT, maKM, maKHang);
+                int maKH = rs.getInt("maKH");
+                HoaDonDTO hoaDon = new HoaDonDTO(id, ngayBan, tongTien, maTK, maPT, maKM, maKH);
                 result.add(hoaDon);
             }
             return result;
@@ -336,29 +345,33 @@ public class ThongKeDoanhThuDAO {
         }
     }
 
-    public double[] getTotalRevenue() {
+    // Tổng hóa đơn và doanh thu (không giới hạn thời gian)
+    public Object[] getTotalRevenue() {
         String sql = "SELECT COALESCE(COUNT(*), 0) AS soHoaDon, COALESCE(SUM(tongTien), 0) AS doanhThu " +
-                     "FROM HOADON";
+                     "FROM HOADON WHERE trangThai = 1";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
         ResultSet rs = jdbcUtil.executeQuery(sql);
         try {
             if (rs.next()) {
-                return new double[]{rs.getInt("soHoaDon"), rs.getBigDecimal("doanhThu").doubleValue()};
+                return new Object[]{rs.getInt("soHoaDon"), rs.getBigDecimal("doanhThu")};
             }
-            return new double[]{0, 0};
+            return new Object[]{0, BigDecimal.ZERO};
         } catch (SQLException e) {
             e.printStackTrace();
-            return new double[]{0, 0};
+            return new Object[]{0, BigDecimal.ZERO};
         } finally {
             jdbcUtil.Close();
         }
     }
+
+    // Top 5 sách bán chạy (không giới hạn thời gian)
     public List<ThongKeDoanhThuDTO> getTop5Books() {
-        String sql = "SELECT S.maSach, S.tenSach, COALESCE(SUM(CT.soLuong), 0) AS soLuongBan " +
+        String sql = "SELECT S.maSach, S.tenSach, COALESCE(SUM(CT.soLuong), 0) AS soLuongBan, COALESCE(SUM(CT.soLuong * CT.giaBan), 0) AS doanhThu " +
                      "FROM CT_HOADON CT " +
                      "JOIN HOADON HD ON CT.maHD = HD.maHD " +
                      "JOIN SACH S ON CT.maSach = S.maSach " +
+                     "WHERE HD.trangThai = 1 AND S.trangThai = 1 " +
                      "GROUP BY S.maSach, S.tenSach " +
                      "ORDER BY soLuongBan DESC LIMIT 5";
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
@@ -371,7 +384,7 @@ public class ThongKeDoanhThuDAO {
                     rs.getInt("maSach"),
                     rs.getString("tenSach"),
                     rs.getInt("soLuongBan"),
-                    new BigDecimal(0)
+                    rs.getBigDecimal("doanhThu")
                 );
                 result.add(stats);
             }
@@ -384,11 +397,13 @@ public class ThongKeDoanhThuDAO {
         }
     }
 
+    // Top 5 khách hàng mua nhiều nhất (không giới hạn thời gian)
     public List<ThongKeDoanhThuDTO> getTop5Customers() {
         String sql = "SELECT KH.maKH, COALESCE(KH.tenKH, 'Khách lẻ') AS tenKH, " +
                      "COALESCE(COUNT(HD.maHD), 0) AS soHoaDon, COALESCE(SUM(HD.tongTien), 0) AS doanhThu " +
                      "FROM HOADON HD " +
                      "LEFT JOIN KHACHHANG KH ON HD.maKH = KH.maKH " +
+                     "WHERE HD.trangThai = 1 AND (KH.trangThai = 1 OR KH.trangThai IS NULL) " +
                      "GROUP BY KH.maKH, KH.tenKH " +
                      "ORDER BY doanhThu DESC LIMIT 5";
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();

@@ -67,6 +67,7 @@ public class ImageUtil {
 
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             selectedFile = fileChooser.getSelectedFile();
+            System.out.println(selectedFile.getAbsolutePath());
             try {
                 // Kiểm tra file có phải ảnh hợp lệ
                 ImageIO.read(selectedFile);

@@ -54,6 +54,16 @@ public class SachBUS {
 		}
 		return(0);
 	}
+
+	public int updateOnNhap(SachDTO sachDTO) {
+		if(sachDAO.updateOnNhap(sachDTO) != 0){
+			int index = getIndexByID(sachDTO.getMaSach());
+			listSach.get(index).setGiaBan(sachDTO.getGiaBan());
+			listSach.get(index).setSoLuong(sachDTO.getSoLuong());
+			return(1);
+		}
+		return(0);
+	}
 	
 	public ArrayList<SachDTO> getAll(){
 		return(this.listSach);
@@ -76,6 +86,13 @@ public class SachBUS {
 		return(sachDAO.getInstanceByID(maSach));
 	}
 
+	public SachDTO getCurrentSach(int maSach){
+		for (SachDTO x : listSach) 
+			if (x.getMaSach() == maSach ) 
+				return x;
+		return null;
+	}
+
 	public ArrayList<SachDTO> getAllSachByMaVung(int ma){
 		return(sachDAO.getAllSachByMaVung(ma));
 	}
@@ -92,4 +109,6 @@ public class SachBUS {
 
 		return listTen.toArray(new String[0]);
 	}
+
+	
 }

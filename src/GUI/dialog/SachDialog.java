@@ -214,9 +214,10 @@ public class SachDialog extends JDialog implements ActionListener{
         for(int i : danhMuc_TGBUS.getAllMaTacGiaByMaSach(ma)){
             listTG += tacGiaBUS.getTenByMa(i) + ", ";
         }
-        for(int i : kM_SachBUS.getAllMaKMByMaSach(ma)){
-            listKM += khuyenMaiBUS.getTenByMaKhuyenMai(i) + "; ";
+        for(String i : kM_SachBUS.getAllTenKMByMaSach(ma)){
+            listKM += i + "; ";
         }
+
         String newListTL = removeLastCommaForFKNN(listTL);
         String newListTG = removeLastCommaForFKNN(listTG);
         // String newListKM = removeLastCommaForFKNN(listKM);
@@ -339,6 +340,7 @@ public class SachDialog extends JDialog implements ActionListener{
         String ten = inputForm.getListItem().get(0).getText();
         int namXB = Integer.parseInt(inputForm.getListItem().get(1).getText());
         BigDecimal giaban = new BigDecimal(inputForm.getListItem().get(2).getText());
+        System.out.println(giaban + "gia ban hien tai");
 
         String tenVung = inputForm.getListItem().get(3).getSelection();
         String tenNhaXB = inputForm.getListItem().get(4).getSelection();
@@ -351,11 +353,15 @@ public class SachDialog extends JDialog implements ActionListener{
         SachDTO sach = new SachDTO(ma, ten, giaban, namXB, maVung, maNXB, path.getPath());
         // BigDecimal giaban = sachBUS.getInstanceByID(ma).getGiaBan();
         if(sachBUS.update(sach) != 0){
-            try {
-                path.getImageUtil().saveFile();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Lỗi khi lưu: " + ex.getMessage(),
-                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+            System.out.println(sachBUS.getCurrentSach(ma).getAnh() + path.getPath());
+            if (!path.getPath().equals(sachBUS.getCurrentSach(ma).getAnh())) {
+                try {
+                    path.getImageUtil().saveFile();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Lỗi khi lưu: " + ex.getMessage(),
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+                System.out.println("con bo biet bay");
             }
             Notifications.getInstance().setJFrame(mainFrame);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Sửa thành công");
@@ -368,10 +374,10 @@ public class SachDialog extends JDialog implements ActionListener{
             this.dispose();
         }
 
-        //cập nhật xuống DAO
+        // cập nhật xuống DAO
         UpdateListPhanloai();
         UpdateListDanhMuc_TG();
-        UpdateListKM_SACH();
+        // UpdateListKM_SACH();
 
     }
 
@@ -460,16 +466,16 @@ public class SachDialog extends JDialog implements ActionListener{
         }
         //Thực hiện delete nếu cũ có mới không có
         for(int i : oldListTL){
-            if(!newListTG.contains(i)){
+            // if(!newListTG.contains(i)){
                 danhMuc_TGBUS.delete(maSach, i);
-            }
+            // }
         }
         //Thực hiện insert nếu cũ không có mới có
         for(int i : newListTG){
-            if(!oldListTL.contains(i)){
+            // if(!oldListTL.contains(i)){
                 DanhMuc_TGDTO tgia = new DanhMuc_TGDTO(maSach, i);
                 danhMuc_TGBUS.insert(tgia);
-            }
+            // }
         }
     }
 

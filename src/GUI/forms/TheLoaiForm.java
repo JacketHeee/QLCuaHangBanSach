@@ -179,7 +179,7 @@ public class TheLoaiForm extends JPanel implements TableActionListener, ActionLi
         JPanel panel = new JPanel(new MigLayout("insets 0"));
         table = new CustomTable(dataToShow,getActionBottom(), header);
         table.setActionListener(this);
-        panel.add(new CustomScrollPane(table),"push, grow");
+        panel.add(table,"push, grow");
         return panel;
     }
 

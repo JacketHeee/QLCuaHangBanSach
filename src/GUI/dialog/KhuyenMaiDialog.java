@@ -262,7 +262,7 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
 
             inputForm.getListItem().get(5).getCombobox().setModel(new DefaultComboBoxModel<>(giamTheoTienCoDinh));
 
-            giatrigiam = FormatterUtil.formatNumberVN(khuyenMai.getGiaTriGiam());
+            giatrigiam = FormatterUtil.formatNumberKM(khuyenMai.getGiaTriGiam());
             inputForm.getListItem().get(5).getCombobox().setSelectedItem(giatrigiam);
             System.out.println(giatrigiam);
         }
@@ -448,6 +448,7 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
                         break;
                     case "Tác giả":
                         ma = tacGiaBUS.getMaByTen(giatri);
+                        System.out.println(giatri + " + " + ma);
                         DanhMuc_TGBUS danhMuc_TGBUS = DanhMuc_TGBUS.getInstance();
                         for (SachDTO x : sachBUS.getAll()) 
                             if (FormatterUtil.checkTonTai(danhMuc_TGBUS.getAllMaTacGiaByMaSach(x.getMaSach()), ma)) {
@@ -456,6 +457,7 @@ public class KhuyenMaiDialog extends JDialog implements ActionListener{
                         break;
                     case "Nhà xuất bản":
                         ma = nhaXBBUS.getMaNXBByTen(giatri);
+                        System.out.println(giatri + " + " + ma);
                         for (SachDTO x : sachBUS.getAll()) 
                             if (x.getMaNXB() == ma) {
                                 km_SachBUS.insert(new KM_SachDTO(kM.getMaKM(),x.getMaSach()));

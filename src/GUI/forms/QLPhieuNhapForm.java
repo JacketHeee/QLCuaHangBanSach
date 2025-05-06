@@ -254,11 +254,12 @@ public class QLPhieuNhapForm extends JPanel implements TableActionListener, Acti
                     public void setData(PhieuNhapDTO phieuNhap) {
                         String tenNCC = nhaCungCapBUS.getTenByMaNhaCungCap(phieuNhap.getMaNCC());
                         String tenNV = nhanVienBUS.getTenNVByMaTK(phieuNhap.getMaTK());
-                        table.addDataRow(new String[] {
+                        table.addRowDataFirst(new String[] {
                             phieuNhap.getMaNhap() + ""
                             , FormatterUtil.formatDateTime(phieuNhap.getNgayNhap())
                             , tenNCC
-                            , FormatterUtil.formatNumberVN(phieuNhap.getTongTien())
+                            , FormatterUtil.formatNumberVN(phieuNhap.getTongTien()),
+                            tenNV
                         });
                     }  
                 });

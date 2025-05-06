@@ -52,7 +52,14 @@ public class InputFormItem extends JPanel{
                 setTextBox();
                 break;
             case "textArea":
-                this.textArea = new JTextArea(3,20);
+                this.textArea = new JTextArea(3,30);
+                textArea.setLineWrap(true);              // Tự động xuống dòng
+                textArea.setWrapStyleWord(true);         // Ngắt ở khoảng trắng
+
+                // Thiết lập kích thước cố định
+                textArea.setMinimumSize(textArea.getPreferredSize());
+                textArea.setMaximumSize(textArea.getPreferredSize());
+                textArea.setPreferredSize(textArea.getPreferredSize());
                 setTextAreaBox();
                 break;
             case "combobox":

@@ -25,7 +25,7 @@ public class PhieuNhapBUS {
 	
 	public int insert(PhieuNhapDTO PhieuNhap){
 		if(phieuNhapDAO.insert(PhieuNhap) != 0){
-			listPhieuNhap.add(PhieuNhap);
+			listPhieuNhap.addFirst(PhieuNhap);
 			return(1);
 		}
 		return(0);

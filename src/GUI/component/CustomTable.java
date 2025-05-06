@@ -535,7 +535,7 @@ public class CustomTable extends JPanel implements ActionListener {
     }
 
     public void updateRowConstraints() {
-        migLayout.setRowConstraints(getRowConstraints());
+        // migLayout.setRowConstraints(getRowConstraints());
     }
 
     // Trả về chuỗi Định dạng các cột dựa trên Col Wid được khởi tạo
@@ -836,5 +836,55 @@ public class CustomTable extends JPanel implements ActionListener {
 
         dataPanel.revalidate();
         dataPanel.repaint();
+    }
+
+    public void addRowDataFirst(String[] data) {
+    
+        // Lưu trạng thái chỉnh sửa nếu có
+        if (currentEditingField != null) {
+            saveEditing();
+        }
+
+        // Thêm dữ liệu vào đầu danh sách data
+        String[] rowData = (data == null) ? new String[headers.length] : data;
+        if (data == null) {
+            for (int i = 0; i < rowData.length; i++) {
+                rowData[i] = "";
+            }
+        }
+        // if (rowLabels.size() + 1 > this.data.size()) 
+        // this.data.addFirst(data);
+        this.data.add(0, rowData);
+
+        // Lưu trạng thái hàng được chọn
+        int previouslySelectedRow = selectedRow;
+
+        // Xóa tất cả nội dung hiện tại
+        dataPanel.removeAll();
+        rowLabels.clear();
+
+        // Cập nhật rowHeights
+        // rowHeights = new int[this.data.size() + 1];
+        // for (int i = 0; i < rowHeights.length; i++) {
+        //     rowHeights[i] = 30;
+        // }
+
+        // Thêm lại tất cả các hàng, bắt đầu từ hàng mới
+        for (String[] row : this.data) {
+            addDataRow(row);
+        }
+
+        // Khôi phục trạng thái chọn hàng
+        if (previouslySelectedRow != -1) {
+            setSelectedRow(previouslySelectedRow + 1);
+        }
+
+        // Cập nhật giao diện
+        updateRowColors();
+        dataPanel.setPreferredSize(null);
+        dataPanel.revalidate();
+        dataPanel.repaint();
+        revalidate();
+        repaint();
     }
 }

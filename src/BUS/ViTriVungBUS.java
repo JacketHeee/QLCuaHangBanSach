@@ -69,7 +69,7 @@ public class ViTriVungBUS {
 	}
 	public int getMaViTriVungByTen(String ten){
 		for(ViTriVungDTO viTriVungDTO : this.listViTriVung){
-			if(viTriVungDTO.getTenVung() == ten){
+			if(viTriVungDTO.getTenVung().equals(ten)){
 				return(viTriVungDTO.getMaVung());
 			}
 		}

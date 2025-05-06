@@ -118,8 +118,11 @@ public class DoanhThuForm extends JPanel implements ActionListener, TableActionL
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, 1);
         startDate = cal.getTime();
+        // startDate = endDate
         listSach = doanhThuBUS.getRevenueStats(startDate,endDate,"book");
         listKH = doanhThuBUS.getRevenueStats(startDate,endDate,"customer");
+        System.out.println(listSach.size() + " " + listKH.size());
+
         tongHD_TongDT = doanhThuBUS.getTotalRevenue(startDate,endDate);
 
         listTop5Sach = doanhThuBUS.getTop5Books(startDate, endDate);

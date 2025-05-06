@@ -37,9 +37,18 @@ public class InvoiceTable extends CustomTable{
     private TinhTongGia tinhTongGia;
     private TinhTongGiaChungTu tinhTongGiaChungTu;
     private String[] headerType;
-    
+    private Runnable updateKM; 
 
-    public InvoiceTable(ArrayList<String[]> data, String[][] actions, DataForTable dataForTableFN, TinhTongGia tinhTongGia, TinhTongGiaChungTu tinhTongGiaChungTu, String[] headers, String[] headerType, int maxText) { // do có super làm hơi xấu
+    public InvoiceTable(
+            ArrayList<String[]> data, 
+            String[][] actions, 
+            DataForTable dataForTableFN, 
+            TinhTongGia tinhTongGia,
+            TinhTongGiaChungTu tinhTongGiaChungTu,
+            String[] headers, 
+            String[] headerType, 
+            int maxText
+            ) { // do có super làm hơi xấu 
         super(data, actions,maxText, headers);
         // Gọi constructor của lớp cha CustomTable
         // MigLayout layout = (MigLayout)getDataPanel().getLayout();
@@ -60,6 +69,14 @@ public class InvoiceTable extends CustomTable{
                 }
             }
         });
+    }
+
+    public Runnable getUpdateKM() {
+        return updateKM;
+    }
+
+    public void setUpdateKM(Runnable updateKM) {
+        this.updateKM = updateKM;
     }
 
     @Override
@@ -95,12 +112,19 @@ public class InvoiceTable extends CustomTable{
                         }
                         updateRowData(row, temp);
                         tinhTongGia.updateTongGia(row);
+                        
+                        //update list khuyến mãi tương ứng
+                        
+                        
                     }
                 },
                 new TextFieldListSach.UpdateTongGiaCTWhenAddSach() {
                     @Override
                     public void TinhTongGiaCTWhenAddSach() {
                         tinhTongGiaChungTu.updateTongGiaChungTu();
+                        // if (updateKM != null) {
+                        //     updateKM.run();
+                        // }
                     }
                 }
             );

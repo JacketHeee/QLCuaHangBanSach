@@ -74,7 +74,7 @@ public class NhaXBBUS {
 
 	public int getMaNXBByTen(String ten){
 		for(NhaXBDTO nhaXBDTO : this.listNhaXB){
-			if(nhaXBDTO.getTenNXB() == ten){
+			if(nhaXBDTO.getTenNXB().equals(ten)){
 				return(nhaXBDTO.getMaNXB());
 			}
 		}
