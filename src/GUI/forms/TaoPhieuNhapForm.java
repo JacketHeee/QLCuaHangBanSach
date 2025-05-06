@@ -20,6 +20,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import BUS.CT_PhieuNhapBUS;
 import BUS.ChiTietQuyenBUS;
 import BUS.ChucNangBUS;
+import BUS.HoaDonBUS;
 import BUS.NhaCungCapBUS;
 import BUS.NhanVienBUS;
 import BUS.PhieuNhapBUS;
@@ -152,8 +153,11 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
             add(panelThongTinNhapHang(), "pushx, align right");
         }
         add(getTongTien(),"pushx, growx");
-        if(!type.equals("detail")){
-            add(getPanelAction(),"pushx, growx");
+        if (type.equals("detail")) {
+            add(getPanelActionDetail(), "pushx, growx");
+            addBtnListenerDetail();
+        } else {
+            add(getPanelAction(), "pushx, growx");
             addBtnListener();
         }
         //detail
@@ -308,6 +312,17 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         panel.add(buttonCancel,"sg 1");
         return panel;
     }
+        //PDF
+    private JPanel getPanelActionDetail() {
+        JPanel panel = new JPanel(new MigLayout("gap 10, al right"));
+        buttonSave = new CustomButton("Xuất PDF");
+        buttonSave.setBackground(Color.decode("#4CAF50"));
+        buttonCancel = new CustomButton("Hủy");
+    
+        panel.add(buttonSave, "sg 1");
+        panel.add(buttonCancel, "sg 1");
+        return panel;
+        }
 
     private JPanel getPanel(String title) {
         JPanel panel = new JPanel();
@@ -320,7 +335,18 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         buttonSave.setActionCommand("btnLuu");
         buttonSave.addActionListener(this);
     }
-
+    public void addBtnListenerDetail() {
+        buttonSave.setActionCommand("btnExportPNPDF");
+        buttonSave.addActionListener(this);
+        buttonCancel.setActionCommand("btnCancelPNDetail");
+        buttonCancel.addActionListener(this);
+    } 
+    private void exportPNPDF() {
+        PhieuNhapBUS phieuNhapBUS = PhieuNhapBUS.getInstance();
+        phieuNhapBUS.xuatPhieuNhapPDF(phieuNhap);
+    }
+    private void closePNDetail() {
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -339,6 +365,12 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
             case "btnLuu":
                 themPhieuNhap();
                 break;
+            case "btnExportPNPDF":
+            exportPNPDF();
+            break;
+            case "btnCancelPNDetail":
+            closePNDetail();
+            break;
             default:
                 break;
         }

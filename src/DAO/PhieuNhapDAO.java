@@ -1,12 +1,15 @@
 package DAO;
 
+import DTO.CT_PhieuNhapDTO;
+import DTO.PhieuNhapDTO;
+import config.JDBCUtil;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import DTO.PhieuNhapDTO;
-import config.JDBCUtil;
+import java.util.List;
+import utils.PhieuNhapUtils;
 
 public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
     private static PhieuNhapDAO instance;
@@ -124,5 +127,8 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         }
         jdbcUtil.Close();
         return result;
+    }
+    public void xuatPhieuNhapPDF(PhieuNhapDTO phieuNhap, List<CT_PhieuNhapDTO> listCTPN) {
+        PhieuNhapUtils.taoPhieuNhapPDF(phieuNhap, listCTPN);
     }
 }

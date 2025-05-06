@@ -3,13 +3,17 @@ package utils;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 
+import BUS.HoaDonBUS;
+import BUS.KhuyenMaiBUS;
 import DTO.CT_HoaDonDTO;
 import DTO.HoaDonDTO;
+import DAO.NhanVienDAO;
 import DAO.TaiKhoanDAO;
 
 import javax.swing.*;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.text.html.HTMLDocument;
 
@@ -48,7 +52,7 @@ public class PDFUtils {
             Font boldFont = new Font(baseFont, 7, Font.BOLD);
 
             // Title
-            Paragraph info = new Paragraph("DN SÁCH ChMaTraPhuAn TP-HCM\nNS AN DUONG VUONG 273\nĐịa chỉ: 273 - An Dương Vương P3 - Q5 - TP.HCM\nĐT: 0123456789\n--------------------------------------------------", normalFont);
+            Paragraph info = new Paragraph("DN SÁCH ChMaTraPhuAn TP-HCM\nNS AN DUONG VUONG 273\nĐịa chỉ: 273 - An Dương Vương P3 - Q5 - TP.HCM\nĐT: 0123456789\n------------------------------------------------------------", normalFont);
             info.setAlignment(Element.ALIGN_CENTER);
             document.add(info);
 
@@ -58,7 +62,7 @@ public class PDFUtils {
             document.add(title);
 
             // Thông tin hóa đơn
-            String tenNhanVien = TaiKhoanDAO.getInstance().getUsernameByMaTK(hoaDon.getMaTK());
+            String tenNhanVien = NhanVienDAO.getInstance().gettenNVByMaTK(hoaDon.getMaTK());
 
             PdfPTable infoTable = new PdfPTable(2);
             infoTable.setWidthPercentage(100);
@@ -100,19 +104,23 @@ public class PDFUtils {
             document.add(table);
             
             // Tổng tiền
+
+
             PdfPTable summaryTable = new PdfPTable(2);
-            summaryTable.setWidthPercentage(40); // chiếm toàn bộ chiều ngang trang
-            summaryTable.setHorizontalAlignment(Element.ALIGN_RIGHT); // đẩy về bên phải
-            summaryTable.setWidths(new float[]{3f, 2f}); // cột trái rộng hơn cột phải
+            summaryTable.setWidthPercentage(40);
+            summaryTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            summaryTable.setWidths(new float[]{3f, 2f});
             
             // Tổng cộng
             summaryTable.addCell(createRightAlignCell("Tổng cộng:", boldFont));
             summaryTable.addCell(createRightAlignCell(formatMoney(hoaDon.getTongTien()), normalFont));
             
             // Khuyến mãi
+
             summaryTable.addCell(createRightAlignCell("Khuyến mãi:", boldFont));
-            summaryTable.addCell(createRightAlignCell("0", normalFont));
-            
+            summaryTable.addCell(createRightAlignCell(".........", normalFont));
+
+
             // Phải thu
             summaryTable.addCell(createRightAlignCell("Phải thu:", boldFont));
             summaryTable.addCell(createRightAlignCell(formatMoney(hoaDon.getTongTien()), normalFont));

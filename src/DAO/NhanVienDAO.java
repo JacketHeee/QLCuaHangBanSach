@@ -1,11 +1,11 @@
 package DAO;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-
 import DTO.NhanVienDTO;
 import config.JDBCUtil;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
     private static NhanVienDAO instance;
@@ -258,5 +258,24 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         }
         jdbcUtil.Close();
         return result;
+    }
+        public String gettenNVByMaTK(int maTK) {
+        String hoTen = null;
+        String sql = "SELECT hoTen FROM nhanvien WHERE maTK = ? AND trangThai = 1";
+    
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maTK);
+    
+        try {
+            if (rs.next()) {
+                hoTen = rs.getString("hoTen");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        jdbcUtil.Close();
+        return hoTen;
     }
 }

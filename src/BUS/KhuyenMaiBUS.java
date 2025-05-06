@@ -1,9 +1,8 @@
 package BUS;
 
-import java.util.ArrayList;
-
 import DAO.KhuyenMaiDAO;
 import DTO.KhuyenMaiDTO;
+import java.util.ArrayList;
 
 public class KhuyenMaiBUS {
     private static KhuyenMaiBUS instance;
@@ -81,5 +80,13 @@ public class KhuyenMaiBUS {
     public KhuyenMaiDTO getInstanceByMa(int ma){
         return(khuyenMaiDAO.getInstanceByMa(ma));
     }
-
+    
+    public KhuyenMaiDTO layKhuyenMaiTheoMa(int maKM) {
+        for (KhuyenMaiDTO km : listKhuyenMai) {
+            if (km.getMaKM() == maKM) {
+                return km;
+            }
+        }
+        return null;
+    }
 }

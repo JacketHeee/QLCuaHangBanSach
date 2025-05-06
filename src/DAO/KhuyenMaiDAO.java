@@ -1,17 +1,17 @@
 package DAO;
 
+import DTO.KhuyenMaiDTO;
+import config.JDBCUtil;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import DTO.KhuyenMaiDTO;
-import config.JDBCUtil;
-
 public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
     private static KhuyenMaiDAO instance;
-    private KhuyenMaiDAO() {}
+    private KhuyenMaiDAO() {
+    }
     
     public static KhuyenMaiDAO getInstance() {
         if (instance == null) {
@@ -164,6 +164,4 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
         jdbcUtil.Close();
         return result;
     }
-
-
 }

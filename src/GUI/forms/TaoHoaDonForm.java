@@ -165,11 +165,6 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         this(mainFrame);
         this.addHoaDonDialog = addHoaDonDialog;
     }
-    //PDF
-    // public TaoHoaDonForm(MainFrame mainFrame, HoaDonDTO hoaDon, String type, AddHoaDonDialog addHoaDonDialog) {
-    //     this(mainFrame, hoaDon, type);
-    //     this.addHoaDonDialog = addHoaDonDialog;
-    // }
     
     private void init() {
         setLayout(new MigLayout("insets 0,wrap 1, gap 10"));
