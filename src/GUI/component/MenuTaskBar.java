@@ -32,6 +32,7 @@ import GUI.forms.SachForm;
 import GUI.forms.TacGiaForm;
 import GUI.forms.TaiKhoanForm;
 import GUI.forms.TheLoaiForm;
+import GUI.forms.ThongTinTaiKhoanForm;
 import GUI.forms.VungKeForm;
 import GUI.forms.thongke.TongQuanForm;
 import net.miginfocom.swing.MigLayout;
@@ -114,6 +115,7 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 
 	//button information
 	private JPanel butInfor;
+	private JLabel textAcc;
 	private JPanel createButtonInfor() {
 		JPanel but = new JPanel(new MigLayout("","[]10[]","[]")); 
 
@@ -122,7 +124,9 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 		JPanel panel = new JPanel(new MigLayout("aligny center"));
 		JLabel labelImage = new JLabel(new FlatSVGIcon(MainFrame.class.getResource("../resources/img/icon/myAccount.svg")).derive(60, 60));
 		panel.setOpaque(false);
-		panel.add(new JLabel("<html><b>"+ mainFrame.getNhanVien().getHoTen() +"</b></html>"),"wrap");
+
+		textAcc = new JLabel("<html><b>"+ mainFrame.getNhanVien().getHoTen() +"</b></html>");
+		panel.add(textAcc,"wrap");
 		panel.add(new JLabel(mainFrame.getTaiKhoan().getUsername()));
 
 		but.add(labelImage);
@@ -145,13 +149,19 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 		return but;
 	}
 
+	public void setTextAcc(String text) {
+		textAcc.setText("<html><b>"+ text +"</b></html>");
+	}
     
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 		if (e.getSource() == butInfor) {
-			JOptionPane.showMessageDialog(mainFrame,"Tinh nang danh phat trien","con bo biet bay",JOptionPane.INFORMATION_MESSAGE);
+			setDefaulColor();
+			mainFrame.setPanel(new ThongTinTaiKhoanForm(mainFrame.getTaiKhoan(), name -> {
+				textAcc.setText("<html><b>"+ name +"</b></html>");
+			}));
 		}
 		else 
 		if (e.getSource() == butLogout) {
@@ -252,5 +262,12 @@ public class MenuTaskBar extends JPanel implements MouseListener {
 
         ButtonTaskBar button = (ButtonTaskBar) but;
         button.setSelected(true);
+    }
+
+    private void setDefaulColor() {
+        for (Component x : menuChucNang.getComponents()) {
+            ButtonTaskBar button = (ButtonTaskBar) x;
+            button.setSelected(false);
+        }
     }
 }

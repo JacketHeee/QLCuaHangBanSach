@@ -1,10 +1,14 @@
 package BUS;
 
+import DAO.PhieuNhapDAO;
+import DTO.CT_PhieuNhapDTO;
+import DTO.PhieuNhapDTO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import DAO.PhieuNhapDAO;
 import DTO.PhieuNhapDTO;
+import java.util.List;
 
 public class PhieuNhapBUS {
 	private static PhieuNhapBUS instance;
@@ -76,4 +80,12 @@ public class PhieuNhapBUS {
         return(giaNhap.multiply(BigDecimal.valueOf(soLuong)));
     }
 	
+	// Hàm xuất PN ra PDF
+    public void xuatPhieuNhapPDF(PhieuNhapDTO phieuNhap) {
+        List<CT_PhieuNhapDTO> listCTPN = getChiTietPhieuNhap(phieuNhap.getMaNhap());
+        phieuNhapDAO.xuatPhieuNhapPDF(phieuNhap, listCTPN);
+    }
+    private List<CT_PhieuNhapDTO> getChiTietPhieuNhap(int maNhap) {
+        return CT_PhieuNhapBUS.getInstance().getListCTPNByMaPN(maNhap);
+    }
 }

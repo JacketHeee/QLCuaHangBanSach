@@ -10,9 +10,12 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatClientProperties;
+
+import org.apache.commons.math3.analysis.function.Sin;
 
 import BUS.NhanVienBUS;
 import BUS.NhomQuyenBUS;
@@ -144,7 +147,7 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
         String tenNV = nhanVienBUS.getTenNVByMaTK(maTK);
 
         inputForm.getListItem().get(0).setText(tk.getUsername());
-        inputForm.getListItem().get(1).setText(tk.getPassword());
+        inputForm.getListItem().get(1).setTextPass(tk.getPassword());
         inputForm.getListItem().get(2).setSelection(tenNV);
         inputForm.getListItem().get(3).setSelection(nhomQuyenBUS.getTenByMaNhomQuyen(tk.getMaRole()));
     }
@@ -168,7 +171,7 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
 
     public void insert(){
         String username = inputForm.getListItem().get(0).getText();
-        String password = inputForm.getListItem().get(1).getText();
+        String password = inputForm.getListItem().get(1).getTextPass();
         String tenNhanVien = inputForm.getListItem().get(2).getSelection();
         String tenNhomQuyen = inputForm.getListItem().get(3).getSelection();
 
@@ -201,7 +204,7 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
     public void update(){
         int ma = Integer.parseInt(taiKhoanPanel.getTable().getCellData(rowSelected, 0));
         String username = inputForm.getListItem().get(0).getText();
-        String password = inputForm.getListItem().get(1).getText();
+        String password = inputForm.getListItem().get(1).getTextPass();
         String tenNhanVien = inputForm.getListItem().get(2).getSelection();
         String tenNhomQuyen = inputForm.getListItem().get(3).getSelection();
 
@@ -233,7 +236,7 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
 
     public boolean validation(){
         // String tenTK = inputForm.getListItem().get(0).getText();
-        JTextField password = inputForm.getListItem().get(1).getTextField(); //Mật khẩu phải ở dạng JPasswordField
+        JPasswordField password = inputForm.getListItem().get(1).getPass(); //Mật khẩu phải ở dạng JPasswordField
 
         JTextField input = inputForm.getListItem().get(0).getTextField();
 
@@ -248,12 +251,12 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
             input.requestFocusInWindow();
             return(false);
         }
-        if(Validate.isEmpty(password.getText())){
+        if(Validate.isEmpty(new String(password.getPassword()))){
             JOptionPane.showMessageDialog(mainFrame, "Mật khẩu không được để trống!","",JOptionPane.WARNING_MESSAGE);
             password.requestFocusInWindow();
             return(false);
         }
-        if(!Validate.lengthGreaterThan(password.getText(), 5)){   // test sau
+        if(!Validate.lengthGreaterThan(new String(password.getPassword()), 5)){   // test sau
             JOptionPane.showMessageDialog(mainFrame, "Mật khẩu phải có độ dài trên 5 ký tự!","",JOptionPane.WARNING_MESSAGE);
             password.requestFocusInWindow();
             return(false);

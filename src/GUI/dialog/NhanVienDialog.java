@@ -196,13 +196,6 @@ public class NhanVienDialog extends JDialog implements ActionListener{
         String ngaySinh = inputForm.getListItem().get(1).getDateString();
         JTextField soDT = inputForm.getListItem().get(3).getTextField();
 
-        // JTextField input = inputForm.getListItem().get(0).getTextField();
-        // if(Validate.isEmpty(input.getText())){
-        //     JOptionPane.showMessageDialog(mainFrame, "Tên vùng không được để trống!","Thiếu thông tin",JOptionPane.WARNING_MESSAGE);
-        //     input.requestFocusInWindow();
-        //     return(false);
-        // }
-
         if(Validate.isEmpty(tenNV.getText())){
             JOptionPane.showMessageDialog(mainFrame, "Tên nhân viên không được để trống!","",JOptionPane.WARNING_MESSAGE);
             tenNV.requestFocusInWindow();

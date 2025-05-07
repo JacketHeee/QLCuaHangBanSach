@@ -15,6 +15,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import BUS.TaiKhoanBUS;
 import DTO.TaiKhoanDTO;
 import GUI.component.CustomButton;
+import GUI.component.TransparentBackgroundPanel;
 import net.miginfocom.swing.MigLayout;
 import resources.base.baseTheme;
 import utils.Validate;
@@ -35,7 +36,8 @@ public class Login extends JFrame implements ActionListener{
     }
     
     private void init() {
-        setSize(500,400);
+        // setSize(500,400);
+        setSize(700,500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -48,7 +50,9 @@ public class Login extends JFrame implements ActionListener{
 
         cssComponent();
         
-        JPanel panel = new JPanel(new MigLayout("al center center, wrap 1, gapy 8"));
+        JPanel panel;
+        panel = new TransparentBackgroundPanel("hihi");
+        panel.setLayout(new MigLayout("al center center, wrap 1, gapy 8"));
         // panel.setBackground(Color.decode(baseTheme.backgroundColor));
 
         panel.add(new JLabel("<html><strong><font size=+2>Đăng nhập</font></strong><html>"),"al center"); 

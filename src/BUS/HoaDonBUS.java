@@ -95,8 +95,7 @@ public class HoaDonBUS {
         int maKM = khuyenMaiBUS.getMaKhuyenMaiByTen(tenKM);
         KhuyenMaiDTO khuyenMai = khuyenMaiBUS.getInstanceByMa(maKM);
         return(khuyenMai.getGiaTriGiam());
-    }
-
+    } 
     public BigDecimal tinhKhuyenMai(BigDecimal giaBanDau, BigDecimal soTienKM){
         //Giảm theo phần trăm
         // 0 < soTienKM < 1
@@ -123,4 +122,21 @@ public class HoaDonBUS {
     private List<CT_HoaDonDTO> getChiTietHoaDon(int maHD) {
         return CT_HoaDonBUS.getInstance().getListCTHDByMaHD(maHD);
     }
+    
+    public String layGiaTriKhuyenMaiTheoHoaDon(HoaDonDTO hoaDon) {
+        int maKM = hoaDon.getMaKM();
+    
+        if (maKM <= 0) {
+            return "0";
+        }
+    
+        KhuyenMaiDTO km = khuyenMaiBUS.getInstanceByMa(maKM); 
+    
+        if (km != null && km.getGiaTriGiam() != null) {
+            return km.getGiaTriGiam().toString();
+        } else {
+            return "0";
+        }
+    }
+    
 }

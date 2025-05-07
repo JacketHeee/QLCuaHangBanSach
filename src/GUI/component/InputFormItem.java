@@ -12,6 +12,7 @@ import java.util.Calendar;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -36,17 +37,26 @@ public class InputFormItem extends JPanel{
     private CustomButton btnKNNN;
     private CustomTextFieldSL textSL;
     private JTextArea textArea;
+    private JPasswordField pass; 
     //Cho ảnh
     private PanelPicture panelPicture;
 
     private MigLayout migLayout;
+    public String type;
 
     public InputFormItem(String type, String title){
+        this.type = type;
         this.label = new JLabel(title);
         this.migLayout = new MigLayout("wrap 1", "[grow]");
         this.setBackground(Color.decode("#FFFFFF"));
         this.setLayout(migLayout);
         switch (type) {
+            case "pass": 
+                pass = new JPasswordField();
+                pass.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mật khẩu");
+                pass.putClientProperty(FlatClientProperties.STYLE, "showRevealButton:true");
+                setPassBox();
+                break; 
             case "textbox":
                 this.textField = new JTextField();
                 setTextBox();
@@ -111,6 +121,23 @@ public class InputFormItem extends JPanel{
     public void setTextBox(){
         this.add(label, "grow");
         this.add(textField, "grow");
+    }
+
+    public void setPassBox(){
+        this.add(label, "grow");
+        this.add(pass, "grow");
+    }
+
+    public String getTextPass() {
+        return new String(pass.getPassword());
+    }
+
+    public void setTextPass(String pass) {
+        this.pass.setText(pass);
+    }
+
+    public JPasswordField getPass() {
+        return pass;
     }
 
     public void setTextAreaBox(){

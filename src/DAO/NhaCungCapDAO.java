@@ -1,10 +1,10 @@
 package DAO;
 
+import DTO.NhaCungCapDTO;
+import config.JDBCUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import DTO.NhaCungCapDTO;
-import config.JDBCUtil;
 
 public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
     private static NhaCungCapDAO instance;
@@ -116,5 +116,25 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO> {
         }
         jdbcUtil.Close();
         return result;
+    }
+    
+    public String getNCCnameByMaNCC(int maNCC) {
+        String tenNCC = null;
+        String sql = "SELECT tenNCC FROM nhacungcap WHERE maNCC = ? AND trangThai = 1";
+    
+        JDBCUtil jdbcUtil = new JDBCUtil();
+        jdbcUtil.Open();
+        ResultSet rs = jdbcUtil.executeQuery(sql, maNCC);
+    
+        try {
+            if (rs.next()) {
+                tenNCC = rs.getString("tenNCC");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        jdbcUtil.Close();
+        return tenNCC;
     }
 }

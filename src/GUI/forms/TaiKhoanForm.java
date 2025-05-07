@@ -61,7 +61,7 @@ public class TaiKhoanForm extends JPanel implements TableActionListener, ActionL
 
     private String[][] attributes = {
         {"textbox","Tên đăng nhập"},
-        {"textbox","Mật khẩu"},
+        {"pass","Mật khẩu"},
         {"combobox","Nhân Viên"},
         {"combobox", "Nhóm quyền"}
     };
