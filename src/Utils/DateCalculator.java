@@ -1,11 +1,15 @@
 package utils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import com.toedter.calendar.JDateChooser;
 
 /**
  *
@@ -138,4 +142,13 @@ public class DateCalculator {
             return df.format(date);
         }
     }
+
+
+    public static Date toDate(LocalDateTime localDateTime) {
+    // Chuyển LocalDateTime thành LocalDate để chỉ lấy ngày
+    LocalDate localDate = localDateTime.toLocalDate();
+    
+    // Chuyển LocalDate thành java.util.Date
+    return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+}
 }

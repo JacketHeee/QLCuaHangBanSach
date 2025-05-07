@@ -1,6 +1,7 @@
 package BUS.ThongKeBUS;
 
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,7 @@ public class ThongKeNhapHangBUS {
         this.thongKeNhapHangDAO = new ThongKeNhapHangDAO();
     }
 
-    public List<ThongKeNhapHangDTO> getImportStats(Date startDate, Date endDate, String type) {
+    public List<ThongKeNhapHangDTO> getImportStats(LocalDateTime startDate, LocalDateTime endDate, String type) {
         try {
             if ("book".equalsIgnoreCase(type)) {
                 return thongKeNhapHangDAO.getImportByBook(startDate, endDate);
@@ -35,7 +36,7 @@ public class ThongKeNhapHangBUS {
         }
     }
 
-    public List<PhieuNhapDTO> getImports(String id, Date startDate, Date endDate, String type) {
+    public List<PhieuNhapDTO> getImports(String id, LocalDateTime startDate, LocalDateTime endDate, String type) {
         try {
             if ("book".equalsIgnoreCase(type)) {
                 return thongKeNhapHangDAO.getImportsByBook(id, startDate, endDate);
@@ -52,7 +53,7 @@ public class ThongKeNhapHangBUS {
         }
     }
 
-    public String[] getTotalImport(Date startDate, Date endDate) {
+    public String[] getTotalImport(LocalDateTime startDate, LocalDateTime endDate) {
         try {
             double[] result = thongKeNhapHangDAO.getTotalImport(startDate, endDate);
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -63,7 +64,7 @@ public class ThongKeNhapHangBUS {
         }
     }
 
-    public List<ThongKeNhapHangDTO> getTop5Books(Date startDate, Date endDate) {
+    public List<ThongKeNhapHangDTO> getTop5Books(LocalDateTime startDate, LocalDateTime endDate) {
         try {
             return thongKeNhapHangDAO.getTop5Books(startDate, endDate);
         } catch (Exception e) {
@@ -72,7 +73,7 @@ public class ThongKeNhapHangBUS {
         }
     }
 
-    public List<ThongKeNhapHangDTO> getTop5NCC(Date startDate, Date endDate) {
+    public List<ThongKeNhapHangDTO> getTop5NCC(LocalDateTime startDate, LocalDateTime endDate) {
         try {
             return thongKeNhapHangDAO.getTop5Suppliers(startDate, endDate);
         } catch (Exception e) {

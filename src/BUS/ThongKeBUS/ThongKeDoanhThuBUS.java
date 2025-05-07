@@ -2,6 +2,7 @@ package BUS.ThongKeBUS;
 
 
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public class ThongKeDoanhThuBUS {
     }
 
     // get thoong ke theo sach hoac khach hang 
-    public List<ThongKeDoanhThuDTO> getRevenueStats(Date startDate, Date endDate, String type) {
+    public List<ThongKeDoanhThuDTO> getRevenueStats(LocalDateTime startDate, LocalDateTime endDate, String type) {
         try {
             if ("book".equalsIgnoreCase(type)) {
                 return doanhThuDAO.getRevenueByBook(startDate, endDate);
@@ -34,7 +35,7 @@ public class ThongKeDoanhThuBUS {
     }
 
     //get hoa down tuong tung voi id 
-    public List<HoaDonDTO> getInvoices(String id, Date startDate, Date endDate, String type) {
+    public List<HoaDonDTO> getInvoices(String id, LocalDateTime startDate, LocalDateTime endDate, String type) {
         try {
             if ("book".equalsIgnoreCase(type)) {
                 return doanhThuDAO.getInvoicesByBook(id, startDate, endDate);
@@ -49,7 +50,7 @@ public class ThongKeDoanhThuBUS {
     }
 
     //get so hoa don va tong doanh thu 
-    public String[] getTotalRevenue(Date startDate, Date endDate) {
+    public String[] getTotalRevenue(LocalDateTime startDate, LocalDateTime endDate) {
         try {
             Object[] result = doanhThuDAO.getTotalRevenue(startDate, endDate);
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -60,7 +61,7 @@ public class ThongKeDoanhThuBUS {
         }
     }
 
-    public List<ThongKeDoanhThuDTO> getTop5Books(Date startDate, Date endDate) {
+    public List<ThongKeDoanhThuDTO> getTop5Books(LocalDateTime startDate, LocalDateTime endDate) {
         try {
             return doanhThuDAO.getTop5Books(startDate, endDate);
         } catch (Exception e) {
@@ -69,7 +70,7 @@ public class ThongKeDoanhThuBUS {
         }
     }
 
-    public List<ThongKeDoanhThuDTO> getTop5Kh(Date startDate, Date endDate) {
+    public List<ThongKeDoanhThuDTO> getTop5Kh(LocalDateTime startDate, LocalDateTime endDate) {
         try {
             return doanhThuDAO.getTop5Customers(startDate, endDate);
         } catch (Exception e) {

@@ -163,6 +163,30 @@ Khi bạn gọi LocalDate.parse(dateStr, formatter) với một chuỗi dateStr 
         }
     }
 
+    public static boolean checkStartAndEndDte(String startDateS, String endDateS) {
+        try {
+            // Định dạng cho chuỗi ngày "dd/MM/yyyy"
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    
+            // Chuyển chuỗi thành LocalDate
+            LocalDate startLocalDate = LocalDate.parse(startDateS, formatter);
+            LocalDate endLocalDate = LocalDate.parse(endDateS, formatter);
+    
+            // Tạo LocalDateTime cho startDate (00:00:00.000)
+            LocalDateTime startDate = startLocalDate.atStartOfDay();
+    
+            // Tạo LocalDateTime cho endDate (23:59:59.999999999)
+            LocalDateTime endDate = endLocalDate.atTime(23, 59, 59, 999_999_999);
+    
+            // So sánh startDate và endDate
+            return startDate.isBefore(endDate);
+        } catch (Exception e) {
+            // Xử lý lỗi khi chuỗi ngày không đúng định dạng
+            System.err.println("Lỗi định dạng ngày: " + e.getMessage());
+            return false;
+        }
+    }
+
     public static boolean isStartTimeAndEndTime(String timeStartS, String timeEndS){
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         
@@ -202,11 +226,12 @@ Khi bạn gọi LocalDate.parse(dateStr, formatter) với một chuỗi dateStr 
     public static boolean isBetweenStartDateAndEndDate(String ngayBatDau, String ngayKetThuc, LocalDateTime time){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        LocalDate timeHD = time.toLocalDate();
-        LocalDate startDate = LocalDate.parse(ngayBatDau, formatter);
-        LocalDate endDate = LocalDate.parse(ngayKetThuc, formatter);
+        // LocalDate timeHD = time.toLocalDate();
 
-        if(startDate.isBefore(timeHD) && endDate.isAfter(timeHD) || startDate.isEqual(timeHD) || endDate.isEqual(timeHD)){
+        LocalDateTime startDate = LocalDate.parse(ngayBatDau, formatter).atStartOfDay();
+        LocalDateTime endDate = LocalDate.parse(ngayKetThuc, formatter).atTime(23, 59, 59, 999_999_999);
+
+        if(startDate.isBefore(time) && endDate.isAfter(time) || startDate.isEqual(time) || endDate.isEqual(time)){
             return(true);
         }
         return(false);

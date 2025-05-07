@@ -133,6 +133,7 @@ public class JDBCUtil {
 			else if(params[i] instanceof java.sql.Date){
 				try {
 					pst.setDate(index, (java.sql.Date)params[i]);
+					System.out.println((java.sql.Date)params[i]);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

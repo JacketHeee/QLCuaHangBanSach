@@ -301,12 +301,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         if (!type.equals("detail")) {
            table.addDataRow(null);
         }
-        // if (table instanceof InvoiceTable) {
-        //     InvoiceTable c = (InvoiceTable) table;
-        //     c.setUpdateKM(() -> {
-        //         updateListKM();
-        //     });
-        // }
+
         if(!type.equals("detail")){
             panel.add(panelActionOnTable(),"pushx,growx,wrap");
         }
@@ -778,6 +773,8 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         // if () // Vượt quá số lượng
 
         LocalDateTime ngayBan = LocalDateTime.now();
+        // ngayBan = ngayBan.plusDays(1);
+
         BigDecimal tongTien = this.tongThanhToan;
         int maTK = this.taiKhoan.getMaTK();
         int maPT = phuongThucTTBUS.getMaPhuongThucTTByTen((String)comboboxPTTT.getSelectedItem());

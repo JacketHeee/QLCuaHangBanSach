@@ -451,6 +451,25 @@ public class InvoiceTable extends CustomTable{
         dataPanel.repaint();
         repaint();
         revalidate();
+
+        // Tự động focus vào TextFieldListSach của cột đầu tiên
+        focusOnAdd(row);
+    }
+
+     // Phương thức mới để focus vào TextFieldListSach của cột đầu tiên
+     public void focusOnAdd(int row) {
+        List<JComponent> rowComponents = rowLabels.get(row);
+        if (rowComponents != null && !rowComponents.isEmpty()) {
+            JComponent firstCell = rowComponents.get(0); // Cột đầu tiên
+            if (firstCell instanceof JPanel) {
+                JPanel panel = (JPanel) firstCell;
+                if (panel.getComponentCount() > 0 && panel.getComponent(0) instanceof TextFieldListSach) {
+                    TextFieldListSach textField = (TextFieldListSach) panel.getComponent(0);
+                    textField.requestFocusInWindow();
+                    textField.selectAll(); // Tùy chọn: chọn toàn bộ văn bản để dễ chỉnh sửa
+                }
+            }
+        }
     }
 
 

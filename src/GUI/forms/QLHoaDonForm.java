@@ -416,7 +416,7 @@ public class QLHoaDonForm extends JPanel implements TableActionListener, ActionL
             JOptionPane.showMessageDialog(mainFrame, "Vui lòng nhập ngày kết thúc");
             return(false);
         }
-        else if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS) && !Validate.isStartDateAndEndDate(ngayBatDauS, ngayKetThucS)){
+        else if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS) && !Validate.checkStartAndEndDte(ngayBatDauS, ngayKetThucS)){
             JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải trước ngày kết thúc");
             return(false);
         }

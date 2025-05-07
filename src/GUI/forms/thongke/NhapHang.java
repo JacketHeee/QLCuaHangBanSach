@@ -7,6 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +42,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.chart.data.pie.DefaultPieDataset;
 import raven.chart.pie.PieChart;
 import resources.base.baseTheme;
+import utils.DateCalculator;
 import utils.FormatterUtil;
 import utils.Validate;
 
@@ -45,8 +50,8 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
     JComboBox<String> comboBox;
     String[] choose = {"Sách","Nhà cung cấp"};
     private ThongKeNhapHangBUS doanhThuBUS;
-    private Date startDate; 
-    private Date endDate;
+    private LocalDateTime startDate; 
+    private LocalDateTime endDate;
     private JPanel panelTable;
     private String[] headerSach = {"Mã sách","Tên sách","Số lượng nhập","Tổng tiền"}; 
     private String[] headerKhachHang = {"Mã NCC","Tên NCC","Số phiếu nhập","Tổng tiền"};
@@ -91,23 +96,20 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
     }
 
     private void loadData() {
-        // Calendar cal = Calendar.getInstance();
+         // Lấy ngày hiện tại làm endDate
+        startDate = LocalDateTime.now()
+        .with(TemporalAdjusters.firstDayOfMonth())
+        .withHour(0)
+        .withMinute(0)
+        .withSecond(0)
+        .withNano(0);
 
-        // // startDate: 01/05/2025
-        // cal.set(2025, Calendar.APRIL, 1);
-        // startDate = cal.getTime();
-
-        // // endDate: 01/01/2027 (vì 24 tháng sau tháng 4/2025 là tháng 4/2027)
-        // cal.set(2027, Calendar.APRIL, 1);
-        // endDate = cal.getTime();
-
-        // Ngày hiện tại
-        endDate = new Date();
-
-        // Ngày đầu tháng
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        startDate = cal.getTime();
+    // Đặt endDate là 23:59:59.999 của ngày hiện tại
+        endDate = LocalDateTime.now()
+        .withHour(23)
+        .withMinute(59)
+        .withSecond(59)
+        .withNano(999_999_999);
 
         listSach = doanhThuBUS.getImportStats(startDate,endDate,"book");
         listKH = doanhThuBUS.getImportStats(startDate,endDate,"ncc");
@@ -148,8 +150,10 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
         inputStartDate = new InputFormItem("inputDate", "Từ ngày");
         inputEndDate = new InputFormItem("inputDate", "Đến");
         
-        SwingUtilities.invokeLater(() -> inputStartDate.getInputDate().setDate(startDate));
-        SwingUtilities.invokeLater(() -> inputEndDate.getInputDate().setDate(endDate));
+        // SwingUtilities.invokeLater(() -> inputStartDate.getInputDate().setDate(startDate));
+        // SwingUtilities.invokeLater(() -> inputEndDate.getInputDate().setDate(endDate));
+        inputStartDate.getInputDate().setDate(DateCalculator.toDate(startDate));
+        inputEndDate.getInputDate().setDate(DateCalculator.toDate(endDate));
 
         inputStartDate.setBackground(baseTheme.selectedButton);
         inputEndDate.setBackground(baseTheme.selectedButton);
@@ -461,13 +465,18 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
 
         if(Validation(ngayBatDauS, ngayKetThucS)){
             if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS)){ //Cho bộ lọc
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                try {
-                    startDate = sdf.parse(ngayBatDauS);
-                    endDate = sdf.parse(ngayKetThucS);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+                // Chuyển chuỗi thành LocalDate
+                LocalDate startLocalDate = LocalDate.parse(ngayBatDauS, formatter);
+                LocalDate endLocalDate = LocalDate.parse(ngayKetThucS, formatter);
+
+                // Tạo LocalDateTime cho startDate (00:00:00.000)
+                startDate = startLocalDate.atStartOfDay();
+
+                // Tạo LocalDateTime cho endDate (23:59:59.999)
+                endDate = endLocalDate.atTime(23, 59, 59, 999_999_999);
+
                 loadDataWithDate();
                 flag = true;
     
@@ -535,7 +544,7 @@ public class NhapHang extends JPanel implements ActionListener, TableActionListe
             JOptionPane.showMessageDialog(mainFrame, "Vui lòng nhập ngày kết thúc");
             return(false);
         }
-        else if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS) && !Validate.isStartDateAndEndDate(ngayBatDauS, ngayKetThucS)){
+        else if(!Validate.isEmpty(ngayBatDauS) && !Validate.isEmpty(ngayKetThucS) && !Validate.checkStartAndEndDte(ngayBatDauS, ngayKetThucS)){
             JOptionPane.showMessageDialog(mainFrame, "Ngày bắt đầu phải trước ngày kết thúc");
             return(false);
         }

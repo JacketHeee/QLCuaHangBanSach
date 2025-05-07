@@ -14,17 +14,24 @@ import java.util.List;
 
 public class ThongKeDoanhThuDAO {
     // Thống kê theo sách
-    public List<ThongKeDoanhThuDTO> getRevenueByBook(Date startDate, Date endDate) {
+    public List<ThongKeDoanhThuDTO> getRevenueByBook(LocalDateTime startDate, LocalDateTime endDate) {
         String sql = "SELECT S.maSach, S.tenSach, COALESCE(SUM(CT.soLuong), 0) AS soLuongBan, COALESCE(SUM(CT.soLuong * CT.giaBan), 0) AS doanhThu " +
                      "FROM CT_HOADON CT " +
                      "JOIN HOADON HD ON CT.maHD = HD.maHD " +
                      "JOIN SACH S ON CT.maSach = S.maSach " +
                      "WHERE HD.ngayBan BETWEEN ? AND ? AND HD.trangThai = 1 AND S.trangThai = 1 " +
                      "GROUP BY S.maSach, S.tenSach";
+        
+                    //  / In câu truy vấn và tham số
+    System.out.println("SQL Query: " + sql);
+    System.out.println("startDate: " + startDate);
+    System.out.println("endDate: " + endDate);
+
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+        ResultSet rs = jdbcUtil.executeQuery(sql, startDate, endDate);
+
         try {
             while (rs.next()) {
                 ThongKeDoanhThuDTO stats = new ThongKeDoanhThuDTO(
@@ -45,7 +52,7 @@ public class ThongKeDoanhThuDAO {
     }
 
     // Thống kê theo khách hàng
-    public List<ThongKeDoanhThuDTO> getRevenueByCustomer(Date startDate, Date endDate) {
+    public List<ThongKeDoanhThuDTO> getRevenueByCustomer(LocalDateTime startDate, LocalDateTime endDate) {
         String sql = "SELECT KH.maKH, COALESCE(KH.tenKH, 'Khách lẻ') AS tenKH, COALESCE(COUNT(HD.maHD), 0) AS soHoaDon, COALESCE(SUM(HD.tongTien), 0) AS doanhThu " +
                      "FROM HOADON HD " +
                      "LEFT JOIN KHACHHANG KH ON HD.maKH = KH.maKH " +
@@ -54,7 +61,7 @@ public class ThongKeDoanhThuDAO {
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+        ResultSet rs = jdbcUtil.executeQuery(sql, startDate, endDate);
         try {
             while (rs.next()) {
                 ThongKeDoanhThuDTO stats = new ThongKeDoanhThuDTO(
@@ -75,7 +82,7 @@ public class ThongKeDoanhThuDAO {
     }
 
     // Chi tiết hóa đơn theo sách
-    public List<HoaDonDTO> getInvoicesByBook(String maSach, Date startDate, Date endDate) {
+    public List<HoaDonDTO> getInvoicesByBook(String maSach, LocalDateTime startDate, LocalDateTime endDate) {
         String sql = "SELECT HD.* " +
                      "FROM HOADON HD " +
                      "JOIN CT_HOADON CT ON HD.maHD = CT.maHD " +
@@ -84,7 +91,7 @@ public class ThongKeDoanhThuDAO {
         List<HoaDonDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, maSach, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+        ResultSet rs = jdbcUtil.executeQuery(sql, maSach, startDate, endDate);
         try {
             while (rs.next()) {
                 int id = rs.getInt("maHD");
@@ -107,7 +114,7 @@ public class ThongKeDoanhThuDAO {
     }
 
     // Chi tiết hóa đơn theo khách hàng
-    public List<HoaDonDTO> getInvoicesByCustomer(String maKHang, Date startDate, Date endDate) {
+    public List<HoaDonDTO> getInvoicesByCustomer(String maKHang, LocalDateTime startDate, LocalDateTime endDate) {
         String sql = "SELECT HD.* " +
                      "FROM HOADON HD " +
                      "JOIN KHACHHANG KH ON HD.maKH = KH.maKH " +
@@ -115,7 +122,7 @@ public class ThongKeDoanhThuDAO {
         List<HoaDonDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, maKHang, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+        ResultSet rs = jdbcUtil.executeQuery(sql, maKHang, startDate, endDate);
         try {
             while (rs.next()) {
                 int id = rs.getInt("maHD");
@@ -138,12 +145,12 @@ public class ThongKeDoanhThuDAO {
     }
 
     // Tổng hóa đơn và doanh thu
-    public Object[] getTotalRevenue(Date startDate, Date endDate) {
+    public Object[] getTotalRevenue(LocalDateTime startDate, LocalDateTime endDate) {
         String sql = "SELECT COALESCE(COUNT(*), 0) AS soHoaDon, COALESCE(SUM(tongTien), 0) AS doanhThu " +
                      "FROM HOADON WHERE ngayBan BETWEEN ? AND ? AND trangThai = 1";
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+        ResultSet rs = jdbcUtil.executeQuery(sql, startDate, endDate);
         try {
             if (rs.next()) {
                 return new Object[]{rs.getInt("soHoaDon"), rs.getBigDecimal("doanhThu")};
@@ -158,7 +165,7 @@ public class ThongKeDoanhThuDAO {
     }
 
     // Top 5 sách bán chạy
-    public List<ThongKeDoanhThuDTO> getTop5Books(Date startDate, Date endDate) {
+    public List<ThongKeDoanhThuDTO> getTop5Books(LocalDateTime startDate, LocalDateTime endDate) {
         String sql = "SELECT S.maSach, S.tenSach, COALESCE(SUM(CT.soLuong), 0) AS soLuongBan, COALESCE(SUM(CT.soLuong * CT.giaBan), 0) AS doanhThu " +
                      "FROM CT_HOADON CT " +
                      "JOIN HOADON HD ON CT.maHD = HD.maHD " +
@@ -169,7 +176,7 @@ public class ThongKeDoanhThuDAO {
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+        ResultSet rs = jdbcUtil.executeQuery(sql, startDate, endDate);
         try {
             while (rs.next()) {
                 ThongKeDoanhThuDTO stats = new ThongKeDoanhThuDTO(
@@ -190,7 +197,7 @@ public class ThongKeDoanhThuDAO {
     }
 
     // Top 5 khách hàng mua nhiều nhất
-    public List<ThongKeDoanhThuDTO> getTop5Customers(Date startDate, Date endDate) {
+    public List<ThongKeDoanhThuDTO> getTop5Customers(LocalDateTime startDate, LocalDateTime endDate) {
         String sql = "SELECT KH.maKH, COALESCE(KH.tenKH, 'Khách lẻ') AS tenKH, " +
                      "COALESCE(COUNT(HD.maHD), 0) AS soHoaDon, COALESCE(SUM(HD.tongTien), 0) AS doanhThu " +
                      "FROM HOADON HD " +
@@ -201,7 +208,7 @@ public class ThongKeDoanhThuDAO {
         List<ThongKeDoanhThuDTO> result = new ArrayList<>();
         JDBCUtil jdbcUtil = new JDBCUtil();
         jdbcUtil.Open();
-        ResultSet rs = jdbcUtil.executeQuery(sql, new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime()));
+        ResultSet rs = jdbcUtil.executeQuery(sql, startDate, endDate);
         try {
             while (rs.next()) {
                 ThongKeDoanhThuDTO stats = new ThongKeDoanhThuDTO(
