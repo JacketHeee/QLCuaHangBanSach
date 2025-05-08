@@ -13,7 +13,7 @@ import resources.base.baseTheme;
 
 public class HomeForm extends JPanel{
 
-    private String title = "Hệ thống quản lý cửa hàng sách";
+    private String title = "Hệ thống quản lý cửa hàng sách MaChTraPhuThHiAn";
     protected JLabel headerTitle; 
     protected String[][] content = {
         {"bookHome.svg","Đa dạng","Kho sách phong phú với<br/>nhiều thể loại khác nhau"},

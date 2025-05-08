@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import utils.ExcelReader;
 import utils.UIUtils;
 
 import javax.swing.JLabel;
@@ -272,6 +273,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
 
     private ButtonAction butAddData;
     private ButtonAction butImportData;
+
     private JPanel panelActionOnTable() {
         JPanel panel = new JPanel(new MigLayout("al left"));
         butAddData = new ButtonAction("Thêm", "add.svg", "add");
@@ -341,6 +343,8 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         phieuNhapBUS.xuatPhieuNhapPDF(phieuNhap);
     }
     private void closePNDetail() {
+        // runnable.run();
+        
     }
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -359,7 +363,6 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
                 break;
             case "btnLuu":
                 themPhieuNhap();
-               
                 break;
             case "btnExportPNPDF":
             exportPNPDF();
@@ -367,12 +370,39 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
             case "btnCancelPNDetail":
             closePNDetail();
             break;
+
+            case "importRowData":
+                importExcelForTable();
+            break;
             default:
                 break;
         }
 
         // TODO Auto-generated method stub
         
+    }
+
+    private void importExcelForTable() {
+        ArrayList<String[]> listData = ExcelReader.openFile(3);
+        // table.removeRow(1);
+        int index = table.getRowLabels().size()+1;
+        for (String[] x : listData) {
+            SachDTO sach = sachBUS.getInstanceByID((int)Integer.parseInt(x[0])); 
+            int soLuong = Integer.parseInt(x[2]);
+            BigDecimal giaNhap = new BigDecimal(x[3]);
+            BigDecimal tongGia = giaNhap.multiply(new BigDecimal(soLuong));
+            ArrayList<String> list = new ArrayList<>();
+                        list.add(sach.getMaSach() + "");
+                        list.add(sach.getTenSach());
+                        list.add(soLuong + "");
+                        list.add(giaNhap + "");
+                        list.add(tongGia + "");
+                    ;
+            String[] rowData = list.toArray(new String[0]);
+            table.addDataRow(rowData);
+            updateTongGiaNhap(index++);
+            updateTongTienPhieuNhap();
+        }
     }
 
     @Override

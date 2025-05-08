@@ -111,10 +111,9 @@ public class InvoiceTable extends CustomTable{
                             }
                         }
                         updateRowData(row, temp);
-                        tinhTongGia.updateTongGia(row);
+                        tinhTongGia.updateTongGia( row);
                         
                         //update list khuyến mãi tương ứng
-                        
                         
                     }
                 },

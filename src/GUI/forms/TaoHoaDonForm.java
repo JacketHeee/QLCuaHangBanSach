@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 import raven.toast.Notifications;
+import utils.ExcelReader;
 import utils.FormatterUtil;
 import utils.UIUtils;
 import utils.Validate;
@@ -123,6 +124,7 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
         this.nhanVienBUS = NhanVienBUS.getInstance();
         this.hoaDonBUS = HoaDonBUS.getInstance();
         this.ct_HoaDonBUS = CT_HoaDonBUS.getInstance();
+        this.sachBUS = SachBUS.getInstance();
         this.type = "Thêm";
         this.getListKH();
         this.getListKM();
@@ -520,12 +522,45 @@ public class TaoHoaDonForm extends JPanel implements ActionListener, TableAction
             case "btnCancelDetail":
                 closeDetail();
                 break;
+            case "importRowData":
+                importExcelForTable();
+            break;
             default:
                 break;
         }
 
         // TODO Auto-generated method stub
         
+    }
+
+    private void importExcelForTable() {
+        ArrayList<String[]> listData = ExcelReader.openFile(3);
+        // table.removeRow(1);
+        int index = table.getRowLabels().size()+1;
+        for (String[] x : listData) {
+            SachDTO sach = sachBUS.getInstanceByID(Integer.parseInt(x[0])); 
+            int soLuong = Integer.parseInt(x[2]);
+            BigDecimal giaBan = sach.getGiaBan();
+            BigDecimal tongGia = giaBan.multiply(new BigDecimal(soLuong));
+            ArrayList<String> list = new ArrayList<>();
+                        list.add(sach.getMaSach() + "");
+                        list.add(sach.getTenSach());
+                        list.add(soLuong + "");
+                        list.add(FormatterUtil.formatNumber(giaBan) + "");
+                        list.add(FormatterUtil.formatNumber(tongGia) + "");
+                    ;
+            String[] rowData = list.toArray(new String[0]);
+
+            table.addDataRow(rowData);
+            updateTongGiaBan(index++);
+            updateTongTienHoaDon();
+            updateListKM();
+            updateTTTT();
+            updateStatusCombobox();
+            updateTienKhuyenMai();
+            updateTienKhachDua();
+            updateStatusTextFieldTienTra();
+        }
     }
 
     //gọi callback để đóng dialog hóa đơn 

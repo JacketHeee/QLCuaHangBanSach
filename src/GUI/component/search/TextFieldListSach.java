@@ -121,6 +121,13 @@ public class TextFieldListSach extends JTextField implements KeyListener{
             }
         }
     }
+
+    public void updateWithBook(SachDTO data) {
+        if(data != null){
+            callBack.updateRowDatacb(data); //trả về sachDTO
+            updateTongGiaCTWhenAddSach.TinhTongGiaCTWhenAddSach();  //update tổng giá khi thêm mới sách
+        }
+    }
     //truyền sách DTO ra ngoài
     public interface CallBack {
         public void updateRowDatacb(SachDTO sach);
