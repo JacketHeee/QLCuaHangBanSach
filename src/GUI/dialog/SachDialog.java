@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.JDialog;
@@ -520,6 +521,8 @@ public class SachDialog extends JDialog implements ActionListener{
     public boolean validation(){
         JTextField ten = inputForm.getListItem().get(0).getTextField();
         JTextField namXB = inputForm.getListItem().get(1).getTextField();
+        JTextField giaBan = inputForm.getListItem().get(2).getTextField();
+
         String theLoai = inputForm.getListItem().get(5).getTextKNNN();
         String tacGia = inputForm.getListItem().get(6).getTextKNNN();
         String path = inputForm.getListItem().get(8).getPath();
@@ -546,6 +549,25 @@ public class SachDialog extends JDialog implements ActionListener{
             namXB.requestFocusInWindow();
             return(false);
         }
+
+        if(Integer.parseInt(namXB.getText()) > LocalDate.now().getYear()){
+            JOptionPane.showMessageDialog(mainFrame, "Năm xuất bản phải nhỏ hơn năm hiện tại!","",JOptionPane.WARNING_MESSAGE);
+            namXB.requestFocusInWindow();
+            return(false);
+        }
+
+        if(Validate.isEmpty(giaBan.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Giá bán không được để trốngtrống!","",JOptionPane.WARNING_MESSAGE);
+            giaBan.requestFocusInWindow();
+            return(false);
+        }
+
+        if(!Validate.isPositiveNumber(giaBan.getText())){
+            JOptionPane.showMessageDialog(mainFrame, "Giá bán phair l!","",JOptionPane.WARNING_MESSAGE);
+            giaBan.requestFocusInWindow();
+            return(false);
+        }
+
         if(Validate.isEmpty(theLoai)){
             JOptionPane.showMessageDialog(mainFrame, "Thể loại không được để trống!","",JOptionPane.WARNING_MESSAGE);
             return(false);

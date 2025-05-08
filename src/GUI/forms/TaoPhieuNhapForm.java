@@ -111,7 +111,8 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         init();
     }
 
-    public TaoPhieuNhapForm(MainFrame mainFrame, PhieuNhapDTO phieuNhap, String type) {
+    public TaoPhieuNhapForm(MainFrame mainFrame, PhieuNhapDTO phieuNhap, String type, Runnable runnable) {
+        this.runnable = runnable;
         this.mainFrame = mainFrame;
         this.taiKhoan = mainFrame.getTaiKhoan();
         this.chiTietQuyenBUS = ChiTietQuyenBUS.getInstance();               
@@ -304,6 +305,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         buttonSave.setBackground(Color.decode("#4882FF"));
         buttonSave.setBackground(Color.white);    
         buttonCancel = new CustomButton("Hủy");
+        buttonCancel.addActionListener(e -> runnable.run());
         // buttonCancel.cssCancelButton();
         panel.add(buttonSave,"sg 1");
         panel.add(buttonCancel,"sg 1");
@@ -343,7 +345,7 @@ public class TaoPhieuNhapForm extends JPanel implements ActionListener, TableAct
         phieuNhapBUS.xuatPhieuNhapPDF(phieuNhap);
     }
     private void closePNDetail() {
-        // runnable.run();
+        runnable.run();
         
     }
     @Override

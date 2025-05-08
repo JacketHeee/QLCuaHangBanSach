@@ -51,7 +51,7 @@ public class PhuongThucTTDialog extends JDialog implements ActionListener{
     }
 
     public void init(){
-        this.setLayout(new MigLayout("wrap 1, insets 30 0 20 0, debug", "[grow]"));
+        this.setLayout(new MigLayout("wrap 1, insets 30 0 20 0", "[grow]"));
         this.getContentPane().setBackground(Color.decode("#FFFFFF"));
 
         JPanel panel = new JPanel();

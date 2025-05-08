@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -253,6 +254,7 @@ public class InputFormItem extends JPanel{
         java.sql.Date sqlDate = new Date(utilDate.getTime());
         return(sqlDate);
     }
+
 
     public String getDateString(){
         String result = ((JTextField) inputDate.getDateEditor().getUiComponent()).getText();

@@ -57,3 +57,22 @@ Dự án **"Quản Lý Cửa Hàng Sách"** nhằm xây dựng một hệ thốn
 | `git reset --hard <commit>` | Hoàn tác thay đổi và quay lại commit chỉ định. |
 | `git stash` | Lưu tạm thời các thay đổi hiện tại mà không commit. |
 | `git merge <branch-name>` | Hợp nhất một nhánh vào nhánh hiện tại. |
+
+### **Hình ảnh giao diện**
+
+## Ảnh giao diện ứng dụng
+
+![Ảnh 1](assets/z6581054090379_e65edafaa8843a345aa76904a2ef9af.jpg)
+![Ảnh 2](assets/z658105409389_9ed3841b1db9ce4769e0ede2ca87a20.jpg)
+![Ảnh 3](assets/z658105409407_e4849617b9ddca7ab4d3139274ebd3.jpg)
+![Ảnh 4](assets/z6581054106112_c45c1e907ae811b0a484163c4aa06.jpg)
+![Ảnh 5](assets/z6581054188435_ff3df5c305e593a3bb77dc4d59db8b.jpg)
+![Ảnh 6](assets/z6581054217272_7a9c5db3d7c997073bb2fa7125af814.jpg)
+![Ảnh 7](assets/z6581054217279_c5567b25a8be8fa05c3f96de9fd5.jpg)
+![Ảnh 8](assets/z6581054344773_ebadec918bccf23893754249930924025.jpg)
+![Ảnh 9](assets/z658105434741_2ae0057e76370a8bbb52c68807387e6f.jpg)
+![Ảnh 10](assets/z6581054546341_47eb70fb0dc5425900573607326343.jpg)
+![Ảnh 11](assets/z6581054547365_5bb6a613226a6c7d1418c4dc45175d81.jpg)
+![Ảnh 12](assets/z6581054755675_d8203789d05067f7d8522b53894370f.jpg)
+![Ảnh 13](assets/z6581054857213_c6ffbc60e2403d7825dc612d03b4212.jpg)
+![Ảnh 14](assets/z6581057136990_49a2eb5fc042c9404abe69440a3b4bef0.jpg)

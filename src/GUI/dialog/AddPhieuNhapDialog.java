@@ -26,7 +26,7 @@ public class AddPhieuNhapDialog extends JDialog{
 
     public AddPhieuNhapDialog(MainFrame mainFrame, PhieuNhapDTO phieuNhap) {
         super(mainFrame,"",true);
-        this.taoPhieuNhapForm = new TaoPhieuNhapForm(mainFrame, phieuNhap, "detail");
+        this.taoPhieuNhapForm = new TaoPhieuNhapForm(mainFrame, phieuNhap, "detail",() -> setVisible(false));
         add(new CustomScrollPane(taoPhieuNhapForm));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = 1200;

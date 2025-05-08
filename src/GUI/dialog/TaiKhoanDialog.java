@@ -185,7 +185,8 @@ public class TaiKhoanDialog extends JDialog implements ActionListener{
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"Thêm thành công");
             if(nhanVienBUS.setMaTK(maNV, taiKhoanDTO.getMaTK()) != 0){
                 String tenNQ = nhomQuyenBUS.getTenByMaNhomQuyen(taiKhoanDTO.getMaRole());
-                String[] row = {taiKhoanDTO.getMaTK()+"", taiKhoanDTO.getUsername(), taiKhoanDTO.getPassword(), tenNQ};
+                NhanVienBUS nv = new NhanVienBUS();
+                String[] row = {taiKhoanDTO.getMaTK()+"", taiKhoanDTO.getUsername(), nv.getTenNVByMaTK(taiKhoanDTO.getMaTK()), tenNQ};
                 taiKhoanPanel.getTable().addDataRow(row);
                 this.dispose();
             }
