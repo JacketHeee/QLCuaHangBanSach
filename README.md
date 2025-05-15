@@ -58,8 +58,21 @@ Dự án **"Quản Lý Cửa Hàng Sách"** nhằm xây dựng một hệ thốn
 | `git stash` | Lưu tạm thời các thay đổi hiện tại mà không commit. |
 | `git merge <branch-name>` | Hợp nhất một nhánh vào nhánh hiện tại. |
 
+## 5. Thành viên trong nhóm 
+- **Java**:
+   + 3123560002 - Nguyễn Ngọc Thiên Ân
+   + 3123410285 - Tống Quốc Phùng
+   + 3123560005 - Danh Thị Ngọc Châu 
+   + 3123410385 - Trương Thị Huyền Trang 
+   + 3123560050 - Nguyễn Hùng Mạnh
 
-## 5. Ảnh giao diện ứng dụng
+- **Phân tích thiết kế hệ thống thông tin**:
+   + 3122410390 - Nguyễn Thu Thảo
+   + 3123560005 - Danh Thị Ngọc Châu
+   + 3123560026 - Ngô Đăng Hiến
+   + 3123560050 - Nguyễn Hùng Mạnh
+
+## 6. Ảnh giao diện ứng dụng
 
 ![Ảnh 14](assets/z6581057136990_49a2eb574c0c9404abe69440a3b4bef0.jpg)
 ![Ảnh 3](assets/z6581054090407_e4849617b9ddca3c7ab43d319274ebd3.jpg)
