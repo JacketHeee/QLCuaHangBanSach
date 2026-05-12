@@ -27,21 +27,7 @@ Dự án **"Quản Lý Cửa Hàng Sách"** nhằm xây dựng một hệ thốn
 - Username: admin
 - Password: 123456
 
-## 4. Thành viên trong nhóm 
-- **Java**:
-   + 3123560002 - Nguyễn Ngọc Thiên Ân
-   + 3123410285 - Tống Quốc Phùng
-   + 3123560005 - Danh Thị Ngọc Châu 
-   + 3123410385 - Trương Thị Huyền Trang 
-   + 3123560050 - Nguyễn Hùng Mạnh
-
-- **Phân tích thiết kế hệ thống thông tin**:
-   + 3122410390 - Nguyễn Thu Thảo
-   + 3123560005 - Danh Thị Ngọc Châu
-   + 3123560026 - Ngô Đăng Hiến
-   + 3123560050 - Nguyễn Hùng Mạnh
-
-## 5. Ảnh giao diện ứng dụng
+## 4. Ảnh giao diện ứng dụng
 ![Ảnh 14](assets/z6581057136990_49a2eb574c0c9404abe69440a3b4bef0.jpg)
 ![Ảnh 3](assets/z6581054090407_e4849617b9ddca3c7ab43d319274ebd3.jpg)
 ![Ảnh 1](assets/z6581054090379_e65edaafaa8843a345aa76904a2ef9af.jpg)
@@ -60,7 +46,7 @@ Dự án **"Quản Lý Cửa Hàng Sách"** nhằm xây dựng một hệ thốn
 ![Ảnh 10](assets/z6581249400539_2eca628146eac8a92d05236b1d856735.jpg)
 ![Ảnh 10](assets/z6581243752309_8cb75c6c861f647511b99f4d1107d59e.jpg)
 
-## 6. Các thao thác với git
+## 5. Các thao thác với git
 | Bước | Lệnh Git / Thao tác | Mô tả chi tiết |
 |------|---------------------|----------------|
 | **1** | `git init` hoặc `git clone <repository-url>` | Khởi tạo repository Git mới (`init`) hoặc sao chép một repository có sẵn từ URL (`clone`). |
